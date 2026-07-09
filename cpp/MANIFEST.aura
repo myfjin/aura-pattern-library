@@ -11,6 +11,11 @@
       "bytes": 89
     },
     {
+      "path": "data-science/applied_ds_practice/cohort_retention_analysis.cpp",
+      "sha256": "58d7f70c1d7fad51442175a596c269facdd3a67f79ac823ea1d94927ea441c1b",
+      "bytes": 7523
+    },
+    {
       "path": "data-science/bayesian_iii_approximate_inference/abc_rejection_sampler.cpp",
       "sha256": "e41a25463fafadc2e7e54bf58da5386b4b6a7600532b32a7026fd3ba77575688",
       "bytes": 7396
@@ -81,6 +86,11 @@
       "bytes": 6890
     },
     {
+      "path": "data-science/econometrics_finance/cointegration_engle_granger_lite.cpp",
+      "sha256": "1a6fe85c56f844a8f74f5bbf2eba7f8a6c9fd7033710dcbf784e6cc0e790940f",
+      "bytes": 7642
+    },
+    {
       "path": "data-science/ensembles_robust_methods/adaboost.cpp",
       "sha256": "0c67e9b452fcc93d3601351492fffe080f8ae904911a2031de8e0b33a5dcae71",
       "bytes": 10469
@@ -106,6 +116,16 @@
       "bytes": 8654
     },
     {
+      "path": "data-science/information_theory_probability/conjugate_priors.cpp",
+      "sha256": "5b9caf4b50b3bed5020d5981fec865788948f7f0da321c732f87a6bb94695c9b",
+      "bytes": 8985
+    },
+    {
+      "path": "data-science/linear_algebra/conjugate_gradient.cpp",
+      "sha256": "a3a4db7b2b66c7284f0b6287144d149b173e56f017db5dbcf1517e741e7dcbdc",
+      "bytes": 6632
+    },
+    {
       "path": "data-science/model_diagnostics/bias_variance_decomposition.cpp",
       "sha256": "57328d3a9f8947023208fec6c5bc36fb10c793e9a7b92837827de58183eb372f",
       "bytes": 10462
@@ -119,6 +139,16 @@
       "path": "data-science/model_diagnostics/calibration_curve.cpp",
       "sha256": "43edc43a32c5dc98acbc941a4c50631c69a4295c278b9cb89aaa1fd038bbd5bb",
       "bytes": 8763
+    },
+    {
+      "path": "data-science/model_understanding_tuning/conformal_prediction_intervals.cpp",
+      "sha256": "ecf001fc3e85ed2a789db2e9d10d534977df9bc438e4a8c3bf868f7f44181511",
+      "bytes": 7908
+    },
+    {
+      "path": "data-science/neural_networks_from_scratch/conv1d_feature_detector.cpp",
+      "sha256": "9f011fbe96f5e76cdfcd20249a6d3516c75e71337120a47cc55c04b1875f014a",
+      "bytes": 8698
     },
     {
       "path": "data-science/numerical_methods/adaptive_simpson.cpp",
@@ -176,6 +206,11 @@
       "bytes": 4822
     },
     {
+      "path": "data-science/recommenders_ii_kept_survivors_wave_19_rejected_as_a_fake_fest_these_5_verified_rest_re_harvest/content_tfidf_rec.cpp",
+      "sha256": "48957834142356c0588f91ebd4271ef31e5a06250a0d09947e8e2f17f0e6b1f0",
+      "bytes": 5931
+    },
+    {
       "path": "data-science/signal_processing_sequences/autocovariance_spectrum.cpp",
       "sha256": "298d9534ca79201eabc35815f845cacc79e5b6c3c803b2229029d42881ffd5ff",
       "bytes": 7811
@@ -201,6 +236,11 @@
       "bytes": 6792
     },
     {
+      "path": "data-science/statistics_testing/confusion_matrix_metrics.cpp",
+      "sha256": "1f83ebd1c39a0aa747144c0a4eddeb71f226a230e2398872b49de111b36d7155",
+      "bytes": 6517
+    },
+    {
       "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/adwin_drift_detector.cpp",
       "sha256": "bcf804a66fcbeeb0876dd7590b5e9272ee5f39913c2d1ea4210ff2491041eab6",
       "bytes": 6728
@@ -211,6 +251,11 @@
       "bytes": 7463
     },
     {
+      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/concept_drift_ensemble.cpp",
+      "sha256": "a252d3f001791648955b8b60bdad74ac7f65f6a3e98e77026a5cd5c5071d287f",
+      "bytes": 7484
+    },
+    {
       "path": "data-science/survival_reliability/accelerated_failure_time_lite.cpp",
       "sha256": "467dcf154a1e63a047fdc9a19f11cd5efa26cf4e481ce8c9647529a420808904",
       "bytes": 6396
@@ -219,6 +264,11 @@
       "path": "data-science/survival_reliability/censoring_bias_demo.cpp",
       "sha256": "fd36c6105e8da4c4f3c6eace63539de1137b86faa345f6496c4bda8ab473d0b2",
       "bytes": 6828
+    },
+    {
+      "path": "data-science/survival_reliability/competing_risks_naive_bias.cpp",
+      "sha256": "2e05a6ff29fd1cdb2be19031aa89dc268335282fb4c05ed540b8a9efc4c3559e",
+      "bytes": 7694
     },
     {
       "path": "data-science/text_nlp/bag_of_words.cpp",

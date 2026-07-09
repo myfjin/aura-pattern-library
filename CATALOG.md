@@ -77,19 +77,19 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `class_weight_imbalance` | python | Model Understanding & Tuning |
 | `classic_mds` | python·cpp | Clustering, Graph & Anomaly |
 | `cluster_randomized_icc` | python·cpp | Experiments II |
-| `cohort_retention_analysis` | python | Applied DS Practice |
-| `cointegration_engle_granger_lite` | python | Econometrics & Finance |
-| `competing_risks_naive_bias` | python | Survival & Reliability |
-| `concept_drift_ensemble` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
-| `conformal_prediction_intervals` | python | Model Understanding & Tuning |
-| `confusion_matrix_metrics` | python | Statistics & Testing |
-| `conjugate_gradient` | python | Linear Algebra |
-| `conjugate_priors` | python | Information Theory & Probability |
+| `cohort_retention_analysis` | python·cpp | Applied DS Practice |
+| `cointegration_engle_granger_lite` | python·cpp | Econometrics & Finance |
+| `competing_risks_naive_bias` | python·cpp | Survival & Reliability |
+| `concept_drift_ensemble` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `conformal_prediction_intervals` | python·cpp | Model Understanding & Tuning |
+| `confusion_matrix_metrics` | python·cpp | Statistics & Testing |
+| `conjugate_gradient` | python·cpp | Linear Algebra |
+| `conjugate_priors` | python·cpp | Information Theory & Probability |
 | `connection_pool` | python | Networking |
 | `connection_pool_health_checks` | python | Networking |
 | `consistent_hash_ring` | python | Distributed |
-| `content_tfidf_rec` | python | Recommenders II — kept survivors (wave 19 REJECTED as a fake-fest; these 5 verified; rest re-harvest) |
-| `conv1d_feature_detector` | python | Neural Networks From Scratch |
+| `content_tfidf_rec` | python·cpp | Recommenders II — kept survivors (wave 19 REJECTED as a fake-fest; these 5 verified; rest re-harvest) |
+| `conv1d_feature_detector` | python·cpp | Neural Networks From Scratch |
 | `convex_hull_graham` | python | Geospatial & Spatial |
 | `convolution_filtering` | python | Signal Processing & Sequences |
 | `copula_gaussian_lite` | python | Probability III |
