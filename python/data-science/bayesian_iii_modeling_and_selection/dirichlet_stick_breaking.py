@@ -1,0 +1,62 @@
+"""Dirichlet stick-breaking process: samples probabilities that sum to 1.
+
+Weights sum→1; E[#active clusters] increases monotonically with α (concentration).
+Core claim: weights sum→1; E[#active clusters] increases with α.
+"""
+# △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
+# ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
+_AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
+import math
+from typing import List
+
+def stick_breaking_process(alpha: float, num_breaks: int = 100) -> List[float]:
+    """Generate stick-breaking weights: V_k ~ Beta(1, α), weights w_k = V_k * ∏(1-V_j).
+
+    Returns probabilities that sum to (approximately) 1.
+    """
+    import random
+    weights = []
+    remaining = 1.0
+
+    for _ in range(num_breaks):
+        # V ~ Beta(1, α).
+        v = random.betavariate(1.0, alpha)
+        weight = v * remaining
+        weights.append(weight)
+        remaining *= (1.0 - v)
+
+        if remaining < 1e-8:
+            break
+
+    return weights
+
+def count_active_clusters(weights: List[float], threshold: float = 0.01) -> int:
+    """Count weights above threshold (approximate number of 'active' clusters)."""
+    return sum(1 for w in weights if w > threshold)
+
+if __name__ == "__main__":
+    import random
+    random.seed(42)
+
+    # Test two concentration levels: α = 0.5 (sparse) vs α = 5.0 (uniform).
+    alpha_low = 0.5
+    alpha_high = 5.0
+
+    # Generate many samples and compute expected active clusters.
+    n_sims = 100
+    active_low = [count_active_clusters(stick_breaking_process(alpha_low)) for _ in range(n_sims)]
+    active_high = [count_active_clusters(stick_breaking_process(alpha_high)) for _ in range(n_sims)]
+
+    mean_active_low = sum(active_low) / len(active_low)
+    mean_active_high = sum(active_high) / len(active_high)
+
+    # Weights should sum to ≈ 1.
+    sample_weights = stick_breaking_process(1.0)
+    weight_sum = sum(sample_weights)
+    assert weight_sum > 0.9, f"Weights should sum ≈ 1, got {weight_sum}"
+
+    # Higher α → more active clusters (E[K(α)] increasing in α).
+    assert mean_active_high > mean_active_low, \
+        f"Higher α {alpha_high} should have more clusters: {mean_active_high} vs {mean_active_low}"
+
+    print("PASS")

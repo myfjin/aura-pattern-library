@@ -1,0 +1,42 @@
+{
+  "library": "AURA Pattern Library",
+  "owner": "Reality Optimizer",
+  "generated": "2026-07-09",
+  "signing_pubkey": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
+  "languages": {
+    "python/programming": {
+      "files": 99,
+      "gate_ok": 99,
+      "gate_fail": 0,
+      "signature": "authentic + unaltered"
+    },
+    "python/data-science": {
+      "files": 370,
+      "gate_ok": 370,
+      "gate_fail": 0,
+      "signature": "authentic + unaltered"
+    },
+    "r": {
+      "files": 60,
+      "gate_ok": 60,
+      "gate_fail": 0,
+      "signature": "authentic + unaltered"
+    }
+  },
+  "cpp": {
+    "files": 0,
+    "note": "empty-ready; no final-approved twins"
+  },
+  "go": {
+    "files": 0,
+    "note": "phase 2"
+  },
+  "quarantine": [
+    "keyword_cooccurrence_graph.py",
+    "spelling_corrector_norvig.py",
+    "stratified_sampling.py",
+    "value_iteration_gridworld.py"
+  ],
+  "total_shippable": 529,
+  "unique_ids": 527
+}

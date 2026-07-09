@@ -1,0 +1,12 @@
+# build/run artifacts
+__pycache__/
+*.pyc
+*.o
+*_linux
+*_macos
+/tmp/
+
+# never commit signing private keys (public key + signed manifests ARE committed)
+*.key
+*.seed
+.DS_Store

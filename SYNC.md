@@ -1,0 +1,43 @@
+# SYNC — how the Grand Library re-pulls from its upstreams
+
+The library is a **stamped, signed, verified SNAPSHOT**. The sources of truth are
+the harvest originals (`~/ai-lab/patterns_*/harvested`) and the conversion twins.
+This file is the procedure for keeping the snapshot honest.
+
+## Sources of truth (never edited by this library)
+- **python/programming** ← `~/ai-lab/awesome-python-patterns/patterns` (own gate rubric)
+- **python/data-science** ← `~/ai-lab/patterns_ds/harvested` + `patterns_ds/CATALOG.md`
+- **r** ← `~/ai-lab/patterns_r/harvested` + `patterns_r/CATALOG.md`
+- **cpp / go** ← the conversion pipeline (`~/ai-lab/CONVERSION-PIPELINE-SESSION.md`)
+
+## Seal signal (when to re-pull a sphere)
+A DS wave is sealed when the validation seat writes "REVIEWED + REMEDIATED" in
+`project_ds_harvest_100.md` **and** bumps the count line in `patterns_ds/CATALOG.md`.
+Poll two things: the CATALOG **count line** and **catalog↔disk parity**. When the
+count moves and parity holds → re-pull. (DS is sealed through wave 20 at 374 → 370
+shippable after the 4 rejects.)
+
+## Re-pull procedure (hash-diff, not mtime)
+1. For each sphere, hash every source file (sha256) and compare to the library copy.
+2. Copy only changed/new files; delete files removed upstream.
+3. Re-stamp master-0 and re-sign **only the affected subtree**.
+4. Regenerate `CATALOG.md` + `MANIFEST.json`; run `library_verify.py` → must be GREEN.
+
+## Twin ingest (C++/Go) — strictly downstream of sealed sources
+Ingest a twin ONLY if **both** hold:
+- (a) its source pattern ID is **sealed and NOT quarantined**, and
+- (b) it carries a **final-approved** entry from the conversion pipeline
+  (`patterns_cpp/ver_approvals.jsonl` → `verdict: approved` → final-approval gate).
+
+### The coupling law
+A source fix (e.g. a wave-20 rebuild) **invalidates every twin of that pattern**.
+On any source change, mark stale and **drop** every twin of a changed/quarantined ID
+until it is re-converted and re-approved. `library_verify.py` enforces this: a twin
+whose source ID is missing or quarantined is a RED failure.
+
+> Status today: **no twins ingested** — there is no `ver_approvals.jsonl` yet, and the
+> 122 legacy `patterns_cpp/*.cpp` are the pre-pipeline June-25 batch (PascalCase IDs
+> that don't map to the snake_case sources). `cpp/` and `go/` stand empty-ready.
+
+## The one gate above all
+Nothing here is public. **Illia's explicit yes on the final artifact is the only door.**
