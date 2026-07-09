@@ -21,6 +21,12 @@
       "gate_ok": 60,
       "gate_fail": 0,
       "signature": "authentic + unaltered"
+    },
+    "cpp/data-science": {
+      "files": 28,
+      "gate_ok": 28,
+      "gate_fail": 0,
+      "signature": "authentic + unaltered"
     }
   },
   "cpp": {
