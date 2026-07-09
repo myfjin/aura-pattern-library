@@ -1,0 +1,514 @@
+{
+  "manifest_version": 1,
+  "trademark": "AURA Pattern Library",
+  "created": "2026-07-10",
+  "algorithm": "ed25519",
+  "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
+  "files": [
+    {
+      "path": ".folder-mark.yaml",
+      "sha256": "0b22bcb530918dfbdd7104b90db88cac148ac3d69c9bd5fbe3463e55bca60eb0",
+      "bytes": 74
+    },
+    {
+      "path": "concurrency-locking/advisory_lock_timeout.py",
+      "sha256": "6df623724f770867d4dd996284ae9f18d79d42f926f612aa8e4b4d6c155002ba",
+      "bytes": 8258
+    },
+    {
+      "path": "concurrency-locking/atomic_append.py",
+      "sha256": "691b0f316de0e44d2f7e83838879667ef465280f37c63ce0c63296c20f770386",
+      "bytes": 7271
+    },
+    {
+      "path": "concurrency-locking/cas_file_update.py",
+      "sha256": "6a9083b8d4cb94251f2e40bb158d78f2180957e07df7cb17f4dc70e9b7286412",
+      "bytes": 8151
+    },
+    {
+      "path": "concurrency-locking/deadlock_timeout.py",
+      "sha256": "1d7251176b45bf8736cfd5600f120bb72452574fa242d30b5bdd8cb34bafcf6d",
+      "bytes": 7674
+    },
+    {
+      "path": "concurrency-locking/double_launch_block.py",
+      "sha256": "b43646d31b4821e012450424608f21bed36e8e8b99d2d2c8f39f75a3c0fc8620",
+      "bytes": 10568
+    },
+    {
+      "path": "concurrency-locking/flock_singleton.py",
+      "sha256": "d7bdfda6a611030fcfdb5c18a66013850535009bc210b178939a985360d3fdf3",
+      "bytes": 7511
+    },
+    {
+      "path": "concurrency-locking/idempotent_once_guard.py",
+      "sha256": "4471c4b5cfde3c8b7bc87f6f4b8cbad77f3441d69042e083dad2bd9153c1c9a4",
+      "bytes": 8342
+    },
+    {
+      "path": "concurrency-locking/named_mutex.py",
+      "sha256": "eb08289f8e32ce3b42dd1fd7e5298c3ac69809584c604100c8274f203916f768",
+      "bytes": 8293
+    },
+    {
+      "path": "concurrency-locking/reader_writer_lock.py",
+      "sha256": "7c4f585c59bb0c0e6f696ab3e463cee29c6665a434d47c7777e29abc048b8140",
+      "bytes": 8721
+    },
+    {
+      "path": "concurrency-locking/stale_lock_break.py",
+      "sha256": "b0ce39fe94c39ca540672f175091ff9df9f6b81f9144d00f91f9972dc6f4e517",
+      "bytes": 8995
+    },
+    {
+      "path": "config-management/config_diff.py",
+      "sha256": "1c29bafdfb6418279331a154e4cb138de3fc5f7a97df64ee27dfe0169d5c41a5",
+      "bytes": 6778
+    },
+    {
+      "path": "config-management/config_versioning.py",
+      "sha256": "457defec557e8cf3e3631a3fc8b4ef909655872ba693ff908a9344184bade815",
+      "bytes": 9340
+    },
+    {
+      "path": "config-management/dotenv_parse.py",
+      "sha256": "fc89226fa56f6bb4f4fb7dafd2a39e6267bdf2428475629215b399f0e761d5e6",
+      "bytes": 7722
+    },
+    {
+      "path": "config-management/env_load_defaults.py",
+      "sha256": "1564a9aab7099bc49d089ba0fdfdee93a05edbe760de767a2c8ad9d7af43f071",
+      "bytes": 6386
+    },
+    {
+      "path": "config-management/hot_reload.py",
+      "sha256": "5c555c6cd157d226f236aaa47c089cd1b53d611baf93f8a84782d4100ae2a24a",
+      "bytes": 6472
+    },
+    {
+      "path": "config-management/layered_merge.py",
+      "sha256": "855b73890db5d5c5344b855abfee9c448e4210864b9ce0b8634ca1a7cf06e9bc",
+      "bytes": 6359
+    },
+    {
+      "path": "config-management/multiformat_load.py",
+      "sha256": "ce4c0b9810b8681b3a502b1a2ce69504b9b74abf13a3db1278ea96f175440c19",
+      "bytes": 8450
+    },
+    {
+      "path": "config-management/refuse_start_on_invalid.py",
+      "sha256": "0fc259269772950f3a162e39606b0c231310b296488d5f489623dde8e61ef736",
+      "bytes": 9173
+    },
+    {
+      "path": "config-management/schema_validate.py",
+      "sha256": "8d8d971930fd57571599a8e384ce842a0bd991e373f6943fd6c4ba638efe1dd0",
+      "bytes": 6010
+    },
+    {
+      "path": "config-management/secret_separation.py",
+      "sha256": "11b113393bc2295b1f2aef11f6c1a0f58bb67f7ebde0158cef242a0278a9d350",
+      "bytes": 7704
+    },
+    {
+      "path": "filesystem-integrity/atomic_snapshot.py",
+      "sha256": "ffac1321a5149e5dc0111ea6632e07c3d80092b5e79463db7c17c2a2288354e9",
+      "bytes": 6636
+    },
+    {
+      "path": "filesystem-integrity/atomic_write_temp_rename.py",
+      "sha256": "800f18ecd2174c74175fcb501c8b3ab8e013541ac91c171a978527fa51c8f3a8",
+      "bytes": 7941
+    },
+    {
+      "path": "filesystem-integrity/checksum_corruption_detect.py",
+      "sha256": "f232ad45e7f60631ec5cca21015a21c3209c2d27899cfcfd1150e47cb4c50543",
+      "bytes": 7097
+    },
+    {
+      "path": "filesystem-integrity/cow_backup.py",
+      "sha256": "f02fb3d5191e1264f70f390a235d9c59a15059683575f40c8ed4f9906cc5fbc8",
+      "bytes": 7054
+    },
+    {
+      "path": "filesystem-integrity/dir_tree_diff.py",
+      "sha256": "fcd279fb250089ea7106ae0cb2adf8a35832b035faba9905e4dfa0590eb4ece1",
+      "bytes": 9327
+    },
+    {
+      "path": "filesystem-integrity/disk_full_write_guard.py",
+      "sha256": "7d92beb3027fa81b676dac02ff4b582eccbf6a2b893919be2db5e4b369fbea7a",
+      "bytes": 9300
+    },
+    {
+      "path": "filesystem-integrity/fsync_durability.py",
+      "sha256": "abb8ddefeae3016eeff629a8da4d9a7f11ed8f2dbe9a5729ba09fe2c4d36b1c3",
+      "bytes": 6876
+    },
+    {
+      "path": "filesystem-integrity/restore_from_backup.py",
+      "sha256": "210a25c97d65c97bf0b33ed382b04757fe8247f6f71303026ac5272489d805eb",
+      "bytes": 7794
+    },
+    {
+      "path": "filesystem-integrity/safe_delete_trash.py",
+      "sha256": "7de19be9cabc70a9428b9e12d5a7750b0b6436d7bcdaa5185b0f52dd47d382b2",
+      "bytes": 7235
+    },
+    {
+      "path": "filesystem-integrity/symlink_escape_guard.py",
+      "sha256": "13985b84366ed3f8b055fdca87e3b29546a435de6d1d918277f45cf13ebbdeaf",
+      "bytes": 8185
+    },
+    {
+      "path": "log-management/crash_log_capture.py",
+      "sha256": "5cfd03de1203a51eee09ffa5d5d41d8427bb8e7749f1d25d49c8aadf8f2aba7d",
+      "bytes": 7221
+    },
+    {
+      "path": "log-management/log_compression.py",
+      "sha256": "93408e69b41cccc5e14de525c5c6f7fb58ab8ec92d16d3077e2ecafebfb21c2e",
+      "bytes": 6364
+    },
+    {
+      "path": "log-management/rate_limited_log.py",
+      "sha256": "166e0b286f7fe2683a83d986d60e44b3fb0d5f81a702b04e9f4431de96b8d15c",
+      "bytes": 5608
+    },
+    {
+      "path": "log-management/retention_prune.py",
+      "sha256": "a26dcbb78249b2b4643e498459e33af0355b90abe60b360f62fc9e654a161821",
+      "bytes": 5821
+    },
+    {
+      "path": "log-management/ring_buffer_log.py",
+      "sha256": "f9f06b8d5771dd0767765c0a72f170f460f318f4d3090a135174f337d6c83744",
+      "bytes": 6504
+    },
+    {
+      "path": "log-management/rotate_by_size.py",
+      "sha256": "75bb42bbc5a80591f5f39bf2df0a878525b079b3a0933f69e7aa51c1019737ac",
+      "bytes": 6540
+    },
+    {
+      "path": "log-management/rotate_by_time.py",
+      "sha256": "41cae3e164033f50f493c9012cf2bda04fecb9c5d5d050d2c365ae704a141878",
+      "bytes": 7233
+    },
+    {
+      "path": "log-management/secret_redaction.py",
+      "sha256": "098c329bce4dcbd1851755011c83847e1048232a183ae743a40142c8696e0bc2",
+      "bytes": 7360
+    },
+    {
+      "path": "log-management/structured_json_log.py",
+      "sha256": "20656ad9e844f29df834241e04d3f62498365ac0752be8f661c3ac0c3aadde94",
+      "bytes": 6176
+    },
+    {
+      "path": "log-management/tail_follow.py",
+      "sha256": "653a077554fbc6856f896e68c1285d63545d6faaab021a334de05eee141c6994",
+      "bytes": 6250
+    },
+    {
+      "path": "network-health/dns_resolve_check.py",
+      "sha256": "a21cb8628d11769e6a6149652e20119dd00dd76ee93e084e10263abe5d1fa1fd",
+      "bytes": 5828
+    },
+    {
+      "path": "network-health/exponential_backoff.py",
+      "sha256": "db61d85a1e67a41210789173e989ee883cc913a0a8e37df095771402d00dd4ee",
+      "bytes": 6598
+    },
+    {
+      "path": "network-health/failover_switch.py",
+      "sha256": "f876445ec4fa86a946c07cbc2f0425f295d71804721239e8b8ac3ecd7e18d183",
+      "bytes": 8572
+    },
+    {
+      "path": "network-health/heartbeat_gossip.py",
+      "sha256": "6f26e0511be390f3db0b5e8dff78c0176689636b0add1148ca0c6c0747624e9f",
+      "bytes": 9020
+    },
+    {
+      "path": "network-health/http_health_probe.py",
+      "sha256": "c33e9b1b8209ee102df1e24eef0a65dbe03bd6ab3b8cacb3e48931c3cf9ffb7e",
+      "bytes": 6515
+    },
+    {
+      "path": "network-health/latency_measure.py",
+      "sha256": "ed769142c759ff1922e8924b5cff727a0d4b5a549ae17d672d6bdee2e7d615ec",
+      "bytes": 6579
+    },
+    {
+      "path": "network-health/reachability_matrix.py",
+      "sha256": "dd863aeab6df0516ec369da83ac4976985614a2396db9ee5efbb5e952ea1f180",
+      "bytes": 7901
+    },
+    {
+      "path": "network-health/retry_timeout.py",
+      "sha256": "db8a63675a069f3e7f3c865400549049b234b2c6a36b3771285c223b0df948f2",
+      "bytes": 6369
+    },
+    {
+      "path": "network-health/split_brain_detect.py",
+      "sha256": "4d8bf32c53253a5d56583ab29115971b56533d3a9ef0b14016145dba3629b858",
+      "bytes": 8045
+    },
+    {
+      "path": "network-health/tcp_port_check.py",
+      "sha256": "2fa7fc408446496851d85a469ff54fcbd006e3f3aa88c718862c1c5f31abb9d9",
+      "bytes": 5749
+    },
+    {
+      "path": "process-supervision/crash_loop_detector.py",
+      "sha256": "7c9745a3db97209820acf3fd5915891ff61f317317902d0b7bd537d733bb5f57",
+      "bytes": 6449
+    },
+    {
+      "path": "process-supervision/graceful_shutdown_sigterm.py",
+      "sha256": "3964b91b661e7cdfebbcff164edd393d5d395e26ea62b969342ff17ba226d394",
+      "bytes": 5674
+    },
+    {
+      "path": "process-supervision/heartbeat_liveness.py",
+      "sha256": "4881c0dd329578c46da9390ac96ec8a4dcd2ab0244bc8bc249a87cda11735d2f",
+      "bytes": 6112
+    },
+    {
+      "path": "process-supervision/keepalive_daemon.py",
+      "sha256": "f51f20ee7a163fc506fa85d7b65936892c5e51b3cb64a9c1f652d185237fe690",
+      "bytes": 7148
+    },
+    {
+      "path": "process-supervision/pidfile_singleton.py",
+      "sha256": "dc4e771a3525eaab8ed6d2f43736e44fd3b3a1d7046881a386a91e903fbd59a7",
+      "bytes": 6357
+    },
+    {
+      "path": "process-supervision/readiness_vs_liveness.py",
+      "sha256": "f39618870ae6a751b569e29f9b78abdda15059d83064a899aae8d2837b67b07d",
+      "bytes": 7174
+    },
+    {
+      "path": "process-supervision/restart_backoff.py",
+      "sha256": "6ff2466d5aa0916e4ff019c1ca1b0418db107fd4e32b0db9e297b26936d2f1e4",
+      "bytes": 6388
+    },
+    {
+      "path": "process-supervision/supervised_child.py",
+      "sha256": "085ac143a1a56cecb98ff507c584a0f34109bd82d6904b18a26facdcab3a981a",
+      "bytes": 6697
+    },
+    {
+      "path": "process-supervision/watchdog_restart.py",
+      "sha256": "66b642fde25362535ca48e15279397808ad076ff3fa06c109819d05771eb252b",
+      "bytes": 8062
+    },
+    {
+      "path": "process-supervision/zombie_reaper.py",
+      "sha256": "be35bcbe4a797e764b722ef279cfd0d5b88c4986065d099ab3b1dff6571f164b",
+      "bytes": 5974
+    },
+    {
+      "path": "resource-guards/backpressure_queue.py",
+      "sha256": "f0924adb83814ecf1244643bfb09a72c73a3ba67cdba3328187f3dc1f5034c77",
+      "bytes": 6125
+    },
+    {
+      "path": "resource-guards/circuit_breaker.py",
+      "sha256": "f1d852f390e70de1f6ab41c470389d7ad7bb3812e1c27f8cdfeff5200ba5770c",
+      "bytes": 7520
+    },
+    {
+      "path": "resource-guards/cpu_throttle.py",
+      "sha256": "02d35631d798b41288983c894c487e2dcd30cc3b461796ac7092404b1b9391d8",
+      "bytes": 6599
+    },
+    {
+      "path": "resource-guards/disk_space_watchdog.py",
+      "sha256": "f385f4a3a43bd2191162a3b81f634b2ce467f972a804231a7cba32f9d31488db",
+      "bytes": 7184
+    },
+    {
+      "path": "resource-guards/fd_leak_detector.py",
+      "sha256": "07df774969dcf2ec7f725c23b685656586dfa70b0ffbf515e3cb3d37bee52946",
+      "bytes": 6288
+    },
+    {
+      "path": "resource-guards/inode_guard.py",
+      "sha256": "0d76c5251bd245aef25555a09f345121edeebf12862e03901f805c21c1d650d3",
+      "bytes": 6642
+    },
+    {
+      "path": "resource-guards/load_shedding.py",
+      "sha256": "f0c72086daee93a9c12312e008f4e2c521eb4c3c695cf07fc5475d40ae04ac12",
+      "bytes": 6857
+    },
+    {
+      "path": "resource-guards/memory_cap_guard.py",
+      "sha256": "29b817b51cc2beefa2366814d7751763e486d188f5389e35a3dee06d038314d2",
+      "bytes": 6570
+    },
+    {
+      "path": "resource-guards/tmp_cleanup.py",
+      "sha256": "345718e9e9dfa2efcaa96ba2a44e6bf53f6c1aa8f6350588f127ed46a85771a0",
+      "bytes": 7914
+    },
+    {
+      "path": "resource-guards/token_bucket_limiter.py",
+      "sha256": "6b3fc2db58564fa7b35568447782e7677f374c972c115316fe2a914466842273",
+      "bytes": 6022
+    },
+    {
+      "path": "scheduling-jobs/cron_expr_next_fire.py",
+      "sha256": "6f15c251bf68b42657856093443c3c9244d13f213c22798f36670b4d6bf8b7f9",
+      "bytes": 8119
+    },
+    {
+      "path": "scheduling-jobs/dead_letter_queue.py",
+      "sha256": "87a6eb918449b411b47f049870937d957869f8164f1807ae3a9eecb9b8571b4d",
+      "bytes": 10463
+    },
+    {
+      "path": "scheduling-jobs/idempotency_key.py",
+      "sha256": "7827cf9a2b84abe61deeb4a41926ccec5869bb4e8a114cd39ff1df9948880871",
+      "bytes": 11388
+    },
+    {
+      "path": "scheduling-jobs/interval_scheduler.py",
+      "sha256": "7fd9a34651d92bf4c78a57622437f3f1d8177236d8761177f9b70e9af56ed8b0",
+      "bytes": 7665
+    },
+    {
+      "path": "scheduling-jobs/jitter_backoff.py",
+      "sha256": "41d8122b9c444fc19a625f5b0d5aa0ce908fc16d6f80cc56583f8172e2677b31",
+      "bytes": 9178
+    },
+    {
+      "path": "scheduling-jobs/job_dedup.py",
+      "sha256": "6176fa75fbd41694c64a884457095f8a89ed4842f1868e8a874997dc4da37978",
+      "bytes": 9399
+    },
+    {
+      "path": "scheduling-jobs/missed_run_catchup.py",
+      "sha256": "08d3cbca159be4a18ed884b18502a71937261aa4df5fc198f4081f431f2c35ac",
+      "bytes": 8885
+    },
+    {
+      "path": "scheduling-jobs/oneshot_at_time.py",
+      "sha256": "ee77adfb2a72fe5ab8cf4ecfd6620d9aa5ed6057b56d5a0a936f3f8f15126659",
+      "bytes": 8461
+    },
+    {
+      "path": "scheduling-jobs/retry_with_backoff.py",
+      "sha256": "ab9cafe744cd22e9a780cd154ade859f4a870c8e6d919c5fad17660bb0f6eb88",
+      "bytes": 8917
+    },
+    {
+      "path": "scheduling-jobs/timeout_kill.py",
+      "sha256": "ba76edf659ac0c3e2d298e02765af9b52c3a610110562dc6dca49eeb638c19a6",
+      "bytes": 8008
+    },
+    {
+      "path": "secrets-credentials/enforce_600_perms.py",
+      "sha256": "be824f9fca658b3f2b2278cbc1407870f1817c32763000ca69216be9e3bba7f5",
+      "bytes": 5984
+    },
+    {
+      "path": "secrets-credentials/env_secret_load.py",
+      "sha256": "c1803eda08c41e97b71922199aa59016fa40f53fccc965c50dedc193bb70265c",
+      "bytes": 7769
+    },
+    {
+      "path": "secrets-credentials/expiry_check.py",
+      "sha256": "c88c188bc63bc37215354a8c2aeafb54d38435b209607fca6b75298c7b1dfdb0",
+      "bytes": 6327
+    },
+    {
+      "path": "secrets-credentials/keyring_store.py",
+      "sha256": "3d72843fee968e0b603b9081836fa59e06f26fd36b0c8789520cb9712af7597b",
+      "bytes": 7516
+    },
+    {
+      "path": "secrets-credentials/leaked_secret_scan.py",
+      "sha256": "aa3b7a4309e7c0455aa65a6b6858f21ee1ec610aedffc5b3e4e22680f289c980",
+      "bytes": 7477
+    },
+    {
+      "path": "secrets-credentials/least_privilege_check.py",
+      "sha256": "f12a41a88783720ae0dc39bd14cc50990deb36160bd4f0f2a005911bb6af941c",
+      "bytes": 7356
+    },
+    {
+      "path": "secrets-credentials/log_redaction.py",
+      "sha256": "94980aeb8b696c091400bb73d3583490b1082025ba98fa8c4c68e3113510b562",
+      "bytes": 7559
+    },
+    {
+      "path": "secrets-credentials/secret_audit_trail.py",
+      "sha256": "4e9ef742bd5833abb21503ef15044b4001b2525a693a9210e5f5798ece0222c6",
+      "bytes": 8997
+    },
+    {
+      "path": "secrets-credentials/token_rotation.py",
+      "sha256": "0e13592e8005fb6c1f8bd08edcc6fdbfc77fbacfc00d9e00e2c2a1ff430e547b",
+      "bytes": 7006
+    },
+    {
+      "path": "secrets-credentials/ttl_cache.py",
+      "sha256": "f18e6b6c7b731a9a77be1f13aa11807229bded692201c5af426087c970362b36",
+      "bytes": 7373
+    },
+    {
+      "path": "state-db-durability/backup_rotation.py",
+      "sha256": "4aab48c20a0fd24bd1fbaf5d6cb94c66ffe339e094ecd3a2a2d1fa0725baeb62",
+      "bytes": 7081
+    },
+    {
+      "path": "state-db-durability/corruption_repair.py",
+      "sha256": "4b703d5f683a0845d9b2c6ed2074b984226f526692f273bf79ba9635857b7351",
+      "bytes": 7862
+    },
+    {
+      "path": "state-db-durability/crash_consistent_snapshot.py",
+      "sha256": "5e8ce038b949f43f6177ef802ae22a3a9f985908479ba6361cdfd46ce3a90982",
+      "bytes": 7748
+    },
+    {
+      "path": "state-db-durability/hot_copy.py",
+      "sha256": "39c3660c6911b29acda713e5a6368582d11d91c68f06d2a1bd59ad4590a95ba6",
+      "bytes": 7251
+    },
+    {
+      "path": "state-db-durability/integrity_check.py",
+      "sha256": "8af923c61b22f1064109582cf748bffb59c5126bcbfdcbaafd0ad49feeda0580",
+      "bytes": 6705
+    },
+    {
+      "path": "state-db-durability/journaled_write.py",
+      "sha256": "e19eef5fe33f12454763c1d878b6b48f40dd6e89b5e02657448fea83a3561380",
+      "bytes": 7948
+    },
+    {
+      "path": "state-db-durability/migration_with_rollback.py",
+      "sha256": "5c48410af71e8758a16857052997be8ef10ea77a4dbee13b5398dc9a5a12e63c",
+      "bytes": 7344
+    },
+    {
+      "path": "state-db-durability/point_in_time_restore.py",
+      "sha256": "fb62f375e860264b889967442636e50a177c9d82ee5eb60c743c212e42e0f2ae",
+      "bytes": 7815
+    },
+    {
+      "path": "state-db-durability/transaction_rollback.py",
+      "sha256": "b228a701504f406e3f35448d9e57e8bd1ecdd5414e8923fdcd81a6ba3b57fe9b",
+      "bytes": 7344
+    },
+    {
+      "path": "state-db-durability/wal_checkpoint.py",
+      "sha256": "596c3d1ad489c8073f67b03d431a4b1034376af6fa1f0ce75817ac80855a3b25",
+      "bytes": 7277
+    }
+  ]
+}

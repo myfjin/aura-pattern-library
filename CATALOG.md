@@ -539,3 +539,104 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 - **_quarantine**: 4 (excluded)
 
 **TOTAL shippable: 529** · unique IDs: 527
+
+| `crash_loop_detector` | python | System Administration — Process Supervision |
+| `graceful_shutdown_sigterm` | python | System Administration — Process Supervision |
+| `heartbeat_liveness` | python | System Administration — Process Supervision |
+| `keepalive_daemon` | python | System Administration — Process Supervision |
+| `pidfile_singleton` | python | System Administration — Process Supervision |
+| `readiness_vs_liveness` | python | System Administration — Process Supervision |
+| `restart_backoff` | python | System Administration — Process Supervision |
+| `supervised_child` | python | System Administration — Process Supervision |
+| `watchdog_restart` | python | System Administration — Process Supervision |
+| `zombie_reaper` | python | System Administration — Process Supervision |
+| `atomic_snapshot` | python | System Administration — Filesystem Integrity & Atomic Ops |
+| `atomic_write_temp_rename` | python | System Administration — Filesystem Integrity & Atomic Ops |
+| `checksum_corruption_detect` | python | System Administration — Filesystem Integrity & Atomic Ops |
+| `cow_backup` | python | System Administration — Filesystem Integrity & Atomic Ops |
+| `dir_tree_diff` | python | System Administration — Filesystem Integrity & Atomic Ops |
+| `disk_full_write_guard` | python | System Administration — Filesystem Integrity & Atomic Ops |
+| `fsync_durability` | python | System Administration — Filesystem Integrity & Atomic Ops |
+| `restore_from_backup` | python | System Administration — Filesystem Integrity & Atomic Ops |
+| `safe_delete_trash` | python | System Administration — Filesystem Integrity & Atomic Ops |
+| `symlink_escape_guard` | python | System Administration — Filesystem Integrity & Atomic Ops |
+| `advisory_lock_timeout` | python | System Administration — Concurrency & Locking |
+| `atomic_append` | python | System Administration — Concurrency & Locking |
+| `cas_file_update` | python | System Administration — Concurrency & Locking |
+| `deadlock_timeout` | python | System Administration — Concurrency & Locking |
+| `double_launch_block` | python | System Administration — Concurrency & Locking |
+| `flock_singleton` | python | System Administration — Concurrency & Locking |
+| `idempotent_once_guard` | python | System Administration — Concurrency & Locking |
+| `named_mutex` | python | System Administration — Concurrency & Locking |
+| `reader_writer_lock` | python | System Administration — Concurrency & Locking |
+| `stale_lock_break` | python | System Administration — Concurrency & Locking |
+| `backup_rotation` | python | System Administration — State/DB Durability |
+| `corruption_repair` | python | System Administration — State/DB Durability |
+| `crash_consistent_snapshot` | python | System Administration — State/DB Durability |
+| `hot_copy` | python | System Administration — State/DB Durability |
+| `integrity_check` | python | System Administration — State/DB Durability |
+| `journaled_write` | python | System Administration — State/DB Durability |
+| `migration_with_rollback` | python | System Administration — State/DB Durability |
+| `point_in_time_restore` | python | System Administration — State/DB Durability |
+| `transaction_rollback` | python | System Administration — State/DB Durability |
+| `wal_checkpoint` | python | System Administration — State/DB Durability |
+| `crash_log_capture` | python | System Administration — Log Management |
+| `log_compression` | python | System Administration — Log Management |
+| `rate_limited_log` | python | System Administration — Log Management |
+| `retention_prune` | python | System Administration — Log Management |
+| `ring_buffer_log` | python | System Administration — Log Management |
+| `rotate_by_size` | python | System Administration — Log Management |
+| `rotate_by_time` | python | System Administration — Log Management |
+| `secret_redaction` | python | System Administration — Log Management |
+| `structured_json_log` | python | System Administration — Log Management |
+| `tail_follow` | python | System Administration — Log Management |
+| `backpressure_queue` | python | System Administration — Resource Guards & Quotas |
+| `circuit_breaker` | python | System Administration — Resource Guards & Quotas |
+| `cpu_throttle` | python | System Administration — Resource Guards & Quotas |
+| `disk_space_watchdog` | python | System Administration — Resource Guards & Quotas |
+| `fd_leak_detector` | python | System Administration — Resource Guards & Quotas |
+| `inode_guard` | python | System Administration — Resource Guards & Quotas |
+| `load_shedding` | python | System Administration — Resource Guards & Quotas |
+| `memory_cap_guard` | python | System Administration — Resource Guards & Quotas |
+| `tmp_cleanup` | python | System Administration — Resource Guards & Quotas |
+| `token_bucket_limiter` | python | System Administration — Resource Guards & Quotas |
+| `cron_expr_next_fire` | python | System Administration — Scheduling & Jobs |
+| `dead_letter_queue` | python | System Administration — Scheduling & Jobs |
+| `idempotency_key` | python | System Administration — Scheduling & Jobs |
+| `interval_scheduler` | python | System Administration — Scheduling & Jobs |
+| `jitter_backoff` | python | System Administration — Scheduling & Jobs |
+| `job_dedup` | python | System Administration — Scheduling & Jobs |
+| `missed_run_catchup` | python | System Administration — Scheduling & Jobs |
+| `oneshot_at_time` | python | System Administration — Scheduling & Jobs |
+| `retry_with_backoff` | python | System Administration — Scheduling & Jobs |
+| `timeout_kill` | python | System Administration — Scheduling & Jobs |
+| `dns_resolve_check` | python | System Administration — Network Reachability & Health |
+| `exponential_backoff` | python | System Administration — Network Reachability & Health |
+| `failover_switch` | python | System Administration — Network Reachability & Health |
+| `heartbeat_gossip` | python | System Administration — Network Reachability & Health |
+| `http_health_probe` | python | System Administration — Network Reachability & Health |
+| `latency_measure` | python | System Administration — Network Reachability & Health |
+| `reachability_matrix` | python | System Administration — Network Reachability & Health |
+| `retry_timeout` | python | System Administration — Network Reachability & Health |
+| `split_brain_detect` | python | System Administration — Network Reachability & Health |
+| `tcp_port_check` | python | System Administration — Network Reachability & Health |
+| `config_diff` | python | System Administration — Config Management |
+| `config_versioning` | python | System Administration — Config Management |
+| `dotenv_parse` | python | System Administration — Config Management |
+| `env_load_defaults` | python | System Administration — Config Management |
+| `hot_reload` | python | System Administration — Config Management |
+| `layered_merge` | python | System Administration — Config Management |
+| `multiformat_load` | python | System Administration — Config Management |
+| `refuse_start_on_invalid` | python | System Administration — Config Management |
+| `schema_validate` | python | System Administration — Config Management |
+| `secret_separation` | python | System Administration — Config Management |
+| `enforce_600_perms` | python | System Administration — Secrets & Credentials |
+| `env_secret_load` | python | System Administration — Secrets & Credentials |
+| `expiry_check` | python | System Administration — Secrets & Credentials |
+| `keyring_store` | python | System Administration — Secrets & Credentials |
+| `leaked_secret_scan` | python | System Administration — Secrets & Credentials |
+| `least_privilege_check` | python | System Administration — Secrets & Credentials |
+| `log_redaction` | python | System Administration — Secrets & Credentials |
+| `secret_audit_trail` | python | System Administration — Secrets & Credentials |
+| `token_rotation` | python | System Administration — Secrets & Credentials |
+| `ttl_cache` | python | System Administration — Secrets & Credentials |
