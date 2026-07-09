@@ -104,23 +104,23 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `cramers_v_effect` | r | Nonparametric & Categorical |
 | `crdt_sets` | python | Distributed |
 | `cross_correlation_lag` | python·cpp | Signal Processing & Sequences |
-| `cross_validation_leakage` | python | Applied DS Practice |
-| `crp_table_growth` | python | Bayesian III — Modeling & Selection |
+| `cross_validation_leakage` | python·cpp | Applied DS Practice |
+| `crp_table_growth` | python·cpp | Bayesian III — Modeling & Selection |
 | `csp_solver` | python | Reasoning |
 | `csv_to_json` | python | Io |
-| `csv_type_inference` | python | Data Wrangling From Scratch |
+| `csv_type_inference` | python·cpp | Data Wrangling From Scratch |
 | `csv_validator` | python | Io |
-| `cubic_spline_interpolation` | python | Numerical Methods |
-| `cuped_variance_reduction` | python | Causal Inference & Experimentation |
-| `cusum_changepoint` | python | Time Series |
+| `cubic_spline_interpolation` | python·cpp | Numerical Methods |
+| `cuped_variance_reduction` | python·cpp | Causal Inference & Experimentation |
+| `cusum_changepoint` | python·cpp | Time Series |
 | `cv_model_selection` | r | Regression & GLM |
 | `data_profiling_summary` | python | Preprocessing & EDA |
 | `date_features` | r | Data Wrangling & Feature Engineering |
-| `dbscan_clustering` | python | Clustering, Graph & Anomaly |
-| `ddm_error_drift` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `dbscan_clustering` | python·cpp | Clustering, Graph & Anomaly |
+| `ddm_error_drift` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `dead_letter_queue` | python | Resilience |
 | `decision_tree` | python | Reasoning |
-| `decision_tree_id3` | python | Core ML |
+| `decision_tree_id3` | python·cpp | Core ML |
 | `dedup_pipeline` | python | Composed Tools (bridge-born) |
 | `dedupe_records_fuzzy` | python | Data Wrangling From Scratch |
 | `demographic_parity_metrics` | python | Fairness, Privacy & Robustness |
