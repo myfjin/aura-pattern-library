@@ -76,6 +76,11 @@
       "bytes": 7986
     },
     {
+      "path": "data-science/causal_inference_ii/frontdoor_criterion_lite.cpp",
+      "sha256": "49b851efa3e885192528ffb66687193702c5e3e5762724ec5f3495840a7154ca",
+      "bytes": 19972
+    },
+    {
       "path": "data-science/clustering_graph_anomaly/betweenness_centrality.cpp",
       "sha256": "9ce9d6606cbd31af07dbed4ed2cc78b3748bcb0f5549a6ce6b57f119174eec1b",
       "bytes": 8065
@@ -119,6 +124,16 @@
       "path": "data-science/econometrics_finance/cointegration_engle_granger_lite.cpp",
       "sha256": "1a6fe85c56f844a8f74f5bbf2eba7f8a6c9fd7033710dcbf784e6cc0e790940f",
       "bytes": 7642
+    },
+    {
+      "path": "data-science/econometrics_finance/fixed_effects_within.cpp",
+      "sha256": "675312e0f449de85169c631b42f8d2b03e48eed78a94e534780e9248853c82a6",
+      "bytes": 11837
+    },
+    {
+      "path": "data-science/econometrics_finance/garch_lite_volatility_clustering.cpp",
+      "sha256": "5972abcf1b9fe860d686f5fb8ff5b603fe7ebf53d3931ddeaa12ee1860849dde",
+      "bytes": 16144
     },
     {
       "path": "data-science/ensembles_robust_methods/adaboost.cpp",
@@ -206,6 +221,11 @@
       "bytes": 6297
     },
     {
+      "path": "data-science/numerical_methods/gauss_legendre_quadrature_lite.cpp",
+      "sha256": "005c95ced570f91106316abb133c6b703a2755666cbe4dfac44663cfd1188342",
+      "bytes": 5170
+    },
+    {
       "path": "data-science/optimization_distances/distance_metrics_toolkit.cpp",
       "sha256": "76d45b535d01a5446c8687dd15d5945394f289e948b979f505939f8d7f99d172",
       "bytes": 7464
@@ -229,6 +249,11 @@
       "path": "data-science/probabilistic_modeling_bayes_ii/bayesian_two_segment_changepoint.cpp",
       "sha256": "89045c5019331be5661c908b2f147e879eb1c8901e8fdcd6f54911d6143c4e15",
       "bytes": 7917
+    },
+    {
+      "path": "data-science/probabilistic_modeling_bayes_ii/gamma_poisson_conjugate.cpp",
+      "sha256": "e375ea45714c115ea6c7cfa41b9f14c23a83a4d34a1e2790fc094a8dba3fce4d",
+      "bytes": 7547
     },
     {
       "path": "data-science/probability_iii/banach_matchbox_or_gambler_ruin.cpp",
