@@ -135,11 +135,11 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `dirichlet_stick_breaking` | python | Bayesian III — Modeling & Selection |
 | `discrete_event_simulation` | python | Simulation & Decision Science |
 | `discrete_fourier_transform` | python | Signal Processing & Sequences |
-| `distance_metrics_toolkit` | python | Optimization & Distances |
+| `distance_metrics_toolkit` | python·cpp | Optimization & Distances |
 | `distributed_lock_manager` | python | Distributed |
 | `dns_cache` | python | Networking |
 | `doubly_robust_aipw` | python | Causal Inference II |
-| `douglas_peucker` | python | Geospatial & Spatial |
+| `douglas_peucker` | python·cpp | Geospatial & Spatial |
 | `drift_detection_psi` | python | Applied DS Practice |
 | `dropout_regularization_sim` | python | Neural Networks From Scratch |
 | `dtw_dynamic_time_warping` | python | Optimization & Distances |
@@ -148,7 +148,7 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `e_value_sensitivity` | python | Causal Inference II |
 | `early_stopping` | python | Neural Networks From Scratch |
 | `ecdf_dkw_bands` | r | Distributions & Resampling |
-| `edit_distance` | python | Text / NLP |
+| `edit_distance` | python·cpp | Text / NLP |
 | `elbo_monotone_vi` | python | Bayesian III — Approximate Inference |
 | `elbow_method_kmeans` | python | Clustering, Graph & Anomaly |
 | `elo_rating` | python | Rankings & Information Retrieval |
@@ -165,12 +165,12 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `ewma_streaming_metrics` | python | Applied DS Practice |
 | `exponential_histogram_count` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `exponential_reliability_mtbf` | python | Survival & Reliability |
-| `exponential_smoothing` | python | Time Series |
+| `exponential_smoothing` | python·cpp | Time Series |
 | `expression_evaluator` | python | Reasoning |
 | `extreme_value_block_maxima` | python | Probability III |
 | `factor_onehot` | r | Data Wrangling & Feature Engineering |
 | `feature_hashing_trick` | python | Applied DS Practice |
-| `feature_scaling_toolkit` | python | Optimization & Distances |
+| `feature_scaling_toolkit` | python·cpp | Optimization & Distances |
 | `fenwick_tree` | python | Data Structures |
 | `fft_cooley_tukey` | python | Signal Processing & Sequences |
 | `fisher_exact_2x2` | r | Nonparametric & Categorical |

@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-09",
+  "created": "2026-07-10",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -141,6 +141,11 @@
       "bytes": 7431
     },
     {
+      "path": "data-science/geospatial_spatial/douglas_peucker.cpp",
+      "sha256": "5cbd2b3fd0ba3d08833f1915b2aa9f118203c017f157043a98d10da5e08f13f8",
+      "bytes": 6974
+    },
+    {
       "path": "data-science/information_theory_probability/bayes_diagnostic_test.cpp",
       "sha256": "e0ccd2a2fb2d1bbba3c46911066db668e1c8913188a13c4b56f1250701ae81ec",
       "bytes": 7383
@@ -199,6 +204,16 @@
       "path": "data-science/numerical_methods/cubic_spline_interpolation.cpp",
       "sha256": "79b59ca0d6144cb156cc460077a309a17fc47437a4a2c54b2b2f53626d41e0b7",
       "bytes": 6297
+    },
+    {
+      "path": "data-science/optimization_distances/distance_metrics_toolkit.cpp",
+      "sha256": "76d45b535d01a5446c8687dd15d5945394f289e948b979f505939f8d7f99d172",
+      "bytes": 7464
+    },
+    {
+      "path": "data-science/optimization_distances/feature_scaling_toolkit.cpp",
+      "sha256": "ed90e07914df33a25bcc55b6dfc41bd2c0231433ffbf4f891102545a7ea027b6",
+      "bytes": 6909
     },
     {
       "path": "data-science/preprocessing_eda/covariance_matrix.cpp",
@@ -361,6 +376,11 @@
       "bytes": 11550
     },
     {
+      "path": "data-science/text_nlp/edit_distance.cpp",
+      "sha256": "159db33dd8b0e68f2dafbd3b24254cb41c3b96cf0754bff5639b0c3ff64b2443",
+      "bytes": 6798
+    },
+    {
       "path": "data-science/text_nlp_ii/char_ngram_language_id.cpp",
       "sha256": "c966d9bb5d23befe65bdb328db4103c1686298af18a05cfd4d5a3dd851e60991",
       "bytes": 6680
@@ -379,6 +399,11 @@
       "path": "data-science/time_series/cusum_changepoint.cpp",
       "sha256": "cb0d51cedeef9e46e31c91049834f954c0bea89e1121d1ebf1190bb9b22aa505",
       "bytes": 5910
+    },
+    {
+      "path": "data-science/time_series/exponential_smoothing.cpp",
+      "sha256": "b43dff3c54a167062d22a3c34781150bad8319c230ed793b6f49e66494ff4c11",
+      "bytes": 6742
     }
   ]
 }
