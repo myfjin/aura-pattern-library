@@ -29,8 +29,8 @@
       "signature": "authentic + unaltered"
     },
     "cpp/data-science": {
-      "files": 79,
-      "gate_ok": 79,
+      "files": 84,
+      "gate_ok": 84,
       "gate_fail": 0,
       "signature": "authentic + unaltered"
     }

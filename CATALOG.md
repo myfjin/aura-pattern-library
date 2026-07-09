@@ -174,16 +174,16 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `fenwick_tree` | python | Data Structures |
 | `fft_cooley_tukey` | python | Signal Processing & Sequences |
 | `fisher_exact_2x2` | r | Nonparametric & Categorical |
-| `fixed_effects_within` | python | Econometrics & Finance |
+| `fixed_effects_within` | python·cpp | Econometrics & Finance |
 | `fixed_point_iteration` | python | Numerical Methods |
 | `free_list_allocator` | python | Performance |
-| `frontdoor_criterion_lite` | python | Causal Inference II |
+| `frontdoor_criterion_lite` | python·cpp | Causal Inference II |
 | `frugal_streaming_median` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `funnel_conversion_analysis` | python | Applied DS Practice |
 | `g_counter_crdt` | python | Distributed |
-| `gamma_poisson_conjugate` | python | Probabilistic Modeling (Bayes II) |
-| `garch_lite_volatility_clustering` | python | Econometrics & Finance |
-| `gauss_legendre_quadrature_lite` | python | Numerical Methods |
+| `gamma_poisson_conjugate` | python·cpp | Probabilistic Modeling (Bayes II) |
+| `garch_lite_volatility_clustering` | python·cpp | Econometrics & Finance |
+| `gauss_legendre_quadrature_lite` | python·cpp | Numerical Methods |
 | `gauss_seidel_vs_jacobi` | python | Linear Algebra |
 | `gaussian_mixture_em` | python | Core ML |
 | `gaussian_naive_bayes` | python | Model Diagnostics |
