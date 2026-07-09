@@ -51,9 +51,34 @@
       "bytes": 8736
     },
     {
+      "path": "data-science/causal_inference_ii/caliper_matching.cpp",
+      "sha256": "e1fde954b12c57aa06f92194339f2cf2f060def8f1c6c1b2c0fe6520b32b182b",
+      "bytes": 7986
+    },
+    {
       "path": "data-science/clustering_graph_anomaly/betweenness_centrality.cpp",
       "sha256": "9ce9d6606cbd31af07dbed4ed2cc78b3748bcb0f5549a6ce6b57f119174eec1b",
       "bytes": 8065
+    },
+    {
+      "path": "data-science/clustering_graph_anomaly/classic_mds.cpp",
+      "sha256": "859f4337030835b5736746fc8ff3ea1be34ff76770c5580c226b90953097ec50",
+      "bytes": 9550
+    },
+    {
+      "path": "data-science/composed_tools_bridge_born/broker_term_extraction.cpp",
+      "sha256": "932ad1b4f70928f355dcc99c32ebf3517e6ac2805b88a003fe5d8e1444e593da",
+      "bytes": 9694
+    },
+    {
+      "path": "data-science/econometrics_finance/black_scholes_monte_carlo.cpp",
+      "sha256": "203f56a34d8558e2992e12c7651336294aa4e8615fe339d4f5e7f87540c4d503",
+      "bytes": 6431
+    },
+    {
+      "path": "data-science/econometrics_finance/bootstrap_portfolio_var.cpp",
+      "sha256": "e6a3d55b3513a9983a08199c73d35a8b33913d81ef5685fa8300679a4d50f77b",
+      "bytes": 6890
     },
     {
       "path": "data-science/ensembles_robust_methods/adaboost.cpp",
@@ -66,9 +91,19 @@
       "bytes": 9152
     },
     {
+      "path": "data-science/experiments_ii/cluster_randomized_icc.cpp",
+      "sha256": "21d581a6d1d85a19eb3fde5a3c94b350e8617a97ed1c463a99be893cf63aca5e",
+      "bytes": 8196
+    },
+    {
       "path": "data-science/information_theory_probability/bayes_diagnostic_test.cpp",
       "sha256": "e0ccd2a2fb2d1bbba3c46911066db668e1c8913188a13c4b56f1250701ae81ec",
       "bytes": 7383
+    },
+    {
+      "path": "data-science/information_theory_probability/box_muller_gaussian.cpp",
+      "sha256": "9e1a80ef39b876b364afc0014f34f35d69f0613572501e79fb7e396ff2d328b0",
+      "bytes": 8654
     },
     {
       "path": "data-science/model_diagnostics/bias_variance_decomposition.cpp",
@@ -76,9 +111,24 @@
       "bytes": 10462
     },
     {
+      "path": "data-science/model_diagnostics/bootstrap_model_comparison.cpp",
+      "sha256": "6242ea123fd48e7daa57beeca2c8e62eeae9cd37525e3cc8ffa6641d6cd2688d",
+      "bytes": 7354
+    },
+    {
+      "path": "data-science/model_diagnostics/calibration_curve.cpp",
+      "sha256": "43edc43a32c5dc98acbc941a4c50631c69a4295c278b9cb89aaa1fd038bbd5bb",
+      "bytes": 8763
+    },
+    {
       "path": "data-science/numerical_methods/adaptive_simpson.cpp",
       "sha256": "fc9da5fb2e9f135fa8257542d24a2028fa984ee826f97046b1b0c3e3a6931afd",
       "bytes": 6160
+    },
+    {
+      "path": "data-science/numerical_methods/bisection_newton_hybrid.cpp",
+      "sha256": "c00ac11d1216b2a37d54fc48a11f82d719797961b2f886378a974b93acfe73a2",
+      "bytes": 5845
     },
     {
       "path": "data-science/probabilistic_modeling_bayes_ii/bayesian_linear_regression.cpp",
@@ -101,14 +151,29 @@
       "bytes": 6322
     },
     {
+      "path": "data-science/probability_iii/birthday_paradox_exact_vs_sim.cpp",
+      "sha256": "be2265702449afe0dfe569cd15a3ca2d54f95d7689d95390b9fb63ac17083825",
+      "bytes": 5707
+    },
+    {
       "path": "data-science/rankings_information_retrieval/ab_interleaving.cpp",
       "sha256": "dfe1ab78a85bbf34fa36e8582fa15e3305b3f0238c3028b11948b3c5041e3a27",
       "bytes": 8149
     },
     {
+      "path": "data-science/rankings_information_retrieval/bm25_ranking.cpp",
+      "sha256": "9b97dca3d2586c375ee49268fdb85e405cb7fdd7692d5bac9c7bcf2d5c323351",
+      "bytes": 8166
+    },
+    {
       "path": "data-science/recommenders_graph_sampling/bayesian_ab_beta.cpp",
       "sha256": "05681ab9476c775f7d580497d1fcfb457023d034e48fda6872d0b1a5a563fad4",
       "bytes": 6825
+    },
+    {
+      "path": "data-science/recommenders_ii_kept_survivors_wave_19_rejected_as_a_fake_fest_these_5_verified_rest_re_harvest/catalog_coverage_diversity.cpp",
+      "sha256": "11fcafb23e9ce55d5fb85689725313b6886539791fdc0e3761ef3e606f9744b0",
+      "bytes": 4822
     },
     {
       "path": "data-science/signal_processing_sequences/autocovariance_spectrum.cpp",
@@ -126,9 +191,24 @@
       "bytes": 8057
     },
     {
+      "path": "data-science/statistics_testing/bootstrap_confidence_interval.cpp",
+      "sha256": "cdc237158c2608b32328ebab10e354604d690eebb3d7797c3f88fc10e764b9ae",
+      "bytes": 6315
+    },
+    {
+      "path": "data-science/statistics_testing/chi_square_independence.cpp",
+      "sha256": "a2422272cdefc46e8e16cd24044f7186e3b5882271bd2e4f77425cf05c804396",
+      "bytes": 6792
+    },
+    {
       "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/adwin_drift_detector.cpp",
       "sha256": "bcf804a66fcbeeb0876dd7590b5e9272ee5f39913c2d1ea4210ff2491041eab6",
       "bytes": 6728
+    },
+    {
+      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/bloom_filter_fpr.cpp",
+      "sha256": "0a088e2cce06f62a95a891d2b408647ab3a195f1b32ce07d6308ea9c0137b8bd",
+      "bytes": 7463
     },
     {
       "path": "data-science/survival_reliability/accelerated_failure_time_lite.cpp",
@@ -136,9 +216,24 @@
       "bytes": 6396
     },
     {
+      "path": "data-science/survival_reliability/censoring_bias_demo.cpp",
+      "sha256": "fd36c6105e8da4c4f3c6eace63539de1137b86faa345f6496c4bda8ab473d0b2",
+      "bytes": 6828
+    },
+    {
       "path": "data-science/text_nlp/bag_of_words.cpp",
       "sha256": "735a5923d39a782360308855a7094b69c706f8a314a91922996b9ab3413f1685",
       "bytes": 8949
+    },
+    {
+      "path": "data-science/text_nlp/bpe_tokenizer_lite.cpp",
+      "sha256": "61080983ab5da2bb7ccc5c4567e7a9a79e89e4664884ba0ec455fe40ab4430f7",
+      "bytes": 11550
+    },
+    {
+      "path": "data-science/text_nlp_ii/char_ngram_language_id.cpp",
+      "sha256": "c966d9bb5d23befe65bdb328db4103c1686298af18a05cfd4d5a3dd851e60991",
+      "bytes": 6680
     },
     {
       "path": "data-science/time_series/autocorrelation_function.cpp",
