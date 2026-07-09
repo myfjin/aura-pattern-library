@@ -23,7 +23,7 @@ except ModuleNotFoundError:
     from folder_nature.mark.watermark import verify_file
 
 ROOT = Path(__file__).resolve().parent
-SIGNED_SUBTREES = ["python/programming", "python/data-science", "r", "cpp"]
+SIGNED_SUBTREES = ["python/programming", "python/data-science", "python/system-administration", "r", "cpp"]
 GATE = {".py": ["python3"], ".R": ["Rscript"]}          # cpp/go handled specially
 SRC_EXT = (".py", ".R", ".cpp", ".go")
 

@@ -16,6 +16,12 @@
       "gate_fail": 0,
       "signature": "authentic + unaltered"
     },
+    "python/system-administration": {
+      "files": 100,
+      "gate_ok": 100,
+      "gate_fail": 0,
+      "signature": "authentic + unaltered"
+    },
     "r": {
       "files": 60,
       "gate_ok": 60,
