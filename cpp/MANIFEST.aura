@@ -1,0 +1,154 @@
+{
+  "manifest_version": 1,
+  "trademark": "AURA Pattern Library",
+  "created": "2026-07-09",
+  "algorithm": "ed25519",
+  "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
+  "files": [
+    {
+      "path": ".folder-mark.yaml",
+      "sha256": "db1c188ea0e884826594be4dc45f1d5c85451b82e4b488c0ced305bb226de2a4",
+      "bytes": 89
+    },
+    {
+      "path": "data-science/bayesian_iii_approximate_inference/abc_rejection_sampler.cpp",
+      "sha256": "e41a25463fafadc2e7e54bf58da5386b4b6a7600532b32a7026fd3ba77575688",
+      "bytes": 7396
+    },
+    {
+      "path": "data-science/bayesian_iii_approximate_inference/bayes_factor_normal_means.cpp",
+      "sha256": "385bab5154b40eb4d5e0f0360f6d93c29274726a25d18d498194da1a583c5fd2",
+      "bytes": 6166
+    },
+    {
+      "path": "data-science/bayesian_iii_modeling_selection/bayesian_changepoint_offline.cpp",
+      "sha256": "2ea7ed7236c1b2ac91185d358bc99f77ca7590305d064501021294d6a53930c4",
+      "bytes": 6315
+    },
+    {
+      "path": "data-science/bayesian_iii_modeling_selection/bayesian_linreg_conjugate.cpp",
+      "sha256": "d99ab33d60f25a6338c58d4ca58f22ac054976547dfc359e00a8fe9c41ddaff2",
+      "bytes": 6314
+    },
+    {
+      "path": "data-science/bayesian_iii_modeling_selection/beta_binomial_overdispersion.cpp",
+      "sha256": "badb25eeaed37c206ba45501295d21fa8addca5c83ab3f116ef0c69859d9499f",
+      "bytes": 8026
+    },
+    {
+      "path": "data-science/bayesian_iii_modeling_selection/bic_selects_true_degree.cpp",
+      "sha256": "cf7be027f6c609a043002e6b25fbc8d8cf0df0a513a06d0ddcf3b516da671385",
+      "bytes": 8134
+    },
+    {
+      "path": "data-science/causal_inference_experimentation/ab_test_srm_check.cpp",
+      "sha256": "8b3ef0d9d80ea16bf23023d43aedb49f901d067267eb4cb1817c8df43bae4673",
+      "bytes": 7911
+    },
+    {
+      "path": "data-science/causal_inference_ii/backdoor_vs_collider_adjustment.cpp",
+      "sha256": "e06d56945d8f2fc5eb0669dc989e5ebb06645d3581bc732250b3033d201df82b",
+      "bytes": 8736
+    },
+    {
+      "path": "data-science/clustering_graph_anomaly/betweenness_centrality.cpp",
+      "sha256": "9ce9d6606cbd31af07dbed4ed2cc78b3748bcb0f5549a6ce6b57f119174eec1b",
+      "bytes": 8065
+    },
+    {
+      "path": "data-science/ensembles_robust_methods/adaboost.cpp",
+      "sha256": "0c67e9b452fcc93d3601351492fffe080f8ae904911a2031de8e0b33a5dcae71",
+      "bytes": 10469
+    },
+    {
+      "path": "data-science/ensembles_robust_methods/bagging_variance_reduction.cpp",
+      "sha256": "ae60a7cbb72fe1aab0b6d34c2f10b4739a63969b34b8bc88ca3c49341e0c7f24",
+      "bytes": 9152
+    },
+    {
+      "path": "data-science/information_theory_probability/bayes_diagnostic_test.cpp",
+      "sha256": "e0ccd2a2fb2d1bbba3c46911066db668e1c8913188a13c4b56f1250701ae81ec",
+      "bytes": 7383
+    },
+    {
+      "path": "data-science/model_diagnostics/bias_variance_decomposition.cpp",
+      "sha256": "57328d3a9f8947023208fec6c5bc36fb10c793e9a7b92837827de58183eb372f",
+      "bytes": 10462
+    },
+    {
+      "path": "data-science/numerical_methods/adaptive_simpson.cpp",
+      "sha256": "fc9da5fb2e9f135fa8257542d24a2028fa984ee826f97046b1b0c3e3a6931afd",
+      "bytes": 6160
+    },
+    {
+      "path": "data-science/probabilistic_modeling_bayes_ii/bayesian_linear_regression.cpp",
+      "sha256": "33c488bbf5e888cb97976ebb7f0815260263d9324c12163d435aba98f19094b2",
+      "bytes": 7393
+    },
+    {
+      "path": "data-science/probabilistic_modeling_bayes_ii/bayesian_two_segment_changepoint.cpp",
+      "sha256": "89045c5019331be5661c908b2f147e879eb1c8901e8fdcd6f54911d6143c4e15",
+      "bytes": 7917
+    },
+    {
+      "path": "data-science/probability_iii/banach_matchbox_or_gambler_ruin.cpp",
+      "sha256": "7231797a8a86894dea71339c2e6b36bb30873ec2d2c7f64c80cd3963b50980cb",
+      "bytes": 6421
+    },
+    {
+      "path": "data-science/probability_iii/benford_law_test.cpp",
+      "sha256": "76334e5ea3be43a4a5cc1aca6209b4dff3bd272d2dbb52d753bceb099983125e",
+      "bytes": 6322
+    },
+    {
+      "path": "data-science/rankings_information_retrieval/ab_interleaving.cpp",
+      "sha256": "dfe1ab78a85bbf34fa36e8582fa15e3305b3f0238c3028b11948b3c5041e3a27",
+      "bytes": 8149
+    },
+    {
+      "path": "data-science/recommenders_graph_sampling/bayesian_ab_beta.cpp",
+      "sha256": "05681ab9476c775f7d580497d1fcfb457023d034e48fda6872d0b1a5a563fad4",
+      "bytes": 6825
+    },
+    {
+      "path": "data-science/signal_processing_sequences/autocovariance_spectrum.cpp",
+      "sha256": "298d9534ca79201eabc35815f845cacc79e5b6c3c803b2229029d42881ffd5ff",
+      "bytes": 7811
+    },
+    {
+      "path": "data-science/statistics_testing/ab_test_proportions.cpp",
+      "sha256": "01066641e03a919263f89986df7994a9074d7ac38f0041f059075080eec3268e",
+      "bytes": 6865
+    },
+    {
+      "path": "data-science/statistics_testing/benjamini_hochberg.cpp",
+      "sha256": "ac5213ec4a22ed0f3eacb9958cde0f7a27cacb193156d22688b9c6565b22c9db",
+      "bytes": 8057
+    },
+    {
+      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/adwin_drift_detector.cpp",
+      "sha256": "bcf804a66fcbeeb0876dd7590b5e9272ee5f39913c2d1ea4210ff2491041eab6",
+      "bytes": 6728
+    },
+    {
+      "path": "data-science/survival_reliability/accelerated_failure_time_lite.cpp",
+      "sha256": "467dcf154a1e63a047fdc9a19f11cd5efa26cf4e481ce8c9647529a420808904",
+      "bytes": 6396
+    },
+    {
+      "path": "data-science/text_nlp/bag_of_words.cpp",
+      "sha256": "735a5923d39a782360308855a7094b69c706f8a314a91922996b9ab3413f1685",
+      "bytes": 8949
+    },
+    {
+      "path": "data-science/time_series/autocorrelation_function.cpp",
+      "sha256": "562eabb2bd21d70f8d0da524930dc5389e415ebc988170ea174c7e66d4644bae",
+      "bytes": 8290
+    },
+    {
+      "path": "data-science/time_series/autoregressive_model.cpp",
+      "sha256": "aed7fbd0502cb543c4692f76c3245d5291e4702e98df11e2de5d6b21fca2c292",
+      "bytes": 9706
+    }
+  ]
+}

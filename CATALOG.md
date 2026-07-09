@@ -3,17 +3,17 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 
 | pattern ID | languages | category |
 |---|---|---|
-| `ab_interleaving` | python | Rankings & Information Retrieval |
+| `ab_interleaving` | python·cpp | Rankings & Information Retrieval |
 | `ab_power_analysis` | r | Hypothesis Testing — Parametric |
-| `ab_test_proportions` | python | Statistics & Testing |
-| `ab_test_srm_check` | python | Causal Inference & Experimentation |
-| `abc_rejection_sampler` | python | Bayesian III — Approximate Inference |
-| `accelerated_failure_time_lite` | python | Survival & Reliability |
+| `ab_test_proportions` | python·cpp | Statistics & Testing |
+| `ab_test_srm_check` | python·cpp | Causal Inference & Experimentation |
+| `abc_rejection_sampler` | python·cpp | Bayesian III — Approximate Inference |
+| `accelerated_failure_time_lite` | python·cpp | Survival & Reliability |
 | `acf_pacf_from_scratch` | r | Time Series — Models & Autocorrelation |
-| `adaboost` | python | Ensembles & Robust Methods |
-| `adaptive_simpson` | python | Numerical Methods |
+| `adaboost` | python·cpp | Ensembles & Robust Methods |
+| `adaptive_simpson` | python·cpp | Numerical Methods |
 | `adversarial_perturbation_lite` | python | Fairness, Privacy & Robustness |
-| `adwin_drift_detector` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `adwin_drift_detector` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `alert_manager` | python | Monitoring |
 | `anova_tukey` | r | Hypothesis Testing — Parametric |
 | `apriori_frequent_itemsets` | python | Recommenders & Graph Sampling |
@@ -22,29 +22,29 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `arg_parser` | python | Io |
 | `astar_pathfinding` | python | Reasoning |
 | `async_task_queue` | python | Async |
-| `autocorrelation_function` | python | Time Series |
-| `autocovariance_spectrum` | python | Signal Processing & Sequences |
-| `autoregressive_model` | python | Time Series |
+| `autocorrelation_function` | python·cpp | Time Series |
+| `autocovariance_spectrum` | python·cpp | Signal Processing & Sequences |
+| `autoregressive_model` | python·cpp | Time Series |
 | `avl_tree` | python | Data Structures |
-| `backdoor_vs_collider_adjustment` | python | Causal Inference II |
-| `bag_of_words` | python | Text / NLP |
-| `bagging_variance_reduction` | python | Ensembles & Robust Methods |
-| `banach_matchbox_or_gambler_ruin` | python | Probability III |
+| `backdoor_vs_collider_adjustment` | python·cpp | Causal Inference II |
+| `bag_of_words` | python·cpp | Text / NLP |
+| `bagging_variance_reduction` | python·cpp | Ensembles & Robust Methods |
+| `banach_matchbox_or_gambler_ruin` | python·cpp | Probability III |
 | `batch_controller` | python | Performance |
-| `bayes_diagnostic_test` | python | Information Theory & Probability |
-| `bayes_factor_normal_means` | python | Bayesian III — Approximate Inference |
-| `bayesian_ab_beta` | python | Recommenders & Graph Sampling |
-| `bayesian_changepoint_offline` | python | Bayesian III — Modeling & Selection |
-| `bayesian_linear_regression` | python | Probabilistic Modeling (Bayes II) |
-| `bayesian_linreg_conjugate` | python | Bayesian III — Modeling & Selection |
+| `bayes_diagnostic_test` | python·cpp | Information Theory & Probability |
+| `bayes_factor_normal_means` | python·cpp | Bayesian III — Approximate Inference |
+| `bayesian_ab_beta` | python·cpp | Recommenders & Graph Sampling |
+| `bayesian_changepoint_offline` | python·cpp | Bayesian III — Modeling & Selection |
+| `bayesian_linear_regression` | python·cpp | Probabilistic Modeling (Bayes II) |
+| `bayesian_linreg_conjugate` | python·cpp | Bayesian III — Modeling & Selection |
 | `bayesian_network` | python | Reasoning |
-| `bayesian_two_segment_changepoint` | python | Probabilistic Modeling (Bayes II) |
-| `benford_law_test` | python | Probability III |
-| `benjamini_hochberg` | python | Statistics & Testing |
-| `beta_binomial_overdispersion` | python | Bayesian III — Modeling & Selection |
-| `betweenness_centrality` | python | Clustering, Graph & Anomaly |
-| `bias_variance_decomposition` | python | Model Diagnostics |
-| `bic_selects_true_degree` | python | Bayesian III — Modeling & Selection |
+| `bayesian_two_segment_changepoint` | python·cpp | Probabilistic Modeling (Bayes II) |
+| `benford_law_test` | python·cpp | Probability III |
+| `benjamini_hochberg` | python·cpp | Statistics & Testing |
+| `beta_binomial_overdispersion` | python·cpp | Bayesian III — Modeling & Selection |
+| `betweenness_centrality` | python·cpp | Clustering, Graph & Anomaly |
+| `bias_variance_decomposition` | python·cpp | Model Diagnostics |
+| `bic_selects_true_degree` | python·cpp | Bayesian III — Modeling & Selection |
 | `binary_indexed_tree` | python | Data Structures |
 | `birthday_paradox_exact_vs_sim` | python | Probability III |
 | `bisection_newton_hybrid` | python | Numerical Methods |
