@@ -90,20 +90,20 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `consistent_hash_ring` | python | Distributed |
 | `content_tfidf_rec` | python·cpp | Recommenders II — kept survivors (wave 19 REJECTED as a fake-fest; these 5 verified; rest re-harvest) |
 | `conv1d_feature_detector` | python·cpp | Neural Networks From Scratch |
-| `convex_hull_graham` | python | Geospatial & Spatial |
-| `convolution_filtering` | python | Signal Processing & Sequences |
-| `copula_gaussian_lite` | python | Probability III |
+| `convex_hull_graham` | python·cpp | Geospatial & Spatial |
+| `convolution_filtering` | python·cpp | Signal Processing & Sequences |
+| `copula_gaussian_lite` | python·cpp | Probability III |
 | `correlation_tests` | r | Hypothesis Testing — Parametric |
 | `cosine_similarity_search` | python | Text / NLP |
-| `count_min_sketch` | python | Streaming & Sketches |
-| `coupon_collector` | python | Probability III |
-| `covariance_matrix` | python | Preprocessing & EDA |
+| `count_min_sketch` | python·cpp | Streaming & Sketches |
+| `coupon_collector` | python·cpp | Probability III |
+| `covariance_matrix` | python·cpp | Preprocessing & EDA |
 | `covariate_shift_reweighting` | python | Fairness, Privacy & Robustness |
-| `cox_partial_likelihood_lite` | python | Survival & Reliability |
+| `cox_partial_likelihood_lite` | python·cpp | Survival & Reliability |
 | `cqrs_bus` | python | Architecture |
 | `cramers_v_effect` | r | Nonparametric & Categorical |
 | `crdt_sets` | python | Distributed |
-| `cross_correlation_lag` | python | Signal Processing & Sequences |
+| `cross_correlation_lag` | python·cpp | Signal Processing & Sequences |
 | `cross_validation_leakage` | python | Applied DS Practice |
 | `crp_table_growth` | python | Bayesian III — Modeling & Selection |
 | `csp_solver` | python | Reasoning |
