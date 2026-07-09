@@ -106,6 +106,11 @@
       "bytes": 8196
     },
     {
+      "path": "data-science/geospatial_spatial/convex_hull_graham.cpp",
+      "sha256": "41d25a6c62dec54235172156fabd51294cd11a7840ae6817821c691ce3a1472b",
+      "bytes": 7431
+    },
+    {
       "path": "data-science/information_theory_probability/bayes_diagnostic_test.cpp",
       "sha256": "e0ccd2a2fb2d1bbba3c46911066db668e1c8913188a13c4b56f1250701ae81ec",
       "bytes": 7383
@@ -161,6 +166,11 @@
       "bytes": 5845
     },
     {
+      "path": "data-science/preprocessing_eda/covariance_matrix.cpp",
+      "sha256": "e66ff1f6baca166438e9081c9eb716036f1717e0388657678080ff41337d657f",
+      "bytes": 7325
+    },
+    {
       "path": "data-science/probabilistic_modeling_bayes_ii/bayesian_linear_regression.cpp",
       "sha256": "33c488bbf5e888cb97976ebb7f0815260263d9324c12163d435aba98f19094b2",
       "bytes": 7393
@@ -184,6 +194,16 @@
       "path": "data-science/probability_iii/birthday_paradox_exact_vs_sim.cpp",
       "sha256": "be2265702449afe0dfe569cd15a3ca2d54f95d7689d95390b9fb63ac17083825",
       "bytes": 5707
+    },
+    {
+      "path": "data-science/probability_iii/copula_gaussian_lite.cpp",
+      "sha256": "632e2b5bcdef7b4d4b01aade728956bd8f1633c4f99a47b784f98c5a08aa7161",
+      "bytes": 6580
+    },
+    {
+      "path": "data-science/probability_iii/coupon_collector.cpp",
+      "sha256": "d43b5e15aa375bf4cc47dbd8a47a0e272893e75519280b4f724ba5cef56d2c25",
+      "bytes": 5385
     },
     {
       "path": "data-science/rankings_information_retrieval/ab_interleaving.cpp",
@@ -214,6 +234,16 @@
       "path": "data-science/signal_processing_sequences/autocovariance_spectrum.cpp",
       "sha256": "298d9534ca79201eabc35815f845cacc79e5b6c3c803b2229029d42881ffd5ff",
       "bytes": 7811
+    },
+    {
+      "path": "data-science/signal_processing_sequences/convolution_filtering.cpp",
+      "sha256": "b8e2461f183a2755cacd0ad1ca03ed3319f2c002b05719b5809d5ab72bdbf630",
+      "bytes": 6831
+    },
+    {
+      "path": "data-science/signal_processing_sequences/cross_correlation_lag.cpp",
+      "sha256": "f64343c87fa63488a78a21dbf8787ec82cfde0bd9929ddd9714e63afb3e40ac7",
+      "bytes": 6276
     },
     {
       "path": "data-science/statistics_testing/ab_test_proportions.cpp",
@@ -256,6 +286,11 @@
       "bytes": 7484
     },
     {
+      "path": "data-science/streaming_sketches/count_min_sketch.cpp",
+      "sha256": "2d6b7cca967a448e5530b7602be8d676cb1dfb9b13491c46cd1ac6672f4dfd88",
+      "bytes": 6699
+    },
+    {
       "path": "data-science/survival_reliability/accelerated_failure_time_lite.cpp",
       "sha256": "467dcf154a1e63a047fdc9a19f11cd5efa26cf4e481ce8c9647529a420808904",
       "bytes": 6396
@@ -269,6 +304,11 @@
       "path": "data-science/survival_reliability/competing_risks_naive_bias.cpp",
       "sha256": "2e05a6ff29fd1cdb2be19031aa89dc268335282fb4c05ed540b8a9efc4c3559e",
       "bytes": 7694
+    },
+    {
+      "path": "data-science/survival_reliability/cox_partial_likelihood_lite.cpp",
+      "sha256": "53ade71da7c280896300c36f4a81863b538d39048717309410279beb4d6bb5d4",
+      "bytes": 8262
     },
     {
       "path": "data-science/text_nlp/bag_of_words.cpp",
