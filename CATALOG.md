@@ -46,37 +46,37 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `bias_variance_decomposition` | python·cpp | Model Diagnostics |
 | `bic_selects_true_degree` | python·cpp | Bayesian III — Modeling & Selection |
 | `binary_indexed_tree` | python | Data Structures |
-| `birthday_paradox_exact_vs_sim` | python | Probability III |
-| `bisection_newton_hybrid` | python | Numerical Methods |
-| `black_scholes_monte_carlo` | python | Econometrics & Finance |
+| `birthday_paradox_exact_vs_sim` | python·cpp | Probability III |
+| `bisection_newton_hybrid` | python·cpp | Numerical Methods |
+| `black_scholes_monte_carlo` | python·cpp | Econometrics & Finance |
 | `bloom_filter` | python | Data Structures |
-| `bloom_filter_fpr` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
-| `bm25_ranking` | python | Rankings & Information Retrieval |
+| `bloom_filter_fpr` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `bm25_ranking` | python·cpp | Rankings & Information Retrieval |
 | `bootstrap_ci` | r | Distributions & Resampling |
-| `bootstrap_confidence_interval` | python | Statistics & Testing |
-| `bootstrap_model_comparison` | python | Model Diagnostics |
-| `bootstrap_portfolio_var` | python | Econometrics & Finance |
+| `bootstrap_confidence_interval` | python·cpp | Statistics & Testing |
+| `bootstrap_model_comparison` | python·cpp | Model Diagnostics |
+| `bootstrap_portfolio_var` | python·cpp | Econometrics & Finance |
 | `bootstrap_regression` | r | Regression & GLM |
 | `box_muller` | r | Sampling & Simulation |
-| `box_muller_gaussian` | python | Information Theory & Probability |
-| `bpe_tokenizer_lite` | python | Text / NLP |
-| `broker_term_extraction` | python | Composed Tools (bridge-born) |
+| `box_muller_gaussian` | python·cpp | Information Theory & Probability |
+| `bpe_tokenizer_lite` | python·cpp | Text / NLP |
+| `broker_term_extraction` | python·cpp | Composed Tools (bridge-born) |
 | `budget_allocator` | python | Performance |
 | `bulkhead_isolator` | python | Resilience |
-| `calibration_curve` | python | Model Diagnostics |
-| `caliper_matching` | python | Causal Inference II |
+| `calibration_curve` | python·cpp | Model Diagnostics |
+| `caliper_matching` | python·cpp | Causal Inference II |
 | `cancellable_task_group` | python | Async |
 | `capability_access` | python | Security |
-| `catalog_coverage_diversity` | python | Recommenders II — kept survivors (wave 19 REJECTED as a fake-fest; these 5 verified; rest re-harvest) |
+| `catalog_coverage_diversity` | python·cpp | Recommenders II — kept survivors (wave 19 REJECTED as a fake-fest; these 5 verified; rest re-harvest) |
 | `ccf_lag_detection` | r | Time Series — Models & Autocorrelation |
-| `censoring_bias_demo` | python | Survival & Reliability |
-| `char_ngram_language_id` | python | Text / NLP II |
-| `chi_square_independence` | python·r | Statistics & Testing |
+| `censoring_bias_demo` | python·cpp | Survival & Reliability |
+| `char_ngram_language_id` | python·cpp | Text / NLP II |
+| `chi_square_independence` | python·r·cpp | Statistics & Testing |
 | `chunked_reader` | python | Io |
 | `circuit_breaker` | python | Resilience |
 | `class_weight_imbalance` | python | Model Understanding & Tuning |
-| `classic_mds` | python | Clustering, Graph & Anomaly |
-| `cluster_randomized_icc` | python | Experiments II |
+| `classic_mds` | python·cpp | Clustering, Graph & Anomaly |
+| `cluster_randomized_icc` | python·cpp | Experiments II |
 | `cohort_retention_analysis` | python | Applied DS Practice |
 | `cointegration_engle_granger_lite` | python | Econometrics & Finance |
 | `competing_risks_naive_bias` | python | Survival & Reliability |
