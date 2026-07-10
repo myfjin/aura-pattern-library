@@ -781,3 +781,43 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `retention_gfs` | rust | Rust — Filesystem & Process Logic |
 | `rolling_checksum` | rust | Rust — Filesystem & Process Logic |
 | `supervisor_restart` | rust | Rust — Filesystem & Process Logic |
+| `base32_codec` | rust | Rust — Security & Cryptography |
+| `base64_codec` | rust | Rust — Security & Cryptography |
+| `bloom_filter` | rust | Rust — Security & Cryptography |
+| `capability_bitset` | rust | Rust — Security & Cryptography |
+| `constant_time_eq` | rust | Rust — Security & Cryptography |
+| `crc32` | rust | Rust — Security & Cryptography |
+| `csrf_double_submit` | rust | Rust — Security & Cryptography |
+| `hex_codec` | rust | Rust — Security & Cryptography |
+| `hmac_sha256` | rust | Rust — Security & Cryptography |
+| `hmac_signed_url` | rust | Rust — Security & Cryptography |
+| `hotp` | rust | Rust — Security & Cryptography |
+| `jwt_hs256_verify` | rust | Rust — Security & Cryptography |
+| `leaky_bucket_shaper` | rust | Rust — Security & Cryptography |
+| `nonce_replay_guard` | rust | Rust — Security & Cryptography |
+| `otp_lockout` | rust | Rust — Security & Cryptography |
+| `password_hash_verify` | rust | Rust — Security & Cryptography |
+| `pbkdf2_sha256` | rust | Rust — Security & Cryptography |
+| `session_token_expiry` | rust | Rust — Security & Cryptography |
+| `sha256` | rust | Rust — Security & Cryptography |
+| `totp` | rust | Rust — Security & Cryptography |
+| `adler32` | rust | Rust — Systems Math & Encoding |
+| `base58_codec` | rust | Rust — Systems Math & Encoding |
+| `bit_reader_writer` | rust | Rust — Systems Math & Encoding |
+| `crc16_ccitt` | rust | Rust — Systems Math & Encoding |
+| `crc32c_castagnoli` | rust | Rust — Systems Math & Encoding |
+| `delta_zigzag_encode` | rust | Rust — Systems Math & Encoding |
+| `dynamic_bitset` | rust | Rust — Systems Math & Encoding |
+| `fletcher16` | rust | Rust — Systems Math & Encoding |
+| `gcd_fraction_reduce` | rust | Rust — Systems Math & Encoding |
+| `gray_code` | rust | Rust — Systems Math & Encoding |
+| `hamming_distance` | rust | Rust — Systems Math & Encoding |
+| `length_prefixed_framing` | rust | Rust — Systems Math & Encoding |
+| `luhn_checksum` | rust | Rust — Systems Math & Encoding |
+| `modexp` | rust | Rust — Systems Math & Encoding |
+| `popcount_bits` | rust | Rust — Systems Math & Encoding |
+| `reverse_bits` | rust | Rust — Systems Math & Encoding |
+| `roman_numeral` | rust | Rust — Systems Math & Encoding |
+| `run_length_encode` | rust | Rust — Systems Math & Encoding |
+| `varint_leb128` | rust | Rust — Systems Math & Encoding |
+| `zigzag_signed` | rust | Rust — Systems Math & Encoding |

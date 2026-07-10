@@ -29,8 +29,8 @@
       "signature": "authentic + unaltered"
     },
     "rust": {
-      "files": 40,
-      "gate_ok": 40,
+      "files": 80,
+      "gate_ok": 80,
       "gate_fail": 0,
       "signature": "authentic + unaltered"
     },
