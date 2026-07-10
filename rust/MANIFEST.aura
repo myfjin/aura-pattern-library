@@ -11,6 +11,56 @@
       "bytes": 74
     },
     {
+      "path": "composed-systems/bloom_backed_cache.rs",
+      "sha256": "5855b4163e8e3200deaab93958f9db5e67690762dbc6ed85cf2eaf64310bf880",
+      "bytes": 7934
+    },
+    {
+      "path": "composed-systems/checkpoint_resume_crc.rs",
+      "sha256": "f36bba48150349e1e1b8b184beb48311791394068c593775ab7f5bbd86c88160",
+      "bytes": 9285
+    },
+    {
+      "path": "composed-systems/content_addressed_store.rs",
+      "sha256": "1ab542c1f462c93e2878e91c2162e99b3391624aabebfcda2d52a46657350fb7",
+      "bytes": 10072
+    },
+    {
+      "path": "composed-systems/dag_task_runner.rs",
+      "sha256": "26a6076bf109b6429b1ee7cc93f6402ca65a448f41d4f33d79a196e878315b8d",
+      "bytes": 10100
+    },
+    {
+      "path": "composed-systems/delta_sync_lite.rs",
+      "sha256": "89463ecdd32a5cf73433c2fb17843fc0c2547634a65db30f0408915c28a6702c",
+      "bytes": 7988
+    },
+    {
+      "path": "composed-systems/merkle_tree.rs",
+      "sha256": "18d0c553b95eac250ba3a19a8d5dc87ee7cc690338df7fdae86c33256e9d0165",
+      "bytes": 11517
+    },
+    {
+      "path": "composed-systems/rotating_log_checksum.rs",
+      "sha256": "0ba75b1a24fec23d7389315d6461f90792de1c980992a2557b2d4ae291134766",
+      "bytes": 7481
+    },
+    {
+      "path": "composed-systems/signed_snapshot.rs",
+      "sha256": "c3f6692c60455c6fafaac09b8ddc892c80f5f6dcdd39f1edcd79d03ec065d1e2",
+      "bytes": 10679
+    },
+    {
+      "path": "composed-systems/tamper_evident_log.rs",
+      "sha256": "275af71afc55f1c0235862f364eeec40cf3cc0a5fab8c579c862c0f4429cc287",
+      "bytes": 11901
+    },
+    {
+      "path": "composed-systems/wal_append_replay.rs",
+      "sha256": "e53348115edab0145b22b85fd754700b21caeccc49d2cd4930a55d08925e8019",
+      "bytes": 9579
+    },
+    {
       "path": "concurrency-resilience/atomic_counter_sharded.rs",
       "sha256": "224be6ff0f25c9987668d0e3ba84087b1d8296e83818c6f9eff12a7f6559402f",
       "bytes": 6477
@@ -59,6 +109,56 @@
       "path": "concurrency-resilience/worker_pool_mpsc.rs",
       "sha256": "3654a9833d195314ffce04f02013ae13e7e331570e8d8a581a7c2bb7f2324e7d",
       "bytes": 6759
+    },
+    {
+      "path": "cross-sphere-twins/count_min_sketch.rs",
+      "sha256": "8e10e258ed16fe9db2cb51828192dc16ca4f0caecdf68335e39ebbafcd085122",
+      "bytes": 6653
+    },
+    {
+      "path": "cross-sphere-twins/crdt_gcounter.rs",
+      "sha256": "6c05b67c1ef26b05e14fdfdbf0c29d81de0163b7f608161e77c9235519e4a9f3",
+      "bytes": 7085
+    },
+    {
+      "path": "cross-sphere-twins/hyperloglog_lite.rs",
+      "sha256": "1d8b41da0820ab2727ec5222e94171dc8cd21dec502b80c2abde8bf7d682e994",
+      "bytes": 7984
+    },
+    {
+      "path": "cross-sphere-twins/leader_lease.rs",
+      "sha256": "2e48dae6539b885b9ae7a39097b8b188f03029f8bafbde1ee08aa51b637e5a7d",
+      "bytes": 7597
+    },
+    {
+      "path": "cross-sphere-twins/lru_cache.rs",
+      "sha256": "e8a7b09d149287e879c02cda9d4282a3c80fe6a370f5c583efb8f162d22956fb",
+      "bytes": 7855
+    },
+    {
+      "path": "cross-sphere-twins/lsm_memtable_flush.rs",
+      "sha256": "872d101958a8c09407c1944dd10650dbf640f9569f17701a5ecfb3c0dbd35840",
+      "bytes": 7284
+    },
+    {
+      "path": "cross-sphere-twins/misra_gries_topk.rs",
+      "sha256": "f523616026dc76611a766d202961e2c72bf1f549b10f4282978fa3861ad36f8f",
+      "bytes": 7166
+    },
+    {
+      "path": "cross-sphere-twins/quorum_write.rs",
+      "sha256": "5ba8a111681a524a5645749f7a9f80649429349a57cf40655dace0d3bf7f5508",
+      "bytes": 7162
+    },
+    {
+      "path": "cross-sphere-twins/reservoir_sample.rs",
+      "sha256": "8ae53a71213f8057db3655ee8bf96b41108c96efeb5cc06007a3f407efa3cd4d",
+      "bytes": 7601
+    },
+    {
+      "path": "cross-sphere-twins/skip_list.rs",
+      "sha256": "8dba597bd925a4ec9ad21ce352a8ae68541785121ea64453ad1d5f1eb1ae2e38",
+      "bytes": 9331
     },
     {
       "path": "filesystem-process/atomic_write_rename.rs",

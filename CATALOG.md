@@ -821,3 +821,23 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `run_length_encode` | rust | Rust — Systems Math & Encoding |
 | `varint_leb128` | rust | Rust — Systems Math & Encoding |
 | `zigzag_signed` | rust | Rust — Systems Math & Encoding |
+| `bloom_backed_cache` | rust | Rust — Composed Systems (bridge) |
+| `checkpoint_resume_crc` | rust | Rust — Composed Systems (bridge) |
+| `content_addressed_store` | rust | Rust — Composed Systems (bridge) |
+| `dag_task_runner` | rust | Rust — Composed Systems (bridge) |
+| `delta_sync_lite` | rust | Rust — Composed Systems (bridge) |
+| `merkle_tree` | rust | Rust — Composed Systems (bridge) |
+| `rotating_log_checksum` | rust | Rust — Composed Systems (bridge) |
+| `signed_snapshot` | rust | Rust — Composed Systems (bridge) |
+| `tamper_evident_log` | rust | Rust — Composed Systems (bridge) |
+| `wal_append_replay` | rust | Rust — Composed Systems (bridge) |
+| `count_min_sketch` | rust | Rust — Cross-Sphere Twins (bridge) |
+| `crdt_gcounter` | rust | Rust — Cross-Sphere Twins (bridge) |
+| `hyperloglog_lite` | rust | Rust — Cross-Sphere Twins (bridge) |
+| `leader_lease` | rust | Rust — Cross-Sphere Twins (bridge) |
+| `lru_cache` | rust | Rust — Cross-Sphere Twins (bridge) |
+| `lsm_memtable_flush` | rust | Rust — Cross-Sphere Twins (bridge) |
+| `misra_gries_topk` | rust | Rust — Cross-Sphere Twins (bridge) |
+| `quorum_write` | rust | Rust — Cross-Sphere Twins (bridge) |
+| `reservoir_sample` | rust | Rust — Cross-Sphere Twins (bridge) |
+| `skip_list` | rust | Rust — Cross-Sphere Twins (bridge) |
