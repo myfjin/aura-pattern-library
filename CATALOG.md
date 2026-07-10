@@ -185,7 +185,7 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `garch_lite_volatility_clustering` | python·cpp | Econometrics & Finance |
 | `gauss_legendre_quadrature_lite` | python·cpp | Numerical Methods |
 | `gauss_seidel_vs_jacobi` | python | Linear Algebra |
-| `gaussian_mixture_em` | python | Core ML |
+| `gaussian_mixture_em` | python·cpp | Core ML |
 | `gaussian_naive_bayes` | python | Model Diagnostics |
 | `gaussian_process_lite` | python | Probabilistic Modeling (Bayes II) |
 | `genetic_algorithm` | python | Optimization & Distances |
