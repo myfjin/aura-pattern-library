@@ -106,6 +106,11 @@
       "bytes": 9555
     },
     {
+      "path": "data-science/core_ml/gaussian_mixture_em.cpp",
+      "sha256": "33632aa033085157128b17dd86808a0e001bf1c8c213c2a46179c3ebe5d7c844",
+      "bytes": 9341
+    },
+    {
       "path": "data-science/data_wrangling_from_scratch/csv_type_inference.cpp",
       "sha256": "f6d547d20fa5a685f80ceba7638845c22e67ea5496ea453bfca255f04293260c",
       "bytes": 6847
