@@ -114,72 +114,72 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `cuped_variance_reduction` | python·cpp | Causal Inference & Experimentation |
 | `cusum_changepoint` | python·cpp | Time Series |
 | `cv_model_selection` | r | Regression & GLM |
-| `data_profiling_summary` | python | Preprocessing & EDA |
+| `data_profiling_summary` | python·cpp | Preprocessing & EDA |
 | `date_features` | r | Data Wrangling & Feature Engineering |
 | `dbscan_clustering` | python·cpp | Clustering, Graph & Anomaly |
 | `ddm_error_drift` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `dead_letter_queue` | python | Resilience |
 | `decision_tree` | python | Reasoning |
 | `decision_tree_id3` | python·cpp | Core ML |
-| `dedup_pipeline` | python | Composed Tools (bridge-born) |
-| `dedupe_records_fuzzy` | python | Data Wrangling From Scratch |
-| `demographic_parity_metrics` | python | Fairness, Privacy & Robustness |
+| `dedup_pipeline` | python·cpp | Composed Tools (bridge-born) |
+| `dedupe_records_fuzzy` | python·cpp | Data Wrangling From Scratch |
+| `demographic_parity_metrics` | python·cpp | Fairness, Privacy & Robustness |
 | `dependency_graph` | python | Reasoning |
 | `diff_engine` | python | Io |
 | `diff_seasonality_test` | r | Time Series — Trend, Spectral & Smoothing |
-| `difference_in_differences` | python | Causal Inference & Experimentation |
-| `differencing_stationarity` | python | Time Series |
-| `differential_privacy_laplace` | python | Fairness, Privacy & Robustness |
-| `dirichlet_multinomial` | python | Probabilistic Modeling (Bayes II) |
-| `dirichlet_multinomial_posterior` | python | Bayesian III — Modeling & Selection |
-| `dirichlet_stick_breaking` | python | Bayesian III — Modeling & Selection |
-| `discrete_event_simulation` | python | Simulation & Decision Science |
+| `difference_in_differences` | python·cpp | Causal Inference & Experimentation |
+| `differencing_stationarity` | python·cpp | Time Series |
+| `differential_privacy_laplace` | python·cpp | Fairness, Privacy & Robustness |
+| `dirichlet_multinomial` | python·cpp | Probabilistic Modeling (Bayes II) |
+| `dirichlet_multinomial_posterior` | python·cpp | Bayesian III — Modeling & Selection |
+| `dirichlet_stick_breaking` | python·cpp | Bayesian III — Modeling & Selection |
+| `discrete_event_simulation` | python·cpp | Simulation & Decision Science |
 | `discrete_fourier_transform` | python·cpp | Signal Processing & Sequences |
 | `distance_metrics_toolkit` | python·cpp | Optimization & Distances |
 | `distributed_lock_manager` | python | Distributed |
 | `dns_cache` | python | Networking |
-| `doubly_robust_aipw` | python | Causal Inference II |
+| `doubly_robust_aipw` | python·cpp | Causal Inference II |
 | `douglas_peucker` | python·cpp | Geospatial & Spatial |
-| `drift_detection_psi` | python | Applied DS Practice |
-| `dropout_regularization_sim` | python | Neural Networks From Scratch |
-| `dtw_dynamic_time_warping` | python | Optimization & Distances |
-| `dtw_shape_drift_monitor` | python | Composed Tools (bridge-born) |
-| `dynamic_range_compression` | python | Signal Processing & Sequences |
-| `e_value_sensitivity` | python | Causal Inference II |
-| `early_stopping` | python | Neural Networks From Scratch |
+| `drift_detection_psi` | python·cpp | Applied DS Practice |
+| `dropout_regularization_sim` | python·cpp | Neural Networks From Scratch |
+| `dtw_dynamic_time_warping` | python·cpp | Optimization & Distances |
+| `dtw_shape_drift_monitor` | python·cpp | Composed Tools (bridge-born) |
+| `dynamic_range_compression` | python·cpp | Signal Processing & Sequences |
+| `e_value_sensitivity` | python·cpp | Causal Inference II |
+| `early_stopping` | python·cpp | Neural Networks From Scratch |
 | `ecdf_dkw_bands` | r | Distributions & Resampling |
 | `edit_distance` | python·cpp | Text / NLP |
-| `elbo_monotone_vi` | python | Bayesian III — Approximate Inference |
-| `elbow_method_kmeans` | python | Clustering, Graph & Anomaly |
-| `elo_rating` | python | Rankings & Information Retrieval |
+| `elbo_monotone_vi` | python·cpp | Bayesian III — Approximate Inference |
+| `elbow_method_kmeans` | python·cpp | Clustering, Graph & Anomaly |
+| `elo_rating` | python·cpp | Rankings & Information Retrieval |
 | `em_two_coins` | python·cpp | Statistical Modeling |
-| `empirical_bayes_shrinkage` | python | Probabilistic Modeling (Bayes II) |
-| `entropy_estimators` | python | Information Theory & Probability |
-| `epsilon_greedy_bandit` | python | Optimization & Distances |
+| `empirical_bayes_shrinkage` | python·cpp | Probabilistic Modeling (Bayes II) |
+| `entropy_estimators` | python·cpp | Information Theory & Probability |
+| `epsilon_greedy_bandit` | python·cpp | Optimization & Distances |
 | `equalized_odds_thresholds` | python·cpp | Fairness, Privacy & Robustness |
-| `euler_vs_rk4_error_order` | python | Numerical Methods |
+| `euler_vs_rk4_error_order` | python·cpp | Numerical Methods |
 | `event_bus` | python | Architecture |
 | `event_logger` | python | Monitoring |
 | `event_sourcing_store` | python | Architecture |
-| `evidence_ranks_true_model` | python | Bayesian III — Modeling & Selection |
-| `ewma_streaming_metrics` | python | Applied DS Practice |
-| `exponential_histogram_count` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
-| `exponential_reliability_mtbf` | python | Survival & Reliability |
+| `evidence_ranks_true_model` | python·cpp | Bayesian III — Modeling & Selection |
+| `ewma_streaming_metrics` | python·cpp | Applied DS Practice |
+| `exponential_histogram_count` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `exponential_reliability_mtbf` | python·cpp | Survival & Reliability |
 | `exponential_smoothing` | python·cpp | Time Series |
 | `expression_evaluator` | python | Reasoning |
-| `extreme_value_block_maxima` | python | Probability III |
+| `extreme_value_block_maxima` | python·cpp | Probability III |
 | `factor_onehot` | r | Data Wrangling & Feature Engineering |
-| `feature_hashing_trick` | python | Applied DS Practice |
+| `feature_hashing_trick` | python·cpp | Applied DS Practice |
 | `feature_scaling_toolkit` | python·cpp | Optimization & Distances |
 | `fenwick_tree` | python | Data Structures |
-| `fft_cooley_tukey` | python | Signal Processing & Sequences |
+| `fft_cooley_tukey` | python·cpp | Signal Processing & Sequences |
 | `fisher_exact_2x2` | r | Nonparametric & Categorical |
 | `fixed_effects_within` | python·cpp | Econometrics & Finance |
-| `fixed_point_iteration` | python | Numerical Methods |
+| `fixed_point_iteration` | python·cpp | Numerical Methods |
 | `free_list_allocator` | python | Performance |
 | `frontdoor_criterion_lite` | python·cpp | Causal Inference II |
-| `frugal_streaming_median` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
-| `funnel_conversion_analysis` | python | Applied DS Practice |
+| `frugal_streaming_median` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `funnel_conversion_analysis` | python·cpp | Applied DS Practice |
 | `g_counter_crdt` | python | Distributed |
 | `gamma_poisson_conjugate` | python·cpp | Probabilistic Modeling (Bayes II) |
 | `garch_lite_volatility_clustering` | python·cpp | Econometrics & Finance |
@@ -191,97 +191,97 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `genetic_algorithm` | python·cpp | Optimization & Distances |
 | `geohash_encode_decode` | python·cpp | Geospatial & Spatial |
 | `gibbs_sampling_bivariate` | python·cpp | Statistical Modeling |
-| `gk_quantile_summary` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `gk_quantile_summary` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `gossip_protocol` | python | Distributed |
 | `gp_regression_marginal_likelihood` | python·cpp | Bayesian III — Modeling & Selection |
 | `gradient_boosting_stumps` | python·cpp | Ensembles & Robust Methods |
 | `gradient_descent_momentum` | python·cpp | Optimization & Distances |
 | `great_circle_waypoints` | python·cpp | Geospatial & Spatial |
-| `grid_density_binning` | python | Geospatial & Spatial |
-| `grid_vs_random_search` | python | Model Understanding & Tuning |
+| `grid_density_binning` | python·cpp | Geospatial & Spatial |
+| `grid_vs_random_search` | python·cpp | Model Understanding & Tuning |
 | `group_aggregate` | r | Data Wrangling & Feature Engineering |
-| `group_by_aggregate` | python | Data Wrangling From Scratch |
-| `group_calibration_audit` | python | Fairness, Privacy & Robustness |
-| `hampel_filter_outliers` | python | Signal Processing & Sequences |
+| `group_by_aggregate` | python·cpp | Data Wrangling From Scratch |
+| `group_calibration_audit` | python·cpp | Fairness, Privacy & Robustness |
+| `hampel_filter_outliers` | python·cpp | Signal Processing & Sequences |
 | `hampel_ts_outliers` | r | Time Series — Trend, Spectral & Smoothing |
 | `hash_join` | r | Data Wrangling & Feature Engineering |
-| `hash_join_merge` | python | Data Wrangling From Scratch |
-| `haversine_bearing` | python | Geospatial & Spatial |
-| `hazard_vs_survival_conversion` | python | Survival & Reliability |
-| `heterogeneous_effects_subgroups` | python | Causal Inference II |
-| `hierarchical_agglomerative` | python | Clustering, Graph & Anomaly |
-| `hierarchical_shrinkage_2level` | python | Bayesian III — Approximate Inference |
-| `hill_climbing_restarts` | python | Optimization & Distances |
-| `histogram_builder` | python | Preprocessing & EDA |
-| `hmm_baum_welch` | python | Probabilistic Modeling (Bayes II) |
-| `hmm_forward_backward` | python | Information Theory & Probability |
-| `hoeffding_tree_lite` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `hash_join_merge` | python·cpp | Data Wrangling From Scratch |
+| `haversine_bearing` | python·cpp | Geospatial & Spatial |
+| `hazard_vs_survival_conversion` | python·cpp | Survival & Reliability |
+| `heterogeneous_effects_subgroups` | python·cpp | Causal Inference II |
+| `hierarchical_agglomerative` | python·cpp | Clustering, Graph & Anomaly |
+| `hierarchical_shrinkage_2level` | python·cpp | Bayesian III — Approximate Inference |
+| `hill_climbing_restarts` | python·cpp | Optimization & Distances |
+| `histogram_builder` | python·cpp | Preprocessing & EDA |
+| `hmm_baum_welch` | python·cpp | Probabilistic Modeling (Bayes II) |
+| `hmm_forward_backward` | python·cpp | Information Theory & Probability |
+| `hoeffding_tree_lite` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `holt_winters_lite` | r | Time Series — Models & Autocorrelation |
 | `hosmer_lemeshow_lite` | r | Regression & GLM |
 | `hotp_totp` | python | Security |
-| `householder_reflection` | python | Linear Algebra |
+| `householder_reflection` | python·cpp | Linear Algebra |
 | `http_retry_client` | python | Networking |
 | `http_router` | python | Networking |
-| `huber_robust_regression` | python | Ensembles & Robust Methods |
+| `huber_robust_regression` | python·cpp | Ensembles & Robust Methods |
 | `hyperloglog` | python | Performance |
-| `hyperloglog_distinct` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `hyperloglog_distinct` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `image_stats` | python | Vision |
-| `importance_sampling` | python | Statistical Modeling |
-| `inclusion_exclusion_derangements` | python | Probability III |
+| `importance_sampling` | python·cpp | Statistical Modeling |
+| `inclusion_exclusion_derangements` | python·cpp | Probability III |
 | `ini_parser` | python | Io |
-| `instrumental_2sls` | python | Econometrics & Finance |
-| `instrumental_variable_lite` | python | Causal Inference & Experimentation |
-| `interrupted_time_series` | python | Causal Inference & Experimentation |
+| `instrumental_2sls` | python·cpp | Econometrics & Finance |
+| `instrumental_variable_lite` | python·cpp | Causal Inference & Experimentation |
+| `interrupted_time_series` | python·cpp | Causal Inference & Experimentation |
 | `interval_tree` | python | Data Structures |
-| `intra_list_diversity` | python | Recommenders II — kept survivors (wave 19 REJECTED as a fake-fest; these 5 verified; rest re-harvest) |
+| `intra_list_diversity` | python·cpp | Recommenders II — kept survivors (wave 19 REJECTED as a fake-fest; these 5 verified; rest re-harvest) |
 | `inverse_cdf_sampling` | r | Sampling & Simulation |
-| `inverse_transform_sampling` | python | Information Theory & Probability |
-| `inverted_index_search` | python | Rankings & Information Retrieval |
-| `ipw_ate` | python | Causal Inference II |
-| `iqr_outlier_detection` | python | Recommenders & Graph Sampling |
-| `isolation_tree_anomaly` | python | Clustering, Graph & Anomaly |
-| `item_based_cf` | python | Recommenders & Graph Sampling |
-| `jacobi_eigen_symmetric` | python | Linear Algebra |
+| `inverse_transform_sampling` | python·cpp | Information Theory & Probability |
+| `inverted_index_search` | python·cpp | Rankings & Information Retrieval |
+| `ipw_ate` | python·cpp | Causal Inference II |
+| `iqr_outlier_detection` | python·cpp | Recommenders & Graph Sampling |
+| `isolation_tree_anomaly` | python·cpp | Clustering, Graph & Anomaly |
+| `item_based_cf` | python·cpp | Recommenders & Graph Sampling |
+| `jacobi_eigen_symmetric` | python·cpp | Linear Algebra |
 | `job_scheduler` | python | Performance |
-| `k_anonymity_generalization` | python | Fairness, Privacy & Robustness |
-| `kalman_filter_1d` | python | Time Series |
-| `kalman_rts_smoother` | python | Bayesian III — Modeling & Selection |
-| `kaplan_meier_survival` | python | Statistical Modeling |
+| `k_anonymity_generalization` | python·cpp | Fairness, Privacy & Robustness |
+| `kalman_filter_1d` | python·cpp | Time Series |
+| `kalman_rts_smoother` | python·cpp | Bayesian III — Modeling & Selection |
+| `kaplan_meier_survival` | python·cpp | Statistical Modeling |
 | `kd_tree` | python | Data Structures |
 | `kde_gaussian` | r | Distributions & Resampling |
-| `kde_seeded_gmm` | python | Composed Tools (bridge-born) |
-| `kelly_criterion` | python | Simulation & Decision Science |
-| `kernel_density_estimation` | python | Statistical Modeling |
-| `kl_divergence_cross_entropy` | python | Information Theory & Probability |
+| `kde_seeded_gmm` | python·cpp | Composed Tools (bridge-born) |
+| `kelly_criterion` | python·cpp | Simulation & Decision Science |
+| `kernel_density_estimation` | python·cpp | Statistical Modeling |
+| `kl_divergence_cross_entropy` | python·cpp | Information Theory & Probability |
 | `km_survival_lite` | r | Multivariate & Applied Modeling |
-| `kmeans_clustering` | python | Core ML |
+| `kmeans_clustering` | python·cpp | Core ML |
 | `kmeans_lloyd` | r | Multivariate & Applied Modeling |
-| `knn_classifier` | python | Core ML |
-| `knn_kdtree_accelerated` | python | Composed Tools (bridge-born) |
+| `knn_classifier` | python·cpp | Core ML |
+| `knn_kdtree_accelerated` | python·cpp | Composed Tools (bridge-born) |
 | `kruskal_wallis` | r | Nonparametric & Categorical |
 | `ks_one_sample` | r | Hypothesis Testing — Parametric |
-| `kswin_drift` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
-| `label_noise_robust_loss` | python | Fairness, Privacy & Robustness |
-| `label_propagation_communities` | python | Clustering, Graph & Anomaly |
-| `laplace_approximation_posterior` | python | Bayesian III — Approximate Inference |
-| `latency_percentile_monitor` | python | Composed Tools (bridge-born) |
-| `learning_curve` | python | Model Diagnostics |
-| `learning_rate_schedules` | python | Neural Networks From Scratch |
-| `least_squares_qr` | python | Linear Algebra |
-| `lift_gain_chart` | python | Model Diagnostics |
-| `linear_discriminant_analysis` | python | Clustering, Graph & Anomaly |
-| `linear_regression_gd` | python | Core ML |
+| `kswin_drift` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `label_noise_robust_loss` | python·cpp | Fairness, Privacy & Robustness |
+| `label_propagation_communities` | python·cpp | Clustering, Graph & Anomaly |
+| `laplace_approximation_posterior` | python·cpp | Bayesian III — Approximate Inference |
+| `latency_percentile_monitor` | python·cpp | Composed Tools (bridge-born) |
+| `learning_curve` | python·cpp | Model Diagnostics |
+| `learning_rate_schedules` | python·cpp | Neural Networks From Scratch |
+| `least_squares_qr` | python·cpp | Linear Algebra |
+| `lift_gain_chart` | python·cpp | Model Diagnostics |
+| `linear_discriminant_analysis` | python·cpp | Clustering, Graph & Anomaly |
+| `linear_regression_gd` | python·cpp | Core ML |
 | `linear_regression_normal_eq` | r | Regression & GLM |
 | `ljung_box` | r | Time Series — Models & Autocorrelation |
-| `lln_clt_demo` | python | Information Theory & Probability |
+| `lln_clt_demo` | python·cpp | Information Theory & Probability |
 | `lm_diagnostics` | r | Regression & GLM |
-| `loess_local_regression` | python | Statistical Modeling |
+| `loess_local_regression` | python·cpp | Statistical Modeling |
 | `log_parser` | python | Io |
 | `log_pattern_matcher` | python | Monitoring |
-| `log_rank_test` | python | Survival & Reliability |
-| `logistic_regression` | python | Core ML |
+| `log_rank_test` | python·cpp | Survival & Reliability |
+| `logistic_regression` | python·cpp | Core ML |
 | `logistic_regression_irls` | r | Regression & GLM |
-| `logit_marginal_effects` | python | Econometrics & Finance |
+| `logit_marginal_effects` | python·cpp | Econometrics & Finance |
 | `long_wide_reshape` | r | Data Wrangling & Feature Engineering |
 | `lossy_counting_frequent` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `lru_cache` | python | Performance |
@@ -373,7 +373,7 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `polynomial_regression` | python·cpp | Statistical Modeling |
 | `porter_stemmer_lite` | python·cpp | Text / NLP II |
 | `position_bias_click_model` | python·cpp | Rankings & Information Retrieval |
-| `post_stratification_variance` | python | Experiments II |
+| `post_stratification_variance` | python·cpp | Experiments II |
 | `posterior_contraction_rate` | python·cpp | Bayesian III — Approximate Inference |
 | `posterior_predictive_pvalue` | python·cpp | Bayesian III — Approximate Inference |
 | `power_analysis_sample_size` | python·cpp | Statistical Modeling |
@@ -422,64 +422,64 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `rhat_convergence_diagnostic` | python·cpp | Bayesian III — Approximate Inference |
 | `richardson_extrapolation` | python·cpp | Numerical Methods |
 | `ridge_regression` | r | Regression & GLM |
-| `ridge_regression_normal_eq` | python | Core ML |
-| `rk4_ode_solver` | python | Numerical Methods |
-| `robust_streaming_mad` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
-| `roc_auc_from_scratch` | python | Statistics & Testing |
-| `rolling_join_asof` | python | Data Wrangling From Scratch |
+| `ridge_regression_normal_eq` | python·cpp | Core ML |
+| `rk4_ode_solver` | python·cpp | Numerical Methods |
+| `robust_streaming_mad` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `roc_auc_from_scratch` | python·cpp | Statistics & Testing |
+| `rolling_join_asof` | python·cpp | Data Wrangling From Scratch |
 | `rolling_origin_cv` | r | Time Series — Trend, Spectral & Smoothing |
 | `rolling_stats` | r | Data Wrangling & Feature Engineering |
-| `rolling_zscore_anomaly` | python | Time Series |
-| `romberg_integration` | python | Numerical Methods |
-| `rts_kalman_smoother` | python | Probabilistic Modeling (Bayes II) |
+| `rolling_zscore_anomaly` | python·cpp | Time Series |
+| `romberg_integration` | python·cpp | Numerical Methods |
+| `rts_kalman_smoother` | python·cpp | Probabilistic Modeling (Bayes II) |
 | `rtt_estimator` | python | Networking |
 | `rule_engine` | python | Reasoning |
 | `rw_lock` | python | Performance |
 | `saga_coordinator` | python | Architecture |
 | `sat_solver` | python | Reasoning |
-| `savitzky_golay_lite` | python | Signal Processing & Sequences |
-| `sbc_rank_uniformity` | python | Bayesian III — Approximate Inference |
-| `schelling_segregation` | python | Simulation & Decision Science |
+| `savitzky_golay_lite` | python·cpp | Signal Processing & Sequences |
+| `sbc_rank_uniformity` | python·cpp | Bayesian III — Approximate Inference |
+| `schelling_segregation` | python·cpp | Simulation & Decision Science |
 | `seasonal_decompose` | r | Time Series — Models & Autocorrelation |
-| `seasonal_decomposition` | python | Time Series |
-| `secant_method` | python | Numerical Methods |
+| `seasonal_decomposition` | python·cpp | Time Series |
+| `secant_method` | python·cpp | Numerical Methods |
 | `secure_envelope` | python | Security |
 | `segment_tree` | python | Data Structures |
 | `segmented_wal` | python | Persistence |
-| `sentence_boundary_detection` | python | Text / NLP II |
-| `sequential_probability_ratio` | python | Causal Inference & Experimentation |
+| `sentence_boundary_detection` | python·cpp | Text / NLP II |
+| `sequential_probability_ratio` | python·cpp | Causal Inference & Experimentation |
 | `service_registry` | python | Distributed |
-| `shapley_value_sampling` | python | Model Understanding & Tuning |
-| `sharpe_sortino_ratios` | python | Econometrics & Finance |
-| `silhouette_score` | python | Clustering, Graph & Anomaly |
-| `simpsons_paradox_demo` | python | Applied DS Practice |
-| `simulated_annealing` | python | Optimization & Distances |
-| `sir_epidemic_model` | python | Simulation & Decision Science |
+| `shapley_value_sampling` | python·cpp | Model Understanding & Tuning |
+| `sharpe_sortino_ratios` | python·cpp | Econometrics & Finance |
+| `silhouette_score` | python·cpp | Clustering, Graph & Anomaly |
+| `simpsons_paradox_demo` | python·cpp | Applied DS Practice |
+| `simulated_annealing` | python·cpp | Optimization & Distances |
+| `sir_epidemic_model` | python·cpp | Simulation & Decision Science |
 | `skip_list` | python | Data Structures |
-| `sliding_window_extrema` | python | Streaming & Sketches |
-| `sliding_window_quantile` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
-| `sliding_window_regression` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `sliding_window_extrema` | python·cpp | Streaming & Sketches |
+| `sliding_window_quantile` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `sliding_window_regression` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `sma_wma_filter` | r | Time Series — Trend, Spectral & Smoothing |
-| `softmax_regression` | python | Neural Networks From Scratch |
-| `sort_multi_key` | python | Data Wrangling From Scratch |
-| `soundex_phonetic` | python | Text / NLP II |
-| `space_saving_heavy_hitters` | python | Streaming & Sketches |
-| `spatial_radius_join` | python | Geospatial & Spatial |
+| `softmax_regression` | python·cpp | Neural Networks From Scratch |
+| `sort_multi_key` | python·cpp | Data Wrangling From Scratch |
+| `soundex_phonetic` | python·cpp | Text / NLP II |
+| `space_saving_heavy_hitters` | python·cpp | Streaming & Sketches |
+| `spatial_radius_join` | python·cpp | Geospatial & Spatial |
 | `spectral_clustering_lite` | python | Ensembles & Robust Methods |
-| `stacking_ensemble` | python | Ensembles & Robust Methods |
+| `stacking_ensemble` | python·cpp | Ensembles & Robust Methods |
 | `state_machine` | python | Architecture |
-| `stirling_approximation_error` | python | Probability III |
-| `stratification_subclassification` | python | Causal Inference II |
-| `stratified_randomization` | python | Experiments II |
+| `stirling_approximation_error` | python·cpp | Probability III |
+| `stratification_subclassification` | python·cpp | Causal Inference II |
+| `stratified_randomization` | python·cpp | Experiments II |
 | `stratified_split` | r | Multivariate & Applied Modeling |
-| `streaming_histogram_merge` | python | Streaming & Sketches |
-| `streaming_kmeans` | python | Streaming & Sketches |
-| `successive_halving` | python | Model Understanding & Tuning |
+| `streaming_histogram_merge` | python·cpp | Streaming & Sketches |
+| `streaming_kmeans` | python·cpp | Streaming & Sketches |
+| `successive_halving` | python·cpp | Model Understanding & Tuning |
 | `suffix_array` | python | Data Structures |
-| `switchback_experiment_lite` | python | Experiments II |
-| `synthetic_control_lite` | python | Causal Inference & Experimentation |
+| `switchback_experiment_lite` | python·cpp | Experiments II |
+| `synthetic_control_lite` | python·cpp | Causal Inference & Experimentation |
 | `table_margins` | r | Nonparametric & Categorical |
-| `target_encoding_smoothing` | python | Applied DS Practice |
+| `target_encoding_smoothing` | python·cpp | Applied DS Practice |
 | `tdigest_lite` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `template_engine` | python | Io |
 | `textrank_lite` | python·cpp | Text / NLP II |
@@ -492,44 +492,44 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `time_series_db` | python | Monitoring |
 | `timeout_guard` | python | Resilience |
 | `timer_stack` | python | Monitoring |
-| `tiny_autoencoder` | python | Neural Networks From Scratch |
+| `tiny_autoencoder` | python·cpp | Neural Networks From Scratch |
 | `token_bucket` | python | Performance |
-| `tornado_sensitivity` | python | Simulation & Decision Science |
+| `tornado_sensitivity` | python·cpp | Simulation & Decision Science |
 | `trace_collector` | python | Monitoring |
 | `trace_sampler` | python | Monitoring |
 | `trace_span_collector` | python | Monitoring |
-| `train_test_split_kfold` | python | Statistics & Testing |
+| `train_test_split_kfold` | python·cpp | Statistics & Testing |
 | `treap` | python | Data Structures |
 | `trie` | python | Data Structures |
 | `truncated_normal` | r | Sampling & Simulation |
-| `ucb_bandit` | python | Model Diagnostics |
+| `ucb_bandit` | python·cpp | Model Diagnostics |
 | `union_find` | python | Data Structures |
 | `url_router` | python | Networking |
-| `user_based_cf` | python | Recommenders & Graph Sampling |
-| `value_averaging_vs_dca` | python | Econometrics & Finance |
+| `user_based_cf` | python·cpp | Recommenders & Graph Sampling |
+| `value_averaging_vs_dca` | python·cpp | Econometrics & Finance |
 | `vector_clock` | python | Distributed |
-| `viterbi_hmm` | python | Text / NLP |
-| `voting_classifier` | python | Ensembles & Robust Methods |
-| `walk_forward_early_stopping` | python | Composed Tools (bridge-born) |
-| `walk_forward_validation` | python | Time Series |
-| `weibull_mle` | python | Survival & Reliability |
-| `weight_initialization_comparison` | python | Neural Networks From Scratch |
-| `weighted_reservoir_ares` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
-| `weighted_reservoir_sampling` | python | Streaming & Sketches |
+| `viterbi_hmm` | python·cpp | Text / NLP |
+| `voting_classifier` | python·cpp | Ensembles & Robust Methods |
+| `walk_forward_early_stopping` | python·cpp | Composed Tools (bridge-born) |
+| `walk_forward_validation` | python·cpp | Time Series |
+| `weibull_mle` | python·cpp | Survival & Reliability |
+| `weight_initialization_comparison` | python·cpp | Neural Networks From Scratch |
+| `weighted_reservoir_ares` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `weighted_reservoir_sampling` | python·cpp | Streaming & Sketches |
 | `weighted_survey_mean` | r | Multivariate & Applied Modeling |
 | `welch_t_test` | r | Hypothesis Testing — Parametric |
-| `welford_decayed_moments` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
-| `welford_online_stats` | python | Applied DS Practice |
+| `welford_decayed_moments` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `welford_online_stats` | python·cpp | Applied DS Practice |
 | `wilcoxon_rank_sum` | r | Nonparametric & Categorical |
-| `window_functions` | python | Data Wrangling From Scratch |
+| `window_functions` | python·cpp | Data Wrangling From Scratch |
 | `window_sampler` | python | Monitoring |
-| `windowed_distinct_count` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
-| `winsorize_clip_outliers` | python | Preprocessing & EDA |
-| `woodbury_rank1_update` | python | Linear Algebra |
-| `word2vec_skipgram` | python | Neural Networks From Scratch |
+| `windowed_distinct_count` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `winsorize_clip_outliers` | python·cpp | Preprocessing & EDA |
+| `woodbury_rank1_update` | python·cpp | Linear Algebra |
+| `word2vec_skipgram` | python·cpp | Neural Networks From Scratch |
 | `work_stealing_queue` | python | Performance |
 | `write_ahead_log` | python | Persistence |
-| `zipf_law_fit` | python | Text / NLP II |
+| `zipf_law_fit` | python·cpp | Text / NLP II |
 
 ## Counts
 - **python/programming**: 99 files · gate_ok 99 · gate_fail 0 · authentic + unaltered
