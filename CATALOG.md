@@ -329,7 +329,7 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `nelson_aalen_cumhazard` | python·cpp | Survival & Reliability |
 | `network_interference_demo` | python·cpp | Experiments II |
 | `newsvendor_critical_fractile` | python·cpp | Simulation & Decision Science |
-| `newton_method_optimization` | python | Optimization & Distances |
+| `newton_method_optimization` | python·cpp | Optimization & Distances |
 | `ngram_language_model` | python·cpp | Text / NLP |
 | `nonlinear_dependence_mi` | python·cpp | Information Theory & Probability |
 | `novelty_effect_decay` | python·cpp | Experiments II |
@@ -480,15 +480,15 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `synthetic_control_lite` | python | Causal Inference & Experimentation |
 | `table_margins` | r | Nonparametric & Categorical |
 | `target_encoding_smoothing` | python | Applied DS Practice |
-| `tdigest_lite` | python | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `tdigest_lite` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `template_engine` | python | Io |
-| `textrank_lite` | python | Text / NLP II |
-| `tf_idf_bm25_comparison` | python | Text / NLP II |
-| `tfidf_vectorizer` | python | Text / NLP |
-| `theil_sen_estimator` | python | Ensembles & Robust Methods |
-| `thompson_sampling_bandit` | python | Recommenders & Graph Sampling |
-| `three_way_stratified_split` | python | Preprocessing & EDA |
-| `threshold_tuning_cost` | python | Model Understanding & Tuning |
+| `textrank_lite` | python·cpp | Text / NLP II |
+| `tf_idf_bm25_comparison` | python·cpp | Text / NLP II |
+| `tfidf_vectorizer` | python·cpp | Text / NLP |
+| `theil_sen_estimator` | python·cpp | Ensembles & Robust Methods |
+| `thompson_sampling_bandit` | python·cpp | Recommenders & Graph Sampling |
+| `three_way_stratified_split` | python·cpp | Preprocessing & EDA |
+| `threshold_tuning_cost` | python·cpp | Model Understanding & Tuning |
 | `time_series_db` | python | Monitoring |
 | `timeout_guard` | python | Resilience |
 | `timer_stack` | python | Monitoring |

@@ -276,6 +276,11 @@
       "bytes": 7629
     },
     {
+      "path": "data-science/ensembles_robust_methods/theil_sen_estimator.cpp",
+      "sha256": "c56541a1497e1a961c3541c65bdb96b4de88ccfa6464780507ff2e583d681bbf",
+      "bytes": 6946
+    },
+    {
       "path": "data-science/experiments_ii/cluster_randomized_icc.cpp",
       "sha256": "21d581a6d1d85a19eb3fde5a3c94b350e8617a97ed1c463a99be893cf63aca5e",
       "bytes": 8196
@@ -491,6 +496,11 @@
       "bytes": 7279
     },
     {
+      "path": "data-science/model_understanding_tuning/threshold_tuning_cost.cpp",
+      "sha256": "0bf1ede6a5c7ffba4ec7557286304bae39197d85bbddc0aa2bb5eaafee37eae9",
+      "bytes": 11782
+    },
+    {
       "path": "data-science/neural_networks_from_scratch/conv1d_feature_detector.cpp",
       "sha256": "9f011fbe96f5e76cdfcd20249a6d3516c75e71337120a47cc55c04b1875f014a",
       "bytes": 8698
@@ -556,6 +566,11 @@
       "bytes": 7054
     },
     {
+      "path": "data-science/optimization_distances/newton_method_optimization.cpp",
+      "sha256": "919e7de64070cccedd5f343c7a001f07570bb0216db7517a9274f7a494305ff5",
+      "bytes": 5929
+    },
+    {
       "path": "data-science/preprocessing_eda/covariance_matrix.cpp",
       "sha256": "e66ff1f6baca166438e9081c9eb716036f1717e0388657678080ff41337d657f",
       "bytes": 7325
@@ -584,6 +599,11 @@
       "path": "data-science/preprocessing_eda/random_oversampling_balance.cpp",
       "sha256": "16278853cd9c5514079c40d46437c78083299b090e13d975ed59aee16731d68f",
       "bytes": 8310
+    },
+    {
+      "path": "data-science/preprocessing_eda/three_way_stratified_split.cpp",
+      "sha256": "cf89056e668255eab9f3e8ae0e096602d3fa7b0784431dcf5ebe47a480ce63c1",
+      "bytes": 8529
     },
     {
       "path": "data-science/probabilistic_modeling_bayes_ii/bayesian_linear_regression.cpp",
@@ -719,6 +739,11 @@
       "path": "data-science/recommenders_graph_sampling/pagerank_power_iteration.cpp",
       "sha256": "64513cd60ee61ce2cac15b9b7ffb3539b7b0ff614cacae4233c58840dbfd0e07",
       "bytes": 6740
+    },
+    {
+      "path": "data-science/recommenders_graph_sampling/thompson_sampling_bandit.cpp",
+      "sha256": "05cb89c75e9036593eba9da457910537add9c8f9ed0bfff7fd68212bfdc32d3a",
+      "bytes": 6750
     },
     {
       "path": "data-science/recommenders_ii_kept_survivors_wave_19_rejected_as_a_fake_fest_these_5_verified_rest_re_harvest/catalog_coverage_diversity.cpp",
@@ -886,6 +911,11 @@
       "bytes": 132954
     },
     {
+      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/tdigest_lite.cpp",
+      "sha256": "399b90e86b560c207fe6f66062ee1e9d42087f94abb5caff86e03fe1e2201f34",
+      "bytes": 7811
+    },
+    {
       "path": "data-science/streaming_sketches/count_min_sketch.cpp",
       "sha256": "2d6b7cca967a448e5530b7602be8d676cb1dfb9b13491c46cd1ac6672f4dfd88",
       "bytes": 6699
@@ -981,6 +1011,11 @@
       "bytes": 10110
     },
     {
+      "path": "data-science/text_nlp/tfidf_vectorizer.cpp",
+      "sha256": "4c25ee62c797dceecfa411e1038d2a1f7fe6ca0c04e757a474df372b2c9767c9",
+      "bytes": 7852
+    },
+    {
       "path": "data-science/text_nlp_ii/char_ngram_language_id.cpp",
       "sha256": "c966d9bb5d23befe65bdb328db4103c1686298af18a05cfd4d5a3dd851e60991",
       "bytes": 6680
@@ -994,6 +1029,16 @@
       "path": "data-science/text_nlp_ii/porter_stemmer_lite.cpp",
       "sha256": "0d08f342338e23ececec601f4eae5d46940a74ead5453264726ec173a8c03b77",
       "bytes": 5898
+    },
+    {
+      "path": "data-science/text_nlp_ii/textrank_lite.cpp",
+      "sha256": "7fe46683eae198661142ce816a99658a41e55f9c0f881e6e650618c4afe15b10",
+      "bytes": 6544
+    },
+    {
+      "path": "data-science/text_nlp_ii/tf_idf_bm25_comparison.cpp",
+      "sha256": "531efc8c4bc6f112ba9788726e225704b797db44fb2dafec860653fc27c89961",
+      "bytes": 7243
     },
     {
       "path": "data-science/time_series/autocorrelation_function.cpp",
