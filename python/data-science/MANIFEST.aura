@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-09",
+  "created": "2026-07-10",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -592,8 +592,8 @@
     },
     {
       "path": "experiments_ii/peeking_alpha_inflation.py",
-      "sha256": "600b66a4a69f4df7d6231184d9f6dea2fba7baef628d783a6fd6b565d431d53b",
-      "bytes": 7589
+      "sha256": "5fd0d88272acff74e233479f259fc1ff4da28fbb0f3a241a096dc6e5e7de07c8",
+      "bytes": 7966
     },
     {
       "path": "experiments_ii/post_stratification_variance.py",
