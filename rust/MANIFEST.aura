@@ -1,0 +1,214 @@
+{
+  "manifest_version": 1,
+  "trademark": "AURA Pattern Library",
+  "created": "2026-07-10",
+  "algorithm": "ed25519",
+  "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
+  "files": [
+    {
+      "path": ".folder-mark.yaml",
+      "sha256": "0b22bcb530918dfbdd7104b90db88cac148ac3d69c9bd5fbe3463e55bca60eb0",
+      "bytes": 74
+    },
+    {
+      "path": "concurrency-resilience/atomic_counter_sharded.rs",
+      "sha256": "224be6ff0f25c9987668d0e3ba84087b1d8296e83818c6f9eff12a7f6559402f",
+      "bytes": 6477
+    },
+    {
+      "path": "concurrency-resilience/circuit_breaker.rs",
+      "sha256": "a5b9f847ec0133dec3737f357f668d5bdd0ab3f210750eacbcd25e473a438cb8",
+      "bytes": 8197
+    },
+    {
+      "path": "concurrency-resilience/deadline_guard.rs",
+      "sha256": "ecc43db4b4b9782c6e5eab4b1a50040ce0468fb83b53e02afcf13332473f6e3a",
+      "bytes": 7103
+    },
+    {
+      "path": "concurrency-resilience/exponential_backoff.rs",
+      "sha256": "9ac17fa01c21b718cfaf787355d9d27e4d5121b922f460238d65312cf1c2d6f7",
+      "bytes": 7095
+    },
+    {
+      "path": "concurrency-resilience/graceful_shutdown.rs",
+      "sha256": "0f6c2076648a7bdfeba576664765b3daae8d658891c63a0dbe9e7ce985e4fee8",
+      "bytes": 6092
+    },
+    {
+      "path": "concurrency-resilience/retry_with_budget.rs",
+      "sha256": "8fab6f7d10e14682247cc62d87cf9442c1917b75764eece017f1c384ab4150bb",
+      "bytes": 7523
+    },
+    {
+      "path": "concurrency-resilience/rwlock_cache.rs",
+      "sha256": "7df4dba07c52e147541e4759c8e577209e9f5c480dbb108afbd5a9e6acad69f7",
+      "bytes": 6602
+    },
+    {
+      "path": "concurrency-resilience/semaphore_limit.rs",
+      "sha256": "3eaef4f43d9b73de623e45956eca2334b605666f10b1cf57ff31249f886f570a",
+      "bytes": 6916
+    },
+    {
+      "path": "concurrency-resilience/token_bucket.rs",
+      "sha256": "8f38da6b37b062607a3ef7ee0c8ae9bcf243c0ec3dbbd5773d58259f9817f8b6",
+      "bytes": 6981
+    },
+    {
+      "path": "concurrency-resilience/worker_pool_mpsc.rs",
+      "sha256": "3654a9833d195314ffce04f02013ae13e7e331570e8d8a581a7c2bb7f2324e7d",
+      "bytes": 6759
+    },
+    {
+      "path": "filesystem-process/atomic_write_rename.rs",
+      "sha256": "aa1c49c2c8f7994e9f442a86b3c8a2ba72da9dba17838a8616f73a60e1de6857",
+      "bytes": 7864
+    },
+    {
+      "path": "filesystem-process/df_capacity_forecast.rs",
+      "sha256": "570b763d82824a10ce5db68e959a136a88db5bd21367cedfc19593a48a480e84",
+      "bytes": 7742
+    },
+    {
+      "path": "filesystem-process/dir_size_aggregate.rs",
+      "sha256": "ddc11edc4091a8f81d624b38d21e3547dd7287c2ab9a25927bbd0f14193652e1",
+      "bytes": 8100
+    },
+    {
+      "path": "filesystem-process/file_dedup_hash.rs",
+      "sha256": "760c6b7930480104297b722bddb7296a82b82916e1ae8f7e6f3c843ab7459668",
+      "bytes": 7302
+    },
+    {
+      "path": "filesystem-process/lockfile_pid_guard.rs",
+      "sha256": "b596cf53610e1da141ec72cee4b45b0f690e76fe50d10dd94829f92402cc68f8",
+      "bytes": 7676
+    },
+    {
+      "path": "filesystem-process/path_normalize_guard.rs",
+      "sha256": "31b329b21d0205398f1e1a8f72a69d16434df351a0f30209ea732e9c08d97b08",
+      "bytes": 7599
+    },
+    {
+      "path": "filesystem-process/proc_stat_cpu.rs",
+      "sha256": "15d14ce5fd5a92c278242fb6838331461367d6c11c87d6920817e463969414e8",
+      "bytes": 8101
+    },
+    {
+      "path": "filesystem-process/retention_gfs.rs",
+      "sha256": "d894a53dbecf054dcb91dfef0dc936810daa67a26e4ddea7b410d0b1e212aeae",
+      "bytes": 7862
+    },
+    {
+      "path": "filesystem-process/rolling_checksum.rs",
+      "sha256": "ada403d71c849a39d792dcde5595c0b6df1ad6b45b9f072e06fe8372c69d4451",
+      "bytes": 7748
+    },
+    {
+      "path": "filesystem-process/supervisor_restart.rs",
+      "sha256": "f6aa5eef87eaebd77c84fae350d70c5ca98f5517afdb91e2e366ea4015e70633",
+      "bytes": 7547
+    },
+    {
+      "path": "metrics-scheduling/consistent_hash_ring.rs",
+      "sha256": "867c0c915080e96bdf382ab8321351136511d29a360e0d57d7fa86515603c6b1",
+      "bytes": 9499
+    },
+    {
+      "path": "metrics-scheduling/cron_next_fire.rs",
+      "sha256": "fe88642294a74b3bbd18abbb3d1da1f1dbac1b64707a1a460b554c37f141eff5",
+      "bytes": 8839
+    },
+    {
+      "path": "metrics-scheduling/debounce_throttle.rs",
+      "sha256": "a7c53291c3b6f9bdb7efb9c1fdc882d44503d45369acbb60f0d66c2f1456fd94",
+      "bytes": 8154
+    },
+    {
+      "path": "metrics-scheduling/ewma_gauge.rs",
+      "sha256": "ae785a1704b1502861fa688380a6feb3f3044b8c3f54600aab002b6566c9902e",
+      "bytes": 8514
+    },
+    {
+      "path": "metrics-scheduling/hdr_latency_lite.rs",
+      "sha256": "066da76608b79472059166a6de97a15dc560c03e533cb41bca932e6995c1c34e",
+      "bytes": 8379
+    },
+    {
+      "path": "metrics-scheduling/histogram_quantile.rs",
+      "sha256": "4dbcded388ad4aa0c61f75aae971f8050412e0869d8094419f20a90cf00d8544",
+      "bytes": 8479
+    },
+    {
+      "path": "metrics-scheduling/priority_scheduler.rs",
+      "sha256": "4abb532639b36f21737559d5288def2845b40e61e49bc0a96d0e385d8735c4ad",
+      "bytes": 8265
+    },
+    {
+      "path": "metrics-scheduling/rate_counter.rs",
+      "sha256": "4715cf00801438c028c0cf39241ecbd9ae9c28a08dcdf81786b69eb828ef5bb7",
+      "bytes": 7606
+    },
+    {
+      "path": "metrics-scheduling/ring_buffer.rs",
+      "sha256": "6874c547e110c3e6d943b0d573d33c8274b30779d89c837331f664cca78282fa",
+      "bytes": 7634
+    },
+    {
+      "path": "metrics-scheduling/topo_job_order.rs",
+      "sha256": "9e3fd914ebe659df7dcf4aee21e2afc8d50e9b52f2a9ddb219ef63e4dbbe4e9f",
+      "bytes": 8895
+    },
+    {
+      "path": "parsing-protocols/byte_unit_parse.rs",
+      "sha256": "a9561b898946de37ebcd1de7ff359ef4e9f998ac4f55921708ba116ea509500e",
+      "bytes": 7365
+    },
+    {
+      "path": "parsing-protocols/cidr_ip_math.rs",
+      "sha256": "cb422b43366bf1ac642c60becb6a11b6e367945bc871954d128d24a5e6a93d18",
+      "bytes": 8939
+    },
+    {
+      "path": "parsing-protocols/cli_args_parser.rs",
+      "sha256": "087fa5b6b307b3cf265b86dfa9644141700340704286aebffa78229eeb19526f",
+      "bytes": 7931
+    },
+    {
+      "path": "parsing-protocols/csv_reader_typed.rs",
+      "sha256": "e0f96ef64c25dbef14145262014d045b204186f546af5c1c57105b4c4a6bca6a",
+      "bytes": 7276
+    },
+    {
+      "path": "parsing-protocols/duration_parse.rs",
+      "sha256": "3a291b4853d7ae44a16958d65f5f941dfb81b735ed56ee38e156b51839a46c8b",
+      "bytes": 8287
+    },
+    {
+      "path": "parsing-protocols/glob_match.rs",
+      "sha256": "3bb16f31a8c18a89389db191c4511544cd636be97106d408b07f15fe4a03fd50",
+      "bytes": 8063
+    },
+    {
+      "path": "parsing-protocols/http_header_parse.rs",
+      "sha256": "435cff7e3e29068ade895a0928ba89d444425ef8d58dfb3c42cf97d1bdd4b67b",
+      "bytes": 7801
+    },
+    {
+      "path": "parsing-protocols/ini_config_parser.rs",
+      "sha256": "0505e373989818e0fc9ee412913de3d3198f7a8324875d0499913747ffc0812b",
+      "bytes": 8106
+    },
+    {
+      "path": "parsing-protocols/log_line_parser.rs",
+      "sha256": "e7fcff12607cf1aa0e25b78df6546edf5c991ff423d6398ae9a627435325374d",
+      "bytes": 7922
+    },
+    {
+      "path": "parsing-protocols/url_parse.rs",
+      "sha256": "be3f2e28ca4ade9ad30687af9e2dde7969f60a5787e1cb40d1158fd0a49233df",
+      "bytes": 7099
+    }
+  ]
+}

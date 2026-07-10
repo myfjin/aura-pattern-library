@@ -23,9 +23,9 @@ except ModuleNotFoundError:
     from folder_nature.mark.watermark import verify_file
 
 ROOT = Path(__file__).resolve().parent
-SIGNED_SUBTREES = ["python/programming", "python/data-science", "python/system-administration", "r", "cpp"]
-GATE = {".py": ["python3"], ".R": ["Rscript"]}          # cpp/go handled specially
-SRC_EXT = (".py", ".R", ".cpp", ".go")
+SIGNED_SUBTREES = ["python/programming", "python/data-science", "python/system-administration", "r", "cpp", "rust"]
+GATE = {".py": ["python3"], ".R": ["Rscript"]}          # cpp/go/rust handled specially
+SRC_EXT = (".py", ".R", ".cpp", ".go", ".rs")
 
 
 def run_gate(p: Path) -> bool:
@@ -46,6 +46,14 @@ def run_gate(p: Path) -> bool:
         if not shutil.which("go"):
             return True
         return subprocess.run(["go", "run", str(p)], capture_output=True, timeout=120).returncode == 0
+    if p.suffix == ".rs":
+        if not shutil.which("rustc"):
+            return True
+        out = Path("/tmp/_apl_rs")
+        c = subprocess.run(["rustc", "-O", "--edition", "2021", "-D", "warnings", str(p), "-o", str(out)],
+                           capture_output=True, timeout=120)
+        return c.returncode == 0 and subprocess.run([str(out)], capture_output=True,
+                                                    timeout=120).returncode == 0
     return True
 
 

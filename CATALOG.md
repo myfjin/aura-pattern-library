@@ -740,3 +740,44 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `lww_conflict_resolve` | python | System Administration — Mesh/Distributed Coordination |
 | `partition_tolerance_demo` | python | System Administration — Mesh/Distributed Coordination |
 | `quorum_check` | python | System Administration — Mesh/Distributed Coordination |
+
+| `byte_unit_parse` | rust | Rust — Parsing & Protocols |
+| `cidr_ip_math` | rust | Rust — Parsing & Protocols |
+| `cli_args_parser` | rust | Rust — Parsing & Protocols |
+| `csv_reader_typed` | rust | Rust — Parsing & Protocols |
+| `duration_parse` | rust | Rust — Parsing & Protocols |
+| `glob_match` | rust | Rust — Parsing & Protocols |
+| `http_header_parse` | rust | Rust — Parsing & Protocols |
+| `ini_config_parser` | rust | Rust — Parsing & Protocols |
+| `log_line_parser` | rust | Rust — Parsing & Protocols |
+| `url_parse` | rust | Rust — Parsing & Protocols |
+| `atomic_counter_sharded` | rust | Rust — Concurrency & Resilience |
+| `circuit_breaker` | rust | Rust — Concurrency & Resilience |
+| `deadline_guard` | rust | Rust — Concurrency & Resilience |
+| `exponential_backoff` | rust | Rust — Concurrency & Resilience |
+| `graceful_shutdown` | rust | Rust — Concurrency & Resilience |
+| `retry_with_budget` | rust | Rust — Concurrency & Resilience |
+| `rwlock_cache` | rust | Rust — Concurrency & Resilience |
+| `semaphore_limit` | rust | Rust — Concurrency & Resilience |
+| `token_bucket` | rust | Rust — Concurrency & Resilience |
+| `worker_pool_mpsc` | rust | Rust — Concurrency & Resilience |
+| `consistent_hash_ring` | rust | Rust — Metrics & Scheduling |
+| `cron_next_fire` | rust | Rust — Metrics & Scheduling |
+| `debounce_throttle` | rust | Rust — Metrics & Scheduling |
+| `ewma_gauge` | rust | Rust — Metrics & Scheduling |
+| `hdr_latency_lite` | rust | Rust — Metrics & Scheduling |
+| `histogram_quantile` | rust | Rust — Metrics & Scheduling |
+| `priority_scheduler` | rust | Rust — Metrics & Scheduling |
+| `rate_counter` | rust | Rust — Metrics & Scheduling |
+| `ring_buffer` | rust | Rust — Metrics & Scheduling |
+| `topo_job_order` | rust | Rust — Metrics & Scheduling |
+| `atomic_write_rename` | rust | Rust — Filesystem & Process Logic |
+| `df_capacity_forecast` | rust | Rust — Filesystem & Process Logic |
+| `dir_size_aggregate` | rust | Rust — Filesystem & Process Logic |
+| `file_dedup_hash` | rust | Rust — Filesystem & Process Logic |
+| `lockfile_pid_guard` | rust | Rust — Filesystem & Process Logic |
+| `path_normalize_guard` | rust | Rust — Filesystem & Process Logic |
+| `proc_stat_cpu` | rust | Rust — Filesystem & Process Logic |
+| `retention_gfs` | rust | Rust — Filesystem & Process Logic |
+| `rolling_checksum` | rust | Rust — Filesystem & Process Logic |
+| `supervisor_restart` | rust | Rust — Filesystem & Process Logic |
