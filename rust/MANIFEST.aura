@@ -209,6 +209,206 @@
       "path": "parsing-protocols/url_parse.rs",
       "sha256": "be3f2e28ca4ade9ad30687af9e2dde7969f60a5787e1cb40d1158fd0a49233df",
       "bytes": 7099
+    },
+    {
+      "path": "security-crypto/base32_codec.rs",
+      "sha256": "67b3021ad9f07c275a129ee2a48bca3c2c9c69bb99f923a7007b80ff3e739a45",
+      "bytes": 8146
+    },
+    {
+      "path": "security-crypto/base64_codec.rs",
+      "sha256": "f00dc8a45c4cb7c8405631dd1489ec9e94dfb16d9ac2601fc329aad7b146cfa0",
+      "bytes": 6754
+    },
+    {
+      "path": "security-crypto/bloom_filter.rs",
+      "sha256": "3459bbff400b5e2768766823a6d53dbe859e65924f1bdc75a741942e70fe0a21",
+      "bytes": 7157
+    },
+    {
+      "path": "security-crypto/capability_bitset.rs",
+      "sha256": "dafdbd1e71d4861c5a9c73fc0978dd26d6271aa6efa9e9ba8fe386a0264a66d3",
+      "bytes": 5701
+    },
+    {
+      "path": "security-crypto/constant_time_eq.rs",
+      "sha256": "4b0f5cdab524f18dd619117b5cc171b54841db5b336c51f0bc4a065b4df0653f",
+      "bytes": 6794
+    },
+    {
+      "path": "security-crypto/crc32.rs",
+      "sha256": "91c80412ec47bda3685aa03a6e51e8d3237b3d91907f64df6faf00caeb1a7bf1",
+      "bytes": 5103
+    },
+    {
+      "path": "security-crypto/csrf_double_submit.rs",
+      "sha256": "65535513d014ad20a0be1c4b5366af070afaea60759d3f2c6e88fd5d10464c8e",
+      "bytes": 5743
+    },
+    {
+      "path": "security-crypto/hex_codec.rs",
+      "sha256": "9ff8b43a1b67d2ef4a50a8db809b0cccadb064f578630c69b944b75cca5d6f95",
+      "bytes": 5603
+    },
+    {
+      "path": "security-crypto/hmac_sha256.rs",
+      "sha256": "419fe94c52f0783ced97f10413b35da3a289b2bc9b51eb6bfab4c054fb88aa57",
+      "bytes": 8849
+    },
+    {
+      "path": "security-crypto/hmac_signed_url.rs",
+      "sha256": "dd618ec1b5d810520216a4dc4aaeb3d309d38796d4ab32618c33737e90a382f8",
+      "bytes": 9575
+    },
+    {
+      "path": "security-crypto/hotp.rs",
+      "sha256": "b61266543a81a787fe478f89fd6157a4f1c89fefb0e27ea2e95dcda7e59b5f96",
+      "bytes": 7448
+    },
+    {
+      "path": "security-crypto/jwt_hs256_verify.rs",
+      "sha256": "63a7c18d0261805d2f90222dccc802120b0c30a491331a7c324d6a6f2982170c",
+      "bytes": 11669
+    },
+    {
+      "path": "security-crypto/leaky_bucket_shaper.rs",
+      "sha256": "870796246f3d57537ca9b00131849f0ce6ac55ad93ad232c1e95fafe9bac7183",
+      "bytes": 7575
+    },
+    {
+      "path": "security-crypto/nonce_replay_guard.rs",
+      "sha256": "1dba0cf15a2aaae869462fc54d0488c8937fbaa6eb23ee1897b8f95e5a4ab9b0",
+      "bytes": 5224
+    },
+    {
+      "path": "security-crypto/otp_lockout.rs",
+      "sha256": "95ba9c44a7abe77d5e1ea9c3e9d858bc98fdc6751ea8a08dc8b335b6660e3205",
+      "bytes": 6332
+    },
+    {
+      "path": "security-crypto/password_hash_verify.rs",
+      "sha256": "2e89284dde000f1ceefa0f4295f309d8c2c95b5f5798a6bf9790733071eceea8",
+      "bytes": 9894
+    },
+    {
+      "path": "security-crypto/pbkdf2_sha256.rs",
+      "sha256": "54ee13ed4917c977313bb73d428c8e76f193521e833fe7b6f3c8d83ee2773dc8",
+      "bytes": 9424
+    },
+    {
+      "path": "security-crypto/session_token_expiry.rs",
+      "sha256": "c0ca2e52b8d91bbef4be92510c126e5e259e04daf528c32adda5de3fb4d20913",
+      "bytes": 5579
+    },
+    {
+      "path": "security-crypto/sha256.rs",
+      "sha256": "2f0f8fb20e24e7e04bc8a38c6eb31a8f4233f6704dcff94d5de87c49ceed908f",
+      "bytes": 8131
+    },
+    {
+      "path": "security-crypto/totp.rs",
+      "sha256": "ee00202a866b6172c3318b8d7815d80d0ad3da3883716a9cec8914d98162cd46",
+      "bytes": 8393
+    },
+    {
+      "path": "systems-math-encoding/adler32.rs",
+      "sha256": "f9d5ab8f17a5731368dacf3567499b1598ac60fc42c098833c1f53844423348c",
+      "bytes": 6057
+    },
+    {
+      "path": "systems-math-encoding/base58_codec.rs",
+      "sha256": "ce8acbb43c41d33f50b852e7d9dd94ee9cf9047d2474366e14575166d8cd1f89",
+      "bytes": 8129
+    },
+    {
+      "path": "systems-math-encoding/bit_reader_writer.rs",
+      "sha256": "c531efeadb76060c9a6d7206c2c3a696b566bf06fc22db645ed46d7c8e6819d3",
+      "bytes": 7907
+    },
+    {
+      "path": "systems-math-encoding/crc16_ccitt.rs",
+      "sha256": "f9bdc0b97ed1f28e1cd9c7fe55961bd9427338ab43259818f4a3524109c082a2",
+      "bytes": 6054
+    },
+    {
+      "path": "systems-math-encoding/crc32c_castagnoli.rs",
+      "sha256": "bdce36e83f52a0517a4c67276eb7b697efe0e3462c3c0b4029d87ccce2356a0d",
+      "bytes": 5967
+    },
+    {
+      "path": "systems-math-encoding/delta_zigzag_encode.rs",
+      "sha256": "0de130d95b9f525ebec07bb08cc8b2a66a62f76ab4044dd2ea9564c3eca68874",
+      "bytes": 8382
+    },
+    {
+      "path": "systems-math-encoding/dynamic_bitset.rs",
+      "sha256": "62fcf29449bb5a257b3f93cb59175cb330c7116c6d5c34d65429e0912c0445ec",
+      "bytes": 9260
+    },
+    {
+      "path": "systems-math-encoding/fletcher16.rs",
+      "sha256": "921e43e2f9affc8c8edfbd65194b4b3b704c21ace316d5a63c3f4bdcbc2ceb78",
+      "bytes": 5850
+    },
+    {
+      "path": "systems-math-encoding/gcd_fraction_reduce.rs",
+      "sha256": "8f1b99d7f8d32ec231d88d90932e83e93422fb54f12f71f784f94e8c7ccb4a7f",
+      "bytes": 6457
+    },
+    {
+      "path": "systems-math-encoding/gray_code.rs",
+      "sha256": "248331b6389c3ab190969dfcb587b75243c7751aaaf55a1b6dbf152dcaa76d47",
+      "bytes": 5986
+    },
+    {
+      "path": "systems-math-encoding/hamming_distance.rs",
+      "sha256": "76a37ca6c4a1fc80e4eaecae53d55024090ec0cf129f3e52e3bd6deab07c51c5",
+      "bytes": 6590
+    },
+    {
+      "path": "systems-math-encoding/length_prefixed_framing.rs",
+      "sha256": "d4b4ba02a6251d7283f32bdcea266dc228562e307ae4febb48605c3346fca2f9",
+      "bytes": 7818
+    },
+    {
+      "path": "systems-math-encoding/luhn_checksum.rs",
+      "sha256": "ea30326c7a0dbe1118370dd5a5e5cb99030b26ee81af546bc3c05a618794f5e0",
+      "bytes": 7107
+    },
+    {
+      "path": "systems-math-encoding/modexp.rs",
+      "sha256": "553a713323d2e00efabf4ca41bbb1e4797e13795a1cfd47f23b364cf68043b03",
+      "bytes": 6473
+    },
+    {
+      "path": "systems-math-encoding/popcount_bits.rs",
+      "sha256": "c080ff7d4fd53ead129181b7b1dd1654410ca0e982c891cfac6482d4cb27a7a7",
+      "bytes": 6969
+    },
+    {
+      "path": "systems-math-encoding/reverse_bits.rs",
+      "sha256": "62cd52d39223dfd115629e353bfd95369c25374a3e4a5b46f692fd94cec94f54",
+      "bytes": 7057
+    },
+    {
+      "path": "systems-math-encoding/roman_numeral.rs",
+      "sha256": "df0d9ca8ad6ad77042fd77019382d123d792428b12601d9b913cc319d388f215",
+      "bytes": 6823
+    },
+    {
+      "path": "systems-math-encoding/run_length_encode.rs",
+      "sha256": "4e7fa98665bb6857f0010ed91e679be6b1e7a395522c8acdb988b94af3a5ee41",
+      "bytes": 7237
+    },
+    {
+      "path": "systems-math-encoding/varint_leb128.rs",
+      "sha256": "a294182f6569be1c7f42410fd2081ab8ff2b9fd817a0f576401265886a5d4a59",
+      "bytes": 6054
+    },
+    {
+      "path": "systems-math-encoding/zigzag_signed.rs",
+      "sha256": "24773d6aaf7eee3235f70065a3005fc927acef9f04c446d23797b37830ea2f89",
+      "bytes": 5530
     }
   ]
 }
