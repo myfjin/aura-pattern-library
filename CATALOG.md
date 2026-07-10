@@ -640,3 +640,103 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `secret_audit_trail` | python | System Administration — Secrets & Credentials |
 | `token_rotation` | python | System Administration — Secrets & Credentials |
 | `ttl_cache` | python | System Administration — Secrets & Credentials |
+| `clock_skew_detect` | python | System Administration — Time & Clock Correctness |
+| `deadline_ttl` | python | System Administration — Time & Clock Correctness |
+| `drift_compensation` | python | System Administration — Time & Clock Correctness |
+| `leap_safe_interval` | python | System Administration — Time & Clock Correctness |
+| `monotonic_vs_wall` | python | System Administration — Time & Clock Correctness |
+| `ntp_offset_check` | python | System Administration — Time & Clock Correctness |
+| `sliding_rate_window` | python | System Administration — Time & Clock Correctness |
+| `timeout_budget` | python | System Administration — Time & Clock Correctness |
+| `two_clocks_reconcile` | python | System Administration — Time & Clock Correctness |
+| `tz_safe_timestamp` | python | System Administration — Time & Clock Correctness |
+| `atomic_symlink_swap` | python | System Administration — Deployment & Rollback |
+| `blue_green_deploy` | python | System Administration — Deployment & Rollback |
+| `canary_gate` | python | System Administration — Deployment & Rollback |
+| `config_drift_detect` | python | System Administration — Deployment & Rollback |
+| `deplock_verify` | python | System Administration — Deployment & Rollback |
+| `deploy_idempotency` | python | System Administration — Deployment & Rollback |
+| `health_gated_promote` | python | System Administration — Deployment & Rollback |
+| `immutable_release` | python | System Administration — Deployment & Rollback |
+| `rollback_on_failure` | python | System Administration — Deployment & Rollback |
+| `version_pin_verify` | python | System Administration — Deployment & Rollback |
+| `backup_catalog` | python | System Administration — Backup & Disaster Recovery |
+| `backup_dedup` | python | System Administration — Backup & Disaster Recovery |
+| `backup_encryption` | python | System Administration — Backup & Disaster Recovery |
+| `full_incremental_backup` | python | System Administration — Backup & Disaster Recovery |
+| `offsite_integrity` | python | System Administration — Backup & Disaster Recovery |
+| `restore_drill` | python | System Administration — Backup & Disaster Recovery |
+| `restore_verify` | python | System Administration — Backup & Disaster Recovery |
+| `retention_policy` | python | System Administration — Backup & Disaster Recovery |
+| `rpo_rto_measure` | python | System Administration — Backup & Disaster Recovery |
+| `snapshot_chain` | python | System Administration — Backup & Disaster Recovery |
+| `counter_gauge_histogram` | python | System Administration — Monitoring & Metrics |
+| `heartbeat_miss_alert` | python | System Administration — Monitoring & Metrics |
+| `metric_export` | python | System Administration — Monitoring & Metrics |
+| `p2_percentile` | python | System Administration — Monitoring & Metrics |
+| `rate_calc` | python | System Administration — Monitoring & Metrics |
+| `sliding_aggregate` | python | System Administration — Monitoring & Metrics |
+| `slo_error_budget` | python | System Administration — Monitoring & Metrics |
+| `threshold_alert` | python | System Administration — Monitoring & Metrics |
+| `uptime_calc` | python | System Administration — Monitoring & Metrics |
+| `zscore_anomaly` | python | System Administration — Monitoring & Metrics |
+| `load_avg_read` | python | System Administration — Process/System Introspection |
+| `memory_pressure` | python | System Administration — Process/System Introspection |
+| `mount_disk_usage` | python | System Administration — Process/System Introspection |
+| `open_fd_count` | python | System Administration — Process/System Introspection |
+| `orphan_detect` | python | System Administration — Process/System Introspection |
+| `proc_parse_portable` | python | System Administration — Process/System Introspection |
+| `process_tree` | python | System Administration — Process/System Introspection |
+| `resource_usage` | python | System Administration — Process/System Introspection |
+| `top_n_by_resource` | python | System Administration — Process/System Introspection |
+| `uptime_read` | python | System Administration — Process/System Introspection |
+| `ansi_strip` | python | System Administration — Text/Stream Processing |
+| `dedup_stream` | python | System Administration — Text/Stream Processing |
+| `field_extract` | python | System Administration — Text/Stream Processing |
+| `logline_parse` | python | System Administration — Text/Stream Processing |
+| `merge_sorted_streams` | python | System Administration — Text/Stream Processing |
+| `multiline_join` | python | System Administration — Text/Stream Processing |
+| `robust_csv_parse` | python | System Administration — Text/Stream Processing |
+| `structured_diff` | python | System Administration — Text/Stream Processing |
+| `tail_follow_stream` | python | System Administration — Text/Stream Processing |
+| `throughput_meter` | python | System Administration — Text/Stream Processing |
+| `binary_presence_check` | python | System Administration — Packaging & Environment |
+| `capability_probe` | python | System Administration — Packaging & Environment |
+| `depgraph_resolve` | python | System Administration — Packaging & Environment |
+| `deps_verify` | python | System Administration — Packaging & Environment |
+| `dryrun_installer` | python | System Administration — Packaging & Environment |
+| `env_diff` | python | System Administration — Packaging & Environment |
+| `lockfile_hash_integrity` | python | System Administration — Packaging & Environment |
+| `path_sanity` | python | System Administration — Packaging & Environment |
+| `reproducible_build_check` | python | System Administration — Packaging & Environment |
+| `version_constraint_solve` | python | System Administration — Packaging & Environment |
+| `append_only_audit` | python | System Administration — Access Control & Audit |
+| `command_allowlist` | python | System Administration — Access Control & Audit |
+| `immutable_audit` | python | System Administration — Access Control & Audit |
+| `least_privilege_verify` | python | System Administration — Access Control & Audit |
+| `permission_matrix` | python | System Administration — Access Control & Audit |
+| `priv_escalation_detect` | python | System Administration — Access Control & Audit |
+| `rbac_check` | python | System Administration — Access Control & Audit |
+| `session_record` | python | System Administration — Access Control & Audit |
+| `sudo_self_body_guard` | python | System Administration — Access Control & Audit |
+| `tamper_evident_chain` | python | System Administration — Access Control & Audit |
+| `backfill_range` | python | System Administration — Data Pipeline Ops |
+| `checkpoint_resume` | python | System Administration — Data Pipeline Ops |
+| `exactly_once_dedup` | python | System Administration — Data Pipeline Ops |
+| `idempotent_etl_step` | python | System Administration — Data Pipeline Ops |
+| `lineage_track` | python | System Administration — Data Pipeline Ops |
+| `partition_manage` | python | System Administration — Data Pipeline Ops |
+| `pipeline_dead_letter` | python | System Administration — Data Pipeline Ops |
+| `replay_safe` | python | System Administration — Data Pipeline Ops |
+| `schema_drift_detect` | python | System Administration — Data Pipeline Ops |
+| `watermark_track` | python | System Administration — Data Pipeline Ops |
+| `consistent_hashing` | python | System Administration — Mesh/Distributed Coordination |
+| `gossip_membership` | python | System Administration — Mesh/Distributed Coordination |
+| `heartbeat_lease` | python | System Administration — Mesh/Distributed Coordination |
+| `idempotent_replication` | python | System Administration — Mesh/Distributed Coordination |
+| `lamport_clock` | python | System Administration — Mesh/Distributed Coordination |
+| `leader_election_lite` | python | System Administration — Mesh/Distributed Coordination |
+| `lease_distributed_lock` | python | System Administration — Mesh/Distributed Coordination |
+| `lww_conflict_resolve` | python | System Administration — Mesh/Distributed Coordination |
+| `partition_tolerance_demo` | python | System Administration — Mesh/Distributed Coordination |
+| `quorum_check` | python | System Administration — Mesh/Distributed Coordination |

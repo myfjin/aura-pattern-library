@@ -17,8 +17,8 @@
       "signature": "authentic + unaltered"
     },
     "python/system-administration": {
-      "files": 100,
-      "gate_ok": 100,
+      "files": 200,
+      "gate_ok": 200,
       "gate_fail": 0,
       "signature": "authentic + unaltered"
     },
