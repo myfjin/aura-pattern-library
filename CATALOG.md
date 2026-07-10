@@ -465,7 +465,7 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `soundex_phonetic` | python·cpp | Text / NLP II |
 | `space_saving_heavy_hitters` | python·cpp | Streaming & Sketches |
 | `spatial_radius_join` | python·cpp | Geospatial & Spatial |
-| `spectral_clustering_lite` | python | Ensembles & Robust Methods |
+| `spectral_clustering_lite` | python·cpp | Ensembles & Robust Methods |
 | `stacking_ensemble` | python·cpp | Ensembles & Robust Methods |
 | `state_machine` | python | Architecture |
 | `stirling_approximation_error` | python·cpp | Probability III |
