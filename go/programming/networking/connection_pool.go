@@ -3,9 +3,12 @@ package main
 import (
 	"container/list"
 	"fmt"
+	"os"
+	"sync"
 	"time"
 )
 
+// Connection represents a single connection with health tracking.
 // △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 var _auraMark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
@@ -17,8 +20,7 @@ type Connection struct {
 	inUse     bool
 }
 
-func NewConnection(id int) *Connection {
-	now := time.Now()
+func NewConnection(id int, now time.Time) *Connection {
 	return &Connection{
 		id:        id,
 		createdAt: now,
@@ -28,8 +30,8 @@ func NewConnection(id int) *Connection {
 	}
 }
 
-func (c *Connection) markAsUsed() {
-	c.lastUsed = time.Now()
+func (c *Connection) markAsUsed(now time.Time) {
+	c.lastUsed = now
 	c.inUse = true
 }
 
@@ -41,8 +43,8 @@ func (c *Connection) isInUse() bool {
 	return c.inUse
 }
 
-func (c *Connection) healthCheck() bool {
-	if time.Since(c.createdAt).Seconds() > 30 {
+func (c *Connection) healthCheck(now time.Time) bool {
+	if now.Sub(c.createdAt).Seconds() > 30 {
 		c.healthy = false
 	}
 	return c.healthy
@@ -52,11 +54,12 @@ func (c *Connection) String() string {
 	return fmt.Sprintf("Connection(id=%d, healthy=%v, in_use=%v)", c.id, c.healthy, c.inUse)
 }
 
+// ConnectionPool is a thread-safe connection pool with health checks and size management.
 type ConnectionPool struct {
 	maxSize           int
 	available         *list.List
-	inUse             map[*Connection]bool
-	mu                chan struct{}
+	inUse             map[*Connection]struct{}
+	mu                sync.Mutex
 	connectionCounter int
 }
 
@@ -67,69 +70,65 @@ func NewConnectionPool(maxSize int) *ConnectionPool {
 	return &ConnectionPool{
 		maxSize:   maxSize,
 		available: list.New(),
-		inUse:     make(map[*Connection]bool),
-		mu:        make(chan struct{}, 1),
+		inUse:     make(map[*Connection]struct{}),
 	}
 }
-
-func (p *ConnectionPool) lock()   { p.mu <- struct{}{} }
-func (p *ConnectionPool) unlock() { <-p.mu }
 
 func (p *ConnectionPool) maxSizeVal() int {
 	return p.maxSize
 }
 
 func (p *ConnectionPool) availableCount() int {
-	p.lock()
-	defer p.unlock()
+	p.mu.Lock()
+	defer p.mu.Unlock()
 	return p.available.Len()
 }
 
 func (p *ConnectionPool) inUseCount() int {
-	p.lock()
-	defer p.unlock()
+	p.mu.Lock()
+	defer p.mu.Unlock()
 	return len(p.inUse)
 }
 
 func (p *ConnectionPool) totalCount() int {
-	p.lock()
-	defer p.unlock()
+	p.mu.Lock()
+	defer p.mu.Unlock()
 	return p.available.Len() + len(p.inUse)
 }
 
-func (p *ConnectionPool) createConnection() *Connection {
+func (p *ConnectionPool) createConnection(now time.Time) *Connection {
 	p.connectionCounter++
-	return NewConnection(p.connectionCounter)
+	return NewConnection(p.connectionCounter, now)
 }
 
-func (p *ConnectionPool) borrowConnection() *Connection {
-	p.lock()
-	defer p.unlock()
+func (p *ConnectionPool) borrowConnection(now time.Time) *Connection {
+	p.mu.Lock()
+	defer p.mu.Unlock()
 
 	for p.available.Len() > 0 {
 		elem := p.available.Front()
 		connection := elem.Value.(*Connection)
 		p.available.Remove(elem)
-		if connection.healthCheck() {
-			connection.markAsUsed()
-			p.inUse[connection] = true
+		if connection.healthCheck(now) {
+			connection.markAsUsed(now)
+			p.inUse[connection] = struct{}{}
 			return connection
 		}
 	}
 
 	if p.available.Len()+len(p.inUse) < p.maxSize {
-		connection := p.createConnection()
-		connection.markAsUsed()
-		p.inUse[connection] = true
+		connection := p.createConnection(now)
+		connection.markAsUsed(now)
+		p.inUse[connection] = struct{}{}
 		return connection
 	}
 
 	return nil
 }
 
-func (p *ConnectionPool) returnConnection(connection *Connection) bool {
-	p.lock()
-	defer p.unlock()
+func (p *ConnectionPool) returnConnection(connection *Connection, now time.Time) bool {
+	p.mu.Lock()
+	defer p.mu.Unlock()
 
 	if _, ok := p.inUse[connection]; !ok {
 		return false
@@ -138,7 +137,7 @@ func (p *ConnectionPool) returnConnection(connection *Connection) bool {
 	connection.markAsAvailable()
 	delete(p.inUse, connection)
 
-	if connection.healthCheck() {
+	if connection.healthCheck(now) {
 		p.available.PushBack(connection)
 		return true
 	}
@@ -146,17 +145,17 @@ func (p *ConnectionPool) returnConnection(connection *Connection) bool {
 }
 
 func (p *ConnectionPool) closeAllConnections() {
-	p.lock()
-	defer p.unlock()
+	p.mu.Lock()
+	defer p.mu.Unlock()
 	p.available.Init()
 	for c := range p.inUse {
 		delete(p.inUse, c)
 	}
 }
 
-func (p *ConnectionPool) cleanupUnhealthyConnections() int {
-	p.lock()
-	defer p.unlock()
+func (p *ConnectionPool) cleanupUnhealthyConnections(now time.Time) int {
+	p.mu.Lock()
+	defer p.mu.Unlock()
 
 	removed := 0
 	healthy := list.New()
@@ -164,7 +163,7 @@ func (p *ConnectionPool) cleanupUnhealthyConnections() int {
 		elem := p.available.Front()
 		conn := elem.Value.(*Connection)
 		p.available.Remove(elem)
-		if conn.healthCheck() {
+		if conn.healthCheck(now) {
 			healthy.PushBack(conn)
 		} else {
 			removed++
@@ -173,63 +172,140 @@ func (p *ConnectionPool) cleanupUnhealthyConnections() int {
 	p.available = healthy
 
 	for conn := range p.inUse {
-		if !conn.healthCheck() {
+		if !conn.healthCheck(now) {
 			removed++
 		}
 	}
 	return removed
 }
 
+// Fake clock for deterministic self-test.
+var fakeNow = time.Unix(1000, 0)
+
+func currentTime() time.Time {
+	return fakeNow
+}
+
 func main() {
-	fmt.Println("=== Connection Pool Demo ===")
-
 	pool := NewConnectionPool(3)
-	fmt.Printf("Created pool with max size: %d\n", pool.maxSizeVal())
+	_ = pool.maxSizeVal()
 
-	connections := []*Connection{}
+	conns := make([]*Connection, 5)
 	for i := 0; i < 5; i++ {
-		conn := pool.borrowConnection()
-		if conn != nil {
-			connections = append(connections, conn)
-			fmt.Printf("Borrowed %s\n", conn)
-		} else {
-			fmt.Printf("Failed to borrow connection %d - pool at capacity\n", i+1)
+		conns[i] = pool.borrowConnection(currentTime())
+	}
+
+	granted := make([]*Connection, 0, 3)
+	for _, c := range conns {
+		if c != nil {
+			granted = append(granted, c)
 		}
 	}
 
-	fmt.Printf("Pool status: %d available, %d in use\n", pool.availableCount(), pool.inUseCount())
-
-	for i := 0; i < 2; i++ {
-		if len(connections) > 0 {
-			conn := connections[len(connections)-1]
-			connections = connections[:len(connections)-1]
-			pool.returnConnection(conn)
-			fmt.Printf("Returned %s\n", conn)
-		}
+	if !(len(granted) == 3) {
+		fmt.Fprintf(os.Stderr, "max_size=3 pool granted %d\n", len(granted))
+		os.Exit(1)
+	}
+	if !(conns[3] == nil) {
+		fmt.Fprintln(os.Stderr, "fourth borrow was not refused")
+		os.Exit(1)
+	}
+	if !(conns[4] == nil) {
+		fmt.Fprintln(os.Stderr, "fifth borrow was not refused")
+		os.Exit(1)
+	}
+	if !(pool.inUseCount() == 3) {
+		fmt.Fprintln(os.Stderr, "in_use_count mismatch")
+		os.Exit(1)
+	}
+	if !(pool.availableCount() == 0) {
+		fmt.Fprintln(os.Stderr, "available_count mismatch")
+		os.Exit(1)
 	}
 
-	fmt.Printf("Pool status: %d available, %d in use\n", pool.availableCount(), pool.inUseCount())
-
-	for i := 0; i < 2; i++ {
-		conn := pool.borrowConnection()
-		if conn != nil {
-			connections = append(connections, conn)
-			fmt.Printf("Borrowed %s\n", conn)
-		}
+	idsReturned := map[int]struct{}{
+		granted[0].id: {},
+		granted[1].id: {},
+	}
+	_ = idsReturned
+	if !(pool.returnConnection(granted[0], currentTime()) == true) {
+		fmt.Fprintln(os.Stderr, "return first connection failed")
+		os.Exit(1)
+	}
+	if !(pool.returnConnection(granted[1], currentTime()) == true) {
+		fmt.Fprintln(os.Stderr, "return second connection failed")
+		os.Exit(1)
+	}
+	if !(pool.availableCount() == 2) {
+		fmt.Fprintln(os.Stderr, "available count after returns mismatch")
+		os.Exit(1)
+	}
+	if !(pool.inUseCount() == 1) {
+		fmt.Fprintln(os.Stderr, "in_use count after returns mismatch")
+		os.Exit(1)
 	}
 
-	fmt.Printf("Pool status: %d available, %d in use\n", pool.availableCount(), pool.inUseCount())
-
-	removed := pool.cleanupUnhealthyConnections()
-	fmt.Printf("Cleaned up %d unhealthy connections\n", removed)
-
-	for len(connections) > 0 {
-		conn := connections[len(connections)-1]
-		connections = connections[:len(connections)-1]
-		pool.returnConnection(conn)
-		fmt.Printf("Returned %s\n", conn)
+	re1 := pool.borrowConnection(currentTime())
+	re2 := pool.borrowConnection(currentTime())
+	if !((re1.id == granted[0].id || re1.id == granted[1].id) &&
+		(re2.id == granted[0].id || re2.id == granted[1].id) &&
+		(re1.id != re2.id)) {
+		fmt.Fprintln(os.Stderr, "pool built new connections instead of reusing returned ones")
+		os.Exit(1)
 	}
 
-	fmt.Printf("Final pool status: %d available, %d in use\n", pool.availableCount(), pool.inUseCount())
-	fmt.Println("=== Demo Complete ===")
+	foreign := NewConnection(999, currentTime())
+	if !(pool.returnConnection(foreign, currentTime()) == false) {
+		fmt.Fprintln(os.Stderr, "foreign connection accepted")
+		os.Exit(1)
+	}
+	if !(pool.returnConnection(re1, currentTime()) == true) {
+		fmt.Fprintln(os.Stderr, "first re-borrow return failed")
+		os.Exit(1)
+	}
+	if !(pool.returnConnection(re1, currentTime()) == false) {
+		fmt.Fprintln(os.Stderr, "double return accepted")
+		os.Exit(1)
+	}
+
+	// Age-out: at +31s every existing connection fails its health check.
+	fakeNow = fakeNow.Add(31 * time.Second)
+
+	_ = pool.inUseCount()
+	if !(pool.returnConnection(re2, currentTime()) == true) {
+		fmt.Fprintln(os.Stderr, "aged in-use return failed")
+		os.Exit(1)
+	}
+	if !(pool.availableCount() == 1) {
+		fmt.Fprintln(os.Stderr, "aged (unhealthy) connection was re-pooled on return")
+		os.Exit(1)
+	}
+
+	removed := pool.cleanupUnhealthyConnections(currentTime())
+	if !(removed >= 1) {
+		fmt.Fprintf(os.Stderr, "cleanup found no unhealthy connections, removed %d\n", removed)
+		os.Exit(1)
+	}
+	if !(pool.availableCount() == 0) {
+		fmt.Fprintln(os.Stderr, "unhealthy connection survived cleanup")
+		os.Exit(1)
+	}
+
+	fresh := pool.borrowConnection(currentTime())
+	if !(fresh != nil && fresh.healthCheck(currentTime()) == true) {
+		fmt.Fprintln(os.Stderr, "fresh borrow after eviction failed")
+		os.Exit(1)
+	}
+
+	pool.closeAllConnections()
+	if !(pool.availableCount() == 0) {
+		fmt.Fprintln(os.Stderr, "close_all available not empty")
+		os.Exit(1)
+	}
+	if !(pool.inUseCount() == 0) {
+		fmt.Fprintln(os.Stderr, "close_all in_use not empty")
+		os.Exit(1)
+	}
+
+	fmt.Println("connection_pool: 3/5 granted at cap, reuse by id, foreign+double returns refused, 31s age-out evicted, close_all clean — PASS")
 }

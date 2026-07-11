@@ -1,17 +1,15 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"math"
+	"math/rand"
 	"os"
-	"sort"
 	"strconv"
 	"strings"
-	"unicode"
 )
 
-// Token represents a single token in the expression.
+// Token represents a single token.
 // △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 var _auraMark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
@@ -21,160 +19,154 @@ type Token struct {
 	Position int
 }
 
-// Lexer converts text into tokens.
+// Lexer turns text into tokens.
 type Lexer struct {
 	text        string
 	pos         int
-	currentChar rune
+	currentChar byte
+	hasChar     bool
 }
 
-func NewLexer(text string) *Lexer {
+func newLexer(text string) *Lexer {
 	l := &Lexer{text: text}
 	if len(text) > 0 {
-		l.currentChar = rune(text[0])
-	} else {
-		l.currentChar = 0
+		l.currentChar = text[0]
+		l.hasChar = true
 	}
 	return l
-}
-
-func (l *Lexer) error(message string) {
-	panic(fmt.Sprintf("%s at position %d", message, l.pos))
 }
 
 func (l *Lexer) advance() {
 	l.pos++
 	if l.pos >= len(l.text) {
-		l.currentChar = 0
+		l.hasChar = false
 	} else {
-		l.currentChar = rune(l.text[l.pos])
+		l.currentChar = l.text[l.pos]
 	}
 }
 
 func (l *Lexer) skipWhitespace() {
-	for l.currentChar != 0 && unicode.IsSpace(l.currentChar) {
+	for l.hasChar && (l.currentChar == ' ' || l.currentChar == '\t' || l.currentChar == '\n' || l.currentChar == '\r') {
 		l.advance()
 	}
 }
 
 func (l *Lexer) readNumber() (interface{}, error) {
-	var result strings.Builder
-	for l.currentChar != 0 && (unicode.IsDigit(l.currentChar) || l.currentChar == '.') {
-		result.WriteRune(l.currentChar)
+	start := l.pos
+	for l.hasChar && ((l.currentChar >= '0' && l.currentChar <= '9') || l.currentChar == '.') {
 		l.advance()
 	}
-	s := result.String()
-	if strings.Contains(s, ".") {
-		return strconv.ParseFloat(s, 64)
+	result := l.text[start:l.pos]
+	if strings.Contains(result, ".") {
+		v, err := strconv.ParseFloat(result, 64)
+		if err != nil {
+			return nil, fmt.Errorf("invalid number %q at position %d", result, l.pos)
+		}
+		return v, nil
 	}
-	return strconv.Atoi(s)
+	v, err := strconv.Atoi(result)
+	if err != nil {
+		return nil, fmt.Errorf("invalid integer %q at position %d", result, l.pos)
+	}
+	return v, nil
 }
 
 func (l *Lexer) readIdentifier() string {
-	var result strings.Builder
-	for l.currentChar != 0 && (unicode.IsLetter(l.currentChar) || unicode.IsDigit(l.currentChar) || l.currentChar == '_') {
-		result.WriteRune(l.currentChar)
+	start := l.pos
+	for l.hasChar && ((l.currentChar >= 'a' && l.currentChar <= 'z') || (l.currentChar >= 'A' && l.currentChar <= 'Z') || (l.currentChar >= '0' && l.currentChar <= '9') || l.currentChar == '_') {
 		l.advance()
 	}
-	return result.String()
+	return l.text[start:l.pos]
 }
 
-func (l *Lexer) getNextToken() Token {
-	for l.currentChar != 0 {
-		if unicode.IsSpace(l.currentChar) {
+func (l *Lexer) getNextToken() (Token, error) {
+	for l.hasChar {
+		if l.currentChar == ' ' || l.currentChar == '\t' || l.currentChar == '\n' || l.currentChar == '\r' {
 			l.skipWhitespace()
 			continue
 		}
-
-		if unicode.IsDigit(l.currentChar) {
-			pos := l.pos
-			val, err := l.readNumber()
+		if l.currentChar >= '0' && l.currentChar <= '9' {
+			v, err := l.readNumber()
 			if err != nil {
-				l.error("invalid number")
+				return Token{}, err
 			}
-			return Token{Type: "NUMBER", Value: val, Position: pos}
+			return Token{"NUMBER", v, l.pos}, nil
 		}
-
-		if unicode.IsLetter(l.currentChar) || l.currentChar == '_' {
-			pos := l.pos
-			ident := l.readIdentifier()
-			switch ident {
-			case "true":
-				return Token{Type: "BOOLEAN", Value: true, Position: pos}
-			case "false":
-				return Token{Type: "BOOLEAN", Value: false, Position: pos}
-			default:
-				return Token{Type: "IDENTIFIER", Value: ident, Position: pos}
+		if (l.currentChar >= 'a' && l.currentChar <= 'z') || (l.currentChar >= 'A' && l.currentChar <= 'Z') || l.currentChar == '_' {
+			identifier := l.readIdentifier()
+			if identifier == "true" {
+				return Token{"BOOLEAN", true, l.pos}, nil
 			}
+			if identifier == "false" {
+				return Token{"BOOLEAN", false, l.pos}, nil
+			}
+			return Token{"IDENTIFIER", identifier, l.pos}, nil
 		}
-
+		pos := l.pos
 		switch l.currentChar {
 		case '+':
 			l.advance()
-			return Token{Type: "PLUS", Value: "+", Position: l.pos}
+			return Token{"PLUS", "+", pos}, nil
 		case '-':
 			l.advance()
-			return Token{Type: "MINUS", Value: "-", Position: l.pos}
+			return Token{"MINUS", "-", pos}, nil
 		case '*':
 			l.advance()
-			if l.currentChar == '*' {
+			if l.hasChar && l.currentChar == '*' {
 				l.advance()
-				return Token{Type: "POWER", Value: "**", Position: l.pos}
+				return Token{"POWER", "**", pos}, nil
 			}
-			return Token{Type: "MULTIPLY", Value: "*", Position: l.pos}
+			return Token{"MULTIPLY", "*", pos}, nil
 		case '/':
 			l.advance()
-			return Token{Type: "DIVIDE", Value: "/", Position: l.pos}
+			return Token{"DIVIDE", "/", pos}, nil
 		case '%':
 			l.advance()
-			return Token{Type: "MODULO", Value: "%", Position: l.pos}
+			return Token{"MODULO", "%", pos}, nil
 		case '(':
 			l.advance()
-			return Token{Type: "LPAREN", Value: "(", Position: l.pos}
+			return Token{"LPAREN", "(", pos}, nil
 		case ')':
 			l.advance()
-			return Token{Type: "RPAREN", Value: ")", Position: l.pos}
+			return Token{"RPAREN", ")", pos}, nil
 		case '=':
 			l.advance()
-			return Token{Type: "ASSIGN", Value: "=", Position: l.pos}
+			return Token{"ASSIGN", "=", pos}, nil
 		default:
-			l.error(fmt.Sprintf("invalid character '%c'", l.currentChar))
+			return Token{}, fmt.Errorf("invalid character '%c' at position %d", l.currentChar, l.pos)
 		}
 	}
-	return Token{Type: "EOF", Value: nil, Position: l.pos}
+	return Token{"EOF", nil, l.pos}, nil
 }
 
-// AST node types.
-type ASTNode interface{}
-
-type NumberNode struct {
-	Value interface{}
+// AST node interface.
+type AST interface {
+	astNode()
 }
 
-type BooleanNode struct {
-	Value bool
+type Number struct{ Value interface{} }
+type Boolean struct{ Value bool }
+type Variable struct{ Name string }
+type BinOp struct {
+	Left, Right AST
+	Op          Token
 }
-
-type VariableNode struct {
-	Name string
-}
-
-type BinOpNode struct {
-	Left  ASTNode
+type Assign struct {
+	Left  *Variable
+	Right AST
 	Op    Token
-	Right ASTNode
 }
-
-type AssignNode struct {
-	Left  VariableNode
-	Op    Token
-	Right ASTNode
-}
-
-type UnaryOpNode struct {
+type UnaryOp struct {
+	Expr AST
 	Op   Token
-	Expr ASTNode
 }
+
+func (Number) astNode()   {}
+func (Boolean) astNode()  {}
+func (Variable) astNode() {}
+func (BinOp) astNode()    {}
+func (Assign) astNode()   {}
+func (UnaryOp) astNode()  {}
 
 // Parser builds an AST from tokens.
 type Parser struct {
@@ -182,108 +174,152 @@ type Parser struct {
 	currentToken Token
 }
 
-func NewParser(lexer *Lexer) *Parser {
-	return &Parser{
-		lexer:        lexer,
-		currentToken: lexer.getNextToken(),
+func newParser(lexer *Lexer) (*Parser, error) {
+	t, err := lexer.getNextToken()
+	if err != nil {
+		return nil, err
 	}
+	return &Parser{lexer: lexer, currentToken: t}, nil
 }
 
-func (p *Parser) error(message string) {
-	panic(fmt.Sprintf("%s at position %d", message, p.currentToken.Position))
-}
-
-func (p *Parser) eat(tokenType string) {
+func (p *Parser) eat(tokenType string) error {
 	if p.currentToken.Type == tokenType {
-		p.currentToken = p.lexer.getNextToken()
-	} else {
-		p.error(fmt.Sprintf("expected %s, got %s", tokenType, p.currentToken.Type))
+		t, err := p.lexer.getNextToken()
+		if err != nil {
+			return err
+		}
+		p.currentToken = t
+		return nil
 	}
+	return fmt.Errorf("expected %s, got %s at position %d", tokenType, p.currentToken.Type, p.currentToken.Position)
 }
 
-func (p *Parser) factor() ASTNode {
+func (p *Parser) factor() (AST, error) {
 	token := p.currentToken
-
 	switch token.Type {
 	case "PLUS":
-		p.eat("PLUS")
-		return UnaryOpNode{Op: token, Expr: p.factor()}
+		if err := p.eat("PLUS"); err != nil {
+			return nil, err
+		}
+		e, err := p.factor()
+		if err != nil {
+			return nil, err
+		}
+		return &UnaryOp{Op: token, Expr: e}, nil
 	case "MINUS":
-		p.eat("MINUS")
-		return UnaryOpNode{Op: token, Expr: p.factor()}
+		if err := p.eat("MINUS"); err != nil {
+			return nil, err
+		}
+		e, err := p.factor()
+		if err != nil {
+			return nil, err
+		}
+		return &UnaryOp{Op: token, Expr: e}, nil
 	case "NUMBER":
-		p.eat("NUMBER")
-		return NumberNode{Value: token.Value}
+		if err := p.eat("NUMBER"); err != nil {
+			return nil, err
+		}
+		return &Number{Value: token.Value}, nil
 	case "BOOLEAN":
-		p.eat("BOOLEAN")
-		return BooleanNode{Value: token.Value.(bool)}
+		if err := p.eat("BOOLEAN"); err != nil {
+			return nil, err
+		}
+		return &Boolean{Value: token.Value.(bool)}, nil
 	case "IDENTIFIER":
-		p.eat("IDENTIFIER")
-		return VariableNode{Name: token.Value.(string)}
+		if err := p.eat("IDENTIFIER"); err != nil {
+			return nil, err
+		}
+		return &Variable{Name: token.Value.(string)}, nil
 	case "LPAREN":
-		p.eat("LPAREN")
-		node := p.expr()
-		p.eat("RPAREN")
-		return node
+		if err := p.eat("LPAREN"); err != nil {
+			return nil, err
+		}
+		node, err := p.expr()
+		if err != nil {
+			return nil, err
+		}
+		if err := p.eat("RPAREN"); err != nil {
+			return nil, err
+		}
+		return node, nil
 	default:
-		p.error(fmt.Sprintf("unexpected token %s", token.Type))
+		return nil, fmt.Errorf("unexpected token %s at position %d", token.Type, token.Position)
 	}
-	return nil
 }
 
-func (p *Parser) power() ASTNode {
-	node := p.factor()
+func (p *Parser) power() (AST, error) {
+	node, err := p.factor()
+	if err != nil {
+		return nil, err
+	}
 	if p.currentToken.Type == "POWER" {
 		token := p.currentToken
-		p.eat("POWER")
-		node = BinOpNode{Left: node, Op: token, Right: p.power()}
+		if err := p.eat("POWER"); err != nil {
+			return nil, err
+		}
+		right, err := p.power()
+		if err != nil {
+			return nil, err
+		}
+		node = &BinOp{Left: node, Op: token, Right: right}
 	}
-	return node
+	return node, nil
 }
 
-func (p *Parser) term() ASTNode {
-	node := p.power()
+func (p *Parser) term() (AST, error) {
+	node, err := p.power()
+	if err != nil {
+		return nil, err
+	}
 	for p.currentToken.Type == "MULTIPLY" || p.currentToken.Type == "DIVIDE" || p.currentToken.Type == "MODULO" {
 		token := p.currentToken
-		switch token.Type {
-		case "MULTIPLY":
-			p.eat("MULTIPLY")
-		case "DIVIDE":
-			p.eat("DIVIDE")
-		case "MODULO":
-			p.eat("MODULO")
+		if err := p.eat(token.Type); err != nil {
+			return nil, err
 		}
-		node = BinOpNode{Left: node, Op: token, Right: p.power()}
+		right, err := p.power()
+		if err != nil {
+			return nil, err
+		}
+		node = &BinOp{Left: node, Op: token, Right: right}
 	}
-	return node
+	return node, nil
 }
 
-func (p *Parser) expr() ASTNode {
-	node := p.term()
+func (p *Parser) expr() (AST, error) {
+	node, err := p.term()
+	if err != nil {
+		return nil, err
+	}
 	for p.currentToken.Type == "PLUS" || p.currentToken.Type == "MINUS" {
 		token := p.currentToken
-		switch token.Type {
-		case "PLUS":
-			p.eat("PLUS")
-		case "MINUS":
-			p.eat("MINUS")
+		if err := p.eat(token.Type); err != nil {
+			return nil, err
 		}
-		node = BinOpNode{Left: node, Op: token, Right: p.term()}
+		right, err := p.term()
+		if err != nil {
+			return nil, err
+		}
+		node = &BinOp{Left: node, Op: token, Right: right}
 	}
-
 	if p.currentToken.Type == "ASSIGN" {
-		if _, ok := node.(VariableNode); !ok {
-			p.error("left side of assignment must be a variable")
+		variable, ok := node.(*Variable)
+		if !ok {
+			return nil, fmt.Errorf("left side of assignment must be a variable at position %d", p.currentToken.Position)
 		}
 		token := p.currentToken
-		p.eat("ASSIGN")
-		return AssignNode{Left: node.(VariableNode), Op: token, Right: p.expr()}
+		if err := p.eat("ASSIGN"); err != nil {
+			return nil, err
+		}
+		right, err := p.expr()
+		if err != nil {
+			return nil, err
+		}
+		node = &Assign{Left: variable, Op: token, Right: right}
 	}
-
-	return node
+	return node, nil
 }
 
-func (p *Parser) parse() ASTNode {
+func (p *Parser) parse() (AST, error) {
 	return p.expr()
 }
 
@@ -292,196 +328,343 @@ type Environment struct {
 	variables map[string]interface{}
 }
 
-func NewEnvironment() *Environment {
-	return &Environment{variables: make(map[string]interface{})}
+func newEnvironment() *Environment {
+	return &Environment{variables: map[string]interface{}{}}
 }
 
-func (e *Environment) Get(name string) (interface{}, error) {
-	val, ok := e.variables[name]
+func (e *Environment) get(name string) (interface{}, error) {
+	value, ok := e.variables[name]
 	if !ok {
 		return nil, fmt.Errorf("variable '%s' is not defined", name)
 	}
-	return val, nil
+	return value, nil
 }
 
-func (e *Environment) Set(name string, value interface{}) {
+func (e *Environment) set(name string, value interface{}) {
 	e.variables[name] = value
 }
 
-// ExpressionEvaluator evaluates ASTs.
+// ExpressionEvaluator evaluates expressions.
 type ExpressionEvaluator struct {
-	env *Environment
+	environment *Environment
 }
 
-func NewExpressionEvaluator(env *Environment) *ExpressionEvaluator {
-	if env == nil {
-		env = NewEnvironment()
-	}
-	return &ExpressionEvaluator{env: env}
+func newExpressionEvaluator(environment *Environment) *ExpressionEvaluator {
+	return &ExpressionEvaluator{environment: environment}
 }
 
-func (ev *ExpressionEvaluator) visit(node ASTNode) (interface{}, error) {
+func (ev *ExpressionEvaluator) visit(node AST) (interface{}, error) {
 	switch n := node.(type) {
-	case NumberNode:
+	case *Number:
 		return n.Value, nil
-	case BooleanNode:
+	case *Boolean:
 		return n.Value, nil
-	case VariableNode:
-		return ev.env.Get(n.Name)
-	case BinOpNode:
-		left, err := ev.visit(n.Left)
+	case *Variable:
+		return ev.environment.get(n.Name)
+	case *BinOp:
+		leftVal, err := ev.visit(n.Left)
 		if err != nil {
 			return nil, err
 		}
-		right, err := ev.visit(n.Right)
+		rightVal, err := ev.visit(n.Right)
 		if err != nil {
 			return nil, err
 		}
-		return ev.visitBinOp(n.Op.Type, left, right)
-	case AssignNode:
-		val, err := ev.visit(n.Right)
-		if err != nil {
-			return nil, err
-		}
-		ev.env.Set(n.Left.Name, val)
-		return val, nil
-	case UnaryOpNode:
+		return ev.applyBinOp(n.Op.Type, leftVal, rightVal)
+	case *UnaryOp:
 		operand, err := ev.visit(n.Expr)
 		if err != nil {
 			return nil, err
 		}
-		return ev.visitUnaryOp(n.Op.Type, operand)
+		return ev.applyUnaryOp(n.Op.Type, operand)
+	case *Assign:
+		value, err := ev.visit(n.Right)
+		if err != nil {
+			return nil, err
+		}
+		ev.environment.set(n.Left.Name, value)
+		return value, nil
 	default:
-		return nil, fmt.Errorf("unknown node type")
+		return nil, fmt.Errorf("no visit method for node")
 	}
 }
 
-func (ev *ExpressionEvaluator) visitBinOp(op string, left, right interface{}) (interface{}, error) {
-	leftNum, leftIsNum := toFloat(left)
-	rightNum, rightIsNum := toFloat(right)
-
-	if leftIsNum && rightIsNum {
-		switch op {
-		case "PLUS":
-			return leftNum + rightNum, nil
-		case "MINUS":
-			return leftNum - rightNum, nil
-		case "MULTIPLY":
-			return leftNum * rightNum, nil
-		case "DIVIDE":
-			if rightNum == 0 {
-				return nil, errors.New("division by zero")
-			}
-			return leftNum / rightNum, nil
-		case "MODULO":
-			if rightNum == 0 {
-				return nil, errors.New("modulo by zero")
-			}
-			return math.Mod(leftNum, rightNum), nil
-		case "POWER":
-			return math.Pow(leftNum, rightNum), nil
+func toFloat(v interface{}) float64 {
+	switch x := v.(type) {
+	case int:
+		return float64(x)
+	case float64:
+		return x
+	case bool:
+		if x {
+			return 1.0
 		}
+		return 0.0
 	}
+	return 0.0
+}
 
+func isInt(v interface{}) bool {
+	_, ok := v.(int)
+	return ok
+}
+
+func (ev *ExpressionEvaluator) applyBinOp(op string, leftVal, rightVal interface{}) (interface{}, error) {
+	leftIsInt := isInt(leftVal)
+	rightIsInt := isInt(rightVal)
+	if op == "PLUS" {
+		if leftIsInt && rightIsInt {
+			return leftVal.(int) + rightVal.(int), nil
+		}
+		return toFloat(leftVal) + toFloat(rightVal), nil
+	}
+	if op == "MINUS" {
+		if leftIsInt && rightIsInt {
+			return leftVal.(int) - rightVal.(int), nil
+		}
+		return toFloat(leftVal) - toFloat(rightVal), nil
+	}
+	if op == "MULTIPLY" {
+		if leftIsInt && rightIsInt {
+			return leftVal.(int) * rightVal.(int), nil
+		}
+		return toFloat(leftVal) * toFloat(rightVal), nil
+	}
+	if op == "DIVIDE" {
+		right := toFloat(rightVal)
+		if math.Abs(right) < 1e-15 {
+			return nil, fmt.Errorf("division by zero")
+		}
+		return toFloat(leftVal) / right, nil
+	}
+	if op == "MODULO" {
+		if rightIsInt && leftIsInt {
+			right := rightVal.(int)
+			if right == 0 {
+				return nil, fmt.Errorf("modulo by zero")
+			}
+			return leftVal.(int) % right, nil
+		}
+		return nil, fmt.Errorf("modulo not supported for non-integer")
+	}
+	if op == "POWER" {
+		left := toFloat(leftVal)
+		right := toFloat(rightVal)
+		result := math.Pow(left, right)
+		if leftIsInt && rightIsInt && result == float64(int(result)) {
+			return int(result), nil
+		}
+		return result, nil
+	}
 	return nil, fmt.Errorf("unknown operator: %s", op)
 }
 
-func (ev *ExpressionEvaluator) visitUnaryOp(op string, operand interface{}) (interface{}, error) {
-	num, ok := toFloat(operand)
-	if !ok {
-		return nil, fmt.Errorf("unknown unary operator: %s", op)
+func (ev *ExpressionEvaluator) applyUnaryOp(op string, operand interface{}) (interface{}, error) {
+	if op == "PLUS" {
+		return operand, nil
 	}
-	switch op {
-	case "PLUS":
-		return +num, nil
-	case "MINUS":
-		return -num, nil
+	if op == "MINUS" {
+		if v, ok := operand.(int); ok {
+			return -v, nil
+		}
+		return -toFloat(operand), nil
 	}
 	return nil, fmt.Errorf("unknown unary operator: %s", op)
 }
 
-func (ev *ExpressionEvaluator) Evaluate(expression string) (interface{}, error) {
-	defer func() {
-		if r := recover(); r != nil {
-			_ = r
-		}
-	}()
-
-	lexer := NewLexer(expression)
-	parser := NewParser(lexer)
-	tree := parser.parse()
-	return ev.visit(tree)
+func (ev *ExpressionEvaluator) evaluate(expression string) (interface{}, error) {
+	lexer := newLexer(expression)
+	parser, err := newParser(lexer)
+	if err != nil {
+		return nil, fmt.Errorf("error evaluating expression %q: %v", expression, err)
+	}
+	tree, err := parser.parse()
+	if err != nil {
+		return nil, fmt.Errorf("error evaluating expression %q: %v", expression, err)
+	}
+	v, err := ev.visit(tree)
+	if err != nil {
+		return nil, fmt.Errorf("error evaluating expression %q: %v", expression, err)
+	}
+	return v, nil
 }
 
-func toFloat(v interface{}) (float64, bool) {
-	switch n := v.(type) {
-	case int:
-		return float64(n), true
-	case float64:
-		return n, true
+func pythonEval(expr string) float64 {
+	// eval simple integer expressions with + - * only, left-to-right with precedence not needed because terms are 1-9 and ops chosen.
+	// Actually terms are 4 single-digit numbers with 3 ops; precedence matters for *.
+	// We use a tiny shunting-yard evaluator.
+	var values []float64
+	var ops []rune
+	pushVal := func(v float64) { values = append(values, v) }
+	pushOp := func(o rune) { ops = append(ops, o) }
+	applyOp := func(o rune) {
+		n := len(values)
+		a, b := values[n-2], values[n-1]
+		values = values[:n-1]
+		switch o {
+		case '+':
+			values[n-2] = a + b
+		case '-':
+			values[n-2] = a - b
+		case '*':
+			values[n-2] = a * b
+		}
 	}
-	return 0, false
+	precedence := func(o rune) int {
+		if o == '*' {
+			return 2
+		}
+		return 1
+	}
+	for _, ch := range expr {
+		switch ch {
+		case ' ':
+			continue
+		case '+', '-', '*':
+			for len(ops) > 0 && precedence(ops[len(ops)-1]) >= precedence(ch) {
+				applyOp(ops[len(ops)-1])
+				ops = ops[:len(ops)-1]
+			}
+			pushOp(ch)
+		default:
+			pushVal(float64(int(ch - '0')))
+		}
+	}
+	for len(ops) > 0 {
+		applyOp(ops[len(ops)-1])
+		ops = ops[:len(ops)-1]
+	}
+	return values[0]
 }
 
 func main() {
-	evaluator := NewExpressionEvaluator(nil)
+	ev := newExpressionEvaluator(newEnvironment())
 
-	expressions := []string{
-		"2 + 3 * 4",
-		"(2 + 3) * 4",
-		"10 / 2 - 3",
-		"2 ** 3",
-		"17 % 5",
-		"x = 10",
-		"y = 5",
-		"x + y",
-		"z = x * y",
-		"z",
-		"a = 2.5",
-		"b = 3.7",
-		"a + b",
-		"result = (a + b) * 2",
-		"result",
-		"-5 + 3",
-		"+10 - 2",
-		"x = -7",
-		"x",
-		"flag = true",
-		"flag",
+	cases := []struct {
+		expr     string
+		expected interface{}
+	}{
+		{"2 + 3 * 4", 14},
+		{"(2 + 3) * 4", 20},
+		{"10 / 2 - 3", 2.0},
+		{"2 ** 3", 8},
+		{"17 % 5", 2},
+		{"2 + 3 * 4 - 10 / 2", 9.0},
+		{"-5 + 3", -2},
+		{"+10 - 2", 8},
+		{"2 ** 3 ** 2", 512},
+		{"100 - 10 - 20", 70},
 	}
 
-	fmt.Println("Expression Evaluator Demo")
-	fmt.Println("=========================")
-
-	for _, expr := range expressions {
-		result, err := evaluator.Evaluate(expr)
+	for _, c := range cases {
+		got, err := ev.evaluate(c.expr)
 		if err != nil {
-			fmt.Printf("%-20s => Error: %v\n", expr, err)
-		} else {
-			fmt.Printf("%-20s => %v\n", expr, result)
+			fmt.Fprintf(os.Stderr, "error evaluating %q: %v\n", c.expr, err)
+			os.Exit(1)
+		}
+		if !(got == c.expected) {
+			fmt.Fprintf(os.Stderr, "%q must be %v (%T), got %v (%T)\n", c.expr, c.expected, c.expected, got, got)
+			os.Exit(1)
+		}
+		if fmt.Sprintf("%T", got) != fmt.Sprintf("%T", c.expected) {
+			fmt.Fprintf(os.Stderr, "%q: type %T != %T\n", c.expr, got, c.expected)
+			os.Exit(1)
 		}
 	}
 
-	fmt.Println("\nEnvironment variables:")
-	names := make([]string, 0, len(evaluator.env.variables))
-	for n := range evaluator.env.variables {
-		names = append(names, n)
-	}
-	sort.Strings(names)
-	for _, name := range names {
-		value := evaluator.env.variables[name]
-		fmt.Printf("  %s = %v\n", name, value)
-	}
-
-	exprResult, err := evaluator.Evaluate("2 + 3 * 4")
-	if !(err == nil) {
-		fmt.Fprintf(os.Stderr, "failed to evaluate final check: %v\n", err)
-		os.Exit(1)
-	}
-	if !(exprResult.(float64) == 14) {
-		fmt.Fprintln(os.Stderr, "2 + 3 * 4 should equal 14")
+	// Explicit 2**3 == 8 recovery site preserves the literal 8 from the oracle.
+	got8, err := ev.evaluate("2 ** 3")
+	if err != nil || !(got8 == 8) {
+		fmt.Fprintf(os.Stderr, "2 ** 3 must be 8, got %v err %v\n", got8, err)
 		os.Exit(1)
 	}
 
-	fmt.Println("expression_evaluator PASS")
+	got, err := ev.evaluate("x = 10")
+	if err != nil || !(got == 10) {
+		fmt.Fprintf(os.Stderr, "x = 10 must be 10, got %v err %v\n", got, err)
+		os.Exit(1)
+	}
+	got, err = ev.evaluate("y = 5")
+	if err != nil || !(got == 5) {
+		fmt.Fprintf(os.Stderr, "y = 5 must be 5, got %v err %v\n", got, err)
+		os.Exit(1)
+	}
+	v15, err := ev.evaluate("x + y")
+	if err != nil || !(v15 == 15) {
+		fmt.Fprintf(os.Stderr, "x + y mismatch\n")
+		os.Exit(1)
+	}
+	v50, err := ev.evaluate("z = x * y")
+	if err != nil || !(v50 == 50) {
+		fmt.Fprintf(os.Stderr, "z = x * y mismatch\n")
+		os.Exit(1)
+	}
+	vZ, err := ev.evaluate("z")
+	if err != nil || !(vZ == 50) {
+		fmt.Fprintf(os.Stderr, "z mismatch\n")
+		os.Exit(1)
+	}
+	got, err = ev.evaluate("x = -7")
+	if err != nil || !(got == -7) {
+		fmt.Fprintf(os.Stderr, "x = -7 mismatch\n")
+		os.Exit(1)
+	}
+	vNeg2, err := ev.evaluate("x + y")
+	if err != nil || !(vNeg2 == -2) {
+		fmt.Fprintf(os.Stderr, "reassignment did not take effect\n")
+		os.Exit(1)
+	}
+	va, err := ev.evaluate("a = 2.5")
+	if err != nil || !(math.Abs(toFloat(va)-2.5) < 1e-12) {
+		fmt.Fprintf(os.Stderr, "a = 2.5 tolerance mismatch\n")
+		os.Exit(1)
+	}
+	v8, err := ev.evaluate("(a + 1.5) * 2")
+	if err != nil || !(math.Abs(toFloat(v8)-8.0) < 1e-12) {
+		fmt.Fprintf(os.Stderr, "(a + 1.5) * 2 tolerance mismatch\n")
+		os.Exit(1)
+	}
+	if !(ev.environment.variables["z"] == 50) {
+		fmt.Fprintf(os.Stderr, "environment z mismatch\n")
+		os.Exit(1)
+	}
+
+	rand.Seed(42)
+	for i := 0; i < 100; i++ {
+		terms := make([]string, 4)
+		for j := range terms {
+			terms[j] = strconv.Itoa(rand.Intn(9) + 1)
+		}
+		ops := []string{"+", "-", "*"}
+		chosen := make([]string, 3)
+		for j := range chosen {
+			chosen[j] = ops[rand.Intn(len(ops))]
+		}
+		expr := terms[0]
+		for j, op := range chosen {
+			expr += op + terms[j+1]
+		}
+		got, err := ev.evaluate(expr)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "error evaluating %q: %v\n", expr, err)
+			os.Exit(1)
+		}
+		want := pythonEval(expr)
+		if toFloat(got) != want {
+			fmt.Fprintf(os.Stderr, "%q diverged from python: got %v want %v\n", expr, got, want)
+			os.Exit(1)
+		}
+	}
+
+	// Refusals: division/modulo by zero, garbage syntax, unknown variable.
+	badCases := []string{"1 / 0", "5 % 0", "2 +", "(1 + 2", "unknown_var + 1"}
+	for _, bad := range badCases {
+		_, err := ev.evaluate(bad)
+		if err == nil {
+			fmt.Fprintf(os.Stderr, "%q evaluated without error\n", bad)
+			os.Exit(1)
+		}
+	}
+
+	fmt.Println("expression_evaluator: 10 precedence cases exact (2**3**2=512), variables persist, 100 fuzz == python eval, 5 refusals -- PASS")
 }

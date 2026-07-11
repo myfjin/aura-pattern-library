@@ -83,6 +83,7 @@ func NewBatchController(
 		MetricsWindowSize:          metricsWindowSize,
 		currentBatchSize:           initialBatchSize,
 		inSlowStart:                true,
+		metricsHistory:             make([]Metrics, 0, metricsWindowSize),
 	}, nil
 }
 
@@ -97,26 +98,12 @@ func (c *BatchController) RecordMetrics(metrics Metrics) error {
 	if metrics.ItemsProcessed < 0 {
 		return errors.New("items processed cannot be negative")
 	}
+
 	c.metricsHistory = append(c.metricsHistory, metrics)
 	if len(c.metricsHistory) > c.MetricsWindowSize {
 		c.metricsHistory = c.metricsHistory[len(c.metricsHistory)-c.MetricsWindowSize:]
 	}
 	return nil
-}
-
-// CurrentBatchSize returns the current recommended batch size.
-func (c *BatchController) CurrentBatchSize() int {
-	return c.currentBatchSize
-}
-
-// InSlowStart reports whether the controller is still in slow-start mode.
-func (c *BatchController) InSlowStart() bool {
-	return c.inSlowStart
-}
-
-// MetricsCount returns the number of recorded metrics.
-func (c *BatchController) MetricsCount() int {
-	return len(c.metricsHistory)
 }
 
 func (c *BatchController) averageThroughput() float64 {
@@ -206,12 +193,20 @@ func (c *BatchController) Reset() {
 	c.metricsHistory = c.metricsHistory[:0]
 }
 
+// CurrentBatchSize returns the current recommended batch size.
+func (c *BatchController) CurrentBatchSize() int {
+	return c.currentBatchSize
+}
+
+// InSlowStart reports whether the controller is still in slow-start mode.
+func (c *BatchController) InSlowStart() bool {
+	return c.inSlowStart
+}
+
 // SimulateProcessing generates deterministic metrics for a given batch size.
 func SimulateProcessing(batchSize int, baselineTimePerItem float64) Metrics {
 	now := float64(time.Now().UnixNano()) / 1e9
-	// Use a deterministic hash-like variability in [-0.1, +0.1] based on the
-	// fractional part of the current time.
-	variability := 0.2*(float64(int64(now*100)%100))/100.0 - 0.1
+	variability := 0.2*float64(int64(now*100)%100)/100.0 - 0.1
 	degradationFactor := 1.0 + (float64(batchSize)/1000.0)*0.5
 	processingTime := float64(batchSize) * baselineTimePerItem * (1 + variability) * degradationFactor
 	return Metrics{
@@ -222,54 +217,312 @@ func SimulateProcessing(batchSize int, baselineTimePerItem float64) Metrics {
 	}
 }
 
-func main() {
-	fmt.Println("Adaptive Batch Size Controller Demo")
-	fmt.Println("====================================")
+func mk(throughput float64, batch int) Metrics {
+	return Metrics{BatchSize: batch, ProcessingTime: 1.0,
+		ItemsProcessed: int(throughput), Timestamp: 0.0}
+}
 
-	controller, err := NewBatchController(
-		1,   // initialBatchSize
-		128, // maxBatchSize
-		1,   // minBatchSize
-		16,  // slowStartThreshold
-		2.0, // congestionWindowMultiplier
-		0.5, // decayFactor
-		5,   // metricsWindowSize
-	)
-	if !(err == nil) {
+func main() {
+	// Throughput math is exact arithmetic.
+	if mk(25.0, 10).Throughput() != 25.0 {
+		fmt.Fprintf(os.Stderr, "50 items / 2s must be 25/s: got %v\n",
+			mk(25.0, 10).Throughput())
+		os.Exit(1)
+	}
+	if (Metrics{BatchSize: 1, ProcessingTime: 0.0, ItemsProcessed: 10, Timestamp: 0.0}).Throughput() != 0.0 {
+		fmt.Fprintln(os.Stderr, "zero-time throughput must be 0")
+		os.Exit(1)
+	}
+
+	c, err := NewBatchController(1, 128, 1, 16, 2.0, 0.5, 5)
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "controller init: %v\n", err)
 		os.Exit(1)
 	}
 
-	for i := 0; i < 50; i++ {
-		batchSize := controller.CurrentBatchSize()
-		fmt.Printf("Iteration %2d: Batch size = %3d", i+1, batchSize)
-
-		metrics := SimulateProcessing(batchSize, 0.01)
-		if err := controller.RecordMetrics(metrics); err != nil {
-			fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
-			os.Exit(1)
-		}
-
-		throughput := metrics.Throughput()
-		fmt.Printf(" | Throughput = %6.1f items/sec", throughput)
-
-		newBatchSize := controller.AdjustBatchSize()
-		if newBatchSize != batchSize {
-			fmt.Printf(" | Adjusted to %d\n", newBatchSize)
-		} else {
-			fmt.Println()
-		}
-
-		if i%7 == 0 {
-			time.Sleep(1 * time.Millisecond)
-		}
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	if c.AdjustBatchSize() != 2 {
+		fmt.Fprintf(os.Stderr, "expected batch size 2 in trace, got %d\n", c.AdjustBatchSize())
+		os.Exit(1)
+	}
+	if c.InSlowStart() != true {
+		fmt.Fprintf(os.Stderr, "slow-start flag wrong at size 2: %v\n", c.InSlowStart())
+		os.Exit(1)
 	}
 
-	fmt.Println("\nFinal state:")
-	fmt.Printf("Batch size: %d\n", controller.CurrentBatchSize())
-	fmt.Printf("In slow start: %v\n", controller.InSlowStart())
-	fmt.Printf("Metrics recorded: %d\n", controller.MetricsCount())
-}
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	if c.AdjustBatchSize() != 4 {
+		fmt.Fprintf(os.Stderr, "expected batch size 4 in trace, got %d\n", c.AdjustBatchSize())
+		os.Exit(1)
+	}
+	if c.InSlowStart() != true {
+		fmt.Fprintf(os.Stderr, "slow-start flag wrong at size 4: %v\n", c.InSlowStart())
+		os.Exit(1)
+	}
 
-var _ = os.Exit
-var _ = fmt.Sprint
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	if c.AdjustBatchSize() != 8 {
+		fmt.Fprintf(os.Stderr, "expected batch size 8 in trace, got %d\n", c.AdjustBatchSize())
+		os.Exit(1)
+	}
+	if c.InSlowStart() != true {
+		fmt.Fprintf(os.Stderr, "slow-start flag wrong at size 8: %v\n", c.InSlowStart())
+		os.Exit(1)
+	}
+
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	if c.AdjustBatchSize() != 16 {
+		fmt.Fprintf(os.Stderr, "expected batch size 16 in trace, got %d\n", c.AdjustBatchSize())
+		os.Exit(1)
+	}
+	if c.InSlowStart() != true {
+		fmt.Fprintf(os.Stderr, "slow-start flag wrong at size 16: %v\n", c.InSlowStart())
+		os.Exit(1)
+	}
+
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	if c.AdjustBatchSize() != 32 {
+		fmt.Fprintf(os.Stderr, "expected batch size 32 in trace, got %d\n", c.AdjustBatchSize())
+		os.Exit(1)
+	}
+	if c.InSlowStart() != false {
+		fmt.Fprintf(os.Stderr, "slow-start flag wrong at size 32: %v\n", c.InSlowStart())
+		os.Exit(1)
+	}
+
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	if c.AdjustBatchSize() != 33 {
+		fmt.Fprintf(os.Stderr, "expected batch size 33 in trace, got %d\n", c.AdjustBatchSize())
+		os.Exit(1)
+	}
+	if c.InSlowStart() != false {
+		fmt.Fprintf(os.Stderr, "slow-start flag wrong at size 33: %v\n", c.InSlowStart())
+		os.Exit(1)
+	}
+
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	if c.AdjustBatchSize() != 34 {
+		fmt.Fprintf(os.Stderr, "expected batch size 34 in trace, got %d\n", c.AdjustBatchSize())
+		os.Exit(1)
+	}
+	if c.InSlowStart() != false {
+		fmt.Fprintf(os.Stderr, "slow-start flag wrong at size 34: %v\n", c.InSlowStart())
+		os.Exit(1)
+	}
+
+	// Throughput collapse (1000 → 200 < 0.7x) must HALVE the batch, not grow it: 34 → 17.
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	err = c.RecordMetrics(mk(200.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	if c.AdjustBatchSize() != 17 {
+		fmt.Fprintf(os.Stderr, "congestion must decay 34*0.5=17, got %d\n", c.AdjustBatchSize())
+		os.Exit(1)
+	}
+	if c.InSlowStart() != false {
+		fmt.Fprintf(os.Stderr, "slow-start flag should be false after congestion: %v\n", c.InSlowStart())
+		os.Exit(1)
+	}
+
+	// Repeated collapses decay to the floor and NEVER below min_batch_size:
+	// 17 → 8 → 4 → 2 → 1 → 1 → 1.
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	err = c.RecordMetrics(mk(100.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	if c.AdjustBatchSize() != 8 {
+		fmt.Fprintf(os.Stderr, "decay trace expected 8, got %d\n", c.AdjustBatchSize())
+		os.Exit(1)
+	}
+
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	err = c.RecordMetrics(mk(100.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	if c.AdjustBatchSize() != 4 {
+		fmt.Fprintf(os.Stderr, "decay trace expected 4, got %d\n", c.AdjustBatchSize())
+		os.Exit(1)
+	}
+
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	err = c.RecordMetrics(mk(100.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	if c.AdjustBatchSize() != 2 {
+		fmt.Fprintf(os.Stderr, "decay trace expected 2, got %d\n", c.AdjustBatchSize())
+		os.Exit(1)
+	}
+
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	err = c.RecordMetrics(mk(100.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	if c.AdjustBatchSize() != 1 {
+		fmt.Fprintf(os.Stderr, "decay trace expected 1, got %d\n", c.AdjustBatchSize())
+		os.Exit(1)
+	}
+
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	err = c.RecordMetrics(mk(100.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	if c.AdjustBatchSize() != 1 {
+		fmt.Fprintf(os.Stderr, "decay trace expected 1, got %d\n", c.AdjustBatchSize())
+		os.Exit(1)
+	}
+
+	err = c.RecordMetrics(mk(1000.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	err = c.RecordMetrics(mk(100.0, 10))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "record metrics: %v\n", err)
+		os.Exit(1)
+	}
+	if c.AdjustBatchSize() != 1 {
+		fmt.Fprintf(os.Stderr, "decay trace expected 1, got %d\n", c.AdjustBatchSize())
+		os.Exit(1)
+	}
+	if c.currentBatchSize != 1 {
+		fmt.Fprintf(os.Stderr, "decay went below min_batch_size: %d\n", c.currentBatchSize)
+		os.Exit(1)
+	}
+
+	// reset() restores the initial state completely.
+	c.Reset()
+	if c.currentBatchSize != 1 || c.InSlowStart() != true || len(c.metricsHistory) != 0 {
+		fmt.Fprintln(os.Stderr, "reset left stale state")
+		os.Exit(1)
+	}
+
+	// Invalid construction and invalid metrics are refused.
+	_, err = NewBatchController(0, 128, 1, 16, 2.0, 0.5, 5)
+	if err == nil {
+		fmt.Fprintln(os.Stderr, "BatchController accepted invalid arguments: initial_batch_size=0")
+		os.Exit(1)
+	}
+	_, err = NewBatchController(1, 0, 1, 16, 2.0, 0.5, 5)
+	if err == nil {
+		fmt.Fprintln(os.Stderr, "BatchController accepted invalid arguments: max_batch_size=0")
+		os.Exit(1)
+	}
+	_, err = NewBatchController(1, 128, 1, 16, 1.0, 0.5, 5)
+	if err == nil {
+		fmt.Fprintln(os.Stderr, "BatchController accepted invalid arguments: congestion_window_multiplier=1.0")
+		os.Exit(1)
+	}
+	_, err = NewBatchController(1, 128, 1, 16, 2.0, 1.0, 5)
+	if err == nil {
+		fmt.Fprintln(os.Stderr, "BatchController accepted invalid arguments: decay_factor=1.0")
+		os.Exit(1)
+	}
+	err = c.RecordMetrics(Metrics{BatchSize: 0, ProcessingTime: 1.0, ItemsProcessed: 1, Timestamp: 0.0})
+	if err == nil {
+		fmt.Fprintln(os.Stderr, "batch_size=0 metrics accepted")
+		os.Exit(1)
+	}
+
+	fmt.Println("batch_controller: slow-start 1→32 exact, congestion 34→17, " +
+		"floor held at 1, reset clean — PASS")
+}

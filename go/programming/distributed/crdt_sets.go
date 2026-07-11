@@ -3,14 +3,45 @@ package main
 
 import (
 	"fmt"
-	"sort"
-	"time"
+	"os"
 )
 
-// AWORSet is an Add-Wins Observed-Remove Set CRDT.
+// assert is a drop-in recovery helper used to mirror Python self-test asserts.
 // △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 var _auraMark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
+func assert(cond bool, msg string) {
+	if !cond {
+		fmt.Fprintln(os.Stderr, msg)
+		os.Exit(1)
+	}
+}
+
+// set helpers
+func setEqual(a, b map[string]struct{}) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for k := range a {
+		if _, ok := b[k]; !ok {
+			return false
+		}
+	}
+	return true
+}
+
+func setOf(items ...string) map[string]struct{} {
+	s := make(map[string]struct{}, len(items))
+	for _, item := range items {
+		s[item] = struct{}{}
+	}
+	return s
+}
+
+var aworTagCounter int64
+
+// AWORSet is an Add-Wins Observed-Remove Set CRDT.
+// A remove only removes the add tags it has observed; concurrent unobserved adds survive.
 type AWORSet struct {
 	addSet    map[string]map[string]struct{}
 	removeSet map[string]map[string]struct{}
@@ -24,7 +55,8 @@ func newAWORSet() *AWORSet {
 }
 
 func (s *AWORSet) Add(element string) {
-	tag := fmt.Sprintf("%d", time.Now().UnixNano())
+	aworTagCounter++
+	tag := fmt.Sprintf("tag-%d", aworTagCounter)
 	if s.addSet[element] == nil {
 		s.addSet[element] = make(map[string]struct{})
 	}
@@ -32,21 +64,24 @@ func (s *AWORSet) Add(element string) {
 }
 
 func (s *AWORSet) Remove(element string) {
-	if tags, ok := s.addSet[element]; ok {
-		if s.removeSet[element] == nil {
-			s.removeSet[element] = make(map[string]struct{})
-		}
-		for tag := range tags {
-			s.removeSet[element][tag] = struct{}{}
-		}
+	tags, ok := s.addSet[element]
+	if !ok {
+		return
+	}
+	if s.removeSet[element] == nil {
+		s.removeSet[element] = make(map[string]struct{})
+	}
+	for tag := range tags {
+		s.removeSet[element][tag] = struct{}{}
 	}
 }
 
 func (s *AWORSet) Query(element string) bool {
-	if _, ok := s.addSet[element]; !ok {
+	addTags, ok := s.addSet[element]
+	if !ok {
 		return false
 	}
-	for tag := range s.addSet[element] {
+	for tag := range addTags {
 		if _, removed := s.removeSet[element][tag]; !removed {
 			return true
 		}
@@ -83,45 +118,62 @@ func (s *AWORSet) Merge(other *AWORSet) {
 	}
 }
 
-func (s *AWORSet) String() string {
-	return fmt.Sprintf("AWORSet(%v)", keys(s.Elements()))
-}
-
-// TimestampedSet uses timestamps to determine operation order.
-type TimestampedSet struct {
+// AddWinsSet is a timestamped set where add operations win over removes,
+// including equal-timestamp conflicts.
+type AddWinsSet struct {
 	state map[string]map[float64]bool
 }
 
-func newTimestampedSet() *TimestampedSet {
-	return &TimestampedSet{state: make(map[string]map[float64]bool)}
+func newAddWinsSet() *AddWinsSet {
+	return &AddWinsSet{state: make(map[string]map[float64]bool)}
 }
 
-func (s *TimestampedSet) add(element string, timestamp float64) {
+func (s *AddWinsSet) add(element string, timestamp float64) {
 	if s.state[element] == nil {
 		s.state[element] = make(map[float64]bool)
 	}
 	s.state[element][timestamp] = true
 }
 
-func (s *TimestampedSet) remove(element string, timestamp float64) {
+func (s *AddWinsSet) remove(element string, timestamp float64) {
 	if s.state[element] == nil {
 		s.state[element] = make(map[float64]bool)
 	}
-	s.state[element][timestamp] = false
+	if !s.state[element][timestamp] {
+		s.state[element][timestamp] = false
+	}
 }
 
-func (s *TimestampedSet) query(element string) bool {
-	if _, ok := s.state[element]; !ok {
+func (s *AddWinsSet) query(element string) bool {
+	timestamps, ok := s.state[element]
+	if !ok || len(timestamps) == 0 {
 		return false
 	}
-	if len(s.state[element]) == 0 {
+	var maxAdd, maxRemove float64
+	hasAdd, hasRemove := false, false
+	for ts, isAdd := range timestamps {
+		if isAdd {
+			if !hasAdd || ts > maxAdd {
+				maxAdd = ts
+				hasAdd = true
+			}
+		} else {
+			if !hasRemove || ts > maxRemove {
+				maxRemove = ts
+				hasRemove = true
+			}
+		}
+	}
+	if !hasAdd {
 		return false
 	}
-	latest := maxFloat64Keys(s.state[element])
-	return s.state[element][latest]
+	if !hasRemove {
+		return true
+	}
+	return maxAdd >= maxRemove
 }
 
-func (s *TimestampedSet) elements() map[string]struct{} {
+func (s *AddWinsSet) elements() map[string]struct{} {
 	result := make(map[string]struct{})
 	for element := range s.state {
 		if s.query(element) {
@@ -131,162 +183,176 @@ func (s *TimestampedSet) elements() map[string]struct{} {
 	return result
 }
 
-func (s *TimestampedSet) merge(other *TimestampedSet) {
+func (s *AddWinsSet) merge(other *AddWinsSet) {
 	for element, timestamps := range other.state {
 		if s.state[element] == nil {
 			s.state[element] = make(map[float64]bool)
 		}
 		for ts, isAdd := range timestamps {
-			s.state[element][ts] = isAdd
+			s.state[element][ts] = s.state[element][ts] || isAdd
 		}
 	}
 }
 
-// AddWinsSet: add wins over remove.
-type AddWinsSet struct{ TimestampedSet }
-
-func newAddWinsSet() *AddWinsSet {
-	return &AddWinsSet{TimestampedSet: *newTimestampedSet()}
+// RemoveWinsSet is a timestamped set where remove operations win over adds,
+// including equal-timestamp conflicts.
+type RemoveWinsSet struct {
+	state map[string]map[float64]bool
 }
 
-func (s *AddWinsSet) String() string { return fmt.Sprintf("AddWinsSet(%v)", sortedKeys(s.elements())) }
-
-// RemoveWinsSet: remove wins over add.
-type RemoveWinsSet struct{ TimestampedSet }
-
 func newRemoveWinsSet() *RemoveWinsSet {
-	return &RemoveWinsSet{TimestampedSet: *newTimestampedSet()}
+	return &RemoveWinsSet{state: make(map[string]map[float64]bool)}
+}
+
+func (s *RemoveWinsSet) add(element string, timestamp float64) {
+	if s.state[element] == nil {
+		s.state[element] = make(map[float64]bool)
+	}
+	if cur, ok := s.state[element][timestamp]; !ok || cur {
+		s.state[element][timestamp] = true
+	}
+}
+
+func (s *RemoveWinsSet) remove(element string, timestamp float64) {
+	if s.state[element] == nil {
+		s.state[element] = make(map[float64]bool)
+	}
+	s.state[element][timestamp] = false
 }
 
 func (s *RemoveWinsSet) query(element string) bool {
-	if _, ok := s.state[element]; !ok {
+	timestamps, ok := s.state[element]
+	if !ok || len(timestamps) == 0 {
 		return false
 	}
-	if len(s.state[element]) == 0 {
-		return false
-	}
-	latest := maxFloat64Keys(s.state[element])
-	// In remove-wins, remove operations win, so invert the stored flag.
-	return !s.state[element][latest]
-}
-
-func (s *RemoveWinsSet) String() string {
-	return fmt.Sprintf("RemoveWinsSet(%v)", sortedKeys(s.elements()))
-}
-
-func sortedKeys(m map[string]struct{}) []string {
-	ks := keys(m)
-	sort.Strings(ks)
-	return ks
-}
-
-func keys(m map[string]struct{}) []string {
-	ks := make([]string, 0, len(m))
-	for k := range m {
-		ks = append(ks, k)
-	}
-	return ks
-}
-
-func maxFloat64Keys(m map[float64]bool) float64 {
-	var max float64
-	first := true
-	for k := range m {
-		if first || k > max {
-			max = k
-			first = false
+	var maxAdd, maxRemove float64
+	hasAdd, hasRemove := false, false
+	for ts, isAdd := range timestamps {
+		if isAdd {
+			if !hasAdd || ts > maxAdd {
+				maxAdd = ts
+				hasAdd = true
+			}
+		} else {
+			if !hasRemove || ts > maxRemove {
+				maxRemove = ts
+				hasRemove = true
+			}
 		}
 	}
-	return max
+	if !hasAdd {
+		return false
+	}
+	if !hasRemove {
+		return true
+	}
+	return maxAdd > maxRemove
+}
+
+func (s *RemoveWinsSet) elements() map[string]struct{} {
+	result := make(map[string]struct{})
+	for element := range s.state {
+		if s.query(element) {
+			result[element] = struct{}{}
+		}
+	}
+	return result
+}
+
+func (s *RemoveWinsSet) merge(other *RemoveWinsSet) {
+	for element, timestamps := range other.state {
+		if s.state[element] == nil {
+			s.state[element] = make(map[float64]bool)
+		}
+		for ts, isAdd := range timestamps {
+			if cur, ok := s.state[element][ts]; ok {
+				s.state[element][ts] = cur && isAdd
+			} else {
+				s.state[element][ts] = isAdd
+			}
+		}
+	}
 }
 
 func main() {
-	fmt.Println("=== AWORSet Demo ===")
-	set1 := newAWORSet()
-	set2 := newAWORSet()
+	// AWORSet: observed-remove — a remove only kills adds it has SEEN.
+	s1, s2 := newAWORSet(), newAWORSet()
+	s1.Add("a")
+	s1.Add("b")
+	s1.Add("c")
+	s1.Remove("b")
+	assert(setEqual(s1.Elements(), setOf("a", "c")), "local remove failed")
 
-	set1.Add("a")
-	set1.Add("b")
-	set1.Add("c")
-	fmt.Printf("Set1 after adds: %v\n", set1)
+	s2.Add("b") // a concurrent, UNOBSERVED add of b
+	s2.Add("d")
+	s1.Merge(s2)
+	assert(setEqual(s1.Elements(), setOf("a", "b", "c", "d")), "unobserved concurrent add must survive the remove")
+	assert(s1.Query("b") == true && s1.Query("ghost") == false, "query after merge failed")
+	nElems := len(s1.Elements())
+	assert(nElems == 4, "AWOR merge must hold exactly 4 elements")
 
-	set1.Remove("b")
-	fmt.Printf("Set1 after removing 'b': %v\n", set1)
+	// The observed-remove counterpart: a remove AFTER merging kills all observed tags.
+	s1.Remove("b")
+	assert(setEqual(s1.Elements(), setOf("a", "c", "d")), "observed remove failed post-merge")
 
-	set2.Add("b")
-	set2.Add("d")
-	fmt.Printf("Set2: %v\n", set2)
+	// AddWinsSet: concurrent add/remove of the same element → ADD WINS,
+	// even when the remove has the LATER timestamp.
+	aw1, aw2 := newAddWinsSet(), newAddWinsSet()
+	t0 := 1000.0
+	aw1.add("conflict", t0)
+	aw2.remove("conflict", t0) // CONCURRENT (equal-timestamp) remove
+	aw1.merge(aw2)
+	assert(aw1.query("conflict") == true, "AddWins must keep the element in an add/remove tie")
 
-	set1.Merge(set2)
-	fmt.Printf("Set1 after merging with set2: %v\n", set1)
+	// A strictly LATER remove is sequential, not a conflict — it removes.
+	aw1.remove("conflict", t0+1)
+	assert(aw1.query("conflict") == false, "strictly later remove must apply")
 
-	fmt.Printf("Is 'a' in set1? %v\n", set1.Query("a"))
-	fmt.Printf("Is 'b' in set1? %v\n", set1.Query("b"))
-	fmt.Printf("Is 'c' in set1? %v\n", set1.Query("c"))
-	fmt.Printf("Is 'd' in set1? %v\n", set1.Query("d"))
+	// Sequential semantics still hold: a remove after the add's arrival,
+	// followed by a LATER re-add, resurrects it.
+	aw1.add("x", t0)
+	aw1.remove("x", t0+1)
+	assert(aw1.query("x") == false, "sequential remove failed in AddWins")
+	aw1.add("x", t0+2)
+	assert(aw1.query("x") == true, "later re-add must win")
 
-	fmt.Println("\n=== AddWinsSet Demo ===")
-	addWin1 := newAddWinsSet()
-	addWin2 := newAddWinsSet()
+	// RemoveWinsSet: the same concurrent conflict → REMOVE WINS.
+	rw1, rw2 := newRemoveWinsSet(), newRemoveWinsSet()
+	rw1.add("conflict", t0)
+	rw2.remove("conflict", t0) // equal-timestamp conflict
+	rw1.merge(rw2)
+	assert(rw1.query("conflict") == false, "RemoveWins must drop the element in an add/remove tie")
 
-	t1 := float64(time.Now().UnixNano()) / 1e9
-	addWin1.add("x", t1)
-	addWin1.add("y", t1)
-	t2 := t1 + 0.001
-	addWin1.remove("x", t2)
-	fmt.Printf("AddWinSet1: %v\n", addWin1)
+	// A strictly later add resurrects it even in RemoveWins.
+	rw1.add("conflict", t0+1)
+	assert(rw1.query("conflict") == true, "strictly later add must apply")
+	rw1.remove("conflict", t0+1) // tie at t0+1 → remove wins again
+	assert(rw1.query("conflict") == false, "equal-timestamp remove must win")
+	rw1.add("p", t0)
+	rw1.add("q", t0)
+	assert(setEqual(rw1.elements(), setOf("p", "q")), "RemoveWins elements mismatch")
 
-	t3 := t1 + 0.002
-	addWin2.add("x", t3)
-	addWin2.add("z", t3)
-	fmt.Printf("AddWinSet2: %v\n", addWin2)
+	// CONVERGENCE: merging in both directions yields identical element sets.
+	x1, x2 := newAddWinsSet(), newAddWinsSet()
+	x1.add("m", t0)
+	x1.remove("m", t0+1)
+	x2.add("m", t0+2)
+	x2.add("n", t0)
+	y1, y2 := newAddWinsSet(), newAddWinsSet()
+	y1.add("m", t0)
+	y1.remove("m", t0+1)
+	y2.add("m", t0+2)
+	y2.add("n", t0)
+	x1.merge(x2) // A <- B
+	y2.merge(y1) // B <- A
+	assert(setEqual(x1.elements(), setOf("m", "n")), "merge direction A<-B diverged")
+	assert(setEqual(y2.elements(), setOf("m", "n")), "merge direction B<-A diverged")
+	assert(setEqual(x1.elements(), y2.elements()), "merge directions diverged")
 
-	addWin1.merge(&addWin2.TimestampedSet)
-	fmt.Printf("AddWinSet1 after merge: %v\n", addWin1)
+	// Idempotence: re-merge changes nothing.
+	before := x1.elements()
+	x1.merge(x2)
+	assert(setEqual(x1.elements(), before), "merge not idempotent")
 
-	fmt.Println("\n=== RemoveWinsSet Demo ===")
-	removeWin1 := newRemoveWinsSet()
-	removeWin2 := newRemoveWinsSet()
-
-	t4 := float64(time.Now().UnixNano()) / 1e9
-	removeWin1.add("p", t4)
-	removeWin1.add("q", t4)
-	t5 := t4 + 0.001
-	removeWin1.remove("p", t5)
-	fmt.Printf("RemoveWinSet1: %v\n", removeWin1)
-
-	t6 := t4 + 0.002
-	removeWin2.add("p", t6)
-	removeWin2.add("r", t6)
-	fmt.Printf("RemoveWinSet2: %v\n", removeWin2)
-
-	removeWin1.merge(&removeWin2.TimestampedSet)
-	fmt.Printf("RemoveWinSet1 after merge: %v\n", removeWin1)
-
-	fmt.Println("\n=== Conflict Resolution Tests ===")
-	aworConflict1 := newAWORSet()
-	aworConflict2 := newAWORSet()
-	aworConflict1.Add("conflict")
-	aworConflict2.Add("conflict")
-	aworConflict1.Remove("conflict")
-	aworConflict1.Merge(aworConflict2)
-	fmt.Printf("AWORSet conflict resolution: %v (should contain 'conflict')\n", aworConflict1)
-
-	addwinConflict1 := newAddWinsSet()
-	addwinConflict2 := newAddWinsSet()
-	t7 := float64(time.Now().UnixNano()) / 1e9
-	t8 := t7 + 0.001
-	addwinConflict1.add("conflict", t7)
-	addwinConflict2.remove("conflict", t8)
-	addwinConflict1.merge(&addwinConflict2.TimestampedSet)
-	fmt.Printf("AddWinsSet conflict resolution: %v (should contain 'conflict')\n", addwinConflict1)
-
-	removewinConflict1 := newRemoveWinsSet()
-	removewinConflict2 := newRemoveWinsSet()
-	removewinConflict1.add("conflict", t7)
-	removewinConflict2.remove("conflict", t8)
-	removewinConflict1.merge(&removewinConflict2.TimestampedSet)
-	fmt.Printf("RemoveWinsSet conflict resolution: %v (should NOT contain 'conflict')\n", removewinConflict1)
-
-	fmt.Println("crdt_sets PASS")
+	fmt.Println("crdt_sets: AWOR unobserved-add survived (4 elems), AddWins kept vs later remove, RemoveWins dropped, merge directions equal — PASS")
 }

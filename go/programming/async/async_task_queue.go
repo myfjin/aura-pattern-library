@@ -4,7 +4,9 @@ import (
 	"container/heap"
 	"context"
 	"fmt"
-	"strings"
+	"math"
+	"os"
+	"sort"
 	"sync"
 	"time"
 )
@@ -16,21 +18,21 @@ var _auraMark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJF
 type TaskStatus string
 
 const (
-	PENDING    TaskStatus = "pending"
-	PROCESSING TaskStatus = "processing"
-	COMPLETED  TaskStatus = "completed"
-	FAILED     TaskStatus = "failed"
-	RETRYING   TaskStatus = "retrying"
+	Pending    TaskStatus = "pending"
+	Processing TaskStatus = "processing"
+	Completed  TaskStatus = "completed"
+	Failed     TaskStatus = "failed"
+	Retrying   TaskStatus = "retrying"
 )
 
 // Priority represents task priority levels.
 type Priority int
 
 const (
-	LOW      Priority = 3
-	NORMAL   Priority = 2
-	HIGH     Priority = 1
-	CRITICAL Priority = 0
+	Low      Priority = 3
+	Normal   Priority = 2
+	High     Priority = 1
+	Critical Priority = 0
 )
 
 // Task represents a task in the queue.
@@ -49,7 +51,7 @@ type Task struct {
 	Error         *string
 }
 
-// taskHeap implements heap.Interface for Tasks.
+// taskHeap implements heap.Interface for *Task.
 type taskHeap []*Task
 
 func (h taskHeap) Len() int { return len(h) }
@@ -92,6 +94,10 @@ func NewTaskQueue() *TaskQueue {
 	}
 }
 
+func nowSeconds() float64 {
+	return float64(time.Now().UnixNano()) / 1e9
+}
+
 // Enqueue adds a task to the queue.
 func (q *TaskQueue) Enqueue(task *Task) (string, error) {
 	if task == nil || task.Func == nil {
@@ -102,18 +108,18 @@ func (q *TaskQueue) Enqueue(task *Task) (string, error) {
 	heap.Push(&q.queue, task)
 	q.taskIndex[task.ID] = task
 	q.stats["enqueued"]++
-	fmt.Printf("Enqueued task %s with priority %d\n", task.ID, task.Priority)
+	fmt.Printf("Enqueued task %s with priority %s\n", task.ID, priorityName(task.Priority))
 	return task.ID, nil
 }
 
-// Dequeue removes and returns the highest priority task from the queue.
+// Dequeue removes and returns the highest priority ready task from the queue.
 func (q *TaskQueue) Dequeue() *Task {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 	for q.queue.Len() > 0 {
 		task := heap.Pop(&q.queue).(*Task)
-		if task.ScheduledAt <= float64(time.Now().UnixNano())/1e9 {
-			task.Status = PROCESSING
+		if task.ScheduledAt <= nowSeconds() {
+			task.Status = Processing
 			q.processing[task.ID] = task
 			q.stats["processing"]++
 			fmt.Printf("Dequeued task %s\n", task.ID)
@@ -131,9 +137,9 @@ func (q *TaskQueue) CompleteTask(taskID string) bool {
 	defer q.mu.Unlock()
 	if task, ok := q.processing[taskID]; ok {
 		delete(q.processing, taskID)
-		task.Status = COMPLETED
-		now := float64(time.Now().UnixNano()) / 1e9
-		task.CompletedAt = &now
+		task.Status = Completed
+		n := nowSeconds()
+		task.CompletedAt = &n
 		q.stats["completed"]++
 		fmt.Printf("Completed task %s\n", taskID)
 		return true
@@ -150,16 +156,16 @@ func (q *TaskQueue) FailTask(taskID string, errorMsg string) bool {
 		task.Error = &errorMsg
 		if task.RetryCount < task.MaxRetries {
 			task.RetryCount++
-			task.Status = RETRYING
+			task.Status = Retrying
 			backoff := task.CalculateBackoff()
-			task.ScheduledAt = float64(time.Now().UnixNano())/1e9 + backoff
+			task.ScheduledAt = nowSeconds() + backoff
 			heap.Push(&q.queue, task)
 			q.stats["retried"]++
 			fmt.Printf("Retrying task %s in %.2f seconds (attempt %d)\n", taskID, backoff, task.RetryCount)
 		} else {
-			task.Status = FAILED
-			now := float64(time.Now().UnixNano()) / 1e9
-			task.CompletedAt = &now
+			task.Status = Failed
+			n := nowSeconds()
+			task.CompletedAt = &n
 			q.deadLetterQueue = append(q.deadLetterQueue, task)
 			q.stats["failed"]++
 			fmt.Printf("Task %s failed permanently and moved to dead letter queue\n", taskID)
@@ -171,11 +177,7 @@ func (q *TaskQueue) FailTask(taskID string, errorMsg string) bool {
 
 // CalculateBackoff calculates backoff time for retry.
 func (t *Task) CalculateBackoff() float64 {
-	result := 1.0
-	for i := 0; i < t.RetryCount; i++ {
-		result *= t.BackoffFactor
-	}
-	return result
+	return math.Pow(t.BackoffFactor, float64(t.RetryCount))
 }
 
 // GetStats returns queue statistics.
@@ -192,6 +194,17 @@ func (q *TaskQueue) GetStats() map[string]int {
 	return stats
 }
 
+// GetStatsSortedKeys returns sorted keys of statistics for deterministic printing.
+func (q *TaskQueue) GetStatsSortedKeys() []string {
+	stats := q.GetStats()
+	keys := make([]string, 0, len(stats))
+	for k := range stats {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
 // GetDeadLetterQueue returns all tasks in the dead letter queue.
 func (q *TaskQueue) GetDeadLetterQueue() []*Task {
 	q.mu.Lock()
@@ -206,9 +219,9 @@ type Worker struct {
 	queue   *TaskQueue
 	name    string
 	running bool
-	task    context.Context
 	cancel  context.CancelFunc
 	wg      sync.WaitGroup
+	mu      sync.Mutex
 }
 
 // NewWorker creates a new Worker.
@@ -218,36 +231,41 @@ func NewWorker(queue *TaskQueue, name string) *Worker {
 
 // Start starts the worker.
 func (w *Worker) Start() {
+	w.mu.Lock()
+	defer w.mu.Unlock()
 	if w.running {
 		return
 	}
 	w.running = true
 	ctx, cancel := context.WithCancel(context.Background())
-	w.task = ctx
 	w.cancel = cancel
 	w.wg.Add(1)
-	go w.run()
+	go w.run(ctx)
 	fmt.Printf("%s started\n", w.name)
 }
 
 // Stop stops the worker.
 func (w *Worker) Stop() {
+	w.mu.Lock()
 	if !w.running {
+		w.mu.Unlock()
 		return
 	}
 	w.running = false
-	if w.cancel != nil {
-		w.cancel()
+	cancel := w.cancel
+	w.mu.Unlock()
+	if cancel != nil {
+		cancel()
 	}
 	w.wg.Wait()
 	fmt.Printf("%s stopped\n", w.name)
 }
 
-func (w *Worker) run() {
+func (w *Worker) run(ctx context.Context) {
 	defer w.wg.Done()
-	for w.running {
+	for {
 		select {
-		case <-w.task.Done():
+		case <-ctx.Done():
 			return
 		default:
 		}
@@ -255,7 +273,11 @@ func (w *Worker) run() {
 		if task != nil {
 			w.processTask(task)
 		} else {
-			time.Sleep(100 * time.Millisecond)
+			select {
+			case <-ctx.Done():
+				return
+			case <-time.After(100 * time.Millisecond):
+			}
 		}
 	}
 }
@@ -266,15 +288,60 @@ func (w *Worker) processTask(task *Task) {
 	fmt.Printf("%s processing task %s\n", w.name, task.ID)
 	result, err := task.Func(ctx, task.Args...)
 	if err != nil {
-		fmt.Printf("%s failed task %s: %v\n", w.name, task.ID, err)
-		w.queue.FailTask(task.ID, err.Error())
+		errorMsg := err.Error()
+		fmt.Printf("%s failed task %s: %s\n", w.name, task.ID, errorMsg)
+		w.queue.FailTask(task.ID, errorMsg)
 		return
 	}
 	w.queue.CompleteTask(task.ID)
 	fmt.Printf("%s completed task %s with result: %v\n", w.name, task.ID, result)
 }
 
-// demoTaskSuccess succeeds after sleeping.
+func priorityName(p Priority) string {
+	switch p {
+	case Critical:
+		return "CRITICAL"
+	case High:
+		return "HIGH"
+	case Normal:
+		return "NORMAL"
+	case Low:
+		return "LOW"
+	default:
+		return "UNKNOWN"
+	}
+}
+
+var (
+	idCounter int
+	idMu      sync.Mutex
+)
+
+func generateID() string {
+	idMu.Lock()
+	defer idMu.Unlock()
+	idCounter++
+	return fmt.Sprintf("task-%d", idCounter)
+}
+
+// NewTask creates a new Task with default fields.
+func NewTask(fn func(context.Context, ...interface{}) (interface{}, error), args []interface{}, priority Priority, maxRetries int) *Task {
+	n := nowSeconds()
+	return &Task{
+		ID:            generateID(),
+		Func:          fn,
+		Args:          args,
+		Priority:      priority,
+		MaxRetries:    maxRetries,
+		RetryCount:    0,
+		BackoffFactor: 2.0,
+		Status:        Pending,
+		CreatedAt:     n,
+		ScheduledAt:   n,
+	}
+}
+
+// Demo task functions.
 func demoTaskSuccess(ctx context.Context, args ...interface{}) (interface{}, error) {
 	name := "task"
 	if len(args) > 0 {
@@ -290,7 +357,6 @@ func demoTaskSuccess(ctx context.Context, args ...interface{}) (interface{}, err
 	return fmt.Sprintf("Success: %s", name), nil
 }
 
-// demoTaskFailure fails after sleeping.
 func demoTaskFailure(ctx context.Context, args ...interface{}) (interface{}, error) {
 	name := "task"
 	if len(args) > 0 {
@@ -306,97 +372,145 @@ func demoTaskFailure(ctx context.Context, args ...interface{}) (interface{}, err
 	return nil, fmt.Errorf("Intentional failure for %s", name)
 }
 
-// generateID creates a simple unique task ID.
-var taskIDCounter int
-var taskIDMu sync.Mutex
-
-func generateID() string {
-	taskIDMu.Lock()
-	defer taskIDMu.Unlock()
-	taskIDCounter++
-	return fmt.Sprintf("task-%d-%d", time.Now().UnixNano(), taskIDCounter)
-}
-
-// NewTask creates a new Task.
-func NewTask(fn func(context.Context, ...interface{}) (interface{}, error), args []interface{}, priority Priority, maxRetries int) *Task {
-	now := float64(time.Now().UnixNano()) / 1e9
-	return &Task{
-		ID:            generateID(),
-		Func:          fn,
-		Args:          args,
-		Priority:      priority,
-		MaxRetries:    maxRetries,
-		RetryCount:    0,
-		BackoffFactor: 2.0,
-		Status:        PENDING,
-		CreatedAt:     now,
-		ScheduledAt:   now,
-	}
-}
-
 func main() {
-	fmt.Println("=== Async Task Queue Demo ===")
-	fmt.Println()
+	// 1. Priority order, queue driven by hand.
+	q := NewTaskQueue()
+	tLow := NewTask(demoTaskSuccess, []interface{}{"low"}, Low, 3)
+	tHigh := NewTask(demoTaskSuccess, []interface{}{"high"}, High, 3)
+	tNorm := NewTask(demoTaskSuccess, []interface{}{"norm"}, Normal, 3)
+	for _, t := range []*Task{tLow, tHigh, tNorm} {
+		if _, err := q.Enqueue(t); err != nil {
+			fmt.Fprintf(os.Stderr, "enqueue error: %v\n", err)
+			os.Exit(1)
+		}
+	}
 
-	queue := NewTaskQueue()
-	worker := NewWorker(queue, "DemoWorker")
-	worker.Start()
-
-	tasks := []*Task{}
-
+	var order []string
 	for i := 0; i < 3; i++ {
-		task := NewTask(demoTaskSuccess, []interface{}{fmt.Sprintf("High Priority Task %d", i)}, HIGH, 2)
-		tasks = append(tasks, task)
-		queue.Enqueue(task)
-	}
-
-	for i := 0; i < 5; i++ {
-		var fn func(context.Context, ...interface{}) (interface{}, error)
-		if i%2 == 0 {
-			fn = demoTaskSuccess
+		t := q.Dequeue()
+		if t == nil {
+			fmt.Fprintln(os.Stderr, "ASSERT FAILED: expected a task from non-empty queue")
+			os.Exit(1)
+		}
+		if s, ok := t.Args[0].(string); ok {
+			order = append(order, s)
 		} else {
-			fn = demoTaskFailure
-		}
-		task := NewTask(fn, []interface{}{fmt.Sprintf("Normal Task %d", i)}, NORMAL, 3)
-		tasks = append(tasks, task)
-		queue.Enqueue(task)
-	}
-
-	for i := 0; i < 2; i++ {
-		task := NewTask(demoTaskSuccess, []interface{}{fmt.Sprintf("Low Priority Task %d", i)}, LOW, 1)
-		tasks = append(tasks, task)
-		queue.Enqueue(task)
-	}
-
-	fmt.Printf("Enqueued %d tasks\n\n", len(tasks))
-
-	time.Sleep(5 * time.Second)
-
-	stats := queue.GetStats()
-	fmt.Println("=== Processing Statistics ===")
-	for key, value := range stats {
-		fmt.Printf("%s: %d\n", capitalize(key), value)
-	}
-
-	dlq := queue.GetDeadLetterQueue()
-	if len(dlq) > 0 {
-		fmt.Println("\n=== Dead Letter Queue ===")
-		for _, task := range dlq {
-			var errStr string
-			if task.Error != nil {
-				errStr = *task.Error
-			}
-			fmt.Printf("Task %s: %s\n", task.ID, errStr)
+			order = append(order, "")
 		}
 	}
+	if !(len(order) == 3 && order[0] == "high" && order[1] == "norm" && order[2] == "low") {
+		fmt.Fprintf(os.Stderr, "ASSERT FAILED: priority dequeue order wrong: %v\n", order)
+		os.Exit(1)
+	}
+	if q.Dequeue() != nil {
+		fmt.Fprintln(os.Stderr, "ASSERT FAILED: empty queue dequeued something")
+		os.Exit(1)
+	}
 
+	// complete_task: honest bookkeeping.
+	if q.CompleteTask(tHigh.ID) != true {
+		fmt.Fprintln(os.Stderr, "ASSERT FAILED: complete high should succeed")
+		os.Exit(1)
+	}
+	if q.CompleteTask(tHigh.ID) != false {
+		fmt.Fprintln(os.Stderr, "ASSERT FAILED: double complete reported success")
+		os.Exit(1)
+	}
+	if q.CompleteTask("ghost") != false {
+		fmt.Fprintln(os.Stderr, "ASSERT FAILED: complete ghost should fail")
+		os.Exit(1)
+	}
+	q.CompleteTask(tNorm.ID)
+	q.CompleteTask(tLow.ID)
+	stats := q.GetStats()
+	if !(stats["completed"] == 3 && stats["processing"] == 0) {
+		fmt.Fprintf(os.Stderr, "ASSERT FAILED: expected completed==3 and processing==0, got %v\n", stats)
+		os.Exit(1)
+	}
+
+	// 2. RETRY: a failed task is rescheduled with backoff -- NOT immediately
+	// dequeuable -- and lands in the DLQ only after max_retries.
+	flaky := NewTask(demoTaskFailure, []interface{}{"flaky"}, Normal, 1)
+	if _, err := q.Enqueue(flaky); err != nil {
+		fmt.Fprintf(os.Stderr, "enqueue error: %v\n", err)
+		os.Exit(1)
+	}
+	got := q.Dequeue()
+	if got == nil || got.ID != flaky.ID {
+		fmt.Fprintln(os.Stderr, "ASSERT FAILED: dequeued task should be flaky")
+		os.Exit(1)
+	}
+	if q.FailTask(flaky.ID, "boom-1") != true {
+		fmt.Fprintln(os.Stderr, "ASSERT FAILED: fail_task should succeed")
+		os.Exit(1)
+	}
+	stats = q.GetStats()
+	if !(stats["retried"] == 1 && stats["dead_letter"] == 0) {
+		fmt.Fprintf(os.Stderr, "ASSERT FAILED: expected retried==1 dead_letter==0, got %v\n", stats)
+		os.Exit(1)
+	}
+	if q.Dequeue() != nil {
+		fmt.Fprintln(os.Stderr, "ASSERT FAILED: retrying task was dequeuable BEFORE its backoff elapsed")
+		os.Exit(1)
+	}
+	// Make it due now, fail again -> exhausted -> DLQ with the error recorded.
+	flaky.ScheduledAt = nowSeconds() - 1
+	heapTask := q.Dequeue()
+	if heapTask == nil || heapTask.ID != flaky.ID {
+		fmt.Fprintln(os.Stderr, "ASSERT FAILED: expected flaky task after making it due")
+		os.Exit(1)
+	}
+	q.FailTask(flaky.ID, "boom-2")
+	dlq := q.GetDeadLetterQueue()
+	if !(len(dlq) == 1 && dlq[0].ID == flaky.ID) {
+		fmt.Fprintln(os.Stderr, "ASSERT FAILED: exhausted task not in DLQ")
+		os.Exit(1)
+	}
+	if !(dlq[0].Error != nil && *dlq[0].Error == "boom-2" && dlq[0].Status == Failed) {
+		fmt.Fprintln(os.Stderr, "ASSERT FAILED: DLQ task error/status mismatch")
+		os.Exit(1)
+	}
+	if dlq[0].RetryCount != 1 {
+		fmt.Fprintf(os.Stderr, "ASSERT FAILED: expected retry_count==1, got %d\n", dlq[0].RetryCount)
+		os.Exit(1)
+	}
+
+	// 3. Integration: a real worker drains 3 successes + 1 permanent failure.
+	wq := NewTaskQueue()
+	worker := NewWorker(wq, "TestWorker")
+	worker.Start()
+	for i := 0; i < 3; i++ {
+		if _, err := wq.Enqueue(NewTask(demoTaskSuccess, []interface{}{fmt.Sprintf("ok-%d", i)}, High, 0)); err != nil {
+			fmt.Fprintf(os.Stderr, "enqueue error: %v\n", err)
+			os.Exit(1)
+		}
+	}
+	if _, err := wq.Enqueue(NewTask(demoTaskFailure, []interface{}{"dead"}, High, 0)); err != nil {
+		fmt.Fprintf(os.Stderr, "enqueue error: %v\n", err)
+		os.Exit(1)
+	}
+	for i := 0; i < 80; i++ {
+		wqs := wq.GetStats()
+		if wqs["completed"] == 3 && wqs["failed"] == 1 {
+			break
+		}
+		time.Sleep(100 * time.Millisecond)
+	}
 	worker.Stop()
-	fmt.Println("\n=== Demo Complete ===")
-}
-
-func capitalize(s string) string {
-	if s == "" {
-		return ""
+	stats = wq.GetStats()
+	if stats["completed"] != 3 {
+		fmt.Fprintf(os.Stderr, "ASSERT FAILED: worker must complete 3 tasks, stats: %v\n", stats)
+		os.Exit(1)
 	}
-	return strings.ToUpper(s[:1]) + s[1:]
+	if !(stats["failed"] == 1 && stats["dead_letter"] == 1) {
+		fmt.Fprintf(os.Stderr, "ASSERT FAILED: failure not dead-lettered: %v\n", stats)
+		os.Exit(1)
+	}
+	if !(stats["pending"] == 0 && stats["processing"] == 0) {
+		fmt.Fprintf(os.Stderr, "ASSERT FAILED: queue not drained: %v\n", stats)
+		os.Exit(1)
+	}
+
+	fmt.Println("async_task_queue: dequeue high->norm->low, backoff blocks early retry, " +
+		"exhaustion -> DLQ (boom-2, 1 retry), worker drained 3+1 exact -- PASS")
 }
