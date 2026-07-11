@@ -146,50 +146,64 @@ def simulate_network_rtt(base_rtt: float, jitter: float, count: int) -> List[flo
 
 
 def main() -> None:
-    """Demonstrate RTT estimator functionality."""
-    print("RTT Estimator Demo")
-    print("=" * 50)
-    
-    # Create estimator
-    estimator = RTTEstimator(alpha=0.125, beta=0.25)
-    
-    # Simulate network measurements
-    base_rtt = 0.1  # 100ms base RTT
-    jitter = 0.05   # ±50ms jitter
-    samples = simulate_network_rtt(base_rtt, jitter, 20)
-    
-    # Process samples
-    for i, rtt in enumerate(samples):
-        estimator.add_sample(rtt)
-        srtt = estimator.get_rtt_estimate()
-        jitter_val = estimator.get_jitter()
-        timeout = estimator.get_timeout()
-        
-        print(f"Sample {i+1:2d}: RTT={rtt*1000:6.1f}ms "
-              f"SRTT={srtt*1000:6.1f}ms "
-              f"Jitter={jitter_val*1000:5.1f}ms "
-              f"RTO={timeout*1000:6.1f}ms")
-    
-    print("\nFinal Statistics:")
-    print(f"  Samples processed: {estimator.get_sample_count()}")
-    print(f"  Final SRTT: {estimator.get_rtt_estimate()*1000:.1f}ms")
-    print(f"  Final Jitter: {estimator.get_jitter()*1000:.1f}ms")
-    print(f"  Recommended RTO: {estimator.get_timeout()*1000:.1f}ms")
-    
-    # Test error handling
-    print("\nTesting error handling:")
-    try:
-        estimator.add_sample(-0.1)  # Negative RTT
-    except ValueError as e:
-        print(f"  Caught expected error: {e}")
-    
-    # Test with different alpha/beta values
-    print("\nTesting with higher smoothing (alpha=0.5, beta=0.5):")
-    estimator2 = RTTEstimator(alpha=0.5, beta=0.5)
-    for rtt in samples[:10]:  # Only first 10 samples
-        estimator2.add_sample(rtt)
-        print(f"  SRTT={estimator2.get_rtt_estimate()*1000:6.1f}ms "
-              f"RTO={estimator2.get_timeout()*1000:6.1f}ms")
+    """Self-test: hand-traced EWMA arithmetic (RFC 6298 shape) is exact,
+    convergence on a steady link, RTO responds to jitter."""
+    # alpha=beta=0.5 makes the recurrence exactly traceable.
+    est = RTTEstimator(alpha=0.5, beta=0.5)
+    assert est.get_rtt_estimate() is None and est.get_jitter() is None
+    assert est.get_timeout() == 1.0, "default RTO before any sample must be 1.0"
+
+    # Sample 1 (0.1s): srtt=0.1, rttvar=0.05, rto=0.1+4*0.05=0.3.
+    est.add_sample(0.1, timestamp=1.0)
+    assert abs(est.get_rtt_estimate() - 0.1) < 1e-12
+    assert abs(est.get_jitter() - 0.05) < 1e-12
+    assert abs(est.get_timeout() - 0.3) < 1e-12, f"RTO must be 0.3, got {est.get_timeout()}"
+
+    # Sample 2 (0.2s): jitter=|0.2-0.1|=0.1 → rttvar=0.075; srtt=0.15; rto=0.45.
+    est.add_sample(0.2, timestamp=2.0)
+    assert abs(est.get_rtt_estimate() - 0.15) < 1e-12
+    assert abs(est.get_jitter() - 0.075) < 1e-12
+    assert abs(est.get_timeout() - 0.45) < 1e-12
+
+    # Sample 3 (0.15s): jitter=0 → rttvar=0.0375; srtt stays 0.15; rto=0.3.
+    est.add_sample(0.15, timestamp=3.0)
+    assert abs(est.get_rtt_estimate() - 0.15) < 1e-12
+    assert abs(est.get_jitter() - 0.0375) < 1e-12
+    assert abs(est.get_timeout() - 0.3) < 1e-12
+    assert est.get_sample_count() == 3
+
+    # Steady link: constant 80ms drives srtt→0.08 and jitter→0.
+    steady = RTTEstimator(alpha=0.125, beta=0.25)
+    for _ in range(200):
+        steady.add_sample(0.08, timestamp=0.0)
+    assert abs(steady.get_rtt_estimate() - 0.08) < 1e-9, "srtt did not converge"
+    assert steady.get_jitter() < 1e-6, "jitter did not decay on a steady link"
+    assert abs(steady.get_timeout() - 0.08) < 1e-4, "RTO must approach srtt when jitter dies"
+
+    # A jittery link keeps RTO safely above srtt (the whole point of the 4x term).
+    noisy = RTTEstimator(alpha=0.125, beta=0.25)
+    for i in range(100):
+        noisy.add_sample(0.1 if i % 2 == 0 else 0.2, timestamp=float(i))
+    assert noisy.get_timeout() > noisy.get_rtt_estimate() + 0.1, \
+        "RTO on an alternating 100/200ms link must include a jitter margin"
+
+    # Samples are recorded with timestamps; copies protect internals.
+    s = est.get_samples()
+    assert [x.rtt for x in s] == [0.1, 0.2, 0.15]
+    s.append(Sample(9.0, 9.9))
+    assert est.get_sample_count() == 3, "get_samples leaked the internal list"
+
+    # Refusals.
+    for bad in (lambda: est.add_sample(-0.1),
+                lambda: RTTEstimator(alpha=0.0), lambda: RTTEstimator(beta=1.5)):
+        try:
+            bad()
+            assert False, "invalid input accepted"
+        except ValueError:
+            pass
+
+    print("rtt_estimator: EWMA trace 0.3/0.45/0.3 exact, steady link converged "
+          "(jitter→0), noisy link keeps margin, internals copy-safe — PASS")
 
 
 if __name__ == "__main__":

@@ -136,79 +136,57 @@ def negotiate_version(encoder_version: MessageFormat,
 
 
 if __name__ == "__main__":
-    # Demo: Encode and decode messages with different versions
-    print("Message Encoder/Decoder Demo")
-    print("=" * 40)
-    
-    # Test data
-    test_messages = [
-        "Hello, World!",
-        "Python encoding demo",
-        b"Binary data test",
-        "Special chars: !@#$%^&*()"
-    ]
-    
-    # Test V1 encoding/decoding
-    print("\nTesting V1 Protocol:")
-    encoder_v1 = Encoder(MessageFormat.V1)
-    decoder_v1 = Decoder({MessageFormat.V1})
-    
-    for msg in test_messages:
-        try:
-            encoded = encoder_v1.encode(msg)
-            version, decoded = decoder_v1.decode(encoded)
-            original = msg.encode('utf-8') if isinstance(msg, str) else msg
-            status = "✓ PASS" if original == decoded else "✗ FAIL"
-            print(f"  {status} | {msg} -> V{version} -> {decoded}")
-        except Exception as e:
-            print(f"  ✗ ERROR | {msg} -> {e}")
-    
-    # Test V2 encoding/decoding
-    print("\nTesting V2 Protocol:")
-    encoder_v2 = Encoder(MessageFormat.V2)
-    decoder_v2 = Decoder({MessageFormat.V1, MessageFormat.V2})
-    
-    for msg in test_messages:
-        try:
-            encoded = encoder_v2.encode(msg)
-            version, decoded = decoder_v2.decode(encoded)
-            original = msg.encode('utf-8') if isinstance(msg, str) else msg
-            status = "✓ PASS" if original == decoded else "✗ FAIL"
-            print(f"  {status} | {msg} -> V{version} -> {decoded}")
-        except Exception as e:
-            print(f"  ✗ ERROR | {msg} -> {e}")
-    
-    # Test version negotiation
-    print("\nTesting Version Negotiation:")
-    compatible, negotiated = negotiate_version(MessageFormat.V2, {MessageFormat.V1})
-    print(f"  V2 with V1-only decoder: Compatible={compatible}, Negotiated={negotiated}")
-    
-    compatible, negotiated = negotiate_version(MessageFormat.V1, {MessageFormat.V1, MessageFormat.V2})
-    print(f"  V1 with V1/V2 decoder: Compatible={compatible}, Negotiated={negotiated}")
-    
-    # Test error cases
-    print("\nTesting Error Handling:")
-    
-    # Test checksum failure
+    # Self-test: byte-exact round-trips on both protocol versions,
+    # corruption caught, version negotiation exact, unsupported refused.
+    test_messages = ["Hello, World!", "Python encoding demo",
+                     b"Binary data test \x00\xff", "Special chars: !@#$%^&*()"]
+
+    # V1 and V2: every message round-trips byte-exactly, version echoed.
+    for fmt, decoder in ((MessageFormat.V1, Decoder({MessageFormat.V1})),
+                         (MessageFormat.V2, Decoder({MessageFormat.V1,
+                                                     MessageFormat.V2}))):
+        encoder = Encoder(fmt)
+        for msg in test_messages:
+            encoded = encoder.encode(msg)
+            version, decoded = decoder.decode(encoded)
+            original = msg.encode("utf-8") if isinstance(msg, str) else msg
+            assert decoded == original, \
+                f"{fmt} round-trip corrupted {msg!r} -> {decoded!r}"
+            assert version == fmt.value, f"decoder reported version {version}"
+        # The wire form differs from the plaintext (it IS an encoding).
+        assert encoder.encode("test") != b"test"
+
+    # A V2 message decodes in a V1+V2 decoder as V2, not V1.
+    v2_blob = Encoder(MessageFormat.V2).encode("check")
+    version, _ = Decoder({MessageFormat.V1, MessageFormat.V2}).decode(v2_blob)
+    assert version == MessageFormat.V2.value
+
+    # THE DISASTER: corrupt the checksum region — must be caught, not decoded.
+    encoded = Encoder(MessageFormat.V2).encode("test")
+    corrupted = encoded[:5] + b"\x00" * 16 + encoded[21:]
     try:
-        encoder = Encoder(MessageFormat.V2)
-        encoded = encoder.encode("test")
-        # Corrupt the checksum
-        corrupted = encoded[:5] + b'\x00' * 16 + encoded[21:]
-        decoder = Decoder()
-        decoder.decode(corrupted)
-        print("  ✗ FAIL | Checksum corruption not detected")
-    except ValueError as e:
-        print(f"  ✓ PASS | Checksum error detected: {e}")
-    
-    # Test unsupported version
+        Decoder().decode(corrupted)
+        assert False, "checksum corruption decoded successfully"
+    except ValueError:
+        pass
+
+    # Unsupported version: a V1-only decoder must refuse V2 frames.
+    v2_frame = Encoder(MessageFormat.V2).encode("test")
     try:
-        decoder = Decoder({MessageFormat.V1})
-        encoder = Encoder(MessageFormat.V2)
-        encoded = encoder.encode("test")
-        decoder.decode(encoded)
-        print("  ✗ FAIL | Unsupported version not detected")
-    except NotImplementedError as e:
-        print(f"  ✓ PASS | Unsupported version error: {e}")
-    
-    print("\nDemo completed successfully!")
+        Decoder({MessageFormat.V1}).decode(v2_frame)
+        assert False, "V1-only decoder accepted a V2 frame"
+    except NotImplementedError:
+        pass
+
+    # Version negotiation: exact tuples.
+    assert negotiate_version(MessageFormat.V2, {MessageFormat.V1}) == (False, None)
+    assert negotiate_version(MessageFormat.V1,
+                             {MessageFormat.V1, MessageFormat.V2}) == \
+        (True, MessageFormat.V1)
+    assert negotiate_version(MessageFormat.V2,
+                             {MessageFormat.V2}) == (True, MessageFormat.V2)
+
+    n_ok = len(test_messages) * 2
+    assert n_ok == 8, "4 messages x 2 versions must be 8 round-trips"
+    print("message_encoder: 8/8 round-trips byte-exact (incl. binary), "
+          "checksum corruption caught, V1-only refused V2, negotiation exact — PASS")

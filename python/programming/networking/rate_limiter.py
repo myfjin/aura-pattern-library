@@ -163,66 +163,55 @@ class RateLimiter:
 
 
 def main():
-    """Demo burst traffic simulation with rate limiting."""
-    print("=== Rate Limiter Demo ===")
-    
-    # Create rate limiter: 10 requests/second, burst capacity of 20
-    limiter = RateLimiter(capacity=20.0, refill_rate=10.0)
-    
-    def simulate_requests(name: str, requests: int, delay: float = 0.0) -> None:
-        """Simulate a burst of requests."""
-        print(f"\n{name}: Starting burst of {requests} requests")
-        
-        allowed = 0
-        denied = 0
-        
-        for i in range(requests):
-            if limiter.consume("demo_key"):
-                allowed += 1
-                status = "ALLOWED"
-            else:
-                denied += 1
-                status = "DENIED"
-                
-            print(f"{name} - Request {i+1:2d}: {status}")
-            
-            if delay > 0:
-                time.sleep(delay)
-        
-        print(f"{name}: Allowed: {allowed}, Denied: {denied}")
-        
-        # Show current stats
-        stats = limiter.get_stats("demo_key")
-        print(f"{name}: Remaining tokens: {stats['tokens']:.2f}")
-    
-    # Simulate initial burst (should mostly be allowed due to burst capacity)
-    simulate_requests("Burst 1", 15, 0.01)
-    
-    # Wait for partial refill
-    print("\n--- Waiting 1 second for partial refill ---")
-    time.sleep(1.0)
-    
-    # Simulate another burst
-    simulate_requests("Burst 2", 12, 0.01)
-    
-    # Show when requests will be allowed again
-    remaining = limiter.remaining_time("demo_key", 5.0)
-    print(f"\nTime until 5 tokens available: {remaining:.2f} seconds")
-    
-    # Wait and try again
-    print(f"\n--- Waiting {remaining:.2f} seconds ---")
-    time.sleep(remaining)
-    
-    if limiter.consume("demo_key", 5.0):
-        print("Successfully consumed 5 tokens after waiting")
-    else:
-        print("Failed to consume 5 tokens")
-    
-    # Reset and show final stats
-    stats = limiter.get_stats("demo_key")
-    print(f"\nFinal stats: {stats}")
-    
-    print("\n=== Demo Complete ===")
+    """Self-test on a fake monotonic clock: burst capacity exact, refill
+    arithmetic exact, per-key isolation, remaining_time computes the wait."""
+    _now = [5_000.0]
+    _real_monotonic = time.monotonic
+    time.monotonic = lambda: _now[0]
+    try:
+        limiter = RateLimiter(capacity=20.0, refill_rate=10.0)
+
+        # Burst: exactly the 20-token capacity is grantable, the 21st denied.
+        granted = sum(1 for _ in range(25) if limiter.consume("k"))
+        assert granted == 20, f"capacity-20 bucket granted {granted} in a burst"
+        assert limiter.consume("k") is False, "empty bucket granted a token"
+
+        # Refill: +0.5s at 10/s = 5 tokens, exactly 5 more grants.
+        _now[0] += 0.5
+        regrants = sum(1 for _ in range(10) if limiter.consume("k"))
+        assert regrants == 5, f"0.5s at 10/s must refill exactly 5, granted {regrants}"
+
+        # remaining_time: needing 5 tokens on an empty bucket at 10/s = 0.5s.
+        wait = limiter.remaining_time("k", 5.0)
+        assert abs(wait - 0.5) < 1e-9, f"wait for 5 tokens at 10/s must be 0.5s, got {wait}"
+        _now[0] += wait
+        assert limiter.consume("k", 5.0) is True, "tokens not available after the computed wait"
+
+        # Refill never exceeds capacity.
+        _now[0] += 1000
+        stats = limiter.get_stats("k")
+        assert stats["tokens"] == 20.0, f"refill overfilled: {stats['tokens']}"
+        assert stats["capacity"] == 20.0 and stats["refill_rate"] == 10.0
+
+        # Per-key isolation: draining key A leaves key B full.
+        assert all(limiter.consume("a") for _ in range(20))
+        assert limiter.consume("a") is False
+        assert limiter.consume("b") is True, "key isolation broken: b affected by a"
+
+        # Multi-token consume: 3 tokens leave capacity-3 exactly empty.
+        limiter.reset("m")
+        small = RateLimiter(capacity=3.0, refill_rate=1.0)
+        assert small.consume("m", 3.0) is True
+        assert small.consume("m", 0.5) is False, "over-consumed past capacity"
+
+        # reset() restores a fresh full bucket.
+        limiter.reset("a")
+        assert limiter.consume("a") is True, "reset did not refill the bucket"
+    finally:
+        time.monotonic = _real_monotonic
+
+    print("rate_limiter: burst 20/25 exact, +0.5s→5 tokens, wait 0.5s computed, "
+          "cap held at 20, keys isolated — PASS")
 
 
 if __name__ == "__main__":

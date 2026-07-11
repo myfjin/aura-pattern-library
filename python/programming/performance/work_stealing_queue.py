@@ -240,42 +240,52 @@ def work_stealing_context(num_workers: int = 4):
 
 
 def main():
-    """Demo of the work-stealing queue system."""
-    print("Starting work-stealing queue demo...")
-    
-    # Create work-stealing queue with 3 workers
-    wsq = WorkStealingQueue(num_workers=3)
-    
-    # Add 20 tasks to the system
-    for i in range(20):
-        wsq.add_task(f"Task-{i}")
-    
-    print(f"Added {wsq.get_total_tasks()} tasks to the system")
-    
-    # Start workers
+    """Self-test: deque discipline, task conservation, and stealing under starvation."""
+    random.seed(42)
+
+    # 1. Deque discipline (single-threaded truth): the owner takes from the
+    #    FRONT, a thief steals from the BACK — never the same end.
+    solo = WorkStealingQueue(num_workers=2)
+    w = solo.workers[0]
+    for t in (1, 2, 3):
+        w.add_task(t)
+    assert w.get_local_task() == 1, "owner must dequeue from the front"
+    assert w.steal() == 3, "thief must steal from the back"
+    assert w.get_local_task() == 2 and w.get_local_task() is None
+    assert w.steal() is None, "steal from an empty queue must return None"
+    solo.stop_workers()  # workers were never started; just clears the flag
+
+    # 2. THE DISASTER: starve 3 of 4 workers by loading every task into ONE
+    #    worker's local queue. Without stealing, the others idle and the
+    #    victim does all the work; with stealing, tasks are conserved AND
+    #    at least one other worker processes some.
+    wsq = WorkStealingQueue(num_workers=4)
+    victim = wsq.workers[0]
+    n_tasks = 200
+    for i in range(n_tasks):
+        victim.add_task(f"task-{i}")
+        wsq.task_counter += 1  # local adds bypass add_task; keep the ledger true
     wsq.start_workers()
-    
-    # Wait for tasks to complete
-    start_time = time.time()
-    while wsq.get_completed_count() < wsq.get_total_tasks():
-        if time.time() - start_time > 5:  # Timeout after 5 seconds
-            print("Timeout waiting for tasks to complete")
-            break
-        time.sleep(0.1)
-    
-    # Stop workers
+    deadline = time.time() + 30.0
+    while wsq.get_completed_count() < n_tasks:
+        assert time.time() < deadline, \
+            f"only {wsq.get_completed_count()}/{n_tasks} tasks completed in 30s"
+        time.sleep(0.01)
     wsq.stop_workers()
     wsq.wait_for_completion()
-    
-    # Print results
-    completed = wsq.get_completed_count()
-    print(f"Completed {completed} tasks")
-    
-    # Show worker stats
-    for worker in wsq.workers:
-        print(f"{worker.name} processed {worker.processed_count} tasks")
-    
-    print("Work-stealing queue demo completed")
+
+    # Conservation: every task processed exactly once, none lost, none doubled.
+    per_worker = [wk.processed_count for wk in wsq.workers]
+    assert sum(per_worker) == 200, f"task conservation broken: {per_worker} sums to {sum(per_worker)}"
+    assert wsq.get_completed_count() == 200, "completed counter disagrees with 200 submitted"
+
+    # Stealing must actually have happened: the starved workers processed work.
+    stolen_share = sum(per_worker[1:])
+    assert stolen_share > 0, "no task was ever stolen — thieves idled while the victim worked"
+
+    # (exact stolen count is scheduling-dependent; the assert above is the claim)
+    print("work_stealing_queue: front/back discipline held, 200/200 conserved, "
+          "starved workers stole >0 tasks — PASS")
 
 
 if __name__ == "__main__":

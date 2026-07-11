@@ -252,124 +252,110 @@ class DatabaseConnection:
         return self._is_closed
 
 def main():
-    """Demonstrate the object pool with database connections."""
-    
-    def connection_factory() -> DatabaseConnection:
-        """Factory function to create database connections."""
-        conn = DatabaseConnection()
-        # Create a test table
-        conn.execute("""
-            CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY,
-                name TEXT NOT NULL,
-                email TEXT UNIQUE NOT NULL
-            )
-        """)
-        conn.commit()
-        print(f"Created new database connection {conn.id}")
-        return conn
-    
-    def connection_validator(conn: DatabaseConnection) -> bool:
-        """Validator function to check if connection is valid."""
-        try:
-            conn.execute("SELECT 1")
-            return not conn.is_closed
-        except Exception:
-            return False
-    
-    # Create pool with 2-5 connections
-    pool = ObjectPool(
-        factory=connection_factory,
-        validator=connection_validator,
-        min_size=2,
-        max_size=5,
-        idle_timeout=10.0  # 10 seconds for demo
-    )
-    
-    print(f"Pool initialized with {pool.size()} connections")
-    
-    # Test 1: Basic usage with context manager
-    print("\n--- Test 1: Basic usage ---")
-    with pool.get() as conn:
-        print(f"Using connection {conn.id}")
-        conn.execute("INSERT INTO users (name, email) VALUES (?, ?)", 
-                    ("Alice", "alice@example.com"))
-        conn.commit()
-    
-    # Test 2: Multiple concurrent operations
-    print("\n--- Test 2: Concurrent operations ---")
-    def worker(worker_id: int) -> None:
-        try:
-            with pool.get(timeout=5.0) as conn:
-                print(f"Worker {worker_id} using connection {conn.id}")
-                conn.execute("INSERT INTO users (name, email) VALUES (?, ?)", 
-                            (f"User{worker_id}", f"user{worker_id}@example.com"))
-                conn.commit()
-                time.sleep(0.5)  # Simulate work
-        except TimeoutError:
-            print(f"Worker {worker_id} timed out")
-        except Exception as e:
-            print(f"Worker {worker_id} error: {e}")
-    
-    # Start multiple worker threads
-    threads = []
-    for i in range(7):
-        t = threading.Thread(target=worker, args=(i,))
-        threads.append(t)
-        t.start()
-    
-    # Wait for all threads to complete
-    for t in threads:
-        t.join()
-    
-    print(f"Pool size after concurrent operations: {pool.size()}")
-    print(f"Available connections: {pool.available()}")
-    
-    # Test 3: Verify data
-    print("\n--- Test 3: Verify data ---")
-    with pool.get() as conn:
-        cursor = conn.execute("SELECT COUNT(*) as count FROM users")
-        count = cursor.fetchone()['count']
-        print(f"Total users in database: {count}")
-    
-    # Test 4: Test connection invalidation
-    print("\n--- Test 4: Connection invalidation ---")
-    pooled_obj = pool.acquire()
-    print(f"Acquired connection {pooled_obj.obj.id}")
-    pooled_obj.obj.close()  # Manually close the connection
-    pooled_obj.invalidate()  # Mark as invalid
-    pool.return_object(pooled_obj)  # Return to pool
-    
-    print(f"Pool size after invalidation: {pool.size()}")
-    
-    # Test 5: Test pool expansion
-    print("\n--- Test 5: Pool expansion ---")
-    connections = []
-    for i in range(5):
-        pooled_obj = pool.acquire()
-        connections.append(pooled_obj)
-        print(f"Acquired connection {pooled_obj.obj.id} (pool size: {pool.size()})")
-    
-    # Return all connections
-    for pooled_obj in connections:
-        pool.return_object(pooled_obj)
-    
-    print(f"Pool size after returning all: {pool.size()}")
-    print(f"Available connections: {pool.available()}")
-    
-    # Test 6: Cleanup demonstration
-    print("\n--- Test 6: Idle timeout cleanup ---")
-    print("Waiting 12 seconds for idle timeout...")
-    time.sleep(12)
-    
-    # Acquire an object to trigger cleanup
-    with pool.get() as conn:
-        print(f"Pool size after cleanup: {pool.size()}")
-        print(f"Available connections: {pool.available()}")
-    
-    # Clean up
+    """Self-test: exact create counts, reuse identity, max-size refusal,
+    invalidation accounting, idle reaping on a fake clock, sqlite round-trip."""
+
+    class Thing:
+        def __init__(self) -> None:
+            self.alive = True
+
+    made = {"n": 0}
+    def factory() -> "Thing":
+        made["n"] += 1
+        return Thing()
+    validator = lambda t: t.alive
+
+    # min_size prefills exactly, no more.
+    pool = ObjectPool(factory, validator, min_size=2, max_size=4, idle_timeout=3600.0)
+    assert made["n"] == 2, f"min_size=2 must create exactly 2, created {made['n']}"
+    assert pool.size() == 2 and pool.available() == 2
+
+    # Reuse: the pool is FIFO, so identity rotates among the prefilled two —
+    # the reuse claim is that NO new object is ever created while stock exists.
+    prefilled = {id(p._obj) for p in pool._pool}
+    po = pool.acquire()
+    pool.return_object(po)
+    po2 = pool.acquire()
+    assert id(po2.obj) in prefilled, "acquire returned an object the pool never held"
+    assert made["n"] == 2, f"reuse must not create; created {made['n']}"
+    pool.return_object(po2)
+
+    # Expansion stops at max_size: 4 concurrent holds = 4 objects, the 5th
+    # acquire must TIME OUT (the failure the cap exists for).
+    held = [pool.acquire() for _ in range(4)]
+    assert made["n"] == 4 and pool.size() == 4
+    try:
+        pool.acquire(timeout=0.05)
+        assert False, "5th acquire succeeded past max_size=4"
+    except TimeoutError:
+        pass
+    # Returning one frees exactly one slot, and it's the same instance back.
+    freed = held.pop()
+    pool.return_object(freed)
+    again = pool.acquire(timeout=0.05)
+    assert again.obj is freed.obj, "freed slot not reused"
+    pool.return_object(again)
+    for h in held:
+        pool.return_object(h)
+
+    # Invalidation shrinks the pool; the next acquire builds a replacement.
+    po = pool.acquire()
+    po.invalidate()
+    pool.return_object(po)
+    assert pool.size() == 3, f"invalidated return must shrink pool to 3, got {pool.size()}"
+    before = made["n"]
+    dead = pool.acquire()          # pops a pooled survivor, no create needed
+    assert made["n"] == before, "acquire created despite available objects"
+    # A validator rejection on return also evicts.
+    dead.obj.alive = False
+    pool.return_object(dead)
+    assert pool.size() == 2, f"validator-rejected return must evict, size {pool.size()}"
+
+    # Idle reaping: jump the clock past idle_timeout; acquire must discard the
+    # idle survivors and rebuild to min_size with FRESH objects.
+    reap = ObjectPool(factory, validator, min_size=2, max_size=4, idle_timeout=100.0)
+    originals = {id(p._obj) for p in reap._pool}
+    base_created = made["n"]
+    _real_time = time.time
+    time.time = lambda: _real_time() + 3600.0
+    try:
+        po = reap.acquire()
+        assert id(po.obj) not in originals, "idle-expired object handed back out"
+        assert made["n"] > base_created, "no fresh objects built after idle reap"
+        assert reap.size() == 2, f"pool must hold min_size=2 after reap, got {reap.size()}"
+        reap.return_object(po)
+    finally:
+        time.time = _real_time
+
+    # close() empties everything.
     pool.close()
-    print("\nPool closed")
+    assert pool.size() == 0 and pool.available() == 0, "close left objects behind"
+
+    # Invalid configuration is refused.
+    for kwargs in ({"min_size": -1}, {"max_size": 0}, {"min_size": 5, "max_size": 2}):
+        try:
+            ObjectPool(factory, validator, **kwargs)
+            assert False, f"ObjectPool({kwargs}) accepted"
+        except ValueError:
+            pass
+
+    # The DatabaseConnection wrapper really guards a closed connection.
+    conn = DatabaseConnection()
+    conn.execute("CREATE TABLE t (x INTEGER)")
+    conn.execute("INSERT INTO t VALUES (41), (1)")
+    conn.commit()
+    total = conn.execute("SELECT SUM(x) AS s FROM t").fetchone()["s"]
+    assert total == 42, f"sqlite round-trip must sum to 42, got {total}"
+    conn.close()
+    try:
+        conn.execute("SELECT 1")
+        assert False, "closed connection still executed a query"
+    except RuntimeError:
+        pass
+
+    print("object_pool_allocator: prefill 2, reuse-by-identity, cap@4 times out, "
+          "invalidation 4→3→2, idle reap rebuilt 2 fresh, sqlite sum 42 — PASS")
+
 
 if __name__ == "__main__":
     main()

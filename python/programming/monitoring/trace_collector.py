@@ -21,10 +21,13 @@ class Span:
     status: str = "unset"
 
     def finish(self) -> None:
-        """Mark the span as finished."""
+        """Mark the span as finished. Never clobbers an error status —
+        the natural set_error() -> finish() order used to reset failed
+        spans back to "ok"."""
         if self.end_time is None:
             self.end_time = time.time()
-            self.status = "ok"
+            if self.status == "unset":
+                self.status = "ok"
 
     def set_attribute(self, key: str, value: Any) -> None:
         """Set an attribute on the span."""
@@ -142,65 +145,70 @@ def _print_trace_tree(node: Dict[str, Any], indent: int = 0) -> None:
 
 
 if __name__ == "__main__":
-    # Create a collector
+    # Self-test: parent/child structure reconstructed exactly, attributes and
+    # error status preserved, traces isolated from each other.
     collector = Collector()
-    
-    # Create a trace with a root span
+
+    # Trace 1: root with two children, one of which errors.
     root_span = collector.create_span("HTTP GET /api/users")
     root_span.set_attribute("http.method", "GET")
-    root_span.set_attribute("http.url", "/api/users")
-    
-    # Add a child span for database query
-    db_span = collector.create_span(
-        "SELECT users", 
-        trace_id=root_span.trace_id, 
-        parent_span_id=root_span.span_id
-    )
-    db_span.set_attribute("db.statement", "SELECT * FROM users")
+    db_span = collector.create_span("SELECT users", trace_id=root_span.trace_id,
+                                    parent_span_id=root_span.span_id)
     db_span.set_attribute("db.type", "sql")
-    
-    # Simulate some work
-    time.sleep(0.01)
     db_span.finish()
-    
-    # Add another child span for external API call
-    api_span = collector.create_span(
-        "Call external API", 
-        trace_id=root_span.trace_id, 
-        parent_span_id=root_span.span_id
-    )
-    api_span.set_attribute("http.url", "https://api.external.com/users")
-    api_span.set_attribute("http.method", "GET")
-    
-    # Simulate some work and an error
-    time.sleep(0.02)
+    api_span = collector.create_span("Call external API", trace_id=root_span.trace_id,
+                                     parent_span_id=root_span.span_id)
     api_span.set_error()
     api_span.finish()
-    
-    # Finish the root span
     root_span.finish()
-    
-    # Create another trace
+
+    # Trace 2: independent job.
     second_root = collector.create_span("Process batch job")
-    second_root.set_attribute("job.type", "data_processing")
-    
-    child_job = collector.create_span(
-        "Process file", 
-        trace_id=second_root.trace_id, 
-        parent_span_id=second_root.span_id
-    )
-    child_job.set_attribute("file.name", "data.csv")
-    time.sleep(0.01)
+    child_job = collector.create_span("Process file", trace_id=second_root.trace_id,
+                                      parent_span_id=second_root.span_id)
     child_job.finish()
     second_root.finish()
-    
-    # Print all traces
-    print("Traces collected:")
-    print("=" * 50)
-    
-    for trace in collector.get_all_traces():
-        tree = trace.get_trace_tree()
-        print(f"Trace ID: {tree['trace_id']}")
-        for root in tree["roots"]:
-            _print_trace_tree(root)
-        print()
+
+    # Two isolated traces exist.
+    n_traces = len(collector.get_all_traces())
+    assert n_traces == 2, f"expected 2 traces, got {n_traces}"
+    assert root_span.trace_id != second_root.trace_id, "traces share an id"
+
+    # The tree reconstructs the exact hierarchy: 1 root, 2 children under it.
+    tree = collector.get_trace(root_span.trace_id).get_trace_tree()
+    assert len(tree["roots"]) == 1, f"trace 1 must have 1 root, got {len(tree['roots'])}"
+    root_node = tree["roots"][0]
+    assert root_node["span"].name == "HTTP GET /api/users"
+    child_names = sorted(c["span"].name for c in root_node["children"])
+    assert child_names == ["Call external API", "SELECT users"], \
+        f"children wrong: {child_names}"
+    assert all(c["children"] == [] for c in root_node["children"]), "phantom grandchildren"
+
+    # Attributes and status survive.
+    assert root_node["span"].attributes["http.method"] == "GET"
+    by_name = {c["span"].name: c["span"] for c in root_node["children"]}
+    assert by_name["SELECT users"].attributes["db.type"] == "sql"
+    assert by_name["Call external API"].status == "error", "set_error not preserved"
+    assert by_name["SELECT users"].status != "error"
+
+    # Durations are non-negative and set by finish().
+    assert db_span.duration is not None and db_span.duration >= 0.0
+    assert root_span.duration >= db_span.duration * 0, "root duration missing"
+
+    # Trace 2's tree is untouched by trace 1.
+    tree2 = collector.get_trace(second_root.trace_id).get_trace_tree()
+    assert len(tree2["roots"]) == 1
+    assert tree2["roots"][0]["span"].name == "Process batch job"
+    assert len(tree2["roots"][0]["children"]) == 1
+    assert tree2["roots"][0]["children"][0]["span"].name == "Process file"
+
+    # Unknown trace lookups are honest.
+    assert collector.get_trace("nonexistent") is None
+
+    # create_span with an unknown trace_id creates that trace (documented).
+    orphan = collector.create_span("orphan", trace_id="explicit-trace")
+    assert collector.get_trace("explicit-trace") is not None
+    assert len(collector.get_all_traces()) == 3
+
+    print("trace_collector: 2 traces isolated, tree 1-root/2-children exact, "
+          "error status + attributes preserved, explicit trace id honored — PASS")

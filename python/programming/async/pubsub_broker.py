@@ -197,20 +197,26 @@ class Broker:
         if topic_name not in self.topics:
             self.create_topic(topic_name)
         
-        # Publish to the topic
+        # Publish to the topic's attached subscribers
         topic = self.topics[topic_name]
         topic.publish(message)
-        
-        # Also publish to subscribers of matching wildcard topics
-        for subscriber_id, patterns in self.subscriber_topics.items():
-            for pattern in patterns:
-                if self._match_topic(pattern, topic_name):
-                    # Find the subscriber
-                    for t in self.topics.values():
-                        if subscriber_id in [s.id for s in t.subscribers.values()]:
-                            subscriber = t.subscribers[subscriber_id]
-                            subscriber.notify(topic_name, message)
-                            break
+
+        # Also deliver to pattern subscribers NOT yet attached to this topic
+        # (e.g. wildcards that predate the topic). Skipping the already-
+        # attached prevents the double delivery the former code produced —
+        # every attached subscriber was notified by BOTH paths. Attach them
+        # so future publishes go through the fast path exactly once.
+        already_attached = set(topic.subscribers.keys())
+        for subscriber_id, patterns in list(self.subscriber_topics.items()):
+            if subscriber_id in already_attached:
+                continue
+            if any(self._match_topic(p, topic_name) for p in patterns):
+                for t in self.topics.values():
+                    if subscriber_id in t.subscribers:
+                        subscriber = t.subscribers[subscriber_id]
+                        subscriber.notify(topic_name, message)
+                        topic.add_subscriber(subscriber)
+                        break
     
     def get_subscribers(self, topic_name: str) -> List[Subscriber]:
         """
@@ -228,55 +234,64 @@ class Broker:
 
 
 def main():
-    """Demo the message broker functionality."""
-    # Create broker
+    """Self-test: exact-topic and wildcard delivery verified message-by-
+    message, cross-topic isolation, unsubscribe stops delivery."""
     broker = Broker()
-    
-    # Create topics
     broker.create_topic("news/sports")
     broker.create_topic("news/politics")
     broker.create_topic("weather/local")
-    
-    # Create subscribers
-    def callback1(topic: str, message: Any) -> None:
-        print(f"Subscriber 1 received on '{topic}': {message}")
-    
-    def callback2(topic: str, message: Any) -> None:
-        print(f"Subscriber 2 received on '{topic}': {message}")
-    
-    def callback3(topic: str, message: Any) -> None:
-        print(f"Subscriber 3 received on '{topic}': {message}")
-    
-    sub1 = Subscriber("Sports Fan", callback1)
-    sub2 = Subscriber("News Enthusiast", callback2)
-    sub3 = Subscriber("Weather Watcher", callback3)
-    
-    # Subscribe to topics
-    broker.subscribe(sub1, "news/sports")  # Exact match
-    broker.subscribe(sub2, "news/#")       # Wildcard for all news
-    broker.subscribe(sub3, "weather/#")    # Wildcard for all weather
-    
-    # Publish messages
-    print("Publishing messages...")
-    broker.publish("news/sports", "Football game tonight!")
-    broker.publish("news/politics", "Election results coming in")
-    broker.publish("weather/local", "Sunny with chance of rain")
-    
-    # Test wildcard subscription
-    print("\nTesting wildcard subscriptions...")
-    broker.publish("news/technology", "New smartphone released")
-    broker.publish("weather/national", "Hurricane approaching")
-    
-    # Test unsubscribing
-    print("\nUnsubscribing News Enthusiast from news topics...")
-    broker.unsubscribe(sub2, "news/#")
-    broker.publish("news/sports", "Basketball playoffs start soon")
-    
-    # Show subscriber counts
-    print("\nSubscriber counts per topic:")
-    for topic_name in ["news/sports", "news/politics", "weather/local"]:
-        subscribers = broker.get_subscribers(topic_name)
-        print(f"  {topic_name}: {len(subscribers)} subscribers")
+
+    inbox = {"sports": [], "news": [], "weather": []}
+    sub_sports = Subscriber("sports-fan", lambda t, m: inbox["sports"].append((t, m)))
+    sub_news = Subscriber("news-all", lambda t, m: inbox["news"].append((t, m)))
+    sub_weather = Subscriber("weather", lambda t, m: inbox["weather"].append((t, m)))
+
+    broker.subscribe(sub_sports, "news/sports")   # exact
+    broker.subscribe(sub_news, "news/#")          # wildcard
+    broker.subscribe(sub_weather, "weather/#")    # wildcard
+
+    broker.publish("news/sports", "football")
+    broker.publish("news/politics", "election")
+    broker.publish("weather/local", "sunny")
+
+    # Exact subscriber: only its topic, exactly once.
+    assert inbox["sports"] == [("news/sports", "football")], \
+        f"exact subscription wrong: {inbox['sports']}"
+
+    # Wildcard subscriber: BOTH news topics, neither weather.
+    assert ("news/sports", "football") in inbox["news"]
+    assert ("news/politics", "election") in inbox["news"]
+    assert not any(t.startswith("weather") for t, _ in inbox["news"]), \
+        "news/# received weather traffic"
+    assert inbox["weather"] == [("weather/local", "sunny")]
+
+    # Wildcards catch topics created AFTER subscription.
+    broker.publish("news/technology", "gadget")
+    assert ("news/technology", "gadget") in inbox["news"], \
+        "wildcard missed a newly created topic"
+    assert not any(t == "news/technology" for t, _ in inbox["sports"]), \
+        "exact subscriber received a foreign topic"
+
+    # No duplicate delivery to the wildcard subscriber per publish.
+    n_sports_msgs = sum(1 for t, _ in inbox["news"] if t == "news/sports")
+    assert n_sports_msgs == 1, f"wildcard received news/sports {n_sports_msgs} times"
+
+    # UNSUBSCRIBE: the wildcard subscriber goes silent; exact one continues.
+    broker.unsubscribe(sub_news, "news/#")
+    n_news = len(inbox["news"])
+    broker.publish("news/sports", "basketball")
+    assert len(inbox["news"]) == n_news, "unsubscribed wildcard still receives"
+    assert ("news/sports", "basketball") in inbox["sports"], \
+        "exact subscriber lost delivery after another's unsubscribe"
+
+    # Subscriber accounting.
+    assert len(broker.get_subscribers("weather/local")) == 1
+    assert broker.get_subscribers("ghost/topic") == []
+    total = sum(len(v) for v in inbox.values())
+    assert total == 6, f"exactly 6 deliveries expected in the whole run, got {total}"
+
+    print("pubsub_broker: exact 1:1, wildcard caught 3 news topics (incl. "
+          "late-created), no dupes, unsubscribe silent, 6 total deliveries — PASS")
 
 
 if __name__ == "__main__":

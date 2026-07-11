@@ -148,59 +148,92 @@ class Report:
 
 
 def demo() -> None:
-    """Demonstrate the timer functionality."""
-    print("Starting timer demo...")
-    
-    # Basic timer usage
-    timer = Timer("test")
-    timer.start()
-    time.sleep(0.01)  # 10ms
-    timer.stop()
-    print(f"Basic timer result: {timer.elapsed():.6f} seconds")
-    
-    # Timer stack usage
-    with TimerStack() as stack:
-        stack.start("main")
-        
-        # Simulate some work
-        stack.start("setup")
-        time.sleep(0.005)  # 5ms
-        stack.stop()
-        
-        # Nested timers
-        stack.start("processing")
-        stack.start("phase1")
-        time.sleep(0.01)  # 10ms
-        stack.stop()
-        
-        stack.start("phase2")
-        time.sleep(0.015)  # 15ms
-        stack.stop()
-        stack.stop()  # processing
-        
-        stack.start("teardown")
-        time.sleep(0.002)  # 2ms
-        stack.stop()
-        
-        stack.stop()  # main
-    
-    # Generate and print report
-    report = stack.report()
-    print("\n" + str(report))
-    
-    # Demonstrate multiple calls to same timer
-    with TimerStack() as stack:
-        for i in range(3):
-            stack.start("loop_task")
-            time.sleep(0.001 * (i + 1))  # 1ms, 2ms, 3ms
-            stack.stop()
-        
-        stack.start("final_task")
-        time.sleep(0.005)  # 5ms
-        stack.stop()
-        
-        report = stack.report()
-        print("\n" + str(report))
+    """Self-test on a FAKE clock: exact elapsed arithmetic, accumulation
+    across restarts, LIFO stack discipline, misuse refused."""
+    _now = [1000.0]
+    _real = time.perf_counter
+    time.perf_counter = lambda: _now[0]
+    try:
+        # Exact elapsed: start, advance 2.5s, stop.
+        t = Timer("t")
+        t.start()
+        _now[0] += 2.5
+        t.stop()
+        assert t.elapsed() == 2.5, f"2.5s on the fake clock must read 2.5, got {t.elapsed()}"
+
+        # Accumulation across restarts: +1.5 more = 4.0 total.
+        t.start()
+        _now[0] += 1.5
+        t.stop()
+        assert t.elapsed() == 4.0, f"accumulated elapsed must be 4.0, got {t.elapsed()}"
+
+        # A running timer reads live time without stopping.
+        t.start()
+        _now[0] += 0.5
+        assert t.elapsed() == 4.5 and t.running
+        t.stop()
+        t.reset()
+        assert t.elapsed() == 0.0 and not t.running, "reset left state behind"
+
+        # Misuse is refused: double start, stop without start.
+        t.start()
+        try:
+            t.start()
+            assert False, "double start accepted"
+        except RuntimeError:
+            pass
+        t.stop()
+        try:
+            t.stop()
+            assert False, "stop on stopped timer accepted"
+        except RuntimeError:
+            pass
+
+        # Stack discipline: stop() always pops the INNERMOST timer (LIFO),
+        # and nested times nest arithmetically.
+        stack = TimerStack()
+        stack.start("outer")
+        _now[0] += 1.0
+        stack.start("inner")
+        _now[0] += 2.0
+        assert stack.stop() == "inner", "stop must pop the innermost timer"
+        _now[0] += 1.0
+        assert stack.stop() == "outer"
+        assert stack.get_elapsed("inner") == 2.0, f"inner: {stack.get_elapsed('inner')}"
+        assert stack.get_elapsed("outer") == 4.0, f"outer must span 1+2+1=4: {stack.get_elapsed('outer')}"
+        assert stack.get_elapsed("ghost") == 0.0
+
+        # Call counts and re-entry: 3 starts of the same name accumulate.
+        with TimerStack() as s2:
+            for dt in (1.0, 2.0, 3.0):
+                s2.start("loop")
+                _now[0] += dt
+                s2.stop()
+        assert s2.get_call_count("loop") == 3
+        assert s2.get_elapsed("loop") == 6.0, f"1+2+3 must be 6, got {s2.get_elapsed('loop')}"
+
+        # Context-manager exit force-stops whatever is still running.
+        with TimerStack() as s3:
+            s3.start("abandoned")
+            _now[0] += 7.0
+        assert s3.get_elapsed("abandoned") == 7.0, "unstopped timer not closed by __exit__"
+        assert not s3.get_timer("abandoned").running
+
+        # Stopping an empty stack is refused.
+        try:
+            TimerStack().stop()
+            assert False, "stop on empty stack accepted"
+        except RuntimeError:
+            pass
+
+        # Report contains the exact numbers.
+        rep = s2.report()
+        assert "loop" in rep.format_report() and rep.call_counts["loop"] == 3
+    finally:
+        time.perf_counter = _real
+
+    print("timer_stack: fake-clock elapsed exact (2.5→4.0→4.5), LIFO pops, "
+          "loop 3 calls == 6.0s, __exit__ closed 7.0s — PASS")
 
 
 if __name__ == "__main__":

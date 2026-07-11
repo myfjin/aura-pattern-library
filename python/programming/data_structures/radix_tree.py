@@ -91,8 +91,15 @@ class RadixTree:
         child_key, child_node = matching_child
         
         if common_prefix_len == len(child_key):
-            # Key matches the entire child key, continue down this path
+            # Key matches the entire child key, continue down this path.
             remaining_key = key[common_prefix_len:]
+            if not remaining_key:
+                # Exact hit on this node: set/overwrite its value here.
+                # (Recursing with "" used to create a phantom ''-edge child,
+                # so overwriting an existing key silently kept the old value.)
+                child_node.value = value
+                child_node.is_leaf = True
+                return
             self._insert_recursive(child_node, remaining_key, value)
         else:
             # Need to split the existing node
@@ -196,9 +203,15 @@ class RadixTree:
                 if key == child_key:
                     # Found the node to delete
                     if child_node.is_leaf:
-                        del node.children[child_key]
-                        # Try to merge nodes if this node now has only one child
-                        self._merge_single_child(node)
+                        if child_node.children:
+                            # The key is also a prefix of longer keys: unmark
+                            # the leaf but KEEP the subtree. (Unconditional
+                            # deletion here used to destroy every longer key.)
+                            child_node.is_leaf = False
+                            child_node.value = None
+                            self._merge_single_child(node, child_key)
+                        else:
+                            del node.children[child_key]
                         return True
                     else:
                         return False  # Not a leaf node
@@ -211,31 +224,28 @@ class RadixTree:
                         if not child_node.children and not child_node.is_leaf:
                             del node.children[child_key]
                         else:
-                            # Try to merge the child node
-                            self._merge_single_child(child_node)
+                            # Try to merge the child node (parent dict in hand)
+                            self._merge_single_child(node, child_key)
                     return result
-        
+
         return False
-    
-    def _merge_single_child(self, node: RadixNode) -> None:
+
+    def _merge_single_child(self, parent: RadixNode, edge_key: str) -> None:
         """
-        Merge a node with its single child if it has no value.
-        
-        Args:
-            node: Node to potentially merge
+        Compress parent.children[edge_key] with its single child, keeping the
+        parent's children dict and the node's .key in sync. (The former
+        version mutated .key without re-keying the dict, desyncing search()
+        from keys().)
         """
+        node = parent.children[edge_key]
         if node.is_leaf or len(node.children) != 1:
             return
-        
-        # Get the only child
-        child_key, child_node = next(iter(node.children.items()))
-        
-        # Merge the keys and move the child up
-        merged_key = node.key + child_key
-        child_node.key = merged_key
-        
-        # Replace this node with the child in the parent's children
-        # This is handled at a higher level since we don't have parent references
+
+        child_edge, child_node = next(iter(node.children.items()))
+        merged_edge = edge_key + child_edge
+        child_node.key = merged_edge
+        del parent.children[edge_key]
+        parent.children[merged_edge] = child_node
     
     def keys(self) -> List[str]:
         """
@@ -270,45 +280,60 @@ class RadixTree:
 
 
 if __name__ == "__main__":
-    # Demo the radix tree
+    # Self-test: exact lookups through edge-splits, prefix-safe deletes,
+    # and a dict oracle fuzz over a shared-prefix-heavy key space.
+    import random
+    random.seed(42)
+
     tree = RadixTree()
-    
-    # Insert some key-value pairs
-    test_data = [
-        ("apple", 1),
-        ("app", 2),
-        ("application", 3),
-        ("apply", 4),
-        ("banana", 5),
-        ("band", 6),
-        ("bandana", 7),
-        ("cat", 8),
-        ("car", 9),
-        ("card", 10)
-    ]
-    
-    print("Inserting key-value pairs:")
+    test_data = [("apple", 1), ("app", 2), ("application", 3), ("apply", 4),
+                 ("banana", 5), ("band", 6), ("bandana", 7),
+                 ("cat", 8), ("car", 9), ("card", 10)]
     for key, value in test_data:
         tree.insert(key, value)
-        print(f"  Inserted: {key} -> {value}")
-    
-    print("\nAll keys in tree:", tree.keys())
-    
-    print("\nSearching for keys:")
-    search_keys = ["app", "apple", "application", "apply", "banana", "band", "missing"]
-    for key in search_keys:
-        result = tree.search(key)
-        print(f"  Search '{key}': {result}")
-    
-    print("\nDeleting keys:")
-    delete_keys = ["app", "banana", "missing"]
-    for key in delete_keys:
-        result = tree.delete(key)
-        print(f"  Delete '{key}': {result}")
-    
-    print("\nKeys after deletion:", tree.keys())
-    
-    print("\nSearching after deletion:")
-    for key in ["app", "apple", "banana"]:
-        result = tree.search(key)
-        print(f"  Search '{key}': {result}")
+
+    # Every inserted key resolves to exactly its value (through splits).
+    for key, value in test_data:
+        assert tree.search(key) == value, f"search({key!r}) must be {value}"
+    assert tree.search("missing") is None
+    assert tree.search("appl") is None, "internal edge fragment reported as a key"
+    assert tree.search("ap") is None
+    assert sorted(tree.keys()) == sorted(k for k, _ in test_data)
+    assert sum(tree.search(k) for k, _ in test_data) == 55, \
+        "values 1..10 must sum to 55"
+
+    # Overwrite updates in place.
+    tree.insert("app", 20)
+    assert tree.search("app") == 20 and len(tree.keys()) == 10
+
+    # Deleting a key that PREFIXES others must not harm the longer keys.
+    assert tree.delete("app") is True
+    assert tree.search("app") is None
+    assert tree.search("apple") == 1 and tree.search("application") == 3, \
+        "deleting a prefix key destroyed longer keys"
+    assert tree.delete("banana") is True
+    assert tree.search("band") == 6 and tree.search("bandana") == 7
+    assert tree.delete("missing") is False, "deleting a missing key reported success"
+    assert tree.delete("app") is False, "double delete reported success"
+    assert len(tree.keys()) == 8
+
+    # Oracle fuzz: 400 ops over a deliberately collision-heavy key space.
+    fragments = ["a", "ab", "abc", "abd", "b", "ba", "bad", "badge", "bat", "batch"]
+    fuzz = RadixTree()
+    oracle = {}
+    for step in range(400):
+        k = random.choice(fragments) + random.choice(["", "x", "xy", "z"])
+        op = random.random()
+        if op < 0.5:
+            v = random.randint(0, 999)
+            fuzz.insert(k, v)
+            oracle[k] = v
+        elif op < 0.75:
+            assert fuzz.delete(k) == (k in oracle), f"delete({k!r}) disagrees at step {step}"
+            oracle.pop(k, None)
+        else:
+            assert fuzz.search(k) == oracle.get(k), f"search({k!r}) disagrees at step {step}"
+    assert sorted(fuzz.keys()) == sorted(oracle.keys()), "final key set diverged from oracle"
+
+    print(f"radix_tree: 10 keys exact through splits (sum 55), prefix-delete safe, "
+          f"400-op oracle on collision-heavy keys agreed ({len(oracle)} final) — PASS")

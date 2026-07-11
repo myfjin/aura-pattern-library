@@ -191,51 +191,78 @@ class PersistentDeque:
 
 
 if __name__ == "__main__":
-    # Demo: Create a persistent deque and perform operations
-    filename = "demo_deque.pkl"
-    
-    # Clean up any existing file
-    if os.path.exists(filename):
-        os.remove(filename)
-    
-    # Create a new persistent deque
-    print("Creating PersistentDeque with maxlen=5...")
-    dq = PersistentDeque(filename, maxlen=5)
-    
-    # Add elements
-    print("\nAdding elements with append and appendleft:")
-    for i in range(3):
-        dq.append(i)
-        print(f"  append({i}) -> {list(dq)}")
-    
-    for i in range(3, 5):
-        dq.appendleft(i)
-        print(f"  appendleft({i}) -> {list(dq)}")
-    
-    print(f"\nDeque size: {len(dq)}")
-    print(f"Deque representation: {dq}")
-    
-    # Test persistence by creating a new instance
-    print("\nTesting persistence by creating a new instance:")
-    dq2 = PersistentDeque(filename, maxlen=5)
-    print(f"Loaded deque: {list(dq2)}")
-    
-    # Pop elements
-    print("\nPopping elements:")
-    while dq2:
-        try:
-            item = dq2.pop()
-            print(f"  pop() -> {item}, remaining: {list(dq2)}")
-        except IndexError:
-            break
-    
-    # Test maxlen behavior
-    print("\nTesting maxlen behavior:")
-    dq3 = PersistentDeque(filename, maxlen=3)
+    # Self-test: collections.deque oracle fuzz, crash-recovery from disk
+    # (the reason this pattern exists), exact maxlen eviction.
+    import random
+    import tempfile
+    random.seed(42)
+    tmpdir = tempfile.mkdtemp(prefix="pdeque_")
+    path = os.path.join(tmpdir, "state.pkl")
+
+    # Exact end semantics: append→right, appendleft→left.
+    dq = PersistentDeque(path)
+    dq.append(1)
+    dq.append(2)
+    dq.appendleft(0)
+    assert list(dq) == [0, 1, 2], f"end semantics wrong: {list(dq)}"
+    assert dq.pop() == 2 and dq.popleft() == 0 and list(dq) == [1]
+
+    # THE DISASTER: the process "dies" (instance dropped); a fresh instance
+    # on the same file must recover the EXACT state, in order.
+    dq.append(7)
+    dq.appendleft(-1)          # state on disk: [-1, 1, 7]
+    del dq
+    recovered = PersistentDeque(path)
+    assert list(recovered) == [-1, 1, 7], \
+        f"crash recovery lost state: {list(recovered)}"
+    assert len(recovered) == 3
+
+    # Oracle fuzz: 200 random ops mirrored against collections.deque,
+    # RELOADING FROM DISK every 20 ops to prove persistence continuously.
+    oracle = deque([-1, 1, 7])
+    d = recovered
+    for step in range(200):
+        op = random.random()
+        if op < 0.35:
+            v = random.randint(0, 999)
+            d.append(v); oracle.append(v)
+        elif op < 0.6:
+            v = random.randint(0, 999)
+            d.appendleft(v); oracle.appendleft(v)
+        elif op < 0.8 and oracle:
+            assert d.pop() == oracle.pop(), f"pop diverged at step {step}"
+        elif oracle:
+            assert d.popleft() == oracle.popleft(), f"popleft diverged at step {step}"
+        if step % 20 == 19:
+            d = PersistentDeque(path)   # simulate a crash + reload
+            assert list(d) == list(oracle), f"reload at step {step} diverged"
+    assert list(d) == list(oracle) and len(d) == len(oracle)
+
+    # maxlen eviction is exact: append evicts LEFT, appendleft evicts RIGHT.
+    path3 = os.path.join(tmpdir, "capped.pkl")
+    capped = PersistentDeque(path3, maxlen=3)
     for i in range(5):
-        dq3.append(i)
-        print(f"  append({i}) -> {list(dq3)}")
-    
-    # Clean up
-    dq3.close()
-    print(f"\nCleaned up file: {filename}")
+        capped.append(i)
+    assert list(capped) == [2, 3, 4], f"append past maxlen must keep newest: {list(capped)}"
+    capped.appendleft(99)
+    assert list(capped) == [99, 2, 3], f"appendleft must evict from the right: {list(capped)}"
+
+    # Empty pops refuse loudly.
+    capped.clear()
+    assert len(capped) == 0 and not capped
+    for call in (capped.pop, capped.popleft):
+        try:
+            call()
+            assert False, "pop from empty deque succeeded"
+        except IndexError:
+            pass
+
+    # close() removes the backing file; a new instance starts empty.
+    capped.close()
+    assert not os.path.exists(path3), "close() left the backing file"
+    assert list(PersistentDeque(path3)) == []
+
+    d.close()
+    os.rmdir(tmpdir) if not os.listdir(tmpdir) else None
+    print("persistent_deque: crash-recovered [-1,1,7] exact, 200-op deque oracle "
+          "with 10 reloads agreed, maxlen evicts correct end — PASS")

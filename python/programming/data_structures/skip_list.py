@@ -140,33 +140,54 @@ class SkipList:
             current = current.forward[0]
 
 if __name__ == "__main__":
-    # Create a skip list
+    # Self-test: exact search/range/delete semantics + a dict oracle fuzz.
+    random.seed(42)
     sl = SkipList()
-    
-    # Insert 100 key-value pairs
-    for i in range(100):
-        sl.insert(i, f"value_{i}")
-    
-    # Test search
-    print(f"Search for key 50: {sl.search(50)}")
-    print(f"Search for key 150: {sl.search(150)}")
-    
-    # Test range query
-    range_result = sl.range_query(10, 20)
-    print(f"Range query [10, 20]: {range_result}")
-    
-    # Test deletion
-    print(f"Delete key 25: {sl.delete(25)}")
-    print(f"Delete key 150: {sl.delete(150)}")
-    print(f"Search for key 25 after deletion: {sl.search(25)}")
-    
-    # Test length
-    print(f"Length after deletion: {len(sl)}")
-    
-    # Test iteration
-    count = 0
-    for key, value in sl:
-        if count < 5:  # Only print first 5 items
-            print(f"Key: {key}, Value: {value}")
-        count += 1
-    print(f"Total items iterated: {count}")
+
+    # Insert 100 keys in shuffled order; the list must still be fully sorted.
+    keys = list(range(100))
+    random.shuffle(keys)
+    for k in keys:
+        sl.insert(k, f"value_{k}")
+    assert len(sl) == 100, f"100 inserts must give size 100, got {len(sl)}"
+    assert [k for k, _ in sl] == list(range(100)), "iteration is not sorted"
+
+    # Exact hits and misses.
+    assert sl.search(50) == "value_50"
+    assert sl.search(150) is None, "search invented a missing key"
+    assert sl.range_query(10, 13) == [(10, "value_10"), (11, "value_11"),
+                                      (12, "value_12"), (13, "value_13")], \
+        "range [10,13] must return exactly those 4 pairs in order"
+    assert sum(k for k, _ in sl.range_query(10, 13)) == 46, \
+        "keys in range [10,13] must sum to 10+11+12+13 = 46"
+    assert sl.range_query(200, 300) == [], "empty range returned items"
+
+    # Insert on an existing key UPDATES, never duplicates.
+    sl.insert(50, "replaced")
+    assert len(sl) == 100 and sl.search(50) == "replaced", "update-in-place broke"
+
+    # Delete: removes exactly the key, reports honestly.
+    assert sl.delete(25) is True
+    assert sl.delete(25) is False, "double delete reported success"
+    assert sl.delete(150) is False, "deleting a missing key reported success"
+    assert sl.search(25) is None and len(sl) == 99
+
+    # THE STRUCTURAL CLAIM: skip list agrees with a dict oracle over 600
+    # random mixed operations (insert/delete/search).
+    oracle = {k: ("replaced" if k == 50 else f"value_{k}") for k in range(100) if k != 25}
+    for _ in range(600):
+        op = random.random()
+        k = random.randint(0, 149)
+        if op < 0.5:
+            sl.insert(k, k * 7)
+            oracle[k] = k * 7
+        elif op < 0.8:
+            assert sl.delete(k) == (k in oracle), f"delete({k}) disagrees with oracle"
+            oracle.pop(k, None)
+        else:
+            assert sl.search(k) == oracle.get(k), f"search({k}) disagrees with oracle"
+    assert list(sl) == sorted(oracle.items()), "final state diverged from the oracle"
+    assert len(sl) == len(oracle)
+
+    print(f"skip_list: sorted after shuffle, exact range, update-in-place, "
+          f"600-op oracle fuzz agreed, final size {len(sl)} — PASS")

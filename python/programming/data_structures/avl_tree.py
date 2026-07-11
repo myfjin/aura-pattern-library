@@ -372,39 +372,57 @@ class AVLTree:
 
 
 def main() -> None:
-    """Demo of AVL tree functionality."""
-    # Create AVL tree
+    """Self-test: sequential (adversarial) inserts stay balanced with a bounded
+    height, inorder is sorted, deletes rebalance, set-oracle fuzz."""
+    import random
+    random.seed(42)
+
+    # 1..50 IN ORDER is the worst case for a plain BST (a 50-deep chain).
+    # The AVL must keep every balance factor in [-1, 1] and stay logarithmic.
     avl = AVLTree()
-    
-    # Insert 50 keys
-    keys = list(range(1, 51))
-    for key in keys:
+    for key in range(1, 51):
         avl.insert(key)
-    
-    # Verify tree is balanced
-    print(f"Tree is balanced: {avl.is_balanced()}")
-    
-    # Display inorder traversal (should be sorted)
-    traversal = avl.inorder_traversal()
-    print(f"Inorder traversal (first 20): {traversal[:20]}")
-    
-    # Search for some keys
-    print(f"Search for 25: {avl.search(25)}")
-    print(f"Search for 100: {avl.search(100)}")
-    
-    # Delete some keys
-    for key in [10, 20, 30]:
+    assert avl.is_balanced(), "sequential insert broke the AVL balance invariant"
+    assert avl.root.height <= 8, \
+        f"50 nodes must fit in AVL height <=8, got {avl.root.height} (chain?)"
+    assert avl.inorder_traversal() == list(range(1, 51)), "inorder not sorted"
+    assert sum(avl.inorder_traversal()) == 1275, "1..50 must sum to 1275"
+
+    # Search: exact membership.
+    assert avl.search(25) is True and avl.search(1) is True and avl.search(50) is True
+    assert avl.search(100) is False and avl.search(0) is False
+
+    # Duplicate inserts are no-ops (set semantics).
+    avl.insert(25)
+    assert avl.inorder_traversal() == list(range(1, 51)), "duplicate insert changed the tree"
+
+    # Deletes remove exactly the keys and keep the invariant.
+    for key in (10, 20, 30):
         avl.delete(key)
-    
-    # Verify still balanced
-    print(f"Tree is balanced after deletions: {avl.is_balanced()}")
-    
-    # Display updated traversal
-    traversal = avl.inorder_traversal()
-    print(f"Inorder traversal after deletions (first 20): {traversal[:20]}")
-    
-    # Verify deleted keys are gone
-    print(f"Search for 10 after deletion: {avl.search(10)}")
+    assert avl.is_balanced(), "delete broke the balance invariant"
+    remaining = avl.inorder_traversal()
+    assert remaining == [k for k in range(1, 51) if k not in (10, 20, 30)]
+    assert avl.search(10) is False and avl.search(11) is True
+
+    # Oracle fuzz: 600 inserts/deletes vs a plain set, invariant checked
+    # every step (the disaster — an unbalancing rotation — must never land).
+    fuzz = AVLTree()
+    oracle = set()
+    for step in range(600):
+        k = random.randint(0, 80)
+        if random.random() < 0.6:
+            fuzz.insert(k)
+            oracle.add(k)
+        elif k in oracle:
+            fuzz.delete(k)
+            oracle.discard(k)
+        assert fuzz.is_balanced(), f"balance invariant broken at step {step}"
+    assert fuzz.inorder_traversal() == sorted(oracle), "final tree diverged from set oracle"
+    if fuzz.root:
+        assert fuzz.root.height <= 10, f"fuzz tree degenerated: height {fuzz.root.height}"
+
+    print(f"avl_tree: 50 sequential inserts height {avl.root.height} (<=8) balanced, "
+          f"deletes rebalanced, 600-op set oracle agreed — PASS")
 
 
 if __name__ == "__main__":

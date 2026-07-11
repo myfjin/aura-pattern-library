@@ -382,74 +382,57 @@ def recover_from_crash(wal_directory: Path) -> List[bytes]:
 
 
 def main():
-    """Demo of WAL functionality including crash recovery."""
-    # Create temporary directory for WAL
-    wal_dir = Path("wal_demo")
-    if wal_dir.exists():
-        shutil.rmtree(wal_dir)
-    
-    print("=== Write-Ahead Log Demo ===\n")
-    
-    # Create WAL
-    wal = WriteAheadLog(wal_dir, segment_size=1024)  # Small segments for demo
-    
-    print("1. Writing transactions to WAL...")
-    transactions = [
-        b"BEGIN TRANSACTION",
-        b"INSERT INTO users (id, name) VALUES (1, 'Alice')",
-        b"INSERT INTO users (id, name) VALUES (2, 'Bob')",
-        b"COMMIT TRANSACTION",
-        b"BEGIN TRANSACTION",
-        b"UPDATE users SET name = 'Alice Smith' WHERE id = 1",
-        b"COMMIT TRANSACTION"
-    ]
-    
-    positions = []
-    for i, tx in enumerate(transactions):
-        segment_idx, pos = wal.append(tx)
-        positions.append((segment_idx, pos))
-        print(f"   Wrote transaction {i+1} to segment {segment_idx} at position {pos}")
-    
-    print(f"\n2. WAL state: {len(wal.segments)} segments created")
-    for i, segment in enumerate(wal.segments):
-        print(f"   Segment {i}: {segment.size()} bytes")
-    
-    # Demonstrate normal replay
-    print("\n3. Normal replay of all transactions:")
-    wal.sync()  # Ensure all data is written
+    """Self-test: segment rollover actually happens, replay is byte-exact and
+    ordered across segments, unsynced-crash recovery, truncation drops tails."""
+    import tempfile
+    wal_dir = Path(tempfile.mkdtemp(prefix="segwal_"))
+
+    # Small segments force rollover; entries big enough to span segments.
+    wal = WriteAheadLog(wal_dir, segment_size=256)
+    transactions = [f"TX-{i:03d}:".encode() + b"x" * 60 for i in range(12)]
+    for tx in transactions:
+        wal.append(tx)
+    assert len(wal.segments) >= 3, \
+        f"12x~68B entries in 256B segments must roll over, got {len(wal.segments)} segment(s)"
+    wal.sync()
+
+    # Replay is byte-exact and in write order, across ALL segments.
     replayed = list(wal.replay())
-    for i, data in enumerate(replayed):
-        print(f"   Transaction {i+1}: {data.decode()}")
-    
-    # Simulate crash
-    print("\n4. Simulating system crash...")
-    wal2 = WriteAheadLog(wal_dir, segment_size=1024)
-    simulate_crash(wal2)  # This doesn't close the WAL properly
-    
-    # Recovery
-    print("\n5. Recovering from crash...")
+    assert replayed == transactions, (
+        f"replay diverged: {len(replayed)}/{len(transactions)} entries, "
+        f"first mismatch at "
+        f"{next((i for i, (a, b) in enumerate(zip(replayed, transactions)) if a != b), '?')}")
+    assert replayed[7] == b"TX-007:" + b"x" * 60
+
+    # THE CRASH: a second writer appends and never closes/syncs. A fresh
+    # reader must still recover everything that was appended.
+    wal2 = WriteAheadLog(wal_dir, segment_size=256)
+    wal2.append(b"crash-1")
+    wal2.append(b"crash-2")
+    wal2.append(b"crash-3")
+    # no close(), no sync() — the process "dies" here
     recovered = recover_from_crash(wal_dir)
-    print(f"   Recovered {len(recovered)} transactions:")
-    for i, data in enumerate(recovered):
-        print(f"   Transaction {i+1}: {data.decode()}")
-    
-    # Verify recovery
-    print("\n6. Verifying recovery...")
-    if len(recovered) >= len(transactions):
-        match = all(r == t for r, t in zip(recovered, transactions))
-        if match:
-            print("   ✓ All transactions recovered correctly")
-        else:
-            print("   ✗ Transaction data mismatch")
-    else:
-        print(f"   ✗ Expected {len(transactions)} transactions, got {len(recovered)}")
-    
-    # Clean up
+    n_recovered = len(recovered)
+    assert n_recovered == 15, f"must recover 12+3=15 entries, got {n_recovered}"
+    assert recovered[:12] == transactions, "pre-crash entries corrupted"
+    assert recovered[12:] == [b"crash-1", b"crash-2", b"crash-3"], \
+        f"unsynced appends lost in crash: {recovered[12:]}"
+
+    # Truncation drops everything after the cut point (whole trailing segments).
+    wal3 = WriteAheadLog(wal_dir, segment_size=256)
+    keep_bytes = wal3.segments[0].size()
+    wal3.truncate(0, keep_bytes)      # keep only segment 0, whole
+    survivors = list(wal3.replay())
+    assert 0 < len(survivors) < 15, f"truncation kept {len(survivors)}/15"
+    assert survivors == transactions[:len(survivors)], "truncated WAL replays wrong prefix"
+    assert len(list(wal_dir.glob('*'))) == 1, "trailing segment files not deleted"
+    wal3.close()
+
     wal.close()
-    if wal_dir.exists():
-        shutil.rmtree(wal_dir)
-    
-    print("\n=== Demo completed ===")
+    shutil.rmtree(wal_dir)
+    print(f"segmented_wal: rollover to {len(wal.segments)} segments, 12/12 replay "
+          f"byte-exact, 3 unsynced entries crash-recovered, truncate kept "
+          f"{len(survivors)} — PASS")
 
 
 if __name__ == "__main__":

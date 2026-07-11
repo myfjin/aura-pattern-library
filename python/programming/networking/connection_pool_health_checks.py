@@ -337,53 +337,73 @@ class ConnectionPool:
 
 
 def main():
-    """Demo of the connection pool functionality."""
-    print("=== Connection Pool Demo ===\n")
-    
-    # Create a connection pool
-    pool = ConnectionPool(
-        max_connections=5,
-        validation_query="SELECT 1",
-        health_check_interval=5.0
-    )
-    
+    """Self-test: borrow/return conservation under real thread contention,
+    context-manager auto-return, stats exact, closed pool refuses."""
+    pool = ConnectionPool(max_connections=5, validation_query="SELECT 1",
+                          health_check_interval=3600.0)
+
+    # Borrow/return bookkeeping is exact.
+    c1 = pool.borrow_connection(timeout=2.0)
+    c2 = pool.borrow_connection(timeout=2.0)
+    stats = pool.get_pool_stats()
+    assert stats["active_connections"] == 2, f"2 borrows → active {stats['active_connections']}"
+    assert stats["max_connections"] == 5
+    pool.return_connection(c1)
+    pool.return_connection(c2)
+    assert pool.get_pool_stats()["active_connections"] == 0, "returns not accounted"
+
+    # Context manager auto-returns even on exceptions.
+    with pool.get_connection(timeout=2.0) as conn:
+        assert conn.is_valid()
+        result = conn.execute("SELECT 1")
+        assert "SELECT 1" in str(result) or result is not None
+        assert pool.get_pool_stats()["active_connections"] == 1
+    assert pool.get_pool_stats()["active_connections"] == 0, "context manager leaked"
+    try:
+        with pool.get_connection(timeout=2.0):
+            raise RuntimeError("boom")
+    except RuntimeError:
+        pass
+    assert pool.get_pool_stats()["active_connections"] == 0, \
+        "connection leaked when the body raised"
+
+    # THE CONTENTION TEST: 8 threads x 5 checkouts against 5 connections.
+    # Every checkout must succeed (waiting as needed) and nothing may leak.
+    errors = []
+    done = [0]
+    lock = threading.Lock()
     def worker(worker_id: int) -> None:
-        """Worker function to demonstrate connection usage."""
-        for i in range(3):
+        for i in range(5):
             try:
-                with pool.get_connection(timeout=5.0) as conn:
-                    print(f"Worker {worker_id} using connection {conn.connection_id}")
-                    result = conn.execute(f"SELECT * FROM table_{i}")
-                    print(f"Worker {worker_id} got result: {result}")
-                    time.sleep(0.1)
+                with pool.get_connection(timeout=10.0) as conn:
+                    conn.execute(f"SELECT {worker_id}")
+                with lock:
+                    done[0] += 1
             except Exception as e:
-                print(f"Worker {worker_id} encountered error: {e}")
-    
-    # Create and start worker threads
-    threads = []
-    for i in range(8):
-        thread = threading.Thread(target=worker, args=(i,))
-        threads.append(thread)
-        thread.start()
-    
-    # Let workers run for a bit
-    time.sleep(2)
-    
-    # Print pool stats
-    stats = pool.get_pool_stats()
-    print(f"\nPool stats: {stats}")
-    
-    # Wait for all threads to complete
-    for thread in threads:
-        thread.join()
-    
-    # Print final stats
-    stats = pool.get_pool_stats()
-    print(f"\nFinal pool stats: {stats}")
-    
-    # Close the pool
+                errors.append(f"w{worker_id}/{i}: {e}")
+    threads = [threading.Thread(target=worker, args=(i,)) for i in range(8)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    assert not errors, f"checkouts failed under contention: {errors[:3]}"
+    assert done[0] == 40, f"8x5 checkouts must complete 40, got {done[0]}"
+    final = pool.get_pool_stats()
+    assert final["active_connections"] == 0, \
+        f"{final['active_connections']} connections leaked after the storm"
+    assert final["available_connections"] <= 5, "pool grew past max_connections"
+
+    # close(): pool refuses further borrows.
     pool.close()
-    print("\nPool closed successfully")
+    assert pool.get_pool_stats()["is_closed"] is True
+    try:
+        pool.borrow_connection(timeout=0.5)
+        assert False, "closed pool lent a connection"
+    except Exception:
+        pass
+
+    print("connection_pool_health_checks: bookkeeping exact, CM auto-return "
+          "(incl. on raise), 40/40 contended checkouts no leaks, closed refuses — PASS")
 
 
 if __name__ == "__main__":

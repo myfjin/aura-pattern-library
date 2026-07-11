@@ -162,52 +162,86 @@ class IntervalTree:
 
 
 def main():
-    """Demo of the interval tree functionality."""
-    # Create interval tree
+    """Self-test: overlap queries vs a brute-force oracle, exact planted hits,
+    delete correctness, and max_end augmentation integrity."""
+    import random
+    random.seed(42)
+
+    # Planted layout: [0,3], [2,5], [6,8], [10,15].
     tree = IntervalTree()
-    
-    # Insert 50 intervals
-    intervals = []
-    for i in range(50):
-        start = i * 2
-        end = start + (i % 5) + 1
-        interval = Interval(start, end, f"data_{i}")
-        intervals.append(interval)
-        tree.insert(interval)
-    
-    print(f"Inserted {len(intervals)} intervals")
-    
-    # Test query_overlap with a few test intervals
-    test_intervals = [
-        Interval(5, 10),
-        Interval(20, 25),
-        Interval(0, 1),
-        Interval(95, 100)
-    ]
-    
-    for test_interval in test_intervals:
-        overlapping = tree.query_overlap(test_interval)
-        print(f"Intervals overlapping with {test_interval}: {len(overlapping)} found")
-        if len(overlapping) <= 5:  # Only print if not too many
-            for interval in overlapping:
-                print(f"  {interval}")
-    
-    # Test deletion
-    print("\nTesting deletion:")
-    delete_count = 0
-    for i in range(0, len(intervals), 10):  # Delete every 10th interval
-        if tree.delete(intervals[i]):
-            delete_count += 1
-    print(f"Deleted {delete_count} intervals")
-    
-    # Verify deletion by querying
-    remaining = tree.inorder_traversal()
-    print(f"Remaining intervals in tree: {len(remaining)}")
-    
-    # Final verification - query a known interval
-    final_query = Interval(4, 8)
-    final_overlaps = tree.query_overlap(final_query)
-    print(f"\nFinal query for {final_query}: {len(final_overlaps)} overlapping intervals")
+    a, b, c, d = (Interval(0, 3, "a"), Interval(2, 5, "b"),
+                  Interval(6, 8, "c"), Interval(10, 15, "d"))
+    for iv in (a, b, c, d):
+        tree.insert(iv)
+
+    # Exact overlap sets (touching endpoints count: start <= end).
+    hits = tree.query_overlap(Interval(2, 3))
+    assert sorted(h.data for h in hits) == ["a", "b"], f"[2,3] must hit a+b, got {hits}"
+    assert [h.data for h in tree.query_overlap(Interval(9, 9))] == [], "gap [9,9] hit something"
+    assert sorted(h.data for h in tree.query_overlap(Interval(5, 6))) == ["b", "c"], \
+        "touching endpoints [5,6] must hit b and c"
+    assert sorted(h.data for h in tree.query_overlap(Interval(-10, 100))) == list("abcd")
+
+    # Delete removes exactly the matching interval; queries update.
+    assert tree.delete(b) is True
+    assert tree.delete(b) is False, "double delete reported success"
+    assert sorted(h.data for h in tree.query_overlap(Interval(2, 3))) == ["a"]
+    assert len(tree.inorder_traversal()) == 3
+    assert sum(h.start for h in tree.query_overlap(Interval(-10, 100))) == 16, \
+        "remaining intervals must start at 0+6+10 = 16"
+
+    # Inorder is sorted by start.
+    starts = [iv.start for iv in tree.inorder_traversal()]
+    assert starts == sorted(starts), "inorder traversal not sorted by start"
+
+    # THE STRUCTURAL CLAIM: tree query == brute-force scan over 300 random
+    # queries against 80 random intervals (including duplicates and nesting).
+    ivs = []
+    big = IntervalTree()
+    for i in range(80):
+        s = random.randint(0, 200)
+        e = s + random.randint(0, 30)
+        iv = Interval(s, e, i)
+        ivs.append(iv)
+        big.insert(iv)
+    for _ in range(300):
+        qs = random.randint(-10, 220)
+        qe = qs + random.randint(0, 40)
+        q = Interval(qs, qe)
+        got = sorted(h.data for h in big.query_overlap(q))
+        want = sorted(iv.data for iv in ivs if iv.overlaps(q))
+        assert got == want, f"query [{qs},{qe}]: tree {got} != brute-force {want}"
+
+    # Deleting half the intervals keeps the oracle agreement (max_end must
+    # be recomputed correctly on the way up, or queries go blind).
+    for iv in ivs[::2]:
+        assert big.delete(iv) is True, f"failed to delete {iv}"
+    kept = ivs[1::2]
+    for _ in range(200):
+        qs = random.randint(-10, 220)
+        qe = qs + random.randint(0, 40)
+        q = Interval(qs, qe)
+        got = sorted(h.data for h in big.query_overlap(q))
+        want = sorted(iv.data for iv in kept if iv.overlaps(q))
+        assert got == want, f"post-delete query [{qs},{qe}] diverged (max_end stale?)"
+    assert len(big.inorder_traversal()) == 40
+
+    # Refusals: inverted interval, non-Interval arguments.
+    try:
+        Interval(5, 2)
+        assert False, "inverted interval accepted"
+    except ValueError:
+        pass
+    for call in (lambda: tree.insert("x"), lambda: tree.query_overlap((1, 2)),
+                 lambda: tree.delete(42)):
+        try:
+            call()
+            assert False, "non-Interval argument accepted"
+        except TypeError:
+            pass
+
+    print("interval_tree: planted overlaps exact (touch counts), 300+200-query "
+          "oracle agreed through 40 deletes, refusals held — PASS")
 
 
 if __name__ == "__main__":

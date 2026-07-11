@@ -161,43 +161,63 @@ class Query:
 
 
 def main() -> None:
-    """Demo the Binary Indexed Tree with 100 updates."""
-    print("Binary Indexed Tree Demo")
-    print("=" * 30)
-    
-    # Create a BIT with size 20
+    """Self-test: exact sums on a planted array, set-vs-delta semantics,
+    and an 800-op oracle fuzz against a plain list."""
+    import random
+    random.seed(42)
+
+    # Planted array [3,1,4,1,5] at indices 1..5 via the set-value Query wrapper.
     bit = BinaryIndexedTree(20)
-    query = Query(bit)
-    
-    # Perform 100 updates
-    for i in range(1, 101):
-        index = (i % 20) + 1  # Cycle through indices 1-20
-        value = i
-        query.update(index, value)
-        
-        # Every 10 updates, show some stats
-        if i % 10 == 0:
-            print(f"After {i} updates:")
-            print(f"  Prefix sum at index 10: {query.prefix_sum(10)}")
-            print(f"  Range sum [5, 15]: {query.range_sum(5, 15)}")
-            print()
-    
-    # Final verification
-    print("Final verification:")
-    print(f"Prefix sum at index 20: {query.prefix_sum(20)}")
-    print(f"Range sum [1, 20]: {query.range_sum(1, 20)}")
-    
-    # Test error handling
-    print("\nTesting error handling:")
-    try:
-        bit.prefix_sum(25)
-    except IndexError as e:
-        print(f"Caught expected error: {e}")
-    
+    q = Query(bit)
+    for i, v in enumerate([3, 1, 4, 1, 5], start=1):
+        q.update(i, v)
+    assert q.prefix_sum(5) == 14, f"3+1+4+1+5 must be 14, got {q.prefix_sum(5)}"
+    assert q.range_sum(2, 4) == 6, f"1+4+1 must be 6, got {q.range_sum(2, 4)}"
+    assert q.range_sum(1, 20) == 14, "untouched tail changed the total"
+
+    # Query.update is SET (not add): overwriting index 3 with 10 must land exactly.
+    q.update(3, 10)
+    assert q.range_sum(3, 3) == 10, "set-semantics update failed to overwrite"
+    assert q.prefix_sum(5) == 20, f"total after overwrite must be 20, got {q.prefix_sum(5)}"
+
+    # Raw BIT.update is DELTA: +5 at index 1 shifts every prefix by exactly 5.
+    before = bit.prefix_sum(20)
+    bit.update(1, 5)
+    assert bit.prefix_sum(20) == before + 5, "delta update did not shift the total by 5"
+
+    # Oracle fuzz: 800 random delta-updates and queries vs a plain list.
+    oracle = [0] * 21
+    fresh = BinaryIndexedTree(20)
+    for _ in range(800):
+        op = random.random()
+        if op < 0.5:
+            i, d = random.randint(1, 20), random.randint(-50, 50)
+            fresh.update(i, d)
+            oracle[i] += d
+        elif op < 0.75:
+            i = random.randint(1, 20)
+            assert fresh.prefix_sum(i) == sum(oracle[1:i + 1]), f"prefix_sum({i}) diverged"
+        else:
+            l = random.randint(1, 20)
+            r = random.randint(l, 20)
+            assert fresh.range_sum(l, r) == sum(oracle[l:r + 1]), f"range_sum({l},{r}) diverged"
+
+    # Refusals: out-of-bounds and inverted ranges.
+    for call in (lambda: bit.prefix_sum(25), lambda: bit.update(0, 1),
+                 lambda: bit.update(21, 1), lambda: BinaryIndexedTree(0)):
+        try:
+            call()
+            assert False, "invalid call accepted"
+        except (IndexError, ValueError):
+            pass
     try:
         bit.range_sum(15, 10)
-    except ValueError as e:
-        print(f"Caught expected error: {e}")
+        assert False, "inverted range accepted"
+    except ValueError:
+        pass
+
+    print("binary_indexed_tree: planted sums 14/6/20 exact, set-vs-delta held, "
+          "800-op oracle agreed, bounds refused — PASS")
 
 
 if __name__ == "__main__":

@@ -298,44 +298,57 @@ class RBTree:
         return True, black_height
 
 def main() -> None:
-    """Demo of Red-Black Tree functionality"""
-    print("Red-Black Tree Demo")
-    print("=" * 50)
-    
-    # Create tree and insert 50 keys
-    rb_tree = RBTree()
-    keys = list(range(1, 51))
-    
-    print(f"Inserting keys: {keys}")
-    for key in keys:
-        rb_tree.insert(key)
-    
-    # Validate tree
-    is_valid, message = rb_tree.is_valid_rb_tree()
-    print(f"\nTree validation: {message}")
-    
-    # Show inorder traversal
-    traversal = rb_tree.inorder_traversal()
-    print(f"\nInorder traversal ({len(traversal)} keys):")
-    print(traversal[:20], "..." if len(traversal) > 20 else "")
-    
-    # Delete some keys
-    print(f"\nDeleting keys: 10, 20, 30, 40, 50")
-    for key in [10, 20, 30, 40, 50]:
-        rb_tree.delete(key)
-    
-    # Validate tree again
-    is_valid, message = rb_tree.is_valid_rb_tree()
-    print(f"Tree validation after deletion: {message}")
-    
-    # Show inorder traversal after deletion
-    traversal = rb_tree.inorder_traversal()
-    print(f"\nInorder traversal after deletion ({len(traversal)} keys):")
-    print(traversal[:20], "..." if len(traversal) > 20 else "")
-    
-    # Try to delete a non-existent key
-    result = rb_tree.delete(100)
-    print(f"\nDeleting non-existent key 100: {'Success' if result else 'Not found'}")
+    """Self-test: sequential inserts keep ALL Red-Black properties (root black,
+    no red-red edge, equal black heights), deletes preserve them, set-oracle fuzz."""
+    import random
+    random.seed(42)
+
+    # Sequential 1..50 — adversarial for a plain BST.
+    rb = RBTree()
+    for key in range(1, 51):
+        rb.insert(key)
+    ok, msg = rb.is_valid_rb_tree()
+    assert ok, f"RB properties violated after sequential insert: {msg}"
+    traversal = rb.inorder_traversal()
+    assert traversal == list(range(1, 51)), "inorder not sorted"
+    assert sum(traversal) == 1275, "1..50 must sum to 1275"
+
+    # Deletes must preserve every property.
+    for key in (10, 20, 30, 40, 50):
+        rb.delete(key)
+    ok, msg = rb.is_valid_rb_tree()
+    assert ok, f"RB properties violated after delete: {msg}"
+    remaining = rb.inorder_traversal()
+    assert remaining == [k for k in range(1, 51) if k % 10 != 0], \
+        f"wrong survivors after deleting multiples of 10: {remaining[:10]}..."
+    assert len(remaining) == 45
+
+    # Deleting a missing key reports failure and leaves the tree intact.
+    assert not rb.delete(100), "deleting a missing key reported success"
+    assert len(rb.inorder_traversal()) == 45
+
+    # Oracle fuzz: 600 ops vs a set; validity re-proved every 25 ops
+    # (fixup bugs typically appear only after specific rotate/recolor chains).
+    fuzz = RBTree()
+    oracle = set()
+    for step in range(600):
+        k = random.randint(0, 80)
+        if random.random() < 0.6:
+            if k not in oracle:
+                fuzz.insert(k)
+                oracle.add(k)
+        elif k in oracle:
+            fuzz.delete(k)
+            oracle.discard(k)
+        if step % 25 == 24:
+            ok, msg = fuzz.is_valid_rb_tree()
+            assert ok, f"RB invariant broken at step {step}: {msg}"
+    assert fuzz.inorder_traversal() == sorted(oracle), "final tree diverged from set oracle"
+    ok, msg = fuzz.is_valid_rb_tree()
+    assert ok, f"final RB validation failed: {msg}"
+
+    print(f"red_black_tree: 50 sequential inserts valid (sum 1275), deletes "
+          f"preserved properties, 600-op fuzz re-validated 24x — PASS")
 
 if __name__ == "__main__":
     main()

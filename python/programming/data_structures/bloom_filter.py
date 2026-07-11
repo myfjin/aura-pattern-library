@@ -141,16 +141,14 @@ class BloomFilter:
         """
         if self.item_count == 0:
             return 0.0
-            
-        # Probability that a bit is still 0
-        exponent = (-self.hash_count * self.item_count) / self.bit_count
-        p_zero = (1 - (1 / self.bit_count)) ** exponent
-        
-        # Probability that a bit is 1
-        p_one = 1 - p_zero
-        
-        # False positive rate is probability all hash positions are 1
-        return p_one ** self.hash_count
+
+        # Probability a given bit is still 0 after k*n independent bit-sets:
+        # (1 - 1/m)^(k*n). (The former version negated the exponent and divided
+        # by m, yielding p_zero > 1 and a NEGATIVE false-positive rate.)
+        p_zero = (1 - (1 / self.bit_count)) ** (self.hash_count * self.item_count)
+
+        # False positive = all k probed bits are 1.
+        return (1 - p_zero) ** self.hash_count
     
     def resize(self, new_capacity: int, new_error_rate: Optional[float] = None) -> None:
         """
@@ -193,48 +191,56 @@ class BloomFilter:
 
 
 def main():
-    """Demo the Bloom filter with 1000 items."""
-    # Create a Bloom filter for 1000 items with 1% error rate
+    """Self-test: the two Bloom guarantees, measured (md5 → fully deterministic):
+    NO false negatives ever, and false positives near the configured rate."""
     bf = BloomFilter(capacity=1000, error_rate=0.01)
-    
-    # Add 1000 items
-    items_to_add = [f"item_{i}" for i in range(1000)]
-    for item in items_to_add:
+
+    # An empty filter contains nothing and reports fpr 0.
+    assert bf.false_positive_rate() == 0.0
+    assert sum(1 for i in range(50) if f"probe_{i}" in bf) == 0, \
+        "empty filter claimed to contain items"
+
+    # THE HARD GUARANTEE: zero false negatives — all 1000 added items found.
+    items = [f"item_{i}" for i in range(1000)]
+    for item in items:
         bf.add(item)
-    
-    print(f"Added {len(bf)} items to Bloom filter")
-    print(f"Bit array size: {bf.bit_count}")
-    print(f"Hash functions: {bf.hash_count}")
-    print(f"False positive rate: {bf.false_positive_rate():.4f}")
-    
-    # Check that all added items are found
-    found_count = 0
-    for item in items_to_add:
-        if item in bf:
-            found_count += 1
-    
-    print(f"Found {found_count}/{len(items_to_add)} added items (should be all)")
-    
-    # Check for false positives with items we didn't add
-    false_positives = 0
-    items_to_test = [f"test_item_{i}" for i in range(1000)]
-    for item in items_to_test:
-        if item in bf:
-            false_positives += 1
-    
-    actual_fpr = false_positives / len(items_to_test)
-    print(f"False positives: {false_positives}/{len(items_to_test)} = {actual_fpr:.4f}")
-    
-    # Test resize functionality
-    print("\nTesting resize...")
-    original_capacity = bf.capacity
+    assert len(bf) == 1000
+    found = sum(1 for item in items if item in bf)
+    assert found == 1000, f"FALSE NEGATIVE: only {found}/1000 added items found"
+
+    # THE SOFT GUARANTEE: false-positive rate lands near the configured 1%.
+    # 2000 never-added probes; deterministic count under md5. Allow 3x slack.
+    fp = sum(1 for i in range(2000) if f"unknown_{i}" in bf)
+    assert fp < 60, f"false-positive rate {fp}/2000 blows past 3x the 1% target"
+    # The analytic estimate must also sit in a sane band around 1%.
+    est = bf.false_positive_rate()
+    assert 0.0 < est < 0.05, f"analytic FPR estimate {est} out of band"
+
+    # Sizing math: more capacity or stricter error rate → more bits.
+    assert BloomFilter(2000, 0.01).bit_count > bf.bit_count
+    assert BloomFilter(1000, 0.001).bit_count > bf.bit_count
+
+    # resize() grows the structure but (documented limitation) CLEARS content.
     bf.resize(new_capacity=2000)
-    print(f"Resized from {original_capacity} to {bf.capacity} capacity")
-    print(f"New bit array size: {bf.bit_count}")
-    
-    # Verify existing items still return True (they should in a proper implementation)
-    # Note: In this simplified version, resizing clears the bit array
-    print("Bloom filter demo completed")
+    assert bf.capacity == 2000
+    assert not any(bf.bit_array), "resize claims to clear, but bits survived"
+    assert ("item_0" in bf) is False, "cleared filter still claims membership"
+    try:
+        bf.resize(new_capacity=100)
+        assert False, "shrinking resize accepted"
+    except ValueError:
+        pass
+
+    # Invalid construction refused.
+    for cap, err in ((0, 0.01), (100, 0.0), (100, 1.0), (-5, 0.5)):
+        try:
+            BloomFilter(cap, err)
+            assert False, f"BloomFilter({cap}, {err}) accepted"
+        except ValueError:
+            pass
+
+    print(f"bloom_filter: 1000/1000 found (no false negatives), {fp}/2000 false "
+          f"positives (≤1% target x3), sizing monotone, resize clears — PASS")
 
 
 if __name__ == "__main__":

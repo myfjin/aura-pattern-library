@@ -144,8 +144,10 @@ class CronParser:
                 check_time.month in month_values and
                 check_time.day in day_values):
                 
-                # If day of week is specified and doesn't match, skip
-                if self.parts[4] != '*' and check_time.weekday() not in dow_values:
+                # If day of week is specified and doesn't match, skip.
+                # Python weekday() is Monday=0; cron (and DAY_NAMES above) is Sunday=0.
+                cron_dow = (check_time.weekday() + 1) % 7
+                if self.parts[4] != '*' and cron_dow not in dow_values:
                     check_time += timedelta(days=1)
                     check_time = check_time.replace(hour=0, minute=0)
                     continue
@@ -247,40 +249,67 @@ class Scheduler:
         return overdue
 
 
-def demo_function(name: str) -> None:
-    """Demo function to be scheduled."""
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] Executing job: {name}")
-
-
 def main():
-    """Demo the scheduler functionality."""
-    scheduler = Scheduler()
-    
-    # Add various jobs
-    scheduler.add_job("every_minute", "* * * * *", demo_function, args=("Every minute",))
-    scheduler.add_job("every_5_minutes", "*/5 * * * *", demo_function, args=("Every 5 minutes",))
-    scheduler.add_job("daily_at_noon", "0 12 * * *", demo_function, args=("Daily at noon",))
-    scheduler.add_job("weekdays_9am", "0 9 * * 1-5", demo_function, args=("Weekdays at 9am",))
-    
-    print("Scheduler demo started. Press Ctrl+C to stop.")
-    print("Jobs:")
-    for job in scheduler.jobs:
-        if job.next_run:
-            print(f"  {job.name}: next run at {job.next_run.strftime('%Y-%m-%d %H:%M')}")
-    
-    # Run for a short time to demonstrate functionality
-    start_time = time.time()
-    while time.time() - start_time < 10:  # Run for 10 seconds
-        scheduler.run_due_jobs()
-        
-        # Check for overdue jobs
-        overdue = scheduler.get_overdue_jobs(1)
-        if overdue:
-            print(f"Overdue jobs: {[job.name for job in overdue]}")
-        
-        time.sleep(0.5)  # Check every 500ms
-    
-    print("Demo completed.")
+    """Self-test: exact next-fire times from a fixed clock (2024-01-01 was a Monday)."""
+    base = datetime(2024, 1, 1, 10, 30)  # Monday
+
+    # Field parsing is exact.
+    p = CronParser("*/15 * * * *")
+    assert p._parse_field("*/15", 0, 59) == [0, 15, 30, 45]
+    assert p._parse_field("1-5", 0, 6) == [1, 2, 3, 4, 5]
+    assert p._parse_field("jan,jul", 1, 12) == [1, 7]
+    assert p._parse_field("fri", 0, 6) == [5]
+
+    # Next-fire arithmetic against planted truths.
+    cases = [
+        ("* * * * *",    datetime(2024, 1, 1, 10, 31)),   # next minute
+        ("*/15 * * * *", datetime(2024, 1, 1, 10, 45)),   # next quarter-hour
+        ("0 12 * * *",   datetime(2024, 1, 1, 12, 0)),    # noon today
+        ("30 6 15 * *",  datetime(2024, 1, 15, 6, 30)),   # mid-month
+        ("0 0 1 feb *",  datetime(2024, 2, 1, 0, 0)),     # month by name
+        # THE BUG this test pins: cron dow is Sunday=0, python weekday Monday=0.
+        # Weekdays-at-9 from Monday 10:30 must be TUESDAY 9:00 (not Wednesday).
+        ("0 9 * * 1-5",  datetime(2024, 1, 2, 9, 0)),
+        ("0 9 * * sat",  datetime(2024, 1, 6, 9, 0)),     # named day: Saturday
+        ("0 9 * * mon",  datetime(2024, 1, 8, 9, 0)),     # next Monday, a week out
+    ]
+    for expr, expected in cases:
+        got = CronParser(expr).get_next_run(base)
+        assert got == expected, f"{expr!r} from {base} must fire {expected}, got {got}"
+
+    # Malformed expressions are refused.
+    for bad in ("* * * *", "* * * * * *", "xx * * * *"):
+        try:
+            CronParser(bad).get_next_run(base)
+            assert False, f"cron {bad!r} accepted"
+        except ValueError:
+            pass
+
+    # Scheduler: a due job runs exactly once, reschedules, and survives a
+    # crashing job function (the scheduler must not die with the job).
+    sched = Scheduler()
+    ran = []
+    job = sched.add_job("t", "* * * * *", lambda: ran.append(1))
+    boom = sched.add_job("boom", "* * * * *", lambda: 1 / 0)
+    for j in (job, boom):
+        j.next_run = datetime.now() - timedelta(minutes=1)   # force due
+    due = sched.get_due_jobs()
+    assert {j.name for j in due} == {"t", "boom"}, f"due set wrong: {[j.name for j in due]}"
+    sched.run_due_jobs()
+    assert ran == [1], f"due job must run exactly once, ran {len(ran)} times"
+    assert not job.is_running and not boom.is_running, "is_running flag stuck after run"
+    assert job.next_run > datetime.now(), "job not rescheduled into the future"
+    assert sched.get_due_jobs() == [], "jobs still due immediately after running"
+
+    # Invalid cron at add time is refused with the job's name in the error.
+    try:
+        sched.add_job("bad", "not a cron", lambda: None)
+        assert False, "invalid cron accepted by add_job"
+    except ValueError as e:
+        assert "bad" in str(e)
+
+    print("job_scheduler: 8 exact next-fires (dow Sunday=0 pinned), due-run-once, "
+          "crash-isolated, bad cron refused — PASS")
 
 
 if __name__ == "__main__":

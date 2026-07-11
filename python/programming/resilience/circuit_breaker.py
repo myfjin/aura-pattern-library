@@ -204,71 +204,78 @@ class CircuitBreaker:
                 f"failures={self.failure_count}/{self.failure_threshold})")
 
 
-# Demo application
 if __name__ == "__main__":
-    import random
-    
-    # Create a circuit breaker with low threshold for demo purposes
-    breaker = CircuitBreaker(
-        failure_threshold=3,
-        recovery_timeout=5.0,
-        name="DemoService"
-    )
-    
-    # Simulated service that fails randomly
-    call_count = 0
-    
-    def unreliable_service() -> str:
-        """Simulated service that occasionally fails."""
-        global call_count
-        call_count += 1
-        
-        # Fail every 3rd and 4th call to trigger circuit breaker
-        if call_count % 4 == 0 or call_count % 4 == 3:
-            raise ConnectionError("Service temporarily unavailable")
-        
-        return f"Success! Call #{call_count}"
-    
-    # Decorated version of the service
-    @breaker
-    def protected_service() -> str:
-        return unreliable_service()
-    
-    print("Starting Circuit Breaker Demo...")
-    print("=" * 50)
-    
-    # Run demo sequence
-    for i in range(15):
-        print(f"\n--- Call #{i+1} ---")
-        print(f"Circuit state: {breaker.state.value}")
-        
-        try:
-            result = protected_service()
-            print(f"Result: {result}")
-        except CircuitOpenError as e:
-            print(f"Circuit Open: {e}")
-        except Exception as e:
-            print(f"Service Error: {e}")
-        
-        # Small delay to observe state changes
-        if i == 7:  # Wait for recovery timeout
-            print(f"\nWaiting {breaker.recovery_timeout + 1} seconds for recovery...")
-            time.sleep(breaker.recovery_timeout + 1)
-        
-        time.sleep(0.5)
-    
-    print("\n" + "=" * 50)
-    print("Final Circuit State:", breaker)
-    
-    # Demonstrate manual usage
-    print("\n--- Manual Usage Demo ---")
-    manual_breaker = CircuitBreaker(name="ManualService")
-    
-    def another_service():
-        return "Manual service response"
-    
+    # Self-test on a fake clock: full lifecycle CLOSED→OPEN→HALF_OPEN→
+    # (CLOSED on success | OPEN on failure), fail-fast without calling.
+    _now = [40_000.0]
+    _real_time = time.time
+    time.time = lambda: _now[0]
     try:
-        result = manual_breaker.call(another_service)
-        print("Manual call result:", result)
-    except Exception as e:
-        print("Manual call error:", e)
+        breaker = CircuitBreaker(failure_threshold=3, recovery_timeout=5.0,
+                                 name="test")
+        calls = {"n": 0}
+
+        @breaker
+        def service(fail: bool) -> str:
+            calls["n"] += 1
+            if fail:
+                raise ConnectionError("down")
+            return "ok"
+
+        # CLOSED: successes flow through, failures count.
+        assert service(False) == "ok" and breaker.is_closed
+        for i in range(3):
+            try:
+                service(True)
+            except ConnectionError:
+                pass
+        assert breaker.is_open, f"3 failures at threshold 3 must OPEN, state {breaker.state}"
+        assert breaker.failure_count == 3
+
+        # OPEN: fail-fast — the service is NOT called.
+        before = calls["n"]
+        try:
+            service(False)
+            assert False, "OPEN breaker executed the call"
+        except CircuitOpenError:
+            pass
+        assert calls["n"] == before, "OPEN breaker still invoked the service"
+
+        # HALF_OPEN after recovery timeout; a FAILURE re-opens immediately.
+        _now[0] += 5.1
+        try:
+            service(True)
+        except ConnectionError:
+            pass
+        assert breaker.is_open, "failed half-open probe must re-OPEN"
+
+        # HALF_OPEN again; a SUCCESS closes and resets the failure count.
+        _now[0] += 5.1
+        assert service(False) == "ok"
+        assert breaker.is_closed, "successful half-open probe must CLOSE"
+        assert breaker.failure_count == 0, \
+            f"failure count must reset on close, got {breaker.failure_count}"
+
+        # After closing, the breaker needs a fresh threshold of failures.
+        for i in range(2):
+            try:
+                service(True)
+            except ConnectionError:
+                pass
+        assert breaker.is_closed, "breaker opened below the threshold after reset"
+        assert calls["n"] == 8, f"service must have run exactly 8 times, ran {calls['n']}"
+
+        # Unexpected exception types pass through without tripping the breaker.
+        plain = CircuitBreaker(failure_threshold=1, expected_exception=ConnectionError)
+        def type_error():
+            raise TypeError("not counted")
+        try:
+            plain.call(type_error)
+        except TypeError:
+            pass
+        assert plain.is_closed, "non-expected exception tripped the breaker"
+    finally:
+        time.time = _real_time
+
+    print("circuit_breaker: 3 fails→OPEN, fail-fast verified (no call), "
+          "half-open fail re-OPENs / success CLOSES+resets, 8 calls exact — PASS")

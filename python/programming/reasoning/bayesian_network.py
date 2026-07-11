@@ -397,64 +397,56 @@ def create_sample_network() -> BayesianNetwork:
 
 
 def main():
-    """Demo the Bayesian network implementation."""
-    print("Bayesian Network Demo")
-    print("=" * 30)
-    
-    # Create sample network
+    """Self-test: the classic sprinkler network, every probability checked
+    against its hand-derived closed form."""
     bn = create_sample_network()
-    
-    # Test joint probability calculation
-    print("\n1. Joint Probability Calculations:")
-    assignments = [
-        {"Cloudy": True, "Sprinkler": True, "Rain": True, "WetGrass": True},
-        {"Cloudy": False, "Sprinkler": False, "Rain": False, "WetGrass": False},
-        {"Cloudy": True, "Sprinkler": False, "Rain": True, "WetGrass": True}
-    ]
-    
-    for i, assignment in enumerate(assignments, 1):
-        try:
-            prob = bn.joint_probability(assignment)
-            print(f"   Assignment {i}: P({assignment}) = {prob:.6f}")
-        except Exception as e:
-            print(f"   Assignment {i}: Error - {e}")
-    
-    # Test conditional probability inference
-    print("\n2. Conditional Probability Inference:")
-    queries = [
-        ({"WetGrass": True}, {"Rain": True}, "P(WetGrass=True | Rain=True)"),
-        ({"WetGrass": True}, {"Rain": False}, "P(WetGrass=True | Rain=False)"),
-        ({"Sprinkler": True}, {"Cloudy": True}, "P(Sprinkler=True | Cloudy=True)"),
-        ({"Sprinkler": True}, {"Cloudy": False}, "P(Sprinkler=True | Cloudy=False)")
-    ]
-    
-    for query_vars, evidence, description in queries:
-        try:
-            prob = bn.conditional_probability(query_vars, evidence)
-            print(f"   {description} = {prob:.6f}")
-        except Exception as e:
-            print(f"   {description}: Error - {e}")
-    
-    # Test more complex inference
-    print("\n3. Complex Inference:")
-    try:
-        # P(Cloudy=True | WetGrass=True)
-        prob = bn.inference_by_enumeration(
-            {"Cloudy": True}, 
-            {"WetGrass": True}
-        )
-        print(f"   P(Cloudy=True | WetGrass=True) = {prob:.6f}")
-        
-        # P(Rain=True | WetGrass=True, Sprinkler=False)
-        prob = bn.inference_by_enumeration(
-            {"Rain": True}, 
-            {"WetGrass": True, "Sprinkler": False}
-        )
-        print(f"   P(Rain=True | WetGrass=True, Sprinkler=False) = {prob:.6f}")
-    except Exception as e:
-        print(f"   Error in complex inference: {e}")
-    
-    print("\nDemo completed successfully!")
+
+    # Joint probabilities are CPT products — exact arithmetic.
+    p = bn.joint_probability({"Cloudy": True, "Sprinkler": True,
+                              "Rain": True, "WetGrass": True})
+    assert abs(p - 0.0396) < 1e-9, f"P(all true) = .5*.1*.8*.99 = 0.0396, got {p}"
+    p = bn.joint_probability({"Cloudy": False, "Sprinkler": False,
+                              "Rain": False, "WetGrass": False})
+    assert abs(p - 0.2) < 1e-9, f"P(all false) = .5*.5*.8*1 = 0.2, got {p}"
+    p = bn.joint_probability({"Cloudy": True, "Sprinkler": False,
+                              "Rain": True, "WetGrass": True})
+    assert abs(p - 0.324) < 1e-9, f"must be .5*.9*.8*.9 = 0.324, got {p}"
+
+    # The full joint sums to 1 over all 16 assignments.
+    from itertools import product
+    total = sum(bn.joint_probability({"Cloudy": c, "Sprinkler": s,
+                                      "Rain": r, "WetGrass": w})
+                for c, s, r, w in product([True, False], repeat=4))
+    assert abs(total - 1.0) < 1e-9, f"joint distribution sums to {total}, not 1"
+
+    # Conditionals that read straight off a CPT.
+    p = bn.conditional_probability({"Sprinkler": True}, {"Cloudy": True})
+    assert abs(p - 0.1) < 1e-9, f"P(S|C) must be 0.1, got {p}"
+    p = bn.conditional_probability({"Sprinkler": True}, {"Cloudy": False})
+    assert abs(p - 0.5) < 1e-9
+
+    # Marginalized conditional: P(W=T | R=T) = 0.4581/0.5 = 0.9162.
+    p = bn.conditional_probability({"WetGrass": True}, {"Rain": True})
+    assert abs(p - 0.9162) < 1e-6, f"P(W|R) must be 0.9162, got {p}"
+
+    # Diagnostic inference: P(C=T | W=T) = 0.3726/0.6471 ≈ 0.575800.
+    p = bn.inference_by_enumeration({"Cloudy": True}, {"WetGrass": True})
+    assert abs(p - 0.3726 / 0.6471) < 1e-6, \
+        f"P(C|W) must be {0.3726 / 0.6471:.6f}, got {p}"
+
+    # Explaining-away corner: with the sprinkler OFF, wet grass can only
+    # come from rain — the probability is exactly 1.
+    p = bn.inference_by_enumeration({"Rain": True},
+                                    {"WetGrass": True, "Sprinkler": False})
+    assert abs(p - 1.0) < 1e-9, f"P(R | W, ¬S) must be exactly 1, got {p}"
+
+    # Complementarity: P(C|W) + P(¬C|W) = 1.
+    p_not = bn.inference_by_enumeration({"Cloudy": False}, {"WetGrass": True})
+    p_yes = bn.inference_by_enumeration({"Cloudy": True}, {"WetGrass": True})
+    assert abs(p_yes + p_not - 1.0) < 1e-9, "posterior does not normalize"
+
+    print("bayesian_network: joints 0.0396/0.2/0.324 exact, joint sums to 1, "
+          "P(W|R)=0.9162, P(C|W)=0.5758, P(R|W,¬S)=1 exactly — PASS")
 
 
 if __name__ == "__main__":

@@ -394,51 +394,59 @@ def main():
         Constraint([variables[4], variables[5]], not_equal, "NSW != V")
     ]
     
-    # Create CSP
+    # Self-test 1: Australia map coloring — a solution must exist and
+    # EVERY adjacency constraint must hold in it.
     csp = CSP(variables, constraints)
-    
-    # Solve the CSP
-    print("Solving map coloring problem...")
     solution = BacktrackingSolver.solve(csp)
-    
-    if solution:
-        print("Solution found:")
-        for var, value in solution.items():
-            print(f"  {var.name}: {value}")
-    else:
-        print("No solution found")
-    
-    # Demo with a simple Sudoku-like problem
-    print("\nSolving simple 2x2 Sudoku-like problem...")
-    
-    # Variables for a 2x2 grid
-    grid_vars = []
-    for i in range(2):
-        for j in range(2):
-            grid_vars.append(Variable(f"X{i}{j}", [1, 2]))
-    
-    # Constraints: all different in rows and columns
+    assert solution is not None, "3-colorable Australia map reported unsolvable"
+    by_name = {var.name: value for var, value in solution.items()}
+    assert len(by_name) == 7, f"solution must assign all 7 regions, got {len(by_name)}"
+    adjacent = [("WA", "NT"), ("WA", "SA"), ("NT", "SA"), ("NT", "Q"),
+                ("SA", "Q"), ("SA", "NSW"), ("SA", "V"), ("Q", "NSW"), ("NSW", "V")]
+    violated = [(a, b) for a, b in adjacent if by_name[a] == by_name[b]]
+    assert violated == [], f"solution violates adjacency: {violated}"
+    assert all(v in ("red", "green", "blue") for v in by_name.values())
+
+    # Self-test 2: 2x2 latin square — rows and columns all-different.
+    grid_vars = [Variable(f"X{i}{j}", [1, 2]) for i in range(2) for j in range(2)]
     sudoku_constraints = [
         Constraint([grid_vars[0], grid_vars[1]], not_equal, "Row 0"),
         Constraint([grid_vars[2], grid_vars[3]], not_equal, "Row 1"),
         Constraint([grid_vars[0], grid_vars[2]], not_equal, "Col 0"),
-        Constraint([grid_vars[1], grid_vars[3]], not_equal, "Col 1")
+        Constraint([grid_vars[1], grid_vars[3]], not_equal, "Col 1"),
     ]
-    
-    sudoku_csp = CSP(grid_vars, sudoku_constraints)
-    sudoku_solution = BacktrackingSolver.solve(sudoku_csp)
-    
-    if sudoku_solution:
-        print("Sudoku solution found:")
-        for i in range(2):
-            row = []
-            for j in range(2):
-                var_name = f"X{i}{j}"
-                var = next(v for v in grid_vars if v.name == var_name)
-                row.append(str(sudoku_solution[var]))
-            print(f"  {' '.join(row)}")
-    else:
-        print("No Sudoku solution found")
+    sol = BacktrackingSolver.solve(CSP(grid_vars, sudoku_constraints))
+    assert sol is not None, "2x2 latin square reported unsolvable"
+    g = {v.name: sol[v] for v in grid_vars}
+    assert g["X00"] != g["X01"] and g["X10"] != g["X11"], "row constraint violated"
+    assert g["X00"] != g["X10"] and g["X01"] != g["X11"], "column constraint violated"
+    assert g["X00"] == g["X11"] and g["X01"] == g["X10"], \
+        "a 2x2 latin square forces the diagonal equality"
+    assert sum(g.values()) == 6, "cells must be two 1s and two 2s (sum 6)"
+
+    # Self-test 3: UNSAT — a triangle with only two colors has no solution.
+    tri = [Variable(n, ["red", "green"]) for n in ("A", "B", "C")]
+    tri_cons = [Constraint([tri[0], tri[1]], not_equal, "A!=B"),
+                Constraint([tri[1], tri[2]], not_equal, "B!=C"),
+                Constraint([tri[0], tri[2]], not_equal, "A!=C")]
+    assert BacktrackingSolver.solve(CSP(tri, tri_cons)) is None, \
+        "2-coloring a triangle is impossible, but the solver 'solved' it"
+
+    # Self-test 4: forced chain — a domain-1 variable propagates through
+    # not-equal constraints to a unique global solution.
+    a = Variable("a", ["x"])
+    b = Variable("b", ["x", "y"])
+    c = Variable("c", ["x", "y", "z"])
+    chain = [Constraint([a, b], not_equal, "a!=b"),
+             Constraint([b, c], not_equal, "b!=c"),
+             Constraint([a, c], not_equal, "a!=c")]
+    forced = BacktrackingSolver.solve(CSP([a, b, c], chain))
+    assert forced is not None
+    fmap = {v.name: forced[v] for v in (a, b, c)}
+    assert fmap == {"a": "x", "b": "y", "c": "z"}, f"forced chain wrong: {fmap}"
+
+    print("csp_solver: Australia 9/9 constraints hold, 2x2 latin square exact "
+          "(sum 6), 2-color triangle UNSAT, forced chain x/y/z — PASS")
 
 
 if __name__ == "__main__":

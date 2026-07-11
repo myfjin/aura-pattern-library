@@ -296,49 +296,75 @@ def auth_middleware(request: Request, next_func: Callable[[], Response]) -> Resp
 
 
 def main():
-    """Demo the multiplexer functionality."""
-    # Create multiplexer
+    """Self-test: routing + params + method discrimination exact, middleware
+    chain order and short-circuit, 404/401 honest."""
     mux = Multiplexer()
-    
-    # Add middlewares
-    mux.add_middleware(Middleware(logging_middleware))
+
+    # Middleware order probe: record entry order, auth short-circuits.
+    seen = []
+    def order_probe(request, next_func):
+        seen.append("probe")
+        return next_func()
+    mux.add_middleware(Middleware(order_probe))
     mux.add_middleware(Middleware(auth_middleware))
-    
-    # Add routes using decorator
+
     @mux.route("/", [HTTPMethod.GET])
     def home_handler(request: Request) -> Response:
-        return Response(200, "Welcome to the home page!")
-    
+        return Response(200, "home")
+
     @mux.route("/user/{id}", [HTTPMethod.GET])
     def user_handler(request: Request) -> Response:
-        user_id = request.params["id"]
-        return Response(200, f"User profile for ID: {user_id}")
-    
+        return Response(200, f"user:{request.params['id']}")
+
     @mux.route("/api/data", [HTTPMethod.POST])
     def data_handler(request: Request) -> Response:
-        return Response(201, "Data created successfully")
-    
-    # Add route using add_route method
+        return Response(201, "created")
+
     mux.add_route("/health", [HTTPMethod.GET], Handler(create_default_handler("OK")))
-    
-    # Test requests
-    test_requests = [
-        Request(HTTPMethod.GET, "/", {"Authorization": "Bearer token"}),
-        Request(HTTPMethod.GET, "/user/123", {"Authorization": "Bearer token"}),
-        Request(HTTPMethod.POST, "/api/data", {"Authorization": "Bearer token"}, "sample data"),
-        Request(HTTPMethod.GET, "/health", {"Authorization": "Bearer token"}),
-        Request(HTTPMethod.GET, "/nonexistent", {"Authorization": "Bearer token"}),
-        Request(HTTPMethod.GET, "/", {}),  # No auth header
-    ]
-    
-    print("Testing HTTP Multiplexer")
-    print("=" * 30)
-    
-    for i, req in enumerate(test_requests, 1):
-        print(f"\nTest {i}: {req.method.value} {req.path}")
-        response = mux.dispatch(req)
-        print(f"Status: {response.status_code}")
-        print(f"Body: {response.body}")
+
+    auth = {"Authorization": "Bearer token"}
+
+    # Exact dispatch results.
+    r = mux.dispatch(Request(HTTPMethod.GET, "/", dict(auth)))
+    assert (r.status_code, r.body) == (200, "home"), f"home route wrong: {r.status_code}/{r.body}"
+
+    r = mux.dispatch(Request(HTTPMethod.GET, "/user/123", dict(auth)))
+    assert r.status_code == 200 and r.body == "user:123", f"param route wrong: {r.body}"
+
+    r = mux.dispatch(Request(HTTPMethod.POST, "/api/data", dict(auth), "payload"))
+    assert r.status_code == 201 and r.body == "created"
+
+    r = mux.dispatch(Request(HTTPMethod.GET, "/health", dict(auth)))
+    assert (r.status_code, r.body) == (200, "OK")
+
+    # Method discrimination: GET on a POST-only route must not dispatch.
+    r = mux.dispatch(Request(HTTPMethod.GET, "/api/data", dict(auth)))
+    assert r.status_code in (404, 405), \
+        f"GET on POST-only route returned {r.status_code}"
+
+    # Unknown path → 404.
+    r = mux.dispatch(Request(HTTPMethod.GET, "/nonexistent", dict(auth)))
+    assert r.status_code == 404, f"missing route returned {r.status_code}"
+
+    # AUTH short-circuit: without the header the handler never runs.
+    seen.clear()
+    r = mux.dispatch(Request(HTTPMethod.GET, "/", {}))
+    assert r.status_code == 401 and r.body == "Unauthorized", \
+        f"missing auth must 401, got {r.status_code}"
+    assert seen == ["probe"], \
+        "middleware order broken: probe must run before auth rejects"
+
+    # Middleware runs once per dispatch, in registration order.
+    seen.clear()
+    mux.dispatch(Request(HTTPMethod.GET, "/", dict(auth)))
+    assert seen == ["probe"], f"probe middleware ran {len(seen)} times"
+
+    # Param extraction sums as planted numbers.
+    r = mux.dispatch(Request(HTTPMethod.GET, "/user/450", dict(auth)))
+    assert int(r.body.split(":")[1]) + 550 == 1000, "450 + 550 must be 1000"
+
+    print("http_router: 4 routes exact (200/200/201/200), method+path honest "
+          "(404), auth 401 short-circuit after probe, params exact — PASS")
 
 
 if __name__ == "__main__":

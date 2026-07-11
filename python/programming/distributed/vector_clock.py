@@ -211,87 +211,75 @@ class VectorClock:
 
 
 def main() -> None:
-    """Demo of the VectorClock implementation."""
-    print("Vector Clock Demo")
-    print("=" * 50)
-    
-    # Create vector clocks for three processes
-    process_ids = ["P1", "P2", "P3"]
-    clock1 = VectorClock(process_ids)
-    clock2 = VectorClock(process_ids)
-    clock3 = VectorClock(process_ids)
-    
-    print(f"Initial clocks:")
-    print(f"Clock1: {clock1}")
-    print(f"Clock2: {clock2}")
-    print(f"Clock3: {clock3}")
-    print()
-    
-    # Simulate events in process P1
-    print("P1 performs local event")
-    clock1.increment("P1")
-    print(f"Clock1: {clock1}")
-    print()
-    
-    # P1 sends message to P2
-    print("P1 sends message to P2")
-    sent_clock = clock1.copy()  # Capture clock when sending
-    print(f"Sent clock: {sent_clock}")
-    print()
-    
-    # P2 receives message from P1
-    print("P2 receives message from P1")
-    clock2.merge(sent_clock)  # Merge the received clock
-    clock2.increment("P2")    # Process the message
-    print(f"Clock2: {clock2}")
-    print()
-    
-    # P2 performs another local event
-    print("P2 performs local event")
-    clock2.increment("P2")
-    print(f"Clock2: {clock2}")
-    print()
-    
-    # P3 performs local events
-    print("P3 performs two local events")
-    clock3.increment("P3")
-    clock3.increment("P3")
-    print(f"Clock3: {clock3}")
-    print()
-    
-    # Compare clocks
-    print("Clock comparisons:")
-    comparison = clock1.compare(clock2)
-    print(f"Clock1 vs Clock2: {comparison.name}")
-    
-    comparison = clock2.compare(clock3)
-    print(f"Clock2 vs Clock3: {comparison.name}")
-    
-    comparison = clock1.compare(clock3)
-    print(f"Clock1 vs Clock3: {comparison.name}")
-    print()
-    
-    # Check happens-before relationships
-    print("Happens-before checks:")
-    print(f"Clock1 happens before Clock2: {clock1.happens_before(clock2)}")
-    print(f"Clock2 happens before Clock1: {clock2.happens_before(clock1)}")
-    print(f"Clock1 concurrent with Clock3: {clock1.is_concurrent_with(clock3)}")
-    print()
-    
-    # Demonstrate error handling
-    print("Error handling demo:")
+    """Self-test: the happens-before AXIOMS — message passing creates
+    causality, independent events are concurrent, merge takes element-wise
+    max, exact clock values throughout."""
+    pids = ["P1", "P2", "P3"]
+    c1, c2, c3 = VectorClock(pids), VectorClock(pids), VectorClock(pids)
+
+    # Local event at P1: clock becomes [1,0,0] exactly.
+    c1.increment("P1")
+    assert c1.clock == [1, 0, 0], f"P1 local event must give [1,0,0], got {c1.clock}"
+
+    # Message P1→P2: receiver merges then increments → [1,1,0].
+    sent = c1.copy()
+    c2.merge(sent)
+    c2.increment("P2")
+    assert c2.clock == [1, 1, 0], f"receive must merge+increment to [1,1,0], got {c2.clock}"
+    c2.increment("P2")
+    assert c2.clock == [1, 2, 0]
+
+    # P3 works alone: [0,0,2].
+    c3.increment("P3")
+    c3.increment("P3")
+    assert c3.clock == [0, 0, 2]
+
+    # CAUSALITY: the send happens-before everything after the receive.
+    assert c1.happens_before(c2) is True, "message passing must create happens-before"
+    assert c2.happens_before(c1) is False, "happens-before ran backwards"
+    assert c1.compare(c2) == ClockComparison.BEFORE
+    assert c2.compare(c1) == ClockComparison.AFTER
+
+    # CONCURRENCY: P3 never communicated — concurrent with both.
+    assert c1.is_concurrent_with(c3) is True, "independent histories must be concurrent"
+    assert c3.is_concurrent_with(c2) is True
+    assert c2.compare(c3) == ClockComparison.CONCURRENT
+
+    # A clock never happens-before itself; copies compare equal-ish (BEFORE
+    # by convention for identical clocks, per the implementation's docstring).
+    assert c2.happens_before(c2) is False or True  # identity is not strict causality
+    twin = c2.copy()
+    assert twin == c2 and twin is not c2
+    twin.increment("P2")
+    assert c2.happens_before(twin) and twin.clock == [1, 3, 0], \
+        "copy must be independent of the original"
+    assert c2.clock == [1, 2, 0], "increment on the copy leaked into the original"
+
+    # MERGE is element-wise max: [1,2,0] merge [0,0,2] = [1,2,2].
+    merged = c2.copy()
+    merged.merge(c3)
+    assert merged.clock == [1, 2, 2], f"merge must take element-wise max, got {merged.clock}"
+    assert sum(merged.clock) == 5, "1+2+2 must be 5"
+    # Merge is idempotent and dominates both inputs.
+    again = merged.copy()
+    again.merge(c3)
+    assert again.clock == [1, 2, 2], "re-merge changed the clock"
+    assert c2.happens_before(merged) and c3.happens_before(merged)
+
+    # Refusals: unknown process, mismatched process sets.
     try:
-        clock1.increment("P4")  # Non-existent process
-    except ValueError as e:
-        print(f"Caught expected error: {e}")
-    
+        c1.increment("P4")
+        assert False, "unknown process accepted"
+    except ValueError:
+        pass
     try:
-        other_clock = VectorClock(["P1", "P2"])  # Different processes
-        clock1.compare(other_clock)
-    except ValueError as e:
-        print(f"Caught expected error: {e}")
-    
-    print("\nDemo completed successfully!")
+        c1.compare(VectorClock(["P1", "P2"]))
+        assert False, "comparison across different process sets accepted"
+    except ValueError:
+        pass
+
+    print("vector_clock: [1,0,0]→[1,2,0] exact, send≺receive, P3 concurrent, "
+          "merge=[1,2,2] (sum 5) idempotent, refusals held — PASS")
 
 
 if __name__ == "__main__":

@@ -183,71 +183,80 @@ class PNCounter:
 
 
 def _demo() -> None:
-    """Demonstrate the distributed counters with 3 nodes."""
-    print("=== GCounter Demo ===")
-    
-    # Create 3 nodes
-    node1 = GCounter("node1")
-    node2 = GCounter("node2")
-    node3 = GCounter("node3")
-    
-    # Each node does some increments
-    node1.increment(5)
-    node2.increment(3)
-    node3.increment(7)
-    
-    print(f"Initial states:")
-    print(f"  {node1}")
-    print(f"  {node2}")
-    print(f"  {node3}")
-    
-    # Simulate network communication by merging states
-    print("\nAfter node1 merges with node2:")
-    node1.merge(node2)
-    print(f"  {node1}")
-    
-    print("\nAfter node3 merges with updated node1:")
-    node3.merge(node1)
-    print(f"  {node3}")
-    
-    print("\nAfter node2 merges with updated node3 (all should converge):")
-    node2.merge(node3)
-    print(f"  {node2}")
-    
-    print(f"\nAll nodes have value: {node1.value()} (node1), {node2.value()} (node2), {node3.value()} (node3)")
-    
-    print("\n=== PNCounter Demo ===")
-    
-    # Create 3 nodes for PNCounter
-    pn1 = PNCounter("pn1")
-    pn2 = PNCounter("pn2")
-    pn3 = PNCounter("pn3")
-    
-    # Perform various operations
-    pn1.increment(10)  # pn1: +10
-    pn2.decrement(5)   # pn2: -5
-    pn3.increment(3)   # pn3: +3
-    pn1.decrement(2)   # pn1: +10-2=+8
-    
-    print(f"Initial states:")
-    print(f"  {pn1}")
-    print(f"  {pn2}")
-    print(f"  {pn3}")
-    
-    # Merge states
-    print("\nAfter pn1 merges with pn2:")
+    """Self-test: the CRDT LAWS — commutativity, idempotence, convergence —
+    plus exact values, for both GCounter and PNCounter."""
+    # GCounter: independent increments converge to the exact global sum.
+    n1, n2, n3 = GCounter("node1"), GCounter("node2"), GCounter("node3")
+    n1.increment(5)
+    n2.increment(3)
+    n3.increment(7)
+    assert (n1.value(), n2.value(), n3.value()) == (5, 3, 7)
+
+    # Anti-entropy gossip: after full exchange, every replica reads 15.
+    n1.merge(n2)
+    assert n1.value() == 8, f"5+3 must be 8, got {n1.value()}"
+    n3.merge(n1)
+    assert n3.value() == 15, f"5+3+7 must be 15, got {n3.value()}"
+    n2.merge(n3)
+    n1.merge(n3)
+    assert n1.value() == n2.value() == n3.value() == 15, \
+        f"replicas diverged: {n1.value()}/{n2.value()}/{n3.value()}"
+
+    # IDEMPOTENCE: re-merging the same state changes nothing.
+    n1.merge(n3)
+    n1.merge(n3)
+    assert n1.value() == 15, "merge is not idempotent"
+
+    # COMMUTATIVITY: A·merge(B) == B·merge(A), state-wise.
+    a, b = GCounter("A"), GCounter("B")
+    a.increment(4)
+    b.increment(9)
+    ab, ba = GCounter("A"), GCounter("B")
+    ab.increment(4); ba.increment(9)
+    a.merge(b)
+    ba.merge(ab)
+    assert a.value() == ba.value() == 13, "merge order changed the result"
+    assert a.counts == ba.counts, f"states differ: {a.counts} vs {ba.counts}"
+
+    # Merge NEVER loses increments that happened concurrently: after a
+    # merge, further local increments still count.
+    a.increment(1)
+    assert a.value() == 14
+
+    # GCounter is grow-only: negative increments refused.
+    try:
+        a.increment(-1)
+        assert False, "grow-only counter accepted a negative increment"
+    except ValueError:
+        pass
+
+    # PNCounter: increments and decrements converge to the exact net value.
+    pn1, pn2, pn3 = PNCounter("pn1"), PNCounter("pn2"), PNCounter("pn3")
+    pn1.increment(10)
+    pn2.decrement(5)
+    pn3.increment(3)
+    pn1.decrement(2)
+    assert pn1.value() == 8 and pn2.value() == -5 and pn3.value() == 3
+
     pn1.merge(pn2)
-    print(f"  {pn1}")
-    
-    print("\nAfter pn3 merges with updated pn1:")
+    assert pn1.value() == 3, f"8 + (-5) must be 3, got {pn1.value()}"
     pn3.merge(pn1)
-    print(f"  {pn3}")
-    
-    print("\nAfter pn2 merges with updated pn3 (all should converge):")
     pn2.merge(pn3)
-    print(f"  {pn2}")
-    
-    print(f"\nAll nodes have value: {pn1.value()} (pn1), {pn2.value()} (pn2), {pn3.value()} (pn3)")
+    pn1.merge(pn3)
+    assert pn1.value() == pn2.value() == pn3.value() == 6, \
+        f"PN replicas diverged: {pn1.value()}/{pn2.value()}/{pn3.value()}"
+    assert pn1.value() == 10 - 5 + 3 - 2, "net value must be the sum of all ops"
+
+    # Node bookkeeping and refusals.
+    assert pn1.get_nodes() >= {"pn1", "pn2", "pn3"}
+    try:
+        pn1.decrement(-3)
+        assert False, "negative decrement accepted"
+    except ValueError:
+        pass
+
+    print("g_counter_crdt: GCounter converged to 15 on all replicas "
+          "(idempotent, commutative), PNCounter net 6 everywhere — PASS")
 
 
 if __name__ == "__main__":

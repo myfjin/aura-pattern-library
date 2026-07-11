@@ -212,50 +212,62 @@ class TOTP:
 
 
 def main():
-    """Demo of TOTP functionality."""
-    print("=== TOTP Generator and Validator Demo ===\n")
-    
-    # Generate a secret
-    secret = TOTP.generate_secret()
-    print(f"Generated secret: {secret}")
-    
-    # Create TOTP instance
-    totp = TOTP(secret, digits=6, interval=30)
-    print(f"TOTP configuration: {totp.digits} digits, {totp.interval}s interval\n")
-    
-    # Generate current token
-    current_token = totp.generate()
-    print(f"Current TOTP token: {current_token}")
-    
-    # Validate current token
-    is_valid, offset = totp.validate(current_token)
-    print(f"Token validation: {'Valid' if is_valid else 'Invalid'} (offset: {offset})")
-    
-    # Test invalid token
-    is_valid, offset = totp.validate("123456")
-    print(f"Invalid token validation: {'Valid' if is_valid else 'Invalid'}")
-    
-    # Generate provisioning URI
+    """Self-test against the RFC 4226 / RFC 6238 published test vectors —
+    the strongest oracle a OTP implementation can face."""
+    # RFC 4226 Appendix D: secret is the ASCII "12345678901234567890".
+    rfc_secret = base64.b32encode(b"12345678901234567890").decode().rstrip("=")
+    hotp = HOTP(rfc_secret, digits=6)
+
+    rfc4226_truth = ["755224", "287082", "359152", "969429", "338314",
+                     "254676", "287922", "162583", "399871", "520489"]
+    for counter, expected in enumerate(rfc4226_truth):
+        got = hotp.generate(counter)
+        assert got == expected, \
+            f"RFC 4226 vector failed at counter {counter}: got {got}, want {expected}"
+
+    # validate() agrees with the vectors and refuses wrong tokens.
+    assert hotp.validate("755224", 0) is True
+    assert hotp.validate("755224", 1) is False, "token for counter 0 accepted at counter 1"
+    assert hotp.validate("000000", 0) is False
+
+    # RFC 6238 TOTP (SHA-1, 8 digits, 30s): published time/token pairs.
+    totp8 = TOTP(rfc_secret, digits=8, interval=30)
+    rfc6238_truth = [(59, "94287082"), (1111111109, "07081804"),
+                     (1111111111, "14050471"), (1234567890, "89005924"),
+                     (2000000000, "69279037")]
+    for ts, expected in rfc6238_truth:
+        got = totp8.generate(ts)
+        assert got == expected, \
+            f"RFC 6238 vector failed at t={ts}: got {got}, want {expected}"
+
+    # Drift window: a token from one interval ago validates with window=1
+    # at offset -1; a token from 3 intervals ago must NOT validate.
+    totp = TOTP(rfc_secret, digits=6, interval=30)
+    t = 1_111_111_109
+    prev_token = totp.generate(t - 30)
+    ok, offset = totp.validate(prev_token, timestamp=t, window=1)
+    assert ok and offset == -1, f"1-interval drift must validate at offset -1, got {ok}/{offset}"
+    stale = totp.generate(t - 90)
+    ok, _ = totp.validate(stale, timestamp=t, window=1)
+    assert ok is False, "3-interval-old token accepted inside window=1"
+
+    # Determinism within an interval; change across intervals.
+    assert totp.generate(990) == totp.generate(1019), "same interval, different tokens"
+    assert totp.generate(990) != totp.generate(1020), "interval boundary did not rotate token"
+
+    # Provisioning URI carries the exact secret and parameters.
     uri = totp.provisioning_uri("user@example.com", "DemoApp")
-    print(f"\nProvisioning URI: {uri}")
-    print("You can use this URI to generate a QR code for authenticator apps")
-    
-    # Test with time drift
-    print("\n=== Testing with time drift ===")
-    future_time = time.time() + 60  # 1 minute in the future
-    future_token = totp.generate(future_time)
-    print(f"Future token (60s): {future_token}")
-    
-    # Validate with window
-    is_valid, offset = totp.validate(future_token, window=2)
-    print(f"Future token validation with window=2: {'Valid' if is_valid else 'Invalid'} (offset: {offset})")
-    
-    # Show token changes over time
-    print("\n=== Token changes over time ===")
-    for i in range(5):
-        token = totp.generate()
-        print(f"{time.strftime('%H:%M:%S')}: {token}")
-        time.sleep(5)
+    assert f"secret={rfc_secret}" in uri and "issuer=DemoApp" in uri
+    assert "digits=6" in uri and "period=30" in uri
+    assert uri.startswith("otpauth://totp/user%40example.com")
+
+    # Generated secrets are valid base32 and long enough.
+    s = TOTP.generate_secret()
+    assert len(s) >= 16
+    HOTP(s).generate(0)  # must not raise
+
+    print("hotp_totp: 10/10 RFC 4226 vectors, 5/5 RFC 6238 vectors, drift "
+          "window -1 exact, stale refused, URI complete — PASS")
 
 
 if __name__ == "__main__":

@@ -214,47 +214,73 @@ def _create_demo_tasks() -> List[Task]:
 
 
 def main() -> None:
-    """Demo the priority queue scheduler with 20 tasks."""
-    print("Priority Queue Scheduler Demo")
-    print("=" * 40)
-    
-    # Create scheduler and add tasks
-    scheduler = PriorityQueueScheduler()
-    tasks = _create_demo_tasks()
-    
-    print(f"Adding {len(tasks)} tasks to scheduler...")
-    for task in tasks:
-        scheduler.add_task(task)
-    
-    print(f"Tasks in queue: {scheduler.size()}")
-    print("\nTop 5 tasks by priority:")
-    top_tasks = scheduler.peek_tasks(5)
-    for i, task in enumerate(top_tasks, 1):
-        overdue = " (OVERDUE)" if task.is_overdue() else ""
-        print(f"{i}. [{task.priority}] {task.id}: {task.description} "
-              f"(Deadline: {task.deadline.strftime('%H:%M:%S')}){overdue}")
-    
-    print("\nProcessing tasks in priority order:")
-    processed = 0
-    while not scheduler.is_empty() and processed < 10:
-        task = scheduler.pop_next_task()
-        if task:
-            overdue = " (OVERDUE)" if task.is_overdue() else ""
-            print(f"Processing: [{task.priority}] {task.id}: {task.description}{overdue}")
-            processed += 1
-    
-    print(f"\nRemaining tasks: {scheduler.size()}")
-    
-    # Demonstrate task removal
-    print("\nRemoving task_08...")
-    removed = scheduler.remove_task("task_08")
-    print(f"Removal successful: {removed}")
-    print(f"Tasks remaining: {scheduler.size()}")
-    
-    # Show new top task
-    next_task = scheduler.get_next_task()
-    if next_task:
-        print(f"Next task: [{next_task.priority}] {next_task.id}: {next_task.description}")
+    """Self-test: exact pop order (priority → deadline → FIFO), peek purity,
+    mid-heap removal integrity, and a 300-task sorted-oracle drain."""
+    import random
+    random.seed(42)
+    base = datetime(2030, 1, 1, 12, 0)
+
+    # Exact ordering: priority wins, then earlier deadline, then insertion.
+    s = PriorityQueueScheduler()
+    s.add_task(Task("low", 3, base + timedelta(minutes=9), "low prio"))
+    s.add_task(Task("p1_late", 1, base + timedelta(minutes=5), "p1 later deadline"))
+    s.add_task(Task("mid", 2, base + timedelta(minutes=1), "mid prio"))
+    s.add_task(Task("p1_soon", 1, base + timedelta(minutes=1), "p1 sooner deadline"))
+    assert s.size() == 4
+    order = [s.pop_next_task().id for _ in range(4)]
+    assert order == ["p1_soon", "p1_late", "mid", "low"], f"pop order wrong: {order}"
+    assert s.pop_next_task() is None and s.is_empty()
+
+    # FIFO tie-break: identical priority AND deadline → insertion order.
+    for name in ("first", "second", "third"):
+        s.add_task(Task(name, 2, base, "tie"))
+    assert [s.pop_next_task().id for _ in range(3)] == ["first", "second", "third"], \
+        "FIFO tie-break violated"
+
+    # peek/get_next are pure: they must not consume.
+    s.add_task(Task("a", 2, base, ""))
+    s.add_task(Task("b", 1, base, ""))
+    top2 = s.peek_tasks(2)
+    assert [t.id for t in top2] == ["b", "a"] and s.size() == 2, "peek consumed tasks"
+    assert s.get_next_task().id == "b" and s.size() == 2
+
+    # Mid-heap removal keeps the heap ordered.
+    s.add_task(Task("c", 3, base, ""))
+    assert s.remove_task("b") is True
+    assert s.remove_task("b") is False, "double removal reported success"
+    assert s.remove_task("ghost") is False
+    assert [s.pop_next_task().id for _ in range(2)] == ["a", "c"], \
+        "heap order broken after mid-heap removal"
+
+    # is_overdue is a real deadline check.
+    past = Task("late", 1, datetime(2000, 1, 1), "")
+    future = Task("ok", 1, datetime(2100, 1, 1), "")
+    assert past.is_overdue() is True and future.is_overdue() is False
+
+    # Refusal: only Task instances enter the queue.
+    try:
+        s.add_task("not a task")  # type: ignore[arg-type]
+        assert False, "non-Task accepted"
+    except TypeError:
+        pass
+
+    # Oracle drain: 300 random tasks pop out exactly in sorted(Task) order.
+    tasks = [Task(f"t{i}", random.randint(1, 5),
+                  base + timedelta(minutes=random.randint(0, 500)), "")
+             for i in range(300)]
+    big = PriorityQueueScheduler()
+    for t in tasks:
+        big.add_task(t)
+    drained = []
+    while not big.is_empty():
+        drained.append(big.pop_next_task())
+    assert len(drained) == 300
+    assert drained == sorted(tasks), "drain order diverged from the comparator oracle"
+    priorities = [t.priority for t in drained]
+    assert priorities == sorted(priorities), "priorities not non-decreasing in drain"
+
+    print("priority_task_scheduler: pop order exact, FIFO ties, peek pure, "
+          "mid-heap removal safe, 300-task drain == sorted oracle — PASS")
 
 
 if __name__ == "__main__":

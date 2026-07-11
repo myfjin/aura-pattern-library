@@ -249,48 +249,56 @@ class KDTree:
 
 
 def main():
-    """Demo the KDTree functionality with random points."""
-    # Create a new k-d tree
+    """Self-test: nearest-neighbor and range search proven against brute-force
+    scans over 200 random points — the k-d pruning must never lose a point."""
+    random.seed(42)
+    points = [(round(random.uniform(0, 100), 2), round(random.uniform(0, 100), 2))
+              for _ in range(200)]
     tree = KDTree()
-    
-    # Generate random points
-    random.seed(42)  # For reproducible results
-    points = [(round(random.uniform(0, 100), 2), round(random.uniform(0, 100), 2)) for _ in range(20)]
-    
-    print("Inserting points into k-d tree:")
-    for i, point in enumerate(points):
-        print(f"  {i+1:2d}: {point}")
-        tree.insert(point)
-    
-    print("\nNearest neighbor searches:")
-    query_points = [(10, 10), (50, 50), (90, 90)]
-    for query in query_points:
-        nearest = tree.nearest_neighbor(query)
-        if nearest:
-            distance = math.sqrt((query[0] - nearest[0])**2 + (query[1] - nearest[1])**2)
-            print(f"  Query {query} -> Nearest: {nearest} (distance: {distance:.2f})")
-        else:
-            print(f"  Query {query} -> No nearest neighbor (empty tree)")
-    
-    print("\nRange searches:")
-    ranges = [((0, 0), (25, 25)), ((25, 25), (75, 75)), ((75, 75), (100, 100))]
-    for min_p, max_p in ranges:
-        results = tree.range_search(min_p, max_p)
-        print(f"  Range {min_p} to {max_p}: {len(results)} points")
-        for point in sorted(results):
-            print(f"    {point}")
-    
-    # Test error handling
-    print("\nTesting error handling:")
-    try:
-        tree.insert((1, 2, 3))  # Should raise ValueError
-    except ValueError as e:
-        print(f"  Caught expected error: {e}")
-    
-    try:
-        tree.nearest_neighbor("invalid")  # Should raise ValueError
-    except ValueError as e:
-        print(f"  Caught expected error: {e}")
+    for p in points:
+        tree.insert(p)
+
+    # Planted exactness: a point in the set is its own nearest neighbor.
+    assert tree.nearest_neighbor(points[17]) == points[17], \
+        "a stored point must be its own nearest neighbor"
+
+    # THE STRUCTURAL CLAIM: NN via the tree == NN via brute force, 100 queries.
+    # (A wrong prune silently returns a near-but-not-nearest point.)
+    for _ in range(100):
+        q = (random.uniform(-10, 110), random.uniform(-10, 110))
+        got = tree.nearest_neighbor(q)
+        best = min(points, key=lambda p: KDTree._euclidean_distance(p, q))
+        d_got = KDTree._euclidean_distance(got, q)
+        d_true = KDTree._euclidean_distance(best, q)
+        assert abs(d_got - d_true) < 1e-9, \
+            f"NN({q}) returned {got} at {d_got:.4f}, brute-force found {best} at {d_true:.4f}"
+
+    # Range search == brute-force rectangle filter, 100 random rectangles.
+    for _ in range(100):
+        x1, x2 = sorted((random.uniform(0, 100), random.uniform(0, 100)))
+        y1, y2 = sorted((random.uniform(0, 100), random.uniform(0, 100)))
+        got = sorted(tree.range_search((x1, y1), (x2, y2)))
+        want = sorted(p for p in points if x1 <= p[0] <= x2 and y1 <= p[1] <= y2)
+        assert got == want, f"range ({x1:.1f},{y1:.1f})-({x2:.1f},{y2:.1f}) lost/added points"
+
+    # Whole-plane range returns everything; empty rectangle returns nothing.
+    assert len(tree.range_search((0, 0), (100, 100))) == 200
+    assert tree.range_search((200, 200), (300, 300)) == []
+
+    # Empty tree behaves.
+    assert KDTree().nearest_neighbor((1, 1)) is None
+
+    # Refusals: wrong dimensionality / types / inverted rectangle.
+    for call in (lambda: tree.insert((1, 2, 3)), lambda: tree.nearest_neighbor("bad"),
+                 lambda: tree.range_search((5, 5), (1, 1))):
+        try:
+            call()
+            assert False, "invalid call accepted"
+        except ValueError:
+            pass
+
+    print("kd_tree: 100 NN queries == brute force, 100 range queries == brute "
+          "force over 200 points, self-NN exact — PASS")
 
 
 if __name__ == "__main__":

@@ -173,11 +173,12 @@ class DependencyGraph:
         if self._has_cycle():
             raise ValueError("Cannot perform topological sort: graph contains cycles")
         
-        # Calculate in-degrees
-        in_degree: Dict[str, int] = {name: 0 for name in self.nodes}
-        for node in self.nodes.values():
-            for dep in node.dependencies:
-                in_degree[dep] += 1
+        # In-degree = number of prerequisites a node waits on. (The former
+        # code incremented in_degree[dep] — counting DEPENDENTS — which
+        # seeded the queue with sinks and made every non-trivial graph
+        # report "contains cycles".)
+        in_degree: Dict[str, int] = {name: len(node.dependencies)
+                                     for name, node in self.nodes.items()}
         
         # Initialize queue with nodes having zero in-degree
         queue: deque = deque([name for name, degree in in_degree.items() if degree == 0])
@@ -215,11 +216,12 @@ class DependencyGraph:
         if self._has_cycle():
             raise ValueError("Cannot determine parallel levels: graph contains cycles")
         
-        # Calculate in-degrees
-        in_degree: Dict[str, int] = {name: 0 for name in self.nodes}
-        for node in self.nodes.values():
-            for dep in node.dependencies:
-                in_degree[dep] += 1
+        # In-degree = number of prerequisites a node waits on. (The former
+        # code incremented in_degree[dep] — counting DEPENDENTS — which
+        # seeded the queue with sinks and made every non-trivial graph
+        # report "contains cycles".)
+        in_degree: Dict[str, int] = {name: len(node.dependencies)
+                                     for name, node in self.nodes.items()}
         
         levels: List[List[str]] = []
         current_level: List[str] = [name for name, degree in in_degree.items() if degree == 0]
@@ -263,93 +265,76 @@ class DependencyGraph:
 
 
 def main():
-    """Demo of the dependency graph resolver with 10 interdependent tasks."""
-    print("Dependency Graph Resolver Demo")
-    print("=" * 40)
-    
-    # Create a dependency graph
+    """Self-test: the topological INVARIANT (every dependency precedes its
+    dependent) verified edge-by-edge, parallel levels exact, cycles refused."""
     graph = DependencyGraph()
-    
-    # Add 10 tasks
-    tasks = [
-        ("task_a", "Initialize system"),
-        ("task_b", "Load configuration"),
-        ("task_c", "Connect to database"),
-        ("task_d", "Start web server"),
-        ("task_e", "Load plugins"),
-        ("task_f", "Initialize cache"),
-        ("task_g", "Setup logging"),
-        ("task_h", "Validate environment"),
-        ("task_i", "Run migrations"),
-        ("task_j", "Start background workers")
-    ]
-    
-    for task_name, task_desc in tasks:
-        graph.add_node(task_name, task_desc)
-    
-    # Add dependencies (creating a complex dependency structure)
+    for name in "abcdefghij":
+        graph.add_node(f"task_{name}", f"work {name}")
+
     dependencies = [
-        ("task_b", "task_a"),  # B depends on A
-        ("task_c", "task_a"),  # C depends on A
-        ("task_d", "task_b"),  # D depends on B
-        ("task_e", "task_b"),  # E depends on B
-        ("task_f", "task_c"),  # F depends on C
-        ("task_g", "task_a"),  # G depends on A
-        ("task_h", "task_a"),  # H depends on A
-        ("task_i", "task_c"),  # I depends on C
-        ("task_j", "task_d"),  # J depends on D
-        ("task_j", "task_e"),  # J also depends on E
-        ("task_d", "task_f"),  # D also depends on F
-        ("task_e", "task_g"),  # E also depends on G
+        ("task_b", "task_a"), ("task_c", "task_a"), ("task_d", "task_b"),
+        ("task_e", "task_b"), ("task_f", "task_c"), ("task_g", "task_a"),
+        ("task_h", "task_a"), ("task_i", "task_c"), ("task_j", "task_d"),
+        ("task_j", "task_e"), ("task_d", "task_f"), ("task_e", "task_g"),
     ]
-    
-    print("Adding dependencies:")
     for dependent, dependency in dependencies:
-        try:
-            graph.add_dependency(dependent, dependency)
-            print(f"  {dependent} <- {dependency}")
-        except ValueError as e:
-            print(f"  Error adding {dependent} <- {dependency}: {e}")
-    
-    print(f"\nGraph has {len(graph)} nodes")
-    
-    # Perform topological sort
-    print("\nTopological order:")
+        graph.add_dependency(dependent, dependency)
+    assert len(graph) == 10 and "task_a" in graph and "ghost" not in graph
+
+    # THE INVARIANT: in the topological order, every dependency comes
+    # strictly before its dependent — checked for all 12 edges.
+    order = graph.topological_sort()
+    assert sorted(order) == sorted(f"task_{n}" for n in "abcdefghij"), \
+        "topological sort lost or invented nodes"
+    pos = {name: i for i, name in enumerate(order)}
+    violations = [(d, dep) for d, dep in dependencies if pos[dep] >= pos[d]]
+    assert violations == [], f"ordering violates dependencies: {violations}"
+    assert pos["task_a"] == 0, "the only root must come first"
+
+    # Parallel levels: level k = tasks whose longest chain from a root is k.
+    levels = graph.get_parallel_levels()
+    assert [sorted(l) for l in levels] == [
+        ["task_a"],
+        ["task_b", "task_c", "task_g", "task_h"],
+        ["task_e", "task_f", "task_i"],
+        ["task_d"],
+        ["task_j"],
+    ], f"parallel levels wrong: {[sorted(l) for l in levels]}"
+    assert sum(len(l) for l in levels) == 10, "levels lost tasks"
+
+    # Node data survives.
+    assert graph.get_node_data("task_c") == "work c"
+
+    # CYCLE: closing x→y→z back to x must be refused, leaving the graph usable.
+    g2 = DependencyGraph()
+    for n in "xyz":
+        g2.add_node(n)
+    g2.add_dependency("y", "x")
+    g2.add_dependency("z", "y")
     try:
-        order = graph.topological_sort()
-        for i, task in enumerate(order, 1):
-            desc = graph.get_node_data(task)
-            print(f"  {i:2d}. {task} - {desc}")
-    except ValueError as e:
-        print(f"Error: {e}")
-    
-    # Get parallel execution levels
-    print("\nParallel execution levels:")
+        g2.add_dependency("x", "z")
+        assert False, "cycle x→z→y→x was accepted"
+    except ValueError:
+        pass
+    assert g2.topological_sort() == ["x", "y", "z"], \
+        "graph corrupted after the rejected cycle"
+
+    # Self-dependency is the smallest cycle.
     try:
-        levels = graph.get_parallel_levels()
-        for i, level in enumerate(levels, 1):
-            print(f"  Level {i}: {level}")
-            for task in level:
-                desc = graph.get_node_data(task)
-                print(f"    - {task}: {desc}")
-    except ValueError as e:
-        print(f"Error: {e}")
-    
-    # Demonstrate cycle detection
-    print("\nTesting cycle detection:")
-    graph2 = DependencyGraph()
-    graph2.add_node("x")
-    graph2.add_node("y")
-    graph2.add_node("z")
-    
-    graph2.add_dependency("y", "x")  # y depends on x
-    graph2.add_dependency("z", "y")  # z depends on y
-    
+        g2.add_dependency("x", "x")
+        assert False, "self-dependency accepted"
+    except ValueError:
+        pass
+
+    # Unknown nodes refused.
     try:
-        graph2.add_dependency("x", "z")  # x depends on z - would create cycle
-        print("ERROR: Cycle was not detected!")
-    except ValueError as e:
-        print(f"  Cycle correctly detected: {e}")
+        g2.add_dependency("x", "ghost")
+        assert False, "dependency on a missing node accepted"
+    except (ValueError, KeyError):
+        pass
+
+    print("dependency_graph: 12/12 edges respected in topo order, levels "
+          "1/4/3/1/1 exact, cycle+self-dep refused, graph intact — PASS")
 
 
 if __name__ == "__main__":

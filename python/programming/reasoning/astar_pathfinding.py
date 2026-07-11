@@ -216,12 +216,48 @@ class AStar:
         return None
 
 
+def _bfs_shortest_steps(maze, start, end):
+    """Brute-force BFS oracle: exact shortest step count on a 4-connected grid."""
+    from collections import deque
+    h, w = len(maze), len(maze[0])
+    seen = {start}
+    q = deque([(start, 0)])
+    while q:
+        (x, y), d = q.popleft()
+        if (x, y) == end:
+            return d
+        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < w and 0 <= ny < h and maze[ny][nx] and (nx, ny) not in seen:
+                seen.add((nx, ny))
+                q.append(((nx, ny), d + 1))
+    return None
+
+
+def _apply(grid, maze):
+    for y in range(len(maze)):
+        for x in range(len(maze[0])):
+            grid.set_walkable(x, y, maze[y][x])
+
+
+def _valid_path(path, maze, start, end):
+    """A path must start/end correctly, step to adjacent cells, avoid walls."""
+    if path[0] != start or path[-1] != end:
+        return False
+    for (x1, y1), (x2, y2) in zip(path, path[1:]):
+        if abs(x1 - x2) + abs(y1 - y2) != 1:
+            return False
+        if not maze[y2][x2]:
+            return False
+    return True
+
+
 def main():
-    """Demo of A* pathfinding with a simple maze"""
-    # Create a 10x10 grid
-    grid = Grid(10, 10)
-    
-    # Define a simple maze (False = wall, True = walkable)
+    """Self-test: A* paths are VALID and OPTIMAL (== BFS oracle) on the demo
+    maze, an open grid, and 30 random mazes; unreachable goals return None."""
+    import random
+    random.seed(42)
+
     maze = [
         [True,  True,  True,  True,  False, True,  True,  True,  True,  True],
         [True,  False, False, True,  False, True,  False, False, False, True],
@@ -232,40 +268,62 @@ def main():
         [True,  True,  False, True,  False, True,  True,  False, True,  True],
         [True,  True,  False, True,  True,  True,  True,  False, True,  True],
         [True,  False, False, False, False, False, True,  False, False, True],
-        [True,  True,  True,  True,  True,  True,  True,  True,  True,  True]
+        [True,  True,  True,  True,  True,  True,  True,  True,  True,  True],
     ]
-    
-    # Apply maze to grid
-    for y in range(10):
-        for x in range(10):
-            grid.set_walkable(x, y, maze[y][x])
-    
-    # Create A* instance
-    astar = AStar(grid)
-    
-    # Define start and end points
-    start = (0, 0)
-    end = (9, 9)
-    
-    # Find path
-    path = astar.find_path(start, end)
-    
-    if path:
-        print(f"Path found from {start} to {end}:")
-        print(" -> ".join(str(p) for p in path))
-        
-        # Visualize path
-        print("\nMaze visualization (Path marked with 'P'):")
-        visual = [['.' if maze[y][x] else '#' for x in range(10)] for y in range(10)]
-        for x, y in path:
-            visual[y][x] = 'P'
-        visual[start[1]][start[0]] = 'S'
-        visual[end[1]][end[0]] = 'E'
-        
-        for row in visual:
-            print(" ".join(row))
-    else:
-        print(f"No path found from {start} to {end}")
+    grid = Grid(10, 10)
+    _apply(grid, maze)
+    path = AStar(grid).find_path((0, 0), (9, 9))
+    assert path is not None, "demo maze has a path but A* found none"
+    assert _valid_path(path, maze, (0, 0), (9, 9)), f"invalid path: {path}"
+    oracle = _bfs_shortest_steps(maze, (0, 0), (9, 9))
+    assert len(path) - 1 == oracle, \
+        f"A* path has {len(path) - 1} steps, BFS optimum is {oracle}"
+
+    # Open grid: the optimum is exactly manhattan distance 18.
+    open_grid = Grid(10, 10)
+    open_maze = [[True] * 10 for _ in range(10)]
+    _apply(open_grid, open_maze)
+    p = AStar(open_grid).find_path((0, 0), (9, 9))
+    assert len(p) - 1 == 18, f"open-grid path must take 18 steps, took {len(p) - 1}"
+
+    # Unreachable: wall off the goal entirely.
+    boxed = [row[:] for row in open_maze]
+    boxed[8][9] = boxed[8][8] = boxed[9][8] = False
+    g2 = Grid(10, 10)
+    _apply(g2, boxed)
+    assert AStar(g2).find_path((0, 0), (9, 9)) is None, \
+        "A* invented a path to a walled-off goal"
+
+    # Unwalkable endpoints and out-of-bounds are refused.
+    assert AStar(g2).find_path((0, 0), (9, 8)) is None, "path to a wall cell"
+    try:
+        AStar(g2).find_path((0, 0), (99, 99))
+        assert False, "out-of-bounds goal accepted"
+    except ValueError:
+        pass
+
+    # ORACLE FUZZ: 30 random mazes; whenever BFS finds k steps, A* must find
+    # a valid path of exactly k steps; when BFS finds none, A* returns None.
+    agreements = 0
+    for _ in range(30):
+        m = [[random.random() > 0.35 for _ in range(8)] for _ in range(8)]
+        m[0][0] = m[7][7] = True
+        g = Grid(8, 8)
+        _apply(g, m)
+        a_path = AStar(g).find_path((0, 0), (7, 7))
+        truth = _bfs_shortest_steps(m, (0, 0), (7, 7))
+        if truth is None:
+            assert a_path is None, "A* found a path BFS proves impossible"
+        else:
+            assert a_path is not None, f"A* missed an existing {truth}-step path"
+            assert _valid_path(a_path, m, (0, 0), (7, 7)), "fuzz path invalid"
+            assert len(a_path) - 1 == truth, \
+                f"A* took {len(a_path) - 1} steps, optimum {truth} (not optimal!)"
+        agreements += 1
+    assert agreements == 30
+
+    print(f"astar_pathfinding: demo maze optimal ({oracle} steps == BFS), open "
+          f"grid 18 exact, walled goal None, 30/30 fuzz mazes optimal — PASS")
 
 
 if __name__ == "__main__":

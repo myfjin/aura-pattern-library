@@ -210,116 +210,62 @@ def format_deadline(deadline: float) -> str:
 
 
 def main() -> None:
-    """Demo of the priority queue with deadline scheduling."""
-    print("=== Priority Queue with Deadline Scheduling Demo ===\n")
-    
-    # Create a priority queue
+    """Self-test: EDF-with-priority ordering exact on a fixed clock, ties
+    broken by priority then submission, removal honest."""
+    now = 1_000_000.0
     pq = PriorityQueue()
-    
-    # Get current time for reference
-    now = time.time()
-    
-    # Submit background tasks with later deadlines
-    print("Submitting background tasks...")
-    pq.submit_task(
-        task_id="bg-1",
-        priority=Priority.LOW,
-        deadline=now + 60,  # 1 minute from now
-        payload="Background data processing",
-        preemption=PreemptionHint.PREEMPTABLE
-    )
-    print(f"  Submitted bg-1 (deadline: {format_deadline(now + 60)})")
-    
-    pq.submit_task(
-        task_id="bg-2",
-        priority=Priority.NORMAL,
-        deadline=now + 120,  # 2 minutes from now
-        payload="Generate weekly report",
-        preemption=PreemptionHint.NON_PREEMPTABLE
-    )
-    print(f"  Submitted bg-2 (deadline: {format_deadline(now + 120)})")
-    
-    # Submit urgent tasks with earlier deadlines
-    print("\nSubmitting urgent tasks...")
-    pq.submit_task(
-        task_id="urgent-1",
-        priority=Priority.CRITICAL,
-        deadline=now + 10,  # 10 seconds from now
-        payload="Process emergency alert",
-        preemption=PreemptionHint.PREEMPTABLE
-    )
-    print(f"  Submitted urgent-1 (deadline: {format_deadline(now + 10)})")
-    
-    pq.submit_task(
-        task_id="urgent-2",
-        priority=Priority.HIGH,
-        deadline=now + 30,  # 30 seconds from now
-        payload="Handle user payment",
-        preemption=PreemptionHint.NON_PREEMPTABLE
-    )
-    print(f"  Submitted urgent-2 (deadline: {format_deadline(now + 30)})")
-    
-    # Submit another background task
-    pq.submit_task(
-        task_id="bg-3",
-        priority=Priority.LOW,
-        deadline=now + 90,  # 1.5 minutes from now
-        payload="Archive old logs",
-        preemption=PreemptionHint.PREEMPTABLE
-    )
-    print(f"  Submitted bg-3 (deadline: {format_deadline(now + 90)})")
-    
-    print(f"\nQueue size: {pq.size()}")
-    
-    # Show the ordering of tasks
-    print("\nTask execution order (by deadline and priority):")
-    tasks = pq.get_all_tasks()
-    for i, task in enumerate(sorted(tasks), 1):
-        status = "OVERDUE" if task.is_overdue() else "PENDING"
-        print(f"  {i}. {task.task_id}: {task.payload}")
-        print(f"     Priority: {task.priority.name}, "
-              f"Deadline: {format_deadline(task.deadline)}, "
-              f"Status: {status}")
-    
-    # Process tasks in order
-    print("\nProcessing tasks...")
-    processed_tasks = []
+
+    # Deadlines dominate: pop order is by deadline regardless of priority.
+    pq.submit_task("bg-1", Priority.LOW, now + 60, "bg",
+                   preemption=PreemptionHint.PREEMPTABLE)
+    pq.submit_task("bg-2", Priority.NORMAL, now + 120, "report")
+    pq.submit_task("urgent-1", Priority.CRITICAL, now + 10, "alert")
+    pq.submit_task("urgent-2", Priority.HIGH, now + 30, "payment")
+    pq.submit_task("bg-3", Priority.LOW, now + 90, "archive")
+    assert pq.size() == 5
+
+    order = []
     while not pq.is_empty():
-        task = pq.pop_next_task()
-        if task:
-            processed_tasks.append(task)
-            print(f"  Processing {task.task_id}: {task.payload}")
-            print(f"    Priority: {task.priority.name}, "
-                  f"Deadline: {format_deadline(task.deadline)}")
-            
-            # Simulate processing time
-            time.sleep(0.1)
-    
-    # Show final statistics
-    print(f"\nProcessed {len(processed_tasks)} tasks:")
-    overdue_count = sum(1 for task in processed_tasks if task.is_overdue())
-    if overdue_count > 0:
-        print(f"  Warning: {overdue_count} tasks were overdue")
-    
-    # Demonstrate task removal
-    print("\n=== Task Removal Demo ===")
-    pq.submit_task(
-        task_id="temp-task",
-        priority=Priority.NORMAL,
-        deadline=now + 300,
-        payload="Temporary task to be removed"
-    )
-    print(f"Queue size before removal: {pq.size()}")
-    
-    removed = pq.remove_task("temp-task")
-    print(f"Task removal successful: {removed}")
-    print(f"Queue size after removal: {pq.size()}")
-    
-    # Try to remove non-existent task
-    removed = pq.remove_task("non-existent")
-    print(f"Non-existent task removal: {removed}")
-    
-    print("\n=== Demo Complete ===")
+        order.append(pq.pop_next_task().task_id)
+    assert order == ["urgent-1", "urgent-2", "bg-1", "bg-3", "bg-2"], \
+        f"EDF order wrong: {order}"
+    assert pq.pop_next_task() is None and pq.is_empty()
+
+    # Same deadline: HIGHER priority pops first.
+    pq.submit_task("low", Priority.LOW, now + 50, "l")
+    pq.submit_task("crit", Priority.CRITICAL, now + 50, "c")
+    pq.submit_task("norm", Priority.NORMAL, now + 50, "n")
+    tie_order = [pq.pop_next_task().task_id for _ in range(3)]
+    assert tie_order == ["crit", "norm", "low"], \
+        f"priority tie-break wrong: {tie_order}"
+
+    # Same deadline AND priority: earlier submission first (FIFO).
+    pq.submit_task("first", Priority.NORMAL, now + 50, "1")
+    pq.submit_task("second", Priority.NORMAL, now + 50, "2")
+    assert [pq.pop_next_task().task_id for _ in range(2)] == ["first", "second"], \
+        "FIFO tie-break violated"
+
+    # Overdue detection is a real deadline comparison.
+    pq.submit_task("past", Priority.NORMAL, time.time() - 5, "late")
+    pq.submit_task("future", Priority.NORMAL, time.time() + 500, "ok")
+    past = pq.pop_next_task()
+    assert past.task_id == "past" and past.is_overdue() is True
+    assert past.time_until_deadline() < 0
+    fut = pq.pop_next_task()
+    assert fut.is_overdue() is False and fut.time_until_deadline() > 400
+
+    # Removal: honest, and the removed task never pops.
+    pq.submit_task("keep", Priority.NORMAL, now + 10, "k")
+    pq.submit_task("temp", Priority.NORMAL, now + 5, "t")
+    assert pq.size() == 2
+    assert pq.remove_task("temp") is True
+    assert pq.remove_task("temp") is False, "double removal reported success"
+    assert pq.remove_task("ghost") is False
+    assert pq.size() == 1
+    assert pq.pop_next_task().task_id == "keep", "removed task leaked back out"
+
+    print("priority_queue_scheduler: EDF order exact (urgent-1 first, bg-2 "
+          "last), priority then FIFO tie-breaks, overdue real, removal honest — PASS")
 
 
 if __name__ == "__main__":

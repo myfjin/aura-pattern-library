@@ -251,80 +251,78 @@ class WAL:
 
 
 def main() -> None:
-    """Demo of WAL with crash recovery simulation."""
-    print("=== Write-Ahead Log Demo ===")
-    
-    # Initialize WAL
-    wal = WAL("demo_wal.log")
-    print(f"Initialized WAL with sequence number: {wal.sequence_number}")
-    
-    # Simulate database operations
-    print("\n1. Simulating database operations...")
+    """Self-test: THE DISASTER MUST HAPPEN — the process dies, a fresh WAL on
+    the same file must replay every committed operation in order; plus
+    checkpoint recovery, truncation, and torn-tail behavior."""
+    import tempfile
+    tmpdir = tempfile.mkdtemp(prefix="wal_")
+    path = os.path.join(tmpdir, "wal.log")
+
+    # Write operations + a checkpoint + post-checkpoint operations.
+    wal = WAL(path)
+    assert wal.sequence_number == 0
     wal.append(LogEntryType.INSERT, "user:1", {"name": "Alice", "age": 30})
     wal.append(LogEntryType.INSERT, "user:2", {"name": "Bob", "age": 25})
     wal.append(LogEntryType.UPDATE, "user:1", {"name": "Alice", "age": 31})
     wal.append(LogEntryType.DELETE, "user:2", None)
-    
-    print(f"Current sequence number: {wal.sequence_number}")
-    
-    # Create a checkpoint
-    print("\n2. Creating checkpoint...")
-    app_state = {"users_count": 1, "last_user_id": 1}
-    checkpoint = wal.checkpoint(app_state)
-    print(f"Checkpoint created at sequence {checkpoint.sequence_number}")
-    
-    # More operations after checkpoint
-    print("\n3. More operations after checkpoint...")
+    checkpoint = wal.checkpoint({"users_count": 1, "last_user_id": 1})
     wal.append(LogEntryType.INSERT, "user:3", {"name": "Charlie", "age": 35})
-    wal.append(LogEntryType.UPDATE, "user:1", {"name": "Alice Smith", "age": 31})
-    print(f"Current sequence number: {wal.sequence_number}")
-    
-    # Simulate crash and recovery
-    print("\n4. Simulating crash and recovery...")
-    print("Replaying log from beginning:")
-    
-    recovered_state = {"users_count": 0, "last_user_id": 0}
-    operations_applied = []
-    
-    def recovery_callback(entry: LogEntry) -> None:
-        if entry.entry_type == LogEntryType.CHECKPOINT:
-            recovered_state.update(entry.value)
-            print(f"  Restored checkpoint: {entry.value}")
-        else:
-            operations_applied.append(entry)
-            print(f"  Applied {entry.entry_type.name}: {entry.key} -> {entry.value}")
-    
-    count = wal.replay(recovery_callback)
-    print(f"Replayed {count} entries")
-    print(f"Recovered state: {recovered_state}")
-    print(f"Operations applied: {len(operations_applied)}")
-    
-    # Test truncation
-    print("\n5. Testing log truncation...")
-    print(f"Before truncation, sequence number: {wal.sequence_number}")
-    wal.truncate(checkpoint.sequence_number)
-    print(f"After truncation to checkpoint {checkpoint.sequence_number}, sequence number: {wal.sequence_number}")
-    
-    # Verify truncation
-    print("Replaying remaining log entries:")
-    count = wal.replay(lambda e: print(f"  {e.entry_type.name}: {e.key} -> {e.value}"))
-    print(f"Replayed {count} entries after truncation")
-    
-    # Test latest checkpoint retrieval
-    print("\n6. Testing checkpoint retrieval...")
-    latest_checkpoint = wal.get_latest_checkpoint()
-    if latest_checkpoint:
-        entry, state = latest_checkpoint
-        print(f"Latest checkpoint at sequence {entry.sequence_number}: {state}")
-    else:
-        print("No checkpoint found")
-    
-    # Clean up
-    if os.path.exists("demo_wal.log"):
-        os.remove("demo_wal.log")
-        print("\nCleaned up demo log file")
-    
-    print("\n=== Demo completed successfully ===")
+    assert wal.sequence_number == 6, f"6 entries must leave seq 6, got {wal.sequence_number}"
+
+    # THE CRASH: drop the instance; recover from disk alone.
+    del wal
+    recovered = WAL(path)
+    assert recovered.sequence_number == 6, \
+        f"recovered WAL lost its sequence: {recovered.sequence_number}"
+    replayed = []
+    count = recovered.replay(lambda e: replayed.append(e))
+    assert count == 6, f"must replay exactly 6 entries, got {count}"
+    assert [e.sequence_number for e in replayed] == [1, 2, 3, 4, 5, 6], \
+        "replay order broken"
+    assert replayed[0].entry_type == LogEntryType.INSERT and replayed[0].key == "user:1"
+    assert replayed[2].value == {"name": "Alice", "age": 31}, "payload corrupted"
+    assert replayed[3].entry_type == LogEntryType.DELETE
+
+    # Applying the replay rebuilds the exact database state.
+    db = {}
+    for e in replayed:
+        if e.entry_type == LogEntryType.INSERT or e.entry_type == LogEntryType.UPDATE:
+            db[e.key] = e.value
+        elif e.entry_type == LogEntryType.DELETE:
+            db.pop(e.key, None)
+    assert db == {"user:1": {"name": "Alice", "age": 31},
+                  "user:3": {"name": "Charlie", "age": 35}}, f"rebuilt state wrong: {db}"
+
+    # Checkpoint retrieval finds the latest checkpoint payload.
+    entry, state = recovered.get_latest_checkpoint()
+    assert entry.sequence_number == checkpoint.sequence_number == 5
+    assert state == {"users_count": 1, "last_user_id": 1}
+
+    # Truncation keeps only post-checkpoint entries.
+    assert recovered.truncate(checkpoint.sequence_number) is True
+    tail = []
+    assert recovered.replay(lambda e: tail.append(e)) == 1
+    assert tail[0].key == "user:3", f"truncation kept the wrong tail: {tail[0].key}"
+    assert recovered.truncate(0) is False, "truncate(0) must be refused"
+
+    # TORN TAIL: chop bytes off the last record (mid-write crash). Recovery
+    # must still yield the intact prefix rather than exploding.
+    p2 = os.path.join(tmpdir, "torn.log")
+    w2 = WAL(p2)
+    w2.append(LogEntryType.INSERT, "a", 1)
+    w2.append(LogEntryType.INSERT, "b", 2)
+    size = os.path.getsize(p2)
+    with open(p2, "r+b") as f:
+        f.truncate(size - 3)
+    survivors = []
+    WAL(p2).replay(lambda e: survivors.append(e.key))
+    assert survivors == ["a"], f"torn tail must leave exactly the intact prefix: {survivors}"
+
+    for fn in os.listdir(tmpdir):
+        os.remove(os.path.join(tmpdir, fn))
+    os.rmdir(tmpdir)
+    print("write_ahead_log: crash-replayed 6/6 in order, state rebuilt exact, "
+          "checkpoint@5 found, truncate kept 1, torn tail survived — PASS")
 
 
 if __name__ == "__main__":

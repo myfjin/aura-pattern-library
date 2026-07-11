@@ -148,69 +148,71 @@ class DNSCache:
 
 
 def main():
-    """Demonstrate DNS cache functionality."""
-    print("DNS Cache Simulator Demo")
-    print("=" * 30)
-    
-    # Create cache
-    cache = DNSCache(max_size=5)
-    
-    # Insert some records
-    records = [
-        Record("example.com", "A", "93.184.216.34", 60),
-        Record("google.com", "A", "142.250.74.110", 120),
-        Record("github.com", "A", "140.82.114.3", 90),
-        Record("example.com", "AAAA", "2606:2800:220:1:248:1893:25c8:1946", 60),
-    ]
-    
-    print("Inserting records...")
-    for record in records:
-        cache.insert(record)
-        print(f"  Inserted: {record.name} {record.record_type} -> {record.value}")
-    
-    print(f"\nCache size: {cache.size()}")
-    
-    # Lookup existing records
-    print("\nLooking up records...")
-    lookups = [
-        ("example.com", "A"),
-        ("google.com", "A"),
-        ("nonexistent.com", "A"),
-    ]
-    
-    for name, rtype in lookups:
-        result = cache.lookup(name, rtype)
-        if result:
-            print(f"  Found: {name} {rtype} -> {result.value}")
-        else:
-            print(f"  Not found: {name} {rtype}")
-            cache.insert_negative(name, rtype)
-    
-    print(f"\nCache size after negative caching: {cache.size()}")
-    
-    # Test LRU eviction
-    print("\nTesting LRU eviction...")
-    for i in range(3):
-        record = Record(f"test{i}.com", "A", f"1.1.1.{i}", 300)
-        cache.insert(record)
-        print(f"  Inserted: {record.name}")
-    
-    print(f"Cache size: {cache.size()}")
-    print("Current cache contents:")
-    for key in cache._cache:
-        print(f"  {key}")
-    
-    # Test cache clearing
-    print("\nClearing expired entries...")
-    removed = cache.clear_expired()
-    print(f"Removed {removed} expired entries")
-    print(f"Cache size: {cache.size()}")
-    
-    # Clear entire cache
-    print("\nClearing entire cache...")
-    cache.clear()
-    print(f"Cache size: {cache.size()}")
-    print("Demo completed successfully!")
+    """Self-test on a fake clock: TTL expiry exact, negative caching with its
+    30s lifetime, (name,type) keying, LRU eviction, clear_expired count."""
+    _now = [100_000.0]
+    _real_time = time.time
+    time.time = lambda: _now[0]
+    try:
+        cache = DNSCache(max_size=5)
+        cache.insert(Record("example.com", "A", "93.184.216.34", 60))
+        cache.insert(Record("google.com", "A", "142.250.74.110", 120))
+        cache.insert(Record("example.com", "AAAA", "2606::1946", 60))
+        assert cache.size() == 3
+
+        # (name, type) are independent keys.
+        assert cache.lookup("example.com", "A").value == "93.184.216.34"
+        assert cache.lookup("example.com", "AAAA").value == "2606::1946"
+        assert cache.lookup("example.com", "MX") is None
+        assert cache.lookup("nonexistent.com", "A") is None
+
+        # TTL: at +59s example/A (ttl 60) lives; at +61s it's gone,
+        # while google/A (ttl 120) still answers.
+        _now[0] += 59
+        assert cache.lookup("example.com", "A") is not None, "record died before its TTL"
+        _now[0] += 2
+        assert cache.lookup("example.com", "A") is None, "record survived past its TTL"
+        assert cache.lookup("google.com", "A") is not None, "longer TTL record wrongly expired"
+
+        # Negative caching: remembered for 30s, then re-askable.
+        cache.insert_negative("missing.com", "A")
+        assert cache.lookup("missing.com", "A") is None
+        neg_key = "missing.com:A"
+        assert neg_key in cache._cache, "negative entry not stored"
+        _now[0] += 31
+        cache.clear_expired()
+        assert neg_key not in cache._cache, "negative entry outlived its 30s window"
+
+        # clear_expired reports the exact count.
+        fresh = DNSCache(max_size=10)
+        for i in range(4):
+            fresh.insert(Record(f"h{i}.com", "A", f"1.1.1.{i}", 50))
+        fresh.insert(Record("long.com", "A", "9.9.9.9", 500))
+        _now[0] += 60
+        removed = fresh.clear_expired()
+        assert removed == 4, f"exactly 4 of 5 records expired, clear removed {removed}"
+        assert fresh.size() == 1 and fresh.lookup("long.com", "A") is not None
+
+        # LRU eviction: capacity 3, touch A so B is the eviction victim.
+        lru = DNSCache(max_size=3)
+        lru.insert(Record("a.com", "A", "1.0.0.1", 500))
+        lru.insert(Record("b.com", "A", "1.0.0.2", 500))
+        lru.insert(Record("c.com", "A", "1.0.0.3", 500))
+        lru.lookup("a.com", "A")                       # refresh A
+        lru.insert(Record("d.com", "A", "1.0.0.4", 500))
+        assert lru.size() == 3, f"capacity-3 cache holds {lru.size()}"
+        assert lru.lookup("b.com", "A") is None, "LRU victim should be the untouched b.com"
+        assert lru.lookup("a.com", "A") is not None, "recently-used a.com was evicted"
+        assert lru.lookup("d.com", "A") is not None
+
+        # clear() empties.
+        lru.clear()
+        assert lru.size() == 0
+    finally:
+        time.time = _real_time
+
+    print("dns_cache: TTL exact (59s alive/61s dead), negative 30s window, "
+          "clear_expired 4/5, LRU evicted the right victim — PASS")
 
 
 if __name__ == "__main__":

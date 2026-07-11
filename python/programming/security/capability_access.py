@@ -285,119 +285,81 @@ class CapabilitySystem:
 
 
 def main() -> None:
-    """Demo of the capability-based access control system."""
-    print("=== Capability-Based Access Control System Demo ===\n")
-    
-    # Create system
+    """Self-test: THE SECURITY LAW — every forbidden action is attempted and
+    must be denied; grants/delegation/attenuation/revocation exact."""
     system = CapabilitySystem()
-    
-    # Create principals
     admin = system.create_principal("admin")
     user1 = system.create_principal("user1")
     user2 = system.create_principal("user2")
-    print(f"Created principals: {admin}, {user1}, {user2}\n")
-    
-    # Create resources
-    file1 = system.create_resource("confidential_file.txt", {"sensitivity": "high"})
-    file2 = system.create_resource("public_file.txt", {"sensitivity": "low"})
-    database = system.create_resource("company_db", {"type": "database"})
-    print(f"Created resources: {file1.name}, {file2.name}, {database.name}\n")
-    
-    # Grant capabilities
-    print("--- Granting initial capabilities ---")
-    admin_file_cap = system.grant(
-        admin, 
-        file1, 
-        {Permission.READ, Permission.WRITE, Permission.DELETE},
-        delegable=True
-    )
-    print(f"Granted to admin: {admin_file_cap}")
-    
-    admin_db_cap = system.grant(
-        admin, 
-        database, 
-        {Permission.READ, Permission.WRITE}, 
-        delegable=True
-    )
-    print(f"Granted to admin: {admin_db_cap}")
-    
-    user1_file_cap = system.grant(
-        user1, 
-        file2, 
-        {Permission.READ}, 
-        delegable=False
-    )
-    print(f"Granted to user1: {user1_file_cap}\n")
-    
-    # Check access
-    print("--- Checking access ---")
-    print(f"Admin can read file1: {system.check_access(admin, file1, Permission.READ)}")
-    print(f"User1 can write file2: {system.check_access(user1, file2, Permission.WRITE)}")
-    print(f"User2 can read file1: {system.check_access(user2, file1, Permission.READ)}\n")
-    
-    # Delegate capabilities
-    print("--- Delegating capabilities ---")
+    file1 = system.create_resource("confidential.txt", {"sensitivity": "high"})
+    file2 = system.create_resource("public.txt", {"sensitivity": "low"})
+
+    admin_cap = system.grant(admin, file1,
+                             {Permission.READ, Permission.WRITE, Permission.DELETE},
+                             delegable=True)
+    user1_cap = system.grant(user1, file2, {Permission.READ}, delegable=False)
+    live_perms = sum([system.check_access(admin, file1, Permission.READ),
+                      system.check_access(admin, file1, Permission.WRITE),
+                      system.check_access(admin, file1, Permission.DELETE)])
+    assert live_perms == 3, f"admin grant must confer exactly 3 permissions, got {live_perms}"
+
+    # Grants confer exactly the named permissions — nothing more.
+    assert system.check_access(admin, file1, Permission.READ) is True
+    assert system.check_access(admin, file1, Permission.DELETE) is True
+    assert system.check_access(user1, file2, Permission.READ) is True
+    assert system.check_access(user1, file2, Permission.WRITE) is False, \
+        "user1 granted READ but can WRITE"
+    assert system.check_access(user2, file1, Permission.READ) is False, \
+        "user2 has NO capability but can read the confidential file"
+    assert system.check_access(user1, file1, Permission.READ) is False
+
+    # Delegation: admin passes READ (a subset) to user1.
+    delegated = system.delegate(admin, user1, admin_cap, {Permission.READ})
+    assert system.check_access(user1, file1, Permission.READ) is True, \
+        "delegation did not confer READ"
+    assert system.check_access(user1, file1, Permission.WRITE) is False, \
+        "delegating READ leaked WRITE"
+
+    # FORBIDDEN: delegating a non-delegable capability.
     try:
-        delegated_cap = system.delegate(
-            admin, 
-            user1, 
-            admin_file_cap, 
-            {Permission.READ}
-        )
-        print(f"Delegated from admin to user1: {delegated_cap}")
-    except ValueError as e:
-        print(f"Delegation failed: {e}")
-    
-    # Try to delegate non-delegable capability
+        system.delegate(user1, user2, user1_cap)
+        assert False, "non-delegable capability was delegated"
+    except ValueError:
+        pass
+
+    # FORBIDDEN: delegating permissions the delegator does not hold.
     try:
-        system.delegate(user1, user2, user1_file_cap)
-    except ValueError as e:
-        print(f"Failed to delegate non-delegable capability: {e}")
-    
-    # Try to delegate with excessive permissions
+        system.delegate(admin, user2, admin_cap,
+                        {Permission.READ, Permission.EXECUTE})
+        assert False, "delegation AMPLIFIED permissions (EXECUTE never granted)"
+    except ValueError:
+        pass
+    assert system.check_access(user2, file1, Permission.READ) is False, \
+        "failed delegation still granted access"
+
+    # Attenuation narrows; it must never widen.
+    attenuated = system.attenuate(user1, delegated, {Permission.READ})
+    assert Permission.READ in attenuated.permissions
+    assert len(attenuated.permissions) == 1
     try:
-        system.delegate(
-            admin, 
-            user2, 
-            admin_file_cap, 
-            {Permission.READ, Permission.EXECUTE}
-        )
-    except ValueError as e:
-        print(f"Failed to delegate excessive permissions: {e}\n")
-    
-    # Check access after delegation
-    print("--- Checking access after delegation ---")
-    print(f"User1 can read file1: {system.check_access(user1, file1, Permission.READ)}")
-    print(f"User1 can write file1: {system.check_access(user1, file1, Permission.WRITE)}")
-    print(f"User2 can read file1: {system.check_access(user2, file1, Permission.READ)}\n")
-    
-    # Attenuate capabilities
-    print("--- Attenuating capabilities ---")
-    attenuated_cap = system.attenuate(
-        user1, 
-        delegated_cap, 
-        {Permission.READ}
-    )
-    print(f"Attenuated capability: {attenuated_cap}")
-    
-    # Check access after attenuation
-    print("--- Checking access after attenuation ---")
-    print(f"User1 can read file1: {system.check_access(user1, file1, Permission.READ)}")
-    print(f"User1 can write file1: {system.check_access(user1, file1, Permission.WRITE)}\n")
-    
-    # Revoke capability
-    print("--- Revoking capability ---")
-    print(f"User1 capabilities before revocation: {len(user1.capabilities)}")
-    system.revoke(admin_file_cap)
-    print(f"User1 capabilities after revocation: {len(user1.capabilities)}")
-    print(f"User1 can read file1: {system.check_access(user1, file1, Permission.READ)}\n")
-    
-    # Show final state
-    print("--- Final system state ---")
-    print(f"Total capabilities in system: {len(system.capabilities)}")
-    print(f"Admin capabilities: {len(admin.capabilities)}")
-    print(f"User1 capabilities: {len(user1.capabilities)}")
-    print(f"User2 capabilities: {len(user2.capabilities)}")
+        system.attenuate(user1, attenuated, {Permission.READ, Permission.WRITE})
+        assert False, "attenuation WIDENED permissions"
+    except ValueError:
+        pass
+
+    # Revocation of the root capability cuts the whole delegation chain.
+    assert system.check_access(user1, file1, Permission.READ) is True
+    system.revoke(admin_cap)
+    assert system.check_access(admin, file1, Permission.READ) is False, \
+        "revoked capability still grants its holder access"
+    assert system.check_access(user1, file1, Permission.READ) is False, \
+        "revoking the root left the DELEGATED capability alive"
+    # Unrelated capability untouched.
+    assert system.check_access(user1, file2, Permission.READ) is True, \
+        "revocation of file1's chain damaged file2 access"
+
+    print("capability_access: exact grants, no ambient authority, delegation "
+          "subset-only, attenuation narrows, revocation kills the chain — PASS")
 
 
 if __name__ == "__main__":

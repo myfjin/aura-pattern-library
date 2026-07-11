@@ -191,68 +191,79 @@ class WriteLock:
         self._rwlock.release_write()
 
 
-def _demo_reader(rwlock: RWLock, reader_id: int, data: list) -> None:
-    """Demo reader function."""
-    with ReadLock(rwlock):
-        print(f"Reader {reader_id} reading data: {data}")
-        # Try to upgrade (should fail if there are other readers)
-        if rwlock.upgrade():
-            print(f"Reader {reader_id} upgraded to writer")
-            data.append(f"Modified by reader {reader_id}")
-            rwlock.downgrade()
-            print(f"Reader {reader_id} downgraded to reader")
-        else:
-            print(f"Reader {reader_id} could not upgrade")
-
-
-def _demo_writer(rwlock: RWLock, writer_id: int, data: list) -> None:
-    """Demo writer function."""
-    with WriteLock(rwlock):
-        print(f"Writer {writer_id} writing to data")
-        data.append(f"Written by writer {writer_id}")
-        # Try to downgrade (should work)
-        rwlock.downgrade()
-        print(f"Writer {writer_id} downgraded to reader")
-        print(f"Writer {writer_id} reading data: {data}")
-        # Try to upgrade back (should work since we're the only reader)
-        if rwlock.upgrade():
-            print(f"Writer {writer_id} upgraded back to writer")
-            data.append(f"Re-modified by writer {writer_id}")
-        rwlock.release_write()  # Need to manually release since we upgraded
-
-
 if __name__ == "__main__":
-    # Create shared data and lock
-    shared_data = ["initial"]
+    # Self-test: writer exclusion under real contention, reader concurrency,
+    # reader/writer overlap detection, upgrade/downgrade semantics.
+
+    # 1. Readers genuinely share: 4 readers must be INSIDE the read section
+    #    at the same instant (a barrier only passes if all 4 overlap).
     lock = RWLock()
-    
-    # Create threads
-    threads = []
-    
-    # Create reader threads
-    for i in range(3):
-        t = threading.Thread(target=_demo_reader, args=(lock, i, shared_data))
-        threads.append(t)
-    
-    # Create writer threads
-    for i in range(2):
-        t = threading.Thread(target=_demo_writer, args=(lock, i, shared_data))
-        threads.append(t)
-    
-    # Start all threads
-    for t in threads:
+    barrier = threading.Barrier(4, timeout=10.0)
+    barrier_ok = [0]
+    def _concurrent_reader() -> None:
+        with lock.read_lock():
+            barrier.wait()          # deadlocks (→ timeout) if readers serialize
+            barrier_ok[0] += 1      # safe: all 4 are read-side, bump is pre-join-checked
+    readers = [threading.Thread(target=_concurrent_reader) for _ in range(4)]
+    for t in readers:
         t.start()
-    
-    # Wait for all threads to complete
-    for t in threads:
+    for t in readers:
         t.join()
-    
-    print(f"Final data: {shared_data}")
-    
-    # Demonstrate context managers
-    print("\nDemonstrating context managers:")
-    with lock.read_lock():
-        print("Inside read lock context manager")
-    
-    with lock.write_lock():
-        print("Inside write lock context manager")
+    assert barrier_ok[0] == 4, "4 readers failed to hold the read lock concurrently"
+
+    # 2. THE DISASTER: writers without exclusion lose increments, and a reader
+    #    inside a writer's critical section is corruption. Force both to be
+    #    attempted and prove neither happens.
+    state = {"value": 0, "readers_in": 0, "writers_in": 0, "overlap": False}
+    meta = threading.Lock()
+    def _writer() -> None:
+        for _ in range(200):
+            with lock.write_lock():
+                with meta:
+                    state["writers_in"] += 1
+                    if state["writers_in"] > 1 or state["readers_in"] > 0:
+                        state["overlap"] = True
+                v = state["value"]          # deliberately non-atomic read-modify-write:
+                state["value"] = v + 1      # only writer exclusion makes this safe
+                with meta:
+                    state["writers_in"] -= 1
+    def _reader() -> None:
+        for _ in range(200):
+            with lock.read_lock():
+                with meta:
+                    state["readers_in"] += 1
+                    if state["writers_in"] > 0:
+                        state["overlap"] = True
+                with meta:
+                    state["readers_in"] -= 1
+    workers = ([threading.Thread(target=_writer) for _ in range(8)]
+               + [threading.Thread(target=_reader) for _ in range(4)])
+    for t in workers:
+        t.start()
+    for t in workers:
+        t.join()
+    assert state["value"] == 1600, \
+        f"8 writers x 200 increments must equal 1600, got {state['value']} (lost updates)"
+    assert not state["overlap"], "reader or second writer observed inside a write section"
+
+    # 3. Upgrade: the sole reader may upgrade; one of two readers may not.
+    solo = RWLock()
+    solo.acquire_read()
+    assert solo.upgrade() is True, "sole reader denied upgrade"
+    solo.release_write()
+    solo.acquire_read()
+    solo.acquire_read()                     # second read hold
+    assert solo.upgrade() is False, "upgrade granted while another reader holds the lock"
+    solo.release_read()
+    assert solo.upgrade() is True, "sole remaining reader denied upgrade"
+    solo.release_write()
+
+    # 4. Downgrade: writer becomes reader without releasing, then upgrades back.
+    solo.acquire_write()
+    solo.downgrade()
+    assert solo._readers == 1 and solo._writers == 0, "downgrade did not convert writer to reader"
+    assert solo.upgrade() is True, "downgraded writer could not upgrade back"
+    solo.release_write()
+
+    print("rw_lock: 4 readers concurrent, 1600/1600 writes exclusive, no overlap, "
+          "upgrade/downgrade honored — PASS")

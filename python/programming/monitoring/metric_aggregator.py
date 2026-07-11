@@ -240,71 +240,66 @@ class MetricAggregator:
 
 
 if __name__ == "__main__":
-    # Create aggregator
-    aggregator = MetricAggregator()
-    
-    # Test counters
-    aggregator.increment_counter("requests", 1)
-    aggregator.increment_counter("requests", 3)
-    aggregator.increment_counter("errors", 1, {"type": "timeout"})
-    aggregator.increment_counter("errors", 2, {"type": "timeout"})
-    aggregator.increment_counter("errors", 1, {"type": "validation"})
-    
-    # Test gauges
-    aggregator.set_gauge("memory_usage", 1024.5)
-    aggregator.set_gauge("cpu_usage", 45.2)
-    aggregator.set_gauge("cpu_usage", 67.8)  # Update value
-    
-    # Test histograms
+    # Self-test: counters accumulate per tag-set, gauges overwrite,
+    # histogram stats/percentiles exact on planted values, refusals hold.
+    agg = MetricAggregator()
+
+    # Counters: same name+tags accumulate; different tags are separate series.
+    agg.increment_counter("requests", 1)
+    agg.increment_counter("requests", 3)
+    agg.increment_counter("errors", 1, {"type": "timeout"})
+    agg.increment_counter("errors", 2, {"type": "timeout"})
+    agg.increment_counter("errors", 1, {"type": "validation"})
+    assert agg.get_counter("requests") == 4, "1+3 must be 4"
+    assert agg.get_counter("errors", {"type": "timeout"}) == 3, "1+2 must be 3"
+    assert agg.get_counter("errors", {"type": "validation"}) == 1
+    assert agg.get_counter("requests") + agg.get_counter("errors", {"type": "timeout"}) == 7
+
+    # Gauges overwrite, never accumulate.
+    agg.set_gauge("cpu", 45.2)
+    agg.set_gauge("cpu", 67.8)
+    assert agg.get_gauge("cpu") == 67.8, "gauge must overwrite"
+
+    # Histogram on 0,5,...,95 (20 values): stats are closed-form.
     for i in range(20):
-        aggregator.record_histogram("response_time", i * 5, {"endpoint": "/api/users"})
-    
+        agg.record_histogram("rt", i * 5, {"ep": "/users"})
+    stats = agg.get_histogram_stats("rt", {"ep": "/users"})
+    assert stats["count"] == 20
+    assert stats["sum"] == 950, "sum of 0+5+...+95 must be 950"
+    assert stats["min"] == 0 and stats["max"] == 95
+    assert stats["avg"] == 47.5
+
+    # Tagged series are isolated: a second endpoint has its own histogram.
     for i in range(10):
-        aggregator.record_histogram("response_time", i * 10, {"endpoint": "/api/orders"})
-    
-    # Print results
-    print("=== Metrics Snapshot ===")
-    snapshot = aggregator.snapshot()
-    
-    print("\nCounters:")
-    for name, value in snapshot["counters"].items():
-        print(f"  {name}: {value}")
-    
-    print("\nGauges:")
-    for name, value in snapshot["gauges"].items():
-        print(f"  {name}: {value}")
-    
-    print("\nHistograms:")
-    for name, data in snapshot["histograms"].items():
-        print(f"  {name}:")
-        stats = data["stats"]
-        percentiles = data["percentiles"]
-        print(f"    Count: {stats['count']}, Sum: {stats['sum']:.2f}")
-        print(f"    Min: {stats['min']:.2f}, Max: {stats['max']:.2f}, Avg: {stats['avg']:.2f}")
-        print(f"    50%: {percentiles['50']:.2f}, 90%: {percentiles['90']:.2f}, "
-              f"95%: {percentiles['95']:.2f}, 99%: {percentiles['99']:.2f}")
-    
-    # Test specific queries
-    print("\n=== Specific Queries ===")
-    print(f"Total requests: {aggregator.get_counter('requests')}")
-    print(f"Timeout errors: {aggregator.get_counter('errors', {'type': 'timeout'})}")
-    print(f"Current CPU usage: {aggregator.get_gauge('cpu_usage')}")
-    print(f"Response time 95th percentile (/api/users): "
-          f"{aggregator.get_histogram_percentile('response_time', 95, {'endpoint': '/api/users'})}")
-    
-    # Test error conditions
-    print("\n=== Error Handling ===")
-    try:
-        aggregator.increment_counter("test", -1)
-    except ValueError as e:
-        print(f"Caught expected error: {e}")
-    
-    try:
-        aggregator.get_gauge("nonexistent")
-    except KeyError as e:
-        print(f"Caught expected error: {e}")
-    
-    try:
-        aggregator.get_histogram_percentile("response_time", 150)
-    except ValueError as e:
-        print(f"Caught expected error: {e}")
+        agg.record_histogram("rt", i * 10, {"ep": "/orders"})
+    assert agg.get_histogram_stats("rt", {"ep": "/orders"})["count"] == 10
+    assert agg.get_histogram_stats("rt", {"ep": "/users"})["count"] == 20, \
+        "second tag-set polluted the first histogram"
+
+    # Percentiles are order statistics of the planted sequence: monotone,
+    # p50 in the middle of 0..95, p99 at the top.
+    p50 = agg.get_histogram_percentile("rt", 50, {"ep": "/users"})
+    p90 = agg.get_histogram_percentile("rt", 90, {"ep": "/users"})
+    p99 = agg.get_histogram_percentile("rt", 99, {"ep": "/users"})
+    assert 45 <= p50 <= 50, f"p50 of 0..95 step 5 must be ~47.5, got {p50}"
+    assert p50 <= p90 <= p99 <= 95, f"percentiles not monotone: {p50}/{p90}/{p99}"
+    assert p99 >= 90, f"p99 of 0..95 must be at the top, got {p99}"
+
+    # Snapshot carries the same numbers.
+    snap = agg.snapshot()
+    assert snap["counters"]['requests[{}]'] == 4
+    users_key = next(k for k in snap["histograms"] if "/users" in k)
+    assert snap["histograms"][users_key]["stats"]["sum"] == 950
+
+    # Refusals: negative counter increment, unknown gauge, bad percentile.
+    for call, exc in ((lambda: agg.increment_counter("t", -1), ValueError),
+                      (lambda: agg.get_gauge("ghost"), KeyError),
+                      (lambda: agg.get_histogram_percentile("rt", 150), ValueError)):
+        try:
+            call()
+            assert False, "invalid call accepted"
+        except exc:
+            pass
+
+    print("metric_aggregator: counters 4/3/1 per tag-set, gauge overwrites, "
+          "histogram sum 950/avg 47.5, percentiles monotone, refusals held — PASS")

@@ -27,11 +27,11 @@
    "rust-systems": 200
   },
   "per_sphere_patterns": {
-   "system-administration": 200,
-   "data-science": 370,
    "rust-systems": 200,
-   "r-statistics": 60,
-   "programming": 99
+   "programming": 99,
+   "data-science": 370,
+   "system-administration": 200,
+   "r-statistics": 60
   },
   "per_category": {
    "data-science": {
@@ -364,16 +364,16 @@
    "rust": 200
   },
   "stem_collisions_across_spheres": {
-   "exponential_backoff": 2,
-   "circuit_breaker": 3,
-   "lru_cache": 2,
-   "skip_list": 2,
-   "token_bucket": 2,
    "dead_letter_queue": 2,
+   "lru_cache": 2,
    "consistent_hash_ring": 2,
+   "count_min_sketch": 2,
+   "exponential_backoff": 2,
    "merkle_tree": 2,
-   "bloom_filter": 2,
-   "count_min_sketch": 2
+   "skip_list": 2,
+   "circuit_breaker": 3,
+   "token_bucket": 2,
+   "bloom_filter": 2
   },
   "free_tier_patterns": 99,
   "free_tier_ids": [
@@ -514,1350 +514,126 @@
     "twins_without_ledger_row": [],
     "ledger_rows_without_twin": [],
     "source_missing": [],
-    "source_hash_drift": []
+    "source_hash_drift": [
+     "alert_manager",
+     "arg_parser",
+     "astar_pathfinding",
+     "async_task_queue",
+     "avl_tree",
+     "batch_controller",
+     "bayesian_network",
+     "binary_indexed_tree",
+     "bloom_filter",
+     "budget_allocator",
+     "bulkhead_isolator",
+     "cancellable_task_group",
+     "chunked_reader",
+     "circuit_breaker",
+     "connection_pool",
+     "connection_pool_health_checks",
+     "consistent_hash_ring",
+     "cqrs_bus",
+     "crdt_sets",
+     "csp_solver",
+     "csv_to_json",
+     "csv_validator",
+     "dead_letter_queue",
+     "decision_tree",
+     "diff_engine",
+     "distributed_lock_manager",
+     "dns_cache",
+     "event_bus",
+     "event_logger",
+     "event_sourcing_store",
+     "expression_evaluator",
+     "fenwick_tree",
+     "free_list_allocator",
+     "g_counter_crdt",
+     "sat_solver"
+    ]
    }
   },
   "validity": {
    "checked_files": 1392,
    "skipped_languages": [],
-   "valid_files": 1201,
+   "valid_files": 1381,
    "failures": [
     {
-     "id": "cqrs_bus",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "event_bus",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "event_sourcing_store",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "message_encoder",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "plugin_registry",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "saga_coordinator",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "state_machine",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "async_task_queue",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "cancellable_task_group",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "priority_queue_scheduler",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "pubsub_broker",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "reactive_signals",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "avl_tree",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "binary_indexed_tree",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "bloom_filter",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "fenwick_tree",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "interval_tree",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "kd_tree",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "merkle_tree",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "ordered_map",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "persistent_deque",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "priority_task_scheduler",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "radix_tree",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "red_black_tree",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "segment_tree",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "skip_list",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "suffix_array",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "treap",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "trie",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "union_find",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "consistent_hash_ring",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "crdt_sets",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "distributed_lock_manager",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "g_counter_crdt",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "gossip_protocol",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "quorum_consensus",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "raft_consensus",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "service_registry",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "vector_clock",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "arg_parser",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "chunked_reader",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "csv_to_json",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "csv_validator",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "diff_engine",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "ini_parser",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "log_parser",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "template_engine",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "alert_manager",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "event_logger",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "log_pattern_matcher",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "metric_aggregation_engine",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "metric_aggregator",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "metrics_formatter",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "time_series_db",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "timer_stack",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "trace_collector",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "trace_sampler",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "trace_span_collector",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "window_sampler",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "connection_pool",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "connection_pool_health_checks",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "dns_cache",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "http_retry_client",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "http_router",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "packet_parser",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "rate_limiter",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "rtt_estimator",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "url_router",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "batch_controller",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "budget_allocator",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "free_list_allocator",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "hyperloglog",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "job_scheduler",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "lru_cache",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "object_pool_allocator",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "resource_budget_allocator",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "rw_lock",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "token_bucket",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "work_stealing_queue",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "lsm_tree",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "segmented_wal",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "write_ahead_log",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "astar_pathfinding",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "bayesian_network",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "csp_solver",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "decision_tree",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "dependency_graph",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "expression_evaluator",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "minimax_game_search",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "rule_engine",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "bulkhead_isolator",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "circuit_breaker",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "dead_letter_queue",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "timeout_guard",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "capability_access",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "hotp_totp",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "secure_envelope",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "image_stats",
-     "sphere": "programming",
-     "lang": "python",
-     "layer_failed": "L2",
-     "reason": "no-asserts"
-    },
-    {
-     "id": "cqrs_bus",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/architecture/cqrs_bus.go:4:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "event_bus",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/architecture/event_bus.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "event_sourcing_store",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/architecture/event_sourcing_store.go:3:1: expected 'package', found 'var'\n"
+     "id": "flock_singleton",
+     "sphere": "system-administration",
+     "lang": "python",
+     "layer_failed": "L3",
+     "reason": "exit codes [0, 1, 0]"
     },
     {
      "id": "async_task_queue",
      "sphere": "programming",
      "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/async/async_task_queue.go:3:1: expected 'package', found 'var'\n; also L2 REJECT: no real failure paths (go scan)"
-    },
-    {
-     "id": "cancellable_task_group",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/async/cancellable_task_group.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "avl_tree",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/data_structures/avl_tree.go:3:1: expected 'package', found 'var'\n"
+     "layer_failed": "L2",
+     "reason": "no real failure paths (go scan)"
     },
     {
      "id": "binary_indexed_tree",
      "sphere": "programming",
      "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/data_structures/binary_indexed_tree.go:3:1: expected 'package', found 'var'\n; also L2 REJECT: no real failure paths (go scan)"
-    },
-    {
-     "id": "bloom_filter",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/data_structures/bloom_filter.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "fenwick_tree",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/data_structures/fenwick_tree.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "consistent_hash_ring",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/distributed/consistent_hash_ring.go:3:1: expected 'package', found 'var'\n"
+     "layer_failed": "L2",
+     "reason": "no real failure paths (go scan)"
     },
     {
      "id": "crdt_sets",
      "sphere": "programming",
      "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/distributed/crdt_sets.go:4:1: expected 'package', found 'var'\n; also L2 REJECT: no real failure paths (go scan)"
+     "layer_failed": "L2",
+     "reason": "no real failure paths (go scan)"
     },
     {
      "id": "distributed_lock_manager",
      "sphere": "programming",
      "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/distributed/distributed_lock_manager.go:3:1: expected 'package', found 'var'\n; also L2 REJECT: no real failure paths (go scan)"
-    },
-    {
-     "id": "g_counter_crdt",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/distributed/g_counter_crdt.go:3:1: expected 'package', found 'var'\n"
+     "layer_failed": "L2",
+     "reason": "no real failure paths (go scan)"
     },
     {
      "id": "arg_parser",
      "sphere": "programming",
      "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/io/arg_parser.go:3:1: expected 'package', found 'var'\n; also L2 REJECT: no real failure paths (go scan)"
-    },
-    {
-     "id": "chunked_reader",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/io/chunked_reader.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "csv_to_json",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/io/csv_to_json.go:4:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "csv_validator",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/io/csv_validator.go:3:1: expected 'package', found 'var'\n"
+     "layer_failed": "L2",
+     "reason": "no real failure paths (go scan)"
     },
     {
      "id": "diff_engine",
      "sphere": "programming",
      "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/io/diff_engine.go:3:1: expected 'package', found 'var'\n; also L2 REJECT: no real failure paths (go scan)"
-    },
-    {
-     "id": "alert_manager",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/monitoring/alert_manager.go:3:1: expected 'package', found 'var'\n"
+     "layer_failed": "L2",
+     "reason": "no real failure paths (go scan)"
     },
     {
      "id": "event_logger",
      "sphere": "programming",
      "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/monitoring/event_logger.go:3:1: expected 'package', found 'var'\n; also L2 REJECT: no real failure paths (go scan)"
-    },
-    {
-     "id": "connection_pool",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/networking/connection_pool.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "connection_pool_health_checks",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/networking/connection_pool_health_checks.go:3:1: expected 'package', found 'var'\n"
+     "layer_failed": "L2",
+     "reason": "no real failure paths (go scan)"
     },
     {
      "id": "dns_cache",
      "sphere": "programming",
      "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/networking/dns_cache.go:3:1: expected 'package', found 'var'\n; also L2 REJECT: no real failure paths (go scan)"
-    },
-    {
-     "id": "batch_controller",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/performance/batch_controller.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "budget_allocator",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/performance/budget_allocator.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "free_list_allocator",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/performance/free_list_allocator.go:3:1: expected 'package', found 'var'\n"
+     "layer_failed": "L2",
+     "reason": "no real failure paths (go scan)"
     },
     {
      "id": "astar_pathfinding",
      "sphere": "programming",
      "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/reasoning/astar_pathfinding.go:3:1: expected 'package', found 'var'\n; also L2 REJECT: no real failure paths (go scan)"
-    },
-    {
-     "id": "bayesian_network",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/reasoning/bayesian_network.go:3:1: expected 'package', found 'var'\n"
+     "layer_failed": "L2",
+     "reason": "no real failure paths (go scan)"
     },
     {
      "id": "csp_solver",
      "sphere": "programming",
      "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/reasoning/csp_solver.go:4:1: expected 'package', found 'var'\n; also L2 REJECT: no real failure paths (go scan)"
-    },
-    {
-     "id": "decision_tree",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/reasoning/decision_tree.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "expression_evaluator",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/reasoning/expression_evaluator.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "sat_solver",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/reasoning/sat_solver.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "bulkhead_isolator",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/resilience/bulkhead_isolator.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "circuit_breaker",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/resilience/circuit_breaker.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "dead_letter_queue",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/programming/resilience/dead_letter_queue.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "advisory_lock_timeout",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/advisory_lock_timeout.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "ansi_strip",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/ansi_strip.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "append_only_audit",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/append_only_audit.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "atomic_append",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/atomic_append.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "atomic_snapshot",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/atomic_snapshot.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "atomic_symlink_swap",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/atomic_symlink_swap.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "atomic_write_temp_rename",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/atomic_write_temp_rename.go:7:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "backfill_range",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/backfill_range.go:5:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "backpressure_queue",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/backpressure_queue.go:6:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "backup_catalog",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/backup_catalog.go:4:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "backup_dedup",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/backup_dedup.go:4:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "backup_encryption",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/backup_encryption.go:4:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "backup_rotation",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/backup_rotation.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "binary_presence_check",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/binary_presence_check.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "blue_green_deploy",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/blue_green_deploy.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "canary_gate",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/canary_gate.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "capability_probe",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/capability_probe.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "cas_file_update",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/cas_file_update.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "checkpoint_resume",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/checkpoint_resume.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "circuit_breaker",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/circuit_breaker.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "clock_skew_detect",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/clock_skew_detect.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "command_allowlist",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/command_allowlist.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "config_diff",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/config_diff.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "config_drift_detect",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/config_drift_detect.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "config_versioning",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/config_versioning.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "corruption_repair",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/corruption_repair.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "cow_backup",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/cow_backup.go:7:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "cpu_throttle",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/cpu_throttle.go:4:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "crash_consistent_snapshot",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/crash_consistent_snapshot.go:4:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "crash_log_capture",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/crash_log_capture.go:4:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "crash_loop_detector",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/crash_loop_detector.go:4:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "cron_expr_next_fire",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/cron_expr_next_fire.go:4:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "deadline_ttl",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/deadline_ttl.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "deadlock_timeout",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/deadlock_timeout.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "dedup_stream",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/dedup_stream.go:4:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "deplock_verify",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/deplock_verify.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "deploy_idempotency",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/deploy_idempotency.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "deps_verify",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/deps_verify.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "dir_tree_diff",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/dir_tree_diff.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "disk_full_write_guard",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/disk_full_write_guard.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "disk_space_watchdog",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/disk_space_watchdog.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "dns_resolve_check",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/dns_resolve_check.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "dotenv_parse",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/dotenv_parse.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "double_launch_block",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/double_launch_block.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "drift_compensation",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/drift_compensation.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "dryrun_installer",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/dryrun_installer.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "enforce_600_perms",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/enforce_600_perms.go:4:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "env_diff",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/env_diff.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "env_load_defaults",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/env_load_defaults.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "env_secret_load",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/env_secret_load.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "exactly_once_dedup",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/exactly_once_dedup.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "expiry_check",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/expiry_check.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "exponential_backoff",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/exponential_backoff.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "fd_leak_detector",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/fd_leak_detector.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "field_extract",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/field_extract.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "fsync_durability",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/fsync_durability.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "full_incremental_backup",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/full_incremental_backup.go:3:1: expected 'package', found 'var'\n"
-    },
-    {
-     "id": "timeout_kill",
-     "sphere": "system-administration",
-     "lang": "go",
-     "layer_failed": "L1",
-     "reason": "compile fail: go/system-administration/sysadmin/timeout_kill.go:3:1: expected 'package', found 'var'\n"
+     "layer_failed": "L2",
+     "reason": "no real failure paths (go scan)"
     },
     {
      "id": "peeking_alpha_inflation",
@@ -1865,149 +641,254 @@
      "lang": "cpp",
      "layer_failed": "COUPLING",
      "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    }
-   ],
-   "l3_stdout_notes": [
+    },
     {
-     "id": "cqrs_bus",
-     "sphere": "programming",
-     "lang": "python"
+     "id": "alert_manager",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "arg_parser",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "astar_pathfinding",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
     },
     {
      "id": "async_task_queue",
-     "sphere": "programming",
-     "lang": "python"
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
     },
     {
-     "id": "priority_queue_scheduler",
-     "sphere": "programming",
-     "lang": "python"
-    },
-    {
-     "id": "fenwick_tree",
-     "sphere": "programming",
-     "lang": "python"
-    },
-    {
-     "id": "crdt_sets",
-     "sphere": "programming",
-     "lang": "python"
-    },
-    {
-     "id": "distributed_lock_manager",
-     "sphere": "programming",
-     "lang": "python"
-    },
-    {
-     "id": "raft_consensus",
-     "sphere": "programming",
-     "lang": "python"
-    },
-    {
-     "id": "service_registry",
-     "sphere": "programming",
-     "lang": "python"
-    },
-    {
-     "id": "event_logger",
-     "sphere": "programming",
-     "lang": "python"
-    },
-    {
-     "id": "metric_aggregation_engine",
-     "sphere": "programming",
-     "lang": "python"
-    },
-    {
-     "id": "timer_stack",
-     "sphere": "programming",
-     "lang": "python"
-    },
-    {
-     "id": "trace_collector",
-     "sphere": "programming",
-     "lang": "python"
-    },
-    {
-     "id": "trace_sampler",
-     "sphere": "programming",
-     "lang": "python"
-    },
-    {
-     "id": "trace_span_collector",
-     "sphere": "programming",
-     "lang": "python"
-    },
-    {
-     "id": "connection_pool_health_checks",
-     "sphere": "programming",
-     "lang": "python"
-    },
-    {
-     "id": "http_retry_client",
-     "sphere": "programming",
-     "lang": "python"
-    },
-    {
-     "id": "rate_limiter",
-     "sphere": "programming",
-     "lang": "python"
+     "id": "avl_tree",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
     },
     {
      "id": "batch_controller",
-     "sphere": "programming",
-     "lang": "python"
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
     },
     {
-     "id": "lru_cache",
-     "sphere": "programming",
-     "lang": "python"
+     "id": "bayesian_network",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
     },
     {
-     "id": "object_pool_allocator",
-     "sphere": "programming",
-     "lang": "python"
+     "id": "binary_indexed_tree",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
     },
     {
-     "id": "work_stealing_queue",
-     "sphere": "programming",
-     "lang": "python"
+     "id": "bloom_filter",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
     },
     {
-     "id": "lsm_tree",
-     "sphere": "programming",
-     "lang": "python"
-    },
-    {
-     "id": "rule_engine",
-     "sphere": "programming",
-     "lang": "python"
+     "id": "budget_allocator",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
     },
     {
      "id": "bulkhead_isolator",
-     "sphere": "programming",
-     "lang": "python"
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "cancellable_task_group",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "chunked_reader",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "circuit_breaker",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "connection_pool",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "connection_pool_health_checks",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "consistent_hash_ring",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "cqrs_bus",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "crdt_sets",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "csp_solver",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "csv_to_json",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "csv_validator",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
     },
     {
      "id": "dead_letter_queue",
-     "sphere": "programming",
-     "lang": "python"
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
     },
     {
-     "id": "capability_access",
-     "sphere": "programming",
-     "lang": "python"
+     "id": "decision_tree",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
     },
     {
-     "id": "hotp_totp",
-     "sphere": "programming",
-     "lang": "python"
+     "id": "diff_engine",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
     },
     {
-     "id": "secure_envelope",
-     "sphere": "programming",
-     "lang": "python"
+     "id": "distributed_lock_manager",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
     },
+    {
+     "id": "dns_cache",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "event_bus",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "event_logger",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "event_sourcing_store",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "expression_evaluator",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "fenwick_tree",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "free_list_allocator",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "g_counter_crdt",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    },
+    {
+     "id": "sat_solver",
+     "sphere": "twin",
+     "lang": "go",
+     "layer_failed": "COUPLING",
+     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
+    }
+   ],
+   "l3_stdout_notes": [
     {
      "id": "inverted_index_search",
      "sphere": "data-science",
@@ -2022,9 +903,69 @@
      "id": "hot_copy",
      "sphere": "system-administration",
      "lang": "python"
+    },
+    {
+     "id": "event_bus",
+     "sphere": "programming",
+     "lang": "go"
+    },
+    {
+     "id": "async_task_queue",
+     "sphere": "programming",
+     "lang": "go"
+    },
+    {
+     "id": "fenwick_tree",
+     "sphere": "programming",
+     "lang": "go"
+    },
+    {
+     "id": "crdt_sets",
+     "sphere": "programming",
+     "lang": "go"
+    },
+    {
+     "id": "arg_parser",
+     "sphere": "programming",
+     "lang": "go"
+    },
+    {
+     "id": "alert_manager",
+     "sphere": "programming",
+     "lang": "go"
+    },
+    {
+     "id": "batch_controller",
+     "sphere": "programming",
+     "lang": "go"
+    },
+    {
+     "id": "decision_tree",
+     "sphere": "programming",
+     "lang": "go"
+    },
+    {
+     "id": "bulkhead_isolator",
+     "sphere": "programming",
+     "lang": "go"
+    },
+    {
+     "id": "circuit_breaker",
+     "sphere": "programming",
+     "lang": "go"
+    },
+    {
+     "id": "dead_letter_queue",
+     "sphere": "programming",
+     "lang": "go"
+    },
+    {
+     "id": "work_stealing_deque",
+     "sphere": "rust-systems",
+     "lang": "rust"
     }
    ],
-   "l2_warn_files": 357,
+   "l2_warn_files": 356,
    "clangxx_portability_fails": [],
    "runs_per_file": 3
   },
@@ -2037,13 +978,18 @@
    "id": "cqrs_bus",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/architecture/cqrs_bus.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-hollow",
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -2053,9 +999,12 @@
    "id": "event_bus",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/architecture/event_bus.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -2069,9 +1018,12 @@
    "id": "event_sourcing_store",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/architecture/event_sourcing_store.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "directional",
+    "eq-target",
+    "vs-truth-var"
    ],
    "l1": true,
    "l3": true,
@@ -2085,9 +1037,11 @@
    "id": "message_encoder",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/architecture/message_encoder.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
@@ -2101,9 +1055,13 @@
    "id": "plugin_registry",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/architecture/plugin_registry.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "or-escape",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -2117,9 +1075,12 @@
    "id": "saga_coordinator",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/architecture/saga_coordinator.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "directional",
+    "eq-target",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -2133,9 +1094,14 @@
    "id": "state_machine",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/architecture/state_machine.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "and-weak",
+    "directional",
+    "eq-target",
+    "len-shape",
+    "vs-truth-var"
    ],
    "l1": true,
    "l3": true,
@@ -2149,13 +1115,16 @@
    "id": "async_task_queue",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/async/async_task_queue.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "and-weak",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -2165,9 +1134,15 @@
    "id": "cancellable_task_group",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/async/cancellable_task_group.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "isinstance",
+    "len-shape",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -2181,13 +1156,16 @@
    "id": "priority_queue_scheduler",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/async/priority_queue_scheduler.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "directional",
+    "eq-target",
+    "sign-only"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -2197,9 +1175,12 @@
    "id": "pubsub_broker",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/async/pubsub_broker.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "directional",
+    "eq-target",
+    "len-shape",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -2213,9 +1194,12 @@
    "id": "reactive_signals",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/async/reactive_signals.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "and-weak",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
@@ -2229,9 +1213,12 @@
    "id": "avl_tree",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/avl_tree.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "directional",
+    "eq-target",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -2245,9 +1232,11 @@
    "id": "binary_indexed_tree",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/binary_indexed_tree.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
@@ -2261,9 +1250,14 @@
    "id": "bloom_filter",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/bloom_filter.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "len-shape",
+    "sign-only",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -2277,13 +1271,16 @@
    "id": "fenwick_tree",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/fenwick_tree.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "assert-constant",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -2293,9 +1290,12 @@
    "id": "interval_tree",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/interval_tree.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
@@ -2309,9 +1309,12 @@
    "id": "kd_tree",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/kd_tree.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "abs-recovery",
+    "assert-constant",
+    "directional",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
@@ -2325,9 +1328,11 @@
    "id": "merkle_tree",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/merkle_tree.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
@@ -2341,9 +1346,13 @@
    "id": "ordered_map",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/ordered_map.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
@@ -2357,9 +1366,14 @@
    "id": "persistent_deque",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/persistent_deque.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "len-shape",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -2373,9 +1387,14 @@
    "id": "priority_task_scheduler",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/priority_task_scheduler.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
@@ -2389,9 +1408,12 @@
    "id": "radix_tree",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/radix_tree.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "directional",
+    "eq-target",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
@@ -2405,9 +1427,13 @@
    "id": "red_black_tree",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/red_black_tree.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "bare-name",
+    "directional",
+    "eq-target",
+    "len-shape",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -2421,9 +1447,12 @@
    "id": "segment_tree",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/segment_tree.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "assert-constant",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
@@ -2437,9 +1466,12 @@
    "id": "skip_list",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/skip_list.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "directional",
+    "eq-target",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
@@ -2453,9 +1485,13 @@
    "id": "suffix_array",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/suffix_array.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "sign-only",
+    "vs-truth-var"
    ],
    "l1": true,
    "l3": true,
@@ -2469,9 +1505,15 @@
    "id": "treap",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/treap.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "unknown",
+    "vs-truth-var"
    ],
    "l1": true,
    "l3": true,
@@ -2485,9 +1527,12 @@
    "id": "trie",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/trie.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "directional",
+    "eq-target",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
@@ -2501,9 +1546,12 @@
    "id": "union_find",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/data_structures/union_find.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "assert-constant",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
@@ -2517,9 +1565,13 @@
    "id": "consistent_hash_ring",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/distributed/consistent_hash_ring.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "directional",
+    "eq-target",
+    "len-shape",
+    "membership",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -2533,13 +1585,15 @@
    "id": "crdt_sets",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/distributed/crdt_sets.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -2549,13 +1603,16 @@
    "id": "distributed_lock_manager",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/distributed/distributed_lock_manager.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "directional",
+    "eq-target",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -2565,9 +1622,12 @@
    "id": "g_counter_crdt",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/distributed/g_counter_crdt.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "assert-constant",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
@@ -2581,9 +1641,11 @@
    "id": "gossip_protocol",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/distributed/gossip_protocol.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "directional",
+    "eq-target",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
@@ -2597,9 +1659,13 @@
    "id": "quorum_consensus",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/distributed/quorum_consensus.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
@@ -2613,13 +1679,17 @@
    "id": "raft_consensus",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/distributed/raft_consensus.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "and-weak",
+    "directional",
+    "eq-target",
+    "sign-only"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -2629,13 +1699,15 @@
    "id": "service_registry",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/distributed/service_registry.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "directional",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -2645,9 +1717,13 @@
    "id": "vector_clock",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/distributed/vector_clock.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "or-escape"
    ],
    "l1": true,
    "l3": true,
@@ -2661,9 +1737,13 @@
    "id": "arg_parser",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/io/arg_parser.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "or-escape"
    ],
    "l1": true,
    "l3": true,
@@ -2677,9 +1757,12 @@
    "id": "chunked_reader",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/io/chunked_reader.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "len-shape",
+    "vs-truth-var"
    ],
    "l1": true,
    "l3": true,
@@ -2693,9 +1776,13 @@
    "id": "csv_to_json",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/io/csv_to_json.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
@@ -2709,9 +1796,13 @@
    "id": "csv_validator",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/io/csv_validator.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "and-weak",
+    "directional",
+    "eq-target",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -2725,9 +1816,12 @@
    "id": "diff_engine",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/io/diff_engine.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "directional",
+    "eq-target",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -2741,9 +1835,13 @@
    "id": "ini_parser",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/io/ini_parser.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "abs-recovery",
+    "and-recovery",
+    "assert-constant",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
@@ -2757,9 +1855,11 @@
    "id": "log_parser",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/io/log_parser.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
@@ -2773,9 +1873,12 @@
    "id": "template_engine",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/io/template_engine.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -2789,9 +1892,10 @@
    "id": "alert_manager",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/monitoring/alert_manager.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
@@ -2805,13 +1909,18 @@
    "id": "event_logger",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/monitoring/event_logger.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "and-weak",
+    "directional",
+    "eq-target",
+    "len-shape",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -2821,9 +1930,12 @@
    "id": "log_pattern_matcher",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/monitoring/log_pattern_matcher.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
@@ -2837,13 +1949,17 @@
    "id": "metric_aggregation_engine",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/monitoring/metric_aggregation_engine.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "abs-recovery",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "sign-only"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -2853,9 +1969,12 @@
    "id": "metric_aggregator",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/monitoring/metric_aggregator.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "assert-constant",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
@@ -2869,9 +1988,13 @@
    "id": "metrics_formatter",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/monitoring/metrics_formatter.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
@@ -2885,9 +2008,13 @@
    "id": "time_series_db",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/monitoring/time_series_db.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "len-shape",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -2901,13 +2028,19 @@
    "id": "timer_stack",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/monitoring/timer_stack.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "sign-only",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -2917,13 +2050,17 @@
    "id": "trace_collector",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/monitoring/trace_collector.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "directional",
+    "eq-target",
+    "len-shape",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -2933,13 +2070,17 @@
    "id": "trace_sampler",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/monitoring/trace_sampler.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "isinstance",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -2949,13 +2090,17 @@
    "id": "trace_span_collector",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/monitoring/trace_span_collector.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "directional",
+    "eq-target",
+    "len-shape",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -2965,9 +2110,15 @@
    "id": "window_sampler",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/monitoring/window_sampler.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "and-weak",
+    "assert-constant",
+    "bare-name",
+    "directional",
+    "eq-target",
+    "sign-only"
    ],
    "l1": true,
    "l3": true,
@@ -2981,9 +2132,13 @@
    "id": "connection_pool",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/networking/connection_pool.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "and-weak",
+    "directional",
+    "len-shape",
+    "sign-only"
    ],
    "l1": true,
    "l3": true,
@@ -2997,13 +2152,18 @@
    "id": "connection_pool_health_checks",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/networking/connection_pool_health_checks.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "or-escape",
+    "sign-only",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -3013,9 +2173,12 @@
    "id": "dns_cache",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/networking/dns_cache.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "directional",
+    "eq-target",
+    "sign-only"
    ],
    "l1": true,
    "l3": true,
@@ -3029,13 +2192,18 @@
    "id": "http_retry_client",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/networking/http_retry_client.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "sign-only",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -3045,9 +2213,12 @@
    "id": "http_router",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/networking/http_router.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "directional",
+    "eq-target",
+    "membership"
    ],
    "l1": true,
    "l3": true,
@@ -3061,9 +2232,13 @@
    "id": "packet_parser",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/networking/packet_parser.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
@@ -3077,13 +2252,17 @@
    "id": "rate_limiter",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/networking/rate_limiter.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "abs-recovery",
+    "and-recovery",
+    "directional",
+    "eq-target",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -3093,9 +2272,13 @@
    "id": "rtt_estimator",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/networking/rtt_estimator.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "abs-recovery",
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
@@ -3109,9 +2292,11 @@
    "id": "url_router",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/networking/url_router.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
@@ -3125,13 +2310,18 @@
    "id": "batch_controller",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/performance/batch_controller.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "sign-only",
+    "vs-truth-var"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -3141,9 +2331,13 @@
    "id": "budget_allocator",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/performance/budget_allocator.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "directional",
+    "eq-target",
+    "len-shape",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -3157,9 +2351,13 @@
    "id": "free_list_allocator",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/performance/free_list_allocator.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "sign-only"
    ],
    "l1": true,
    "l3": true,
@@ -3173,9 +2371,11 @@
    "id": "hyperloglog",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/performance/hyperloglog.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "abs-recovery",
+    "assert-constant",
+    "directional"
    ],
    "l1": true,
    "l3": true,
@@ -3189,9 +2389,12 @@
    "id": "job_scheduler",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/performance/job_scheduler.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "vs-truth-var"
    ],
    "l1": true,
    "l3": true,
@@ -3205,13 +2408,15 @@
    "id": "lru_cache",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/performance/lru_cache.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -3221,13 +2426,17 @@
    "id": "object_pool_allocator",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/performance/object_pool_allocator.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -3237,9 +2446,12 @@
    "id": "resource_budget_allocator",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/performance/resource_budget_allocator.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "sign-only"
    ],
    "l1": true,
    "l3": true,
@@ -3253,9 +2465,12 @@
    "id": "rw_lock",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/performance/rw_lock.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "directional",
+    "eq-target",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -3269,9 +2484,14 @@
    "id": "token_bucket",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/performance/token_bucket.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "abs-recovery",
+    "and-weak",
+    "assert-constant",
+    "bare-name",
+    "directional",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -3285,13 +2505,16 @@
    "id": "work_stealing_queue",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/performance/work_stealing_queue.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "directional",
+    "eq-target",
+    "sign-only"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -3301,13 +2524,15 @@
    "id": "lsm_tree",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/persistence/lsm_tree.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "directional",
+    "eq-target",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -3317,9 +2542,11 @@
    "id": "segmented_wal",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/persistence/segmented_wal.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "directional",
+    "eq-target",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
@@ -3333,9 +2560,12 @@
    "id": "write_ahead_log",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/persistence/write_ahead_log.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "directional",
+    "eq-target",
+    "sign-only"
    ],
    "l1": true,
    "l3": true,
@@ -3349,9 +2579,13 @@
    "id": "astar_pathfinding",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/reasoning/astar_pathfinding.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "unknown",
+    "vs-truth-var"
    ],
    "l1": true,
    "l3": true,
@@ -3365,9 +2599,10 @@
    "id": "bayesian_network",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/reasoning/bayesian_network.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "abs-recovery",
+    "directional"
    ],
    "l1": true,
    "l3": true,
@@ -3381,9 +2616,13 @@
    "id": "csp_solver",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/reasoning/csp_solver.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "all-hollow",
+    "and-weak",
+    "directional",
+    "eq-target",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
@@ -3397,9 +2636,12 @@
    "id": "decision_tree",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/reasoning/decision_tree.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "vs-truth-var"
    ],
    "l1": true,
    "l3": true,
@@ -3413,9 +2655,13 @@
    "id": "dependency_graph",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/reasoning/dependency_graph.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "sign-only"
    ],
    "l1": true,
    "l3": true,
@@ -3429,9 +2675,13 @@
    "id": "expression_evaluator",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/reasoning/expression_evaluator.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "abs-recovery",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "vs-truth-var"
    ],
    "l1": true,
    "l3": true,
@@ -3445,9 +2695,12 @@
    "id": "minimax_game_search",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/reasoning/minimax_game_search.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "directional",
+    "eq-target",
+    "sign-only"
    ],
    "l1": true,
    "l3": true,
@@ -3461,13 +2714,18 @@
    "id": "rule_engine",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/reasoning/rule_engine.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-hollow",
+    "directional",
+    "eq-target",
+    "len-shape",
+    "sign-only",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -3477,8 +2735,11 @@
    "id": "sat_solver",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/reasoning/sat_solver.py",
    "twin": false,
-   "l2": "WARN",
+   "l2": "PASS",
    "l2_detail": [
+    "and-weak",
+    "directional",
+    "eq-target",
     "unknown"
    ],
    "l1": true,
@@ -3493,13 +2754,17 @@
    "id": "bulkhead_isolator",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/resilience/bulkhead_isolator.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "sign-only"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -3509,9 +2774,14 @@
    "id": "circuit_breaker",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/resilience/circuit_breaker.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "sign-only",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -3525,13 +2795,18 @@
    "id": "dead_letter_queue",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/resilience/dead_letter_queue.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "and-weak",
+    "directional",
+    "eq-target",
+    "len-shape",
+    "sign-only"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -3541,9 +2816,12 @@
    "id": "timeout_guard",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/resilience/timeout_guard.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "abs-recovery",
+    "assert-constant",
+    "bare-name",
+    "directional"
    ],
    "l1": true,
    "l3": true,
@@ -3557,13 +2835,16 @@
    "id": "capability_access",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/security/capability_access.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -3573,13 +2854,17 @@
    "id": "hotp_totp",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/security/hotp_totp.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "directional",
+    "len-shape",
+    "unknown",
+    "vs-truth-var"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -3589,13 +2874,17 @@
    "id": "secure_envelope",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/security/secure_envelope.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-weak",
+    "assert-constant",
+    "directional",
+    "eq-target",
+    "or-escape"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -3605,9 +2894,16 @@
    "id": "image_stats",
    "path": "/Users/s_dio/aura-pattern-library/python/programming/vision/image_stats.py",
    "twin": false,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no-asserts"
+    "and-recovery",
+    "and-weak",
+    "directional",
+    "eq-target",
+    "len-shape",
+    "or-escape",
+    "sign-only",
+    "unknown"
    ],
    "l1": true,
    "l3": true,
@@ -10263,10 +9559,10 @@
     "unknown"
    ],
    "l1": true,
-   "l3": true,
+   "l3": false,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": ""
+   "detail": "exit codes [0, 1, 0]"
   },
   {
    "sphere": "system-administration",
@@ -20259,11 +19555,11 @@
    "l2_detail": [
     "3 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/architecture/cqrs_bus.go:4:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20275,11 +19571,11 @@
    "l2_detail": [
     "6 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
-   "l3_note": false,
+   "l1": true,
+   "l3": true,
+   "l3_note": true,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/architecture/event_bus.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20291,11 +19587,11 @@
    "l2_detail": [
     "4 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/architecture/event_sourcing_store.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20307,11 +19603,11 @@
    "l2_detail": [
     "no real failure paths (go scan)"
    ],
-   "l1": false,
-   "l3": null,
-   "l3_note": false,
+   "l1": true,
+   "l3": true,
+   "l3_note": true,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/async/async_task_queue.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20323,11 +19619,11 @@
    "l2_detail": [
     "7 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/async/cancellable_task_group.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20339,11 +19635,11 @@
    "l2_detail": [
     "2 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/data_structures/avl_tree.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20355,11 +19651,11 @@
    "l2_detail": [
     "no real failure paths (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/data_structures/binary_indexed_tree.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20371,11 +19667,11 @@
    "l2_detail": [
     "7 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/data_structures/bloom_filter.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20387,11 +19683,11 @@
    "l2_detail": [
     "3 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
-   "l3_note": false,
+   "l1": true,
+   "l3": true,
+   "l3_note": true,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/data_structures/fenwick_tree.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20403,11 +19699,11 @@
    "l2_detail": [
     "2 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/distributed/consistent_hash_ring.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20419,11 +19715,11 @@
    "l2_detail": [
     "no real failure paths (go scan)"
    ],
-   "l1": false,
-   "l3": null,
-   "l3_note": false,
+   "l1": true,
+   "l3": true,
+   "l3_note": true,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/distributed/crdt_sets.go:4:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20435,11 +19731,11 @@
    "l2_detail": [
     "no real failure paths (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/distributed/distributed_lock_manager.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20451,11 +19747,11 @@
    "l2_detail": [
     "2 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/distributed/g_counter_crdt.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20467,11 +19763,11 @@
    "l2_detail": [
     "no real failure paths (go scan)"
    ],
-   "l1": false,
-   "l3": null,
-   "l3_note": false,
+   "l1": true,
+   "l3": true,
+   "l3_note": true,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/io/arg_parser.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20483,11 +19779,11 @@
    "l2_detail": [
     "7 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/io/chunked_reader.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20499,11 +19795,11 @@
    "l2_detail": [
     "6 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/io/csv_to_json.go:4:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20515,11 +19811,11 @@
    "l2_detail": [
     "1 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/io/csv_validator.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20531,11 +19827,11 @@
    "l2_detail": [
     "no real failure paths (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/io/diff_engine.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20547,11 +19843,11 @@
    "l2_detail": [
     "6 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
-   "l3_note": false,
+   "l1": true,
+   "l3": true,
+   "l3_note": true,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/monitoring/alert_manager.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20563,11 +19859,11 @@
    "l2_detail": [
     "no real failure paths (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/monitoring/event_logger.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20579,11 +19875,11 @@
    "l2_detail": [
     "1 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/networking/connection_pool.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20595,11 +19891,11 @@
    "l2_detail": [
     "3 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/networking/connection_pool_health_checks.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20611,11 +19907,11 @@
    "l2_detail": [
     "no real failure paths (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/networking/dns_cache.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20627,11 +19923,11 @@
    "l2_detail": [
     "2 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
-   "l3_note": false,
+   "l1": true,
+   "l3": true,
+   "l3_note": true,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/performance/batch_controller.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20643,11 +19939,11 @@
    "l2_detail": [
     "2 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/performance/budget_allocator.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20659,11 +19955,11 @@
    "l2_detail": [
     "5 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/performance/free_list_allocator.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20675,11 +19971,11 @@
    "l2_detail": [
     "no real failure paths (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/reasoning/astar_pathfinding.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20691,11 +19987,11 @@
    "l2_detail": [
     "5 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/reasoning/bayesian_network.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20707,11 +20003,11 @@
    "l2_detail": [
     "no real failure paths (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/reasoning/csp_solver.go:4:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20723,11 +20019,11 @@
    "l2_detail": [
     "4 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
-   "l3_note": false,
+   "l1": true,
+   "l3": true,
+   "l3_note": true,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/reasoning/decision_tree.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20739,11 +20035,11 @@
    "l2_detail": [
     "4 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/reasoning/expression_evaluator.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20755,11 +20051,11 @@
    "l2_detail": [
     "7 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/reasoning/sat_solver.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20771,11 +20067,11 @@
    "l2_detail": [
     "2 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
-   "l3_note": false,
+   "l1": true,
+   "l3": true,
+   "l3_note": true,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/resilience/bulkhead_isolator.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20787,11 +20083,11 @@
    "l2_detail": [
     "3 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
-   "l3_note": false,
+   "l1": true,
+   "l3": true,
+   "l3_note": true,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/resilience/circuit_breaker.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "programming",
@@ -20803,11 +20099,11 @@
    "l2_detail": [
     "1 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
-   "l3_note": false,
+   "l1": true,
+   "l3": true,
+   "l3_note": true,
    "clangxx_ok": null,
-   "detail": "compile fail: go/programming/resilience/dead_letter_queue.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -20819,11 +20115,11 @@
    "l2_detail": [
     "14 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/advisory_lock_timeout.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -20835,11 +20131,11 @@
    "l2_detail": [
     "17 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/ansi_strip.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -20851,11 +20147,11 @@
    "l2_detail": [
     "9 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/append_only_audit.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -20867,11 +20163,11 @@
    "l2_detail": [
     "12 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/atomic_append.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -20883,11 +20179,11 @@
    "l2_detail": [
     "11 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/atomic_snapshot.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -20899,11 +20195,11 @@
    "l2_detail": [
     "13 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/atomic_symlink_swap.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -20915,11 +20211,11 @@
    "l2_detail": [
     "19 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/atomic_write_temp_rename.go:7:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -20931,11 +20227,11 @@
    "l2_detail": [
     "14 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/backfill_range.go:5:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -20947,11 +20243,11 @@
    "l2_detail": [
     "3 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/backpressure_queue.go:6:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -20963,11 +20259,11 @@
    "l2_detail": [
     "24 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/backup_catalog.go:4:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -20979,11 +20275,11 @@
    "l2_detail": [
     "8 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/backup_dedup.go:4:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -20995,11 +20291,11 @@
    "l2_detail": [
     "7 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/backup_encryption.go:4:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21011,11 +20307,11 @@
    "l2_detail": [
     "9 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/backup_rotation.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21027,11 +20323,11 @@
    "l2_detail": [
     "8 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/binary_presence_check.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21043,11 +20339,11 @@
    "l2_detail": [
     "21 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/blue_green_deploy.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21059,11 +20355,11 @@
    "l2_detail": [
     "1 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/canary_gate.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21075,11 +20371,11 @@
    "l2_detail": [
     "8 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/capability_probe.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21091,11 +20387,11 @@
    "l2_detail": [
     "10 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/cas_file_update.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21107,11 +20403,11 @@
    "l2_detail": [
     "1 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/checkpoint_resume.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21123,11 +20419,11 @@
    "l2_detail": [
     "3 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/circuit_breaker.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21139,11 +20435,11 @@
    "l2_detail": [
     "13 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/clock_skew_detect.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21155,11 +20451,11 @@
    "l2_detail": [
     "11 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/command_allowlist.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21171,11 +20467,11 @@
    "l2_detail": [
     "15 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/config_diff.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21187,11 +20483,11 @@
    "l2_detail": [
     "20 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/config_drift_detect.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21203,11 +20499,11 @@
    "l2_detail": [
     "21 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/config_versioning.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21219,11 +20515,11 @@
    "l2_detail": [
     "3 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/corruption_repair.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21235,11 +20531,11 @@
    "l2_detail": [
     "16 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/cow_backup.go:7:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21251,11 +20547,11 @@
    "l2_detail": [
     "3 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/cpu_throttle.go:4:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21267,11 +20563,11 @@
    "l2_detail": [
     "11 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/crash_consistent_snapshot.go:4:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21283,11 +20579,11 @@
    "l2_detail": [
     "10 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/crash_log_capture.go:4:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21299,11 +20595,11 @@
    "l2_detail": [
     "3 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/crash_loop_detector.go:4:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21315,11 +20611,11 @@
    "l2_detail": [
     "9 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/cron_expr_next_fire.go:4:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21331,11 +20627,11 @@
    "l2_detail": [
     "10 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/deadline_ttl.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21347,11 +20643,11 @@
    "l2_detail": [
     "1 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/deadlock_timeout.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21363,11 +20659,11 @@
    "l2_detail": [
     "14 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/dedup_stream.go:4:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21379,11 +20675,11 @@
    "l2_detail": [
     "16 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/deplock_verify.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21395,11 +20691,11 @@
    "l2_detail": [
     "19 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/deploy_idempotency.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21411,11 +20707,11 @@
    "l2_detail": [
     "6 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/deps_verify.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21427,11 +20723,11 @@
    "l2_detail": [
     "27 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/dir_tree_diff.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21443,11 +20739,11 @@
    "l2_detail": [
     "26 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/disk_full_write_guard.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21459,11 +20755,11 @@
    "l2_detail": [
     "5 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/disk_space_watchdog.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21475,11 +20771,11 @@
    "l2_detail": [
     "5 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/dns_resolve_check.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21491,11 +20787,11 @@
    "l2_detail": [
     "25 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/dotenv_parse.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21507,11 +20803,11 @@
    "l2_detail": [
     "12 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/double_launch_block.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21523,11 +20819,11 @@
    "l2_detail": [
     "6 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/drift_compensation.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21539,11 +20835,11 @@
    "l2_detail": [
     "10 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/dryrun_installer.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21555,11 +20851,11 @@
    "l2_detail": [
     "7 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/enforce_600_perms.go:4:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21571,11 +20867,11 @@
    "l2_detail": [
     "8 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/env_diff.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21587,11 +20883,11 @@
    "l2_detail": [
     "9 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/env_load_defaults.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21603,11 +20899,11 @@
    "l2_detail": [
     "10 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/env_secret_load.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21619,11 +20915,11 @@
    "l2_detail": [
     "17 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/exactly_once_dedup.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21635,11 +20931,11 @@
    "l2_detail": [
     "5 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/expiry_check.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21651,11 +20947,11 @@
    "l2_detail": [
     "5 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/exponential_backoff.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21667,11 +20963,11 @@
    "l2_detail": [
     "4 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/fd_leak_detector.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21683,11 +20979,11 @@
    "l2_detail": [
     "11 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/field_extract.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21699,11 +20995,11 @@
    "l2_detail": [
     "11 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/fsync_durability.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21715,11 +21011,11 @@
    "l2_detail": [
     "9 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/full_incremental_backup.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -21731,11 +21027,11 @@
    "l2_detail": [
     "12 failure path(s) (go scan)"
    ],
-   "l1": false,
-   "l3": null,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "compile fail: go/system-administration/sysadmin/timeout_kill.go:3:1: expected 'package', found 'var'\n"
+   "detail": ""
   },
   {
    "sphere": "rust-systems",
@@ -22741,7 +22037,7 @@
    ],
    "l1": true,
    "l3": true,
-   "l3_note": false,
+   "l3_note": true,
    "clangxx_ok": null,
    "detail": ""
   },

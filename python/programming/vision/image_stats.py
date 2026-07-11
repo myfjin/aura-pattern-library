@@ -78,7 +78,10 @@ class ImageStats:
         if not 0 <= percentile <= 100:
             raise ValueError("Percentile must be between 0 and 100")
             
-        target_count = (percentile / 100.0) * self.total_pixels
+        # At least 1 pixel must be covered: percentile 0 means "the smallest
+        # intensity present", not absolute 0 (cum_hist[0] >= 0 was trivially
+        # true, so percentile 0 always answered 0 even for bright images).
+        target_count = max((percentile / 100.0) * self.total_pixels, 1)
         for i in range(len(self.cumulative_histogram)):
             if self.cumulative_histogram[i] >= target_count:
                 return i
@@ -244,54 +247,57 @@ def _visualize_image(pixels: List[int], width: int = 64, height: int = 64, title
 
 
 def main() -> None:
-    """Demonstrate the contrast stretcher functionality."""
-    print("Histogram-based Image Contrast Stretcher Demo")
-    print("=" * 50)
-    
-    # Create test image
-    print("Creating test image...")
-    original_pixels = _create_test_image(64, 64)
-    
-    # Show original image statistics
-    print("\nOriginal Image Statistics:")
-    original_stats = ImageStats(original_pixels)
-    _print_histogram_stats(original_stats)
-    
-    # Visualize original image
-    _visualize_image(original_pixels, 64, 64, "Original Image")
-    
-    # Apply contrast stretching
-    print("\nApplying contrast stretching (1% - 99% clipping)...")
-    stretcher = ContrastStretcher(min_percentile=1.0, max_percentile=99.0)
-    stretched_pixels = stretcher.process_image(original_pixels)
-    
-    # Show results
-    print(f"\nContrast stretching applied:")
-    print(f"  Original range: {stretcher.min_val} - {stretcher.max_val}")
-    print(f"  Stretched to: 0 - {stretcher.max_value}")
-    
-    # Show stretched image statistics
-    print("\nStretched Image Statistics:")
-    stretched_stats = ImageStats(stretched_pixels)
-    _print_histogram_stats(stretched_stats)
-    
-    # Visualize stretched image
-    _visualize_image(stretched_pixels, 64, 64, "Stretched Image")
-    
-    # Demonstrate different stretching parameters
-    print("\n\nTesting different stretching parameters:")
-    test_params = [
-        (0.5, 99.5, "Aggressive stretching (0.5%-99.5%)"),
-        (5.0, 95.0, "Moderate stretching (5%-95%)"),
-        (0.0, 100.0, "No clipping (0%-100%)")
-    ]
-    
-    for min_p, max_p, description in test_params:
-        print(f"\n{description}:")
-        test_stretcher = ContrastStretcher(min_percentile=min_p, max_percentile=max_p)
-        test_pixels = test_stretcher.process_image(original_pixels)
-        print(f"  Range mapped from {test_stretcher.min_val}-{test_stretcher.max_val} to 0-{test_stretcher.max_value}")
-        _visualize_image(test_pixels, 64, 64, f"Result")
+    """Self-test: histogram exact on a planted image, stretch maps a narrow
+    band to the full range, monotonicity preserved, degenerate input safe."""
+    # Planted image: 100 pixels of value 50, 200 of 100, 100 of 150.
+    pixels = [50] * 100 + [100] * 200 + [150] * 100
+    stats = ImageStats(pixels)
+    assert stats.total_pixels == 400
+    assert stats.histogram[50] == 100 and stats.histogram[100] == 200 \
+        and stats.histogram[150] == 100, "histogram counts wrong"
+    assert sum(stats.histogram) == 400, "histogram must account for every pixel"
+    assert stats.histogram[0] == 0 and stats.histogram[255] == 0
+
+    # No-clip stretch of the band [50,150] must use the FULL output range:
+    # 50→0, 150→255, and 100 (the midpoint) lands mid-range.
+    stretcher = ContrastStretcher(min_percentile=0.0, max_percentile=100.0)
+    out = stretcher.process_image(pixels)
+    assert stretcher.min_val == 50 and stretcher.max_val == 150, \
+        f"detected range wrong: {stretcher.min_val}-{stretcher.max_val}"
+    mapped = sorted(set(out))
+    assert mapped[0] == 0, f"lowest band value must map to 0, got {mapped[0]}"
+    assert mapped[-1] == 255, f"highest band value must map to 255, got {mapped[-1]}"
+    assert 120 <= mapped[1] <= 135, f"midpoint must land mid-range, got {mapped[1]}"
+    assert len(out) == 400, "stretch changed the pixel count"
+
+    # Monotonic: order of intensities is preserved on a gradient.
+    gradient = _create_test_image(64, 64)
+    g_out = ContrastStretcher(1.0, 99.0).process_image(gradient)
+    by_input = {}
+    for src, dst in zip(gradient, g_out):
+        by_input.setdefault(src, dst)
+    keys = sorted(by_input)
+    assert all(by_input[a] <= by_input[b] for a, b in zip(keys, keys[1:])), \
+        "contrast stretch broke intensity ordering"
+    # Gradient already spans 0..255, so stretching keeps the extremes.
+    assert min(g_out) == 0 and max(g_out) == 255
+
+    # Percentile clipping: with 1%-99%, outlier singletons get clipped
+    # to the range bounds instead of compressing everyone else.
+    with_outliers = [0] + [128] * 998 + [255]
+    clip = ContrastStretcher(min_percentile=1.0, max_percentile=99.0)
+    c_out = clip.process_image(with_outliers)
+    assert clip.min_val == 128 and clip.max_val == 128 or clip.min_val <= 128 <= clip.max_val, \
+        f"percentile range should center on the mass: {clip.min_val}-{clip.max_val}"
+    assert all(0 <= p <= 255 for p in c_out), "output escaped [0,255]"
+
+    # Degenerate: a flat image must not divide by zero.
+    flat_out = ContrastStretcher(0.0, 100.0).process_image([77] * 50)
+    assert len(flat_out) == 50
+    assert all(0 <= p <= 255 for p in flat_out), "flat image produced out-of-range values"
+
+    print("image_stats: histogram 100/200/100 exact, band [50,150]→[0,255] with "
+          "midpoint centered, gradient monotone, flat image safe — PASS")
 
 
 if __name__ == "__main__":

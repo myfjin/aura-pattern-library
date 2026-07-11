@@ -119,9 +119,12 @@ class HashRing:
         if node_id not in self.nodes:
             raise KeyError(f"Node '{node_id}' not found in ring")
             
-        # Remove virtual nodes
+        # Remove virtual nodes, then rebuild the hash index from what
+        # remains. (The former code filtered the ring FIRST and then looked
+        # for the removed node in the filtered ring — never true, so stale
+        # hashes stayed behind and keys landing on them resolved to None.)
         self.ring = [vn for vn in self.ring if vn.node_id != node_id]
-        self.sorted_hashes = [h for h in self.sorted_hashes if not any(vn.hash_value == h and vn.node_id == node_id for vn in self.ring)]
+        self.sorted_hashes = sorted(vn.hash_value for vn in self.ring)
         
         # Remove from nodes dict
         del self.nodes[node_id]
@@ -173,81 +176,63 @@ class HashRing:
 
 
 def main():
-    """Demo of the consistent hash ring with 100 keys distributed across nodes."""
-    # Create a hash ring
+    """Self-test: THE consistent-hashing claims, measured — stable mapping,
+    bounded movement on add (only keys moving TO the new node), total
+    redistribution of a removed node's keys, rough balance."""
     ring = HashRing(virtual_nodes_per_physical_node=40)
-    
-    # Add nodes
-    nodes = ["node1.example.com", "node2.example.com", "node3.example.com"]
+    nodes = ["node1", "node2", "node3"]
     for node in nodes:
-        ring.add_node(node, {"host": node, "port": 8080})
-    
-    print("Hash Ring Demo")
-    print("=" * 50)
-    print(f"Created ring with {len(ring.ring)} virtual nodes")
-    print(f"Physical nodes: {list(ring.nodes.keys())}")
-    print()
-    
-    # Distribute 100 keys
-    keys = [f"key_{i}" for i in range(100)]
-    distribution: Dict[str, int] = {}
-    
-    print("Key Distribution:")
-    print("-" * 30)
-    
-    for key in keys:
-        node = ring.get_node(key)
-        if node:
-            distribution[node] = distribution.get(node, 0) + 1
-            if len(key) <= 10:  # Only show first few keys for brevity
-                print(f"{key:<15} -> {node}")
-    
-    print()
-    print("Distribution Summary:")
-    print("-" * 30)
-    for node, count in distribution.items():
-        percentage = (count / len(keys)) * 100
-        print(f"{node:<20}: {count:>3} keys ({percentage:>5.1f}%)")
-    
-    # Test adding a node
-    print()
-    print("Adding node4.example.com...")
-    ring.add_node("node4.example.com", {"host": "node4.example.com", "port": 8080})
-    
-    new_distribution: Dict[str, int] = {}
-    for key in keys:
-        node = ring.get_node(key)
-        if node:
-            new_distribution[node] = new_distribution.get(node, 0) + 1
-    
-    print("New Distribution Summary:")
-    print("-" * 30)
-    for node, count in new_distribution.items():
-        percentage = (count / len(keys)) * 100
-        print(f"{node:<20}: {count:>3} keys ({percentage:>5.1f}%)")
-    
-    # Show how many keys moved
-    print()
-    print("Keys that moved after adding node4:")
-    print("-" * 40)
-    moved_count = 0
-    for key in keys[:20]:  # Check first 20 keys for demo
-        old_node = None
-        for node, count in distribution.items():
-            # This is approximate - in a real implementation we'd track actual assignments
-            key_hash = ring._hash(key)
-            # Simplified check for demo purposes
-            if key_hash % len(distribution) == list(distribution.keys()).index(node):
-                old_node = node
-                break
-        
-        new_node = ring.get_node(key)
-        if old_node and new_node and old_node != new_node:
-            moved_count += 1
-            print(f"{key:<15}: {old_node} -> {new_node}")
-    
-    print(f"\nTotal keys that moved (approx): {moved_count} out of {len(keys)}")
-    print(f"Efficiency: {(1 - moved_count/len(keys))*100:.1f}% of keys stayed in place")
+        ring.add_node(node, {"host": node})
+    assert len(ring.ring) == 120, f"3 nodes x 40 vnodes must be 120, got {len(ring.ring)}"
+
+    keys = [f"key_{i}" for i in range(1000)]
+
+    # Deterministic, total, stable mapping.
+    before = {k: ring.get_node(k) for k in keys}
+    assert all(v in nodes for v in before.values()), "key mapped to a ghost node"
+    assert before == {k: ring.get_node(k) for k in keys}, "mapping not stable"
+
+    # Rough balance: with 40 vnodes each, every node holds a sane share.
+    counts = {n: sum(1 for v in before.values() if v == n) for n in nodes}
+    assert sum(counts.values()) == 1000
+    assert all(150 <= c <= 550 for c in counts.values()), \
+        f"distribution badly skewed: {counts}"
+
+    # THE CONSISTENCY CLAIM: adding a node moves keys ONLY onto the new
+    # node — no key may move between two old nodes — and the moved share
+    # is near 1/4 (bounded well below a full reshuffle).
+    ring.add_node("node4", {"host": "node4"})
+    after = {k: ring.get_node(k) for k in keys}
+    moved = {k for k in keys if before[k] != after[k]}
+    illegal = [k for k in moved if after[k] != "node4"]
+    assert illegal == [], \
+        f"{len(illegal)} keys moved between OLD nodes (consistency broken)"
+    assert 0 < len(moved) < 500, \
+        f"adding 1 of 4 nodes should move ~250/1000 keys, moved {len(moved)}"
+
+    # Removing the node hands its keys back — and ONLY its keys move.
+    ring.remove_node("node4")
+    restored = {k: ring.get_node(k) for k in keys}
+    assert restored == before, \
+        "remove(add(ring)) must restore the exact original mapping"
+
+    # Removing an original node: its keys redistribute, others stay put.
+    ring.remove_node("node2")
+    final = {k: ring.get_node(k) for k in keys}
+    for k in keys:
+        if before[k] != "node2":
+            assert final[k] == before[k], \
+                f"key {k} moved although its node was not removed"
+        else:
+            assert final[k] in ("node1", "node3"), f"orphaned key {k} -> {final[k]}"
+    assert counts["node2"] == sum(1 for k in keys if before[k] == "node2")
+
+    # Empty ring answers honestly.
+    empty = HashRing()
+    assert empty.get_node("anything") is None, "empty ring invented a node"
+
+    print(f"consistent_hash_ring: 1000 keys stable, balance {sorted(counts.values())}, "
+          f"add moved {len(moved)} (all to node4), remove restored exactly — PASS")
 
 
 if __name__ == "__main__":

@@ -253,83 +253,72 @@ def solve_sat(formula: Formula) -> Optional[Dict[int, bool]]:
     return dpll(formula, {})
 
 
+def _brute_force_sat(clauses_spec, n_vars):
+    """Exhaustive truth-table oracle: is the formula satisfiable at all?"""
+    from itertools import product
+    for bits in product([False, True], repeat=n_vars):
+        assignment = {v + 1: bits[v] for v in range(n_vars)}
+        if all(any(assignment[var] == pol for var, pol in clause)
+               for clause in clauses_spec):
+            return True
+    return False
+
+
+def _build(clauses_spec):
+    return Formula([Clause([Literal(v, p) for v, p in c]) for c in clauses_spec])
+
+
 def main():
-    """Demo of the SAT solver with several test cases."""
-    
-    # Test case 1: Satisfiable formula (A ∨ B) ∧ (¬A ∨ C) ∧ (¬B ∨ ¬C)
-    # Solution: A=True, B=False, C=True
-    clause1 = Clause([Literal(1, True), Literal(2, True)])    # (A ∨ B)
-    clause2 = Clause([Literal(1, False), Literal(3, True)])   # (¬A ∨ C)
-    clause3 = Clause([Literal(2, False), Literal(3, False)])  # (¬B ∨ ¬C)
-    formula1 = Formula([clause1, clause2, clause3])
-    
-    print("Test case 1: (A ∨ B) ∧ (¬A ∨ C) ∧ (¬B ∨ ¬C)")
-    solution1 = solve_sat(formula1)
-    if solution1:
-        print(f"Satisfiable. Solution: {solution1}")
-        # Verify solution
-        assert formula1.is_satisfied(solution1)
-    else:
-        print("Unsatisfiable")
-    print()
-    
-    # Test case 2: Unsatisfiable formula (A) ∧ (¬A)
-    clause4 = Clause([Literal(1, True)])   # (A)
-    clause5 = Clause([Literal(1, False)])  # (¬A)
-    formula2 = Formula([clause4, clause5])
-    
-    print("Test case 2: (A) ∧ (¬A)")
-    solution2 = solve_sat(formula2)
-    if solution2:
-        print(f"Satisfiable. Solution: {solution2}")
-    else:
-        print("Unsatisfiable")
-    print()
-    
-    # Test case 3: Satisfiable formula with unit propagation (A) ∧ (¬A ∨ B) ∧ (¬B ∨ C)
-    clause6 = Clause([Literal(1, True)])           # (A)
-    clause7 = Clause([Literal(1, False), Literal(2, True)])   # (¬A ∨ B)
-    clause8 = Clause([Literal(2, False), Literal(3, True)])   # (¬B ∨ C)
-    formula3 = Formula([clause6, clause7, clause8])
-    
-    print("Test case 3: (A) ∧ (¬A ∨ B) ∧ (¬B ∨ C)")
-    solution3 = solve_sat(formula3)
-    if solution3:
-        print(f"Satisfiable. Solution: {solution3}")
-        # Verify solution
-        assert formula3.is_satisfied(solution3)
-    else:
-        print("Unsatisfiable")
-    print()
-    
-    # Test case 4: Satisfiable formula with pure literals (A ∨ B) ∧ (A ∨ C) ∧ (B ∨ C)
-    clause9 = Clause([Literal(1, True), Literal(2, True)])   # (A ∨ B)
-    clause10 = Clause([Literal(1, True), Literal(3, True)])  # (A ∨ C)
-    clause11 = Clause([Literal(2, True), Literal(3, True)])  # (B ∨ C)
-    formula4 = Formula([clause9, clause10, clause11])
-    
-    print("Test case 4: (A ∨ B) ∧ (A ∨ C) ∧ (B ∨ C)")
-    solution4 = solve_sat(formula4)
-    if solution4:
-        print(f"Satisfiable. Solution: {solution4}")
-        # Verify solution
-        assert formula4.is_satisfied(solution4)
-    else:
-        print("Unsatisfiable")
-    print()
-    
-    # Test case 5: Single variable formula (A)
-    clause12 = Clause([Literal(1, True)])  # (A)
-    formula5 = Formula([clause12])
-    
-    print("Test case 5: (A)")
-    solution5 = solve_sat(formula5)
-    if solution5:
-        print(f"Satisfiable. Solution: {solution5}")
-        # Verify solution
-        assert formula5.is_satisfied(solution5)
-    else:
-        print("Unsatisfiable")
+    """Self-test: known SAT/UNSAT verdicts exact, unit propagation forced
+    assignments checked, 60 random formulas vs a truth-table oracle."""
+    # (A∨B) ∧ (¬A∨C) ∧ (¬B∨¬C): satisfiable, and the model must satisfy it.
+    f1 = _build([[(1, True), (2, True)], [(1, False), (3, True)],
+                 [(2, False), (3, False)]])
+    m1 = solve_sat(f1)
+    assert m1 is not None, "satisfiable formula reported UNSAT"
+    assert f1.is_satisfied(m1), "returned model does not satisfy the formula"
+
+    # (A) ∧ (¬A): the canonical contradiction must be UNSAT.
+    f2 = _build([[(1, True)], [(1, False)]])
+    assert solve_sat(f2) is None, "A AND NOT-A reported satisfiable"
+
+    # Unit-propagation chain (A) ∧ (¬A∨B) ∧ (¬B∨C): forces A=B=C=True.
+    f3 = _build([[(1, True)], [(1, False), (2, True)], [(2, False), (3, True)]])
+    m3 = solve_sat(f3)
+    assert m3 is not None and f3.is_satisfied(m3)
+    assert m3[1] is True and m3[2] is True and m3[3] is True, \
+        f"unit propagation must force all True, got {m3}"
+
+    # A bigger planted UNSAT: all 8 clauses over 3 vars (every assignment killed).
+    from itertools import product as _prod
+    all_clauses = [[(1, a), (2, b), (3, c)] for a, b, c in
+                   _prod([True, False], repeat=3)]
+    assert solve_sat(_build(all_clauses)) is None, \
+        "complete 3-var clause set is UNSAT by construction"
+
+    # ORACLE FUZZ: 60 random 3-CNF formulas over 5 vars; the solver's verdict
+    # must match the truth table, and every SAT model must check out.
+    import random
+    random.seed(42)
+    sat_seen = unsat_seen = 0
+    for _ in range(60):
+        spec = [[(random.randint(1, 5), random.random() < 0.5) for _ in range(3)]
+                for _ in range(random.randint(3, 12))]
+        verdict_true = _brute_force_sat(spec, 5)
+        model = solve_sat(_build(spec))
+        if verdict_true:
+            assert model is not None, f"solver missed a satisfiable formula: {spec}"
+            assert _build(spec).is_satisfied(model), "solver returned a non-model"
+            sat_seen += 1
+        else:
+            assert model is None, f"solver 'solved' an UNSAT formula: {spec}"
+            unsat_seen += 1
+    assert sat_seen + unsat_seen == 60
+    assert sat_seen > 0 and unsat_seen > 0, \
+        f"fuzz must exercise both verdicts (sat {sat_seen}, unsat {unsat_seen})"
+
+    print(f"sat_solver: known SAT/UNSAT exact, propagation forces T/T/T, "
+          f"60/60 oracle verdicts agree ({sat_seen} sat, {unsat_seen} unsat) — PASS")
 
 
 if __name__ == "__main__":

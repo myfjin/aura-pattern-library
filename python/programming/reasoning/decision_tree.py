@@ -402,62 +402,64 @@ class DecisionTree:
 
 
 def main():
-    """Demo of the decision tree classifier."""
-    # Create sample data
-    # Features: [height, weight]
+    """Self-test: a separable planted rule is learned exactly (100% train
+    accuracy + correct generalization), pruning keeps validation accuracy,
+    untrained refusal."""
+    # PLANTED RULE: label = 0 if weight < 57, 1 if 57 <= weight < 73, else 2.
     samples = [
         [170, 65], [175, 70], [160, 55], [180, 80], [155, 50],
         [165, 60], [172, 75], [158, 52], [178, 78], [162, 58],
-        [185, 90], [150, 45], [168, 68], [176, 76], [159, 54]
+        [185, 90], [150, 45], [168, 68], [176, 76], [159, 54],
     ]
-    
-    # Labels: 0 for "light", 1 for "medium", 2 for "heavy"
-    labels = [1, 1, 0, 2, 0, 0, 1, 0, 2, 0, 2, 0, 1, 2, 0]
-    
-    # Create and train the decision tree
+    labels = [1, 1, 0, 2, 0, 1, 2, 0, 2, 1, 2, 0, 1, 2, 0]
+
     tree = DecisionTree(max_depth=5, min_samples_split=2)
     tree.fit(samples, labels)
-    
-    print("Original Tree:")
-    print(tree)
-    print()
-    
-    # Make predictions
-    test_samples = [[165, 62], [180, 85], [155, 48]]
-    predictions = tree.predict(test_samples)
-    
-    print("Predictions:")
-    for sample, prediction in zip(test_samples, predictions):
-        print(f"Sample {sample} -> Prediction: {prediction}")
-    print()
-    
-    # Create validation data for pruning
-    validation_samples = [
-        [167, 63], [177, 77], [157, 51], [182, 82]
-    ]
+
+    # A separable rule must be learned to 100% on the training set.
+    train_preds = tree.predict(samples)
+    train_acc = sum(p == t for p, t in zip(train_preds, labels)) / len(labels)
+    assert train_acc == 1.0, f"separable data must fit exactly, accuracy {train_acc}"
+
+    # Generalization to fresh points obeying the planted rule.
+    test_samples = [[165, 62], [180, 85], [155, 48], [163, 59], [179, 74]]
+    truth = [1, 2, 0, 1, 2]
+    preds = tree.predict(test_samples)
+    assert preds == truth, f"planted rule not generalized: {preds} != {truth}"
+    assert sum(preds) == 6, "prediction classes 1+2+0+1+2 must sum to 6"
+
+    # Pruning on rule-consistent validation data must not hurt validation
+    # accuracy (that is pruning's contract).
+    validation_samples = [[167, 63], [177, 77], [157, 51], [182, 82]]
     validation_labels = [1, 2, 0, 2]
-    
-    # Prune the tree
+    before = tree.predict(validation_samples)
+    acc_before = sum(p == t for p, t in zip(before, validation_labels)) / 4
     tree.prune(validation_samples, validation_labels)
-    
-    print("Pruned Tree:")
-    print(tree)
-    print()
-    
-    # Make predictions after pruning
-    predictions_after = tree.predict(test_samples)
-    
-    print("Predictions after pruning:")
-    for sample, prediction in zip(test_samples, predictions_after):
-        print(f"Sample {sample} -> Prediction: {prediction}")
-    print()
-    
-    # Test error handling
+    after = tree.predict(validation_samples)
+    acc_after = sum(p == t for p, t in zip(after, validation_labels)) / 4
+    assert acc_after >= acc_before, \
+        f"pruning reduced validation accuracy {acc_before} -> {acc_after}"
+    assert acc_after == 1.0, f"rule-consistent validation must stay perfect, got {acc_after}"
+
+    # Single-class data collapses to a leaf that always answers that class.
+    flat = DecisionTree(max_depth=3)
+    flat.fit([[1, 1], [2, 2], [3, 3]], [7, 7, 7])
+    assert flat.predict([[9, 9], [0, 0]]) == [7, 7], "constant labels not learned"
+
+    # Untrained refusal.
     try:
-        empty_tree = DecisionTree()
-        empty_tree.predict([[1, 2]])
-    except ValueError as e:
-        print(f"Error handling works: {e}")
+        DecisionTree().predict([[1, 2]])
+        assert False, "untrained tree predicted"
+    except ValueError:
+        pass
+    try:
+        DecisionTree().prune([[1, 2]], [0])
+        assert False, "untrained tree pruned"
+    except ValueError:
+        pass
+
+    print("decision_tree: separable rule fit 15/15, generalized 5/5 (sum 6), "
+          "pruning kept validation at 1.0, constant leaf, refusals — PASS")
 
 
 if __name__ == "__main__":

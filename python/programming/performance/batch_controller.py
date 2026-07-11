@@ -224,50 +224,72 @@ def simulate_processing(batch_size: int, baseline_time_per_item: float = 0.01) -
     )
 
 
+def _mk(throughput: float, batch: int = 10) -> Metrics:
+    """Metrics with an exact planted throughput (items = throughput * 1s)."""
+    return Metrics(batch_size=batch, processing_time=1.0,
+                   items_processed=int(throughput), timestamp=0.0)
+
+
 def main():
-    """Demo the adaptive batch controller."""
-    print("Adaptive Batch Size Controller Demo")
-    print("=" * 40)
-    
-    # Create controller
-    controller = BatchController(
-        initial_batch_size=1,
-        max_batch_size=128,
-        min_batch_size=1,
-        slow_start_threshold=16,
-        congestion_window_multiplier=2.0,
-        decay_factor=0.5,
-        metrics_window_size=5
-    )
-    
-    # Simulate processing batches
-    for i in range(50):
-        batch_size = controller.current_batch_size
-        print(f"Iteration {i+1:2d}: Batch size = {batch_size:3d}", end="")
-        
-        # Simulate processing
-        metrics = simulate_processing(batch_size)
-        controller.record_metrics(metrics)
-        
-        throughput = metrics.throughput
-        print(f" | Throughput = {throughput:6.1f} items/sec", end="")
-        
-        # Adjust batch size
-        new_batch_size = controller.adjust_batch_size()
-        
-        if new_batch_size != batch_size:
-            print(f" | Adjusted to {new_batch_size}")
-        else:
-            print()
-            
-        # Add some random variation to make it interesting
-        if i % 7 == 0:
-            time.sleep(0.001)  # Small delay to simulate system load
-    
-    print("\nFinal state:")
-    print(f"Batch size: {controller.current_batch_size}")
-    print(f"In slow start: {controller.in_slow_start}")
-    print(f"Metrics recorded: {len(controller.metrics_history)}")
+    """Self-test: TCP-style dynamics against exactly traced batch sizes."""
+    # Throughput math is exact arithmetic.
+    assert _mk(25.0).throughput == 25.0, "50 items / 2s must be 25/s"
+    assert Metrics(1, 0.0, 10, 0.0).throughput == 0.0, "zero-time throughput must be 0"
+
+    c = BatchController(initial_batch_size=1, max_batch_size=128, min_batch_size=1,
+                        slow_start_threshold=16, congestion_window_multiplier=2.0,
+                        decay_factor=0.5, metrics_window_size=5)
+
+    # Slow start doubles: 1→2→4→8→16→32, exiting slow start past threshold 16,
+    # then congestion avoidance increases linearly: 33, 34. (Constant
+    # throughput ⇒ no congestion; the trace is exact.)
+    for expected, still_slow in [(2, True), (4, True), (8, True), (16, True),
+                                 (32, False), (33, False), (34, False)]:
+        c.record_metrics(_mk(1000.0))
+        c.record_metrics(_mk(1000.0))
+        got = c.adjust_batch_size()
+        assert got == expected, f"expected batch size {expected} in trace, got {got}"
+        assert c.in_slow_start is still_slow, \
+            f"slow-start flag wrong at size {got}: {c.in_slow_start}"
+
+    # THE FAILURE the controller exists for: a throughput collapse
+    # (1000 → 200 < 0.7x) must HALVE the batch, not grow it: 34 → 17.
+    c.record_metrics(_mk(1000.0))
+    c.record_metrics(_mk(200.0))
+    got = c.adjust_batch_size()
+    assert got == 17, f"congestion must decay 34*0.5=17, got {got}"
+    assert c.in_slow_start is False
+
+    # Repeated collapses decay to the floor and NEVER below min_batch_size:
+    # 17 → 8 → 4 → 2 → 1 → 1 → 1.
+    for expected in (8, 4, 2, 1, 1, 1):
+        c.record_metrics(_mk(1000.0))
+        c.record_metrics(_mk(100.0))
+        got = c.adjust_batch_size()
+        assert got == expected, f"decay trace expected {expected}, got {got}"
+    assert c.current_batch_size == 1, "decay went below min_batch_size"
+
+    # reset() restores the initial state completely.
+    c.reset()
+    assert (c.current_batch_size == 1 and c.in_slow_start
+            and len(c.metrics_history) == 0), "reset left stale state"
+
+    # Invalid construction and invalid metrics are refused.
+    for kwargs in ({"initial_batch_size": 0}, {"max_batch_size": 0},
+                   {"decay_factor": 1.0}, {"congestion_window_multiplier": 1.0}):
+        try:
+            BatchController(**kwargs)
+            assert False, f"BatchController({kwargs}) accepted invalid arguments"
+        except ValueError:
+            pass
+    try:
+        c.record_metrics(Metrics(0, 1.0, 1, 0.0))
+        assert False, "batch_size=0 metrics accepted"
+    except ValueError:
+        pass
+
+    print("batch_controller: slow-start 1→32 exact, congestion 34→17, "
+          "floor held at 1, reset clean — PASS")
 
 
 if __name__ == "__main__":

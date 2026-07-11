@@ -318,74 +318,71 @@ async def demo_task_random(name: str) -> str:
 
 
 async def main() -> None:
-    """Demo the task queue functionality."""
-    print("=== Async Task Queue Demo ===\n")
-    
-    # Create queue and worker
-    queue = TaskQueue()
-    worker = Worker(queue, "DemoWorker")
-    
-    # Start worker
+    """Self-test: priority dequeue order, retry scheduling with backoff
+    (not immediately re-dequeuable), DLQ on exhaustion, and a real worker
+    draining successes and failures to exact stats."""
+    # 1. Priority order, queue driven by hand.
+    q = TaskQueue()
+    t_low = Task(func=demo_task_success, args=["low"], priority=Priority.LOW)
+    t_high = Task(func=demo_task_success, args=["high"], priority=Priority.HIGH)
+    t_norm = Task(func=demo_task_success, args=["norm"], priority=Priority.NORMAL)
+    for t in (t_low, t_high, t_norm):
+        await q.enqueue(t)
+    order = [(await q.dequeue()).args[0] for _ in range(3)]
+    assert order == ["high", "norm", "low"], f"priority dequeue order wrong: {order}"
+    assert await q.dequeue() is None, "empty queue dequeued something"
+
+    # complete_task: honest bookkeeping.
+    assert await q.complete_task(t_high.id) is True
+    assert await q.complete_task(t_high.id) is False, "double complete reported success"
+    assert await q.complete_task("ghost") is False
+    await q.complete_task(t_norm.id)
+    await q.complete_task(t_low.id)
+    stats = await q.get_stats()
+    assert stats["completed"] == 3 and stats["processing"] == 0
+
+    # 2. RETRY: a failed task is rescheduled with backoff — NOT immediately
+    # dequeuable — and lands in the DLQ only after max_retries.
+    flaky = Task(func=demo_task_failure, args=["flaky"], max_retries=1)
+    await q.enqueue(flaky)
+    got = await q.dequeue()
+    assert got.id == flaky.id
+    assert await q.fail_task(flaky.id, "boom-1") is True
+    stats = await q.get_stats()
+    assert stats["retried"] == 1 and stats["dead_letter"] == 0
+    assert await q.dequeue() is None, \
+        "retrying task was dequeuable BEFORE its backoff elapsed"
+    # Make it due now, fail again → exhausted → DLQ with the error recorded.
+    flaky.scheduled_at = time.time() - 1
+    heapq_task = await q.dequeue()
+    assert heapq_task is not None and heapq_task.id == flaky.id
+    await q.fail_task(flaky.id, "boom-2")
+    dlq = await q.get_dead_letter_queue()
+    assert len(dlq) == 1 and dlq[0].id == flaky.id, "exhausted task not in DLQ"
+    assert dlq[0].error == "boom-2" and dlq[0].status == TaskStatus.FAILED
+    assert dlq[0].retry_count == 1
+
+    # 3. Integration: a real worker drains 3 successes + 1 permanent failure.
+    wq = TaskQueue()
+    worker = Worker(wq, "TestWorker")
     await worker.start()
-    
-    # Create and enqueue various tasks
-    tasks = []
-    
-    # High priority successful tasks
     for i in range(3):
-        task = Task(
-            func=demo_task_success,
-            args=[f"High Priority Task {i}"],
-            priority=Priority.HIGH,
-            max_retries=2
-        )
-        tasks.append(task)
-        await queue.enqueue(task)
-    
-    # Normal priority tasks with some failures
-    for i in range(5):
-        task = Task(
-            func=demo_task_random if i % 2 == 0 else demo_task_failure,
-            args=[f"Normal Task {i}"],
-            priority=Priority.NORMAL,
-            max_retries=3
-        )
-        tasks.append(task)
-        await queue.enqueue(task)
-    
-    # Low priority tasks
-    for i in range(2):
-        task = Task(
-            func=demo_task_success,
-            args=[f"Low Priority Task {i}"],
-            priority=Priority.LOW,
-            max_retries=1
-        )
-        tasks.append(task)
-        await queue.enqueue(task)
-    
-    print(f"Enqueued {len(tasks)} tasks\n")
-    
-    # Wait for tasks to process
-    await asyncio.sleep(5)
-    
-    # Print statistics
-    stats = await queue.get_stats()
-    print("=== Processing Statistics ===")
-    for key, value in stats.items():
-        print(f"{key.capitalize()}: {value}")
-    
-    # Print dead letter queue
-    dlq = await queue.get_dead_letter_queue()
-    if dlq:
-        print("\n=== Dead Letter Queue ===")
-        for task in dlq:
-            print(f"Task {task.id}: {task.error}")
-    
-    # Stop worker
+        await wq.enqueue(Task(func=demo_task_success, args=[f"ok-{i}"],
+                              priority=Priority.HIGH, max_retries=0))
+    await wq.enqueue(Task(func=demo_task_failure, args=["dead"], max_retries=0))
+    for _ in range(80):                      # wait for drain, bounded
+        s = await wq.get_stats()
+        if s["completed"] == 3 and s["failed"] == 1:
+            break
+        await asyncio.sleep(0.1)
     await worker.stop()
-    
-    print("\n=== Demo Complete ===")
+    s = await wq.get_stats()
+    assert s["completed"] == 3, f"worker must complete 3 tasks, stats: {s}"
+    assert s["failed"] == 1 and s["dead_letter"] == 1, f"failure not dead-lettered: {s}"
+    assert s["pending"] == 0 and s["processing"] == 0, f"queue not drained: {s}"
+
+    print("async_task_queue: dequeue high→norm→low, backoff blocks early retry, "
+          "exhaustion → DLQ (boom-2, 1 retry), worker drained 3+1 exact — PASS")
 
 
 if __name__ == "__main__":

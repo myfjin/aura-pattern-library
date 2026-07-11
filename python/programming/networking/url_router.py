@@ -112,98 +112,61 @@ class URLRouter:
         return url
 
 
-# Demo application
 def demo():
-    """Demonstrate URL router functionality."""
+    """Self-test: exact param extraction, no-match honesty, reverse URL
+    building, and build→match round-trip identity."""
     router = URLRouter()
-    
-    # Define handlers
-    def home_handler():
-        return "Welcome to the home page!"
-    
-    def user_handler(user_id: str):
-        return f"User profile for user {user_id}"
-    
-    def post_handler(user_id: str, post_id: str):
-        return f"Post {post_id} by user {user_id}"
-    
-    def search_handler(query: str, page: str = "1"):
-        return f"Search results for '{query}' (page {page})"
-    
-    # Add routes using method
-    router.add_route("/", home_handler, "home")
-    router.add_route("/user/{user_id}", user_handler, "user_profile")
-    router.add_route("/user/{user_id}/post/{post_id}", post_handler, "user_post")
-    
-    # Add route using decorator
+
+    router.add_route("/", lambda: "home", "home")
+    router.add_route("/user/{user_id}", lambda user_id: f"user {user_id}", "user_profile")
+    router.add_route("/user/{user_id}/post/{post_id}",
+                     lambda user_id, post_id: f"post {post_id} by {user_id}", "user_post")
+
     @router.route("/search/{query}", "search")
-    def search_handler_decorated(query: str, page: str = "1"):
-        return f"Search results for '{query}' (page {page})"
-    
-    # Test matching
-    test_paths = [
-        "/",
-        "/user/123",
-        "/user/456/post/789",
-        "/search/python",
-        "/search/python?page=2",
-        "/nonexistent"
-    ]
-    
-    print("URL Matching Tests:")
-    print("-" * 40)
-    for path in test_paths:
-        handler, params = router.match(path)
-        if handler:
-            result = handler(**params)
-            print(f"Path: {path}")
-            print(f"  Handler: {handler.__name__}")
-            print(f"  Params: {params}")
-            print(f"  Result: {result}")
-        else:
-            print(f"Path: {path}")
-            print(f"  No match found")
-        print()
-    
-    # Test reverse URL building
-    print("Reverse URL Building Tests:")
-    print("-" * 40)
-    build_tests = [
-        ("home", {}),
-        ("user_profile", {"user_id": "123"}),
-        ("user_post", {"user_id": "456", "post_id": "789"}),
-        ("search", {"query": "python"}),
-        ("nonexistent", {})
-    ]
-    
-    for name, params in build_tests:
-        url = router.build_url(name, **params)
-        if url:
-            print(f"Route '{name}' with {params} -> {url}")
-        else:
-            print(f"Route '{name}' not found")
-    
-    # Verify round-trip consistency
-    print("\nRound-trip Consistency Test:")
-    print("-" * 40)
-    test_routes = [
-        ("user_profile", {"user_id": "abc"}),
-        ("user_post", {"user_id": "def", "post_id": "456"})
-    ]
-    
-    for name, params in test_routes:
-        # Build URL
-        url = router.build_url(name, **params)
-        if url:
-            # Match it back
-            handler, matched_params = router.match(url)
-            if handler and handler.__name__ == router.named_routes[name].handler.__name__:
-                match_success = matched_params == params
-                print(f"Route '{name}': {match_success} - {url} -> {matched_params}")
-            else:
-                print(f"Route '{name}': False - Handler mismatch")
-        else:
-            print(f"Route '{name}': False - URL building failed")
+    def search_handler(query: str):
+        return f"results for {query}"
+
+    # Exact matching and param extraction.
+    handler, params = router.match("/")
+    assert handler is not None and params == {} and handler() == "home"
+
+    handler, params = router.match("/user/123")
+    assert params == {"user_id": "123"}, f"single param wrong: {params}"
+    assert handler(**params) == "user 123"
+
+    handler, params = router.match("/user/456/post/789")
+    assert params == {"user_id": "456", "post_id": "789"}, f"two params wrong: {params}"
+    assert handler(**params) == "post 789 by 456"
+    assert int(params["user_id"]) + int(params["post_id"]) == 1245, \
+        "456 + 789 must be 1245"
+
+    # Decorator-registered route works identically.
+    handler, params = router.match("/search/python")
+    assert params == {"query": "python"} and handler(**params) == "results for python"
+
+    # No-match honesty: unknown paths, partial paths, over-long paths.
+    for miss in ("/nonexistent", "/user", "/user/1/post", "/user/1/post/2/extra"):
+        handler, params = router.match(miss)
+        assert handler is None, f"path {miss!r} matched a route"
+
+    # Reverse building is exact.
+    assert router.build_url("home") == "/"
+    assert router.build_url("user_profile", user_id="123") == "/user/123"
+    assert router.build_url("user_post", user_id="456", post_id="789") == \
+        "/user/456/post/789"
+    assert router.build_url("nonexistent") is None
+
+    # ROUND-TRIP: build → match must return the same params.
+    for name, kwargs in (("user_profile", {"user_id": "abc"}),
+                         ("user_post", {"user_id": "def", "post_id": "456"}),
+                         ("search", {"query": "rust"})):
+        url = router.build_url(name, **kwargs)
+        handler, matched = router.match(url)
+        assert handler is not None, f"built URL {url!r} does not match its own route"
+        assert matched == kwargs, f"round-trip params diverged: {kwargs} -> {matched}"
+
+    print("url_router: params exact (456+789=1245), 4 non-matches honest, "
+          "reverse build exact, 3 round-trips identical — PASS")
 
 
 if __name__ == "__main__":

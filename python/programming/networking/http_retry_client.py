@@ -349,7 +349,98 @@ class HTTPClient:
 
 
 def main():
-    """Demo of HTTP client against a local test server (no external network needed)"""
+    """Self-test: backoff arithmetic exact, circuit breaker lifecycle on a
+    fake clock, retry counts proven against a stubbed transport, plus one
+    real request against a local server (no external network)."""
+    # 1. Exponential backoff without jitter is exact: 0.5, 1, 2, 4, cap 5.
+    bo = ExponentialBackoff(base_delay=0.5, max_delay=5.0, multiplier=2.0, jitter=False)
+    trace = [bo.calculate_delay(a) for a in (1, 2, 3, 4, 5)]
+    assert trace == [0.5, 1.0, 2.0, 4.0, 5.0], f"backoff trace wrong: {trace}"
+    jbo = ExponentialBackoff(base_delay=0.5, max_delay=5.0, multiplier=2.0, jitter=True)
+    random.seed(42)
+    assert all(0 < jbo.calculate_delay(a) <= 5.0 for a in range(1, 8)), "jitter escaped bounds"
+
+    # 2. Circuit breaker lifecycle on a fake clock.
+    _now = [10_000.0]
+    _real_time = time.time
+    time.time = lambda: _now[0]
+    try:
+        cb = CircuitBreaker(failure_threshold=3, recovery_timeout=2.0)
+        def boom():
+            raise ValueError("down")
+        failures = 0
+        for _ in range(3):
+            try:
+                cb.call(boom)
+            except ValueError:
+                failures += 1
+        assert failures == 3 and cb.state == CircuitState.OPEN, \
+            f"3 failures must OPEN the breaker, state {cb.state}"
+        # While OPEN, calls are rejected WITHOUT invoking the function.
+        called = [0]
+        def probe():
+            called[0] += 1
+            return "ok"
+        try:
+            cb.call(probe)
+            assert False, "OPEN breaker let a call through"
+        except CircuitBreakerException:
+            pass
+        assert called[0] == 0, "OPEN breaker still invoked the function"
+        # After the recovery timeout it half-opens; success CLOSES it.
+        _now[0] += 2.1
+        assert cb.call(probe) == "ok"
+        assert cb.state == CircuitState.CLOSED, f"half-open success must close, state {cb.state}"
+        assert called[0] == 1
+    finally:
+        time.time = _real_time
+
+    # 3. Retry counting against a stubbed transport (no sockets, no sleeps).
+    client_stub = HTTPClient(
+        retry_policy=RetryPolicy(max_attempts=3),
+        backoff_strategy=ExponentialBackoff(base_delay=0.01, max_delay=1.0,
+                                            multiplier=2.0, jitter=False),
+        circuit_breaker=CircuitBreaker(failure_threshold=100),
+    )
+    attempts = [0]
+    def flaky_transport(request):
+        attempts[0] += 1
+        if attempts[0] < 3:
+            raise urllib.error.URLError("transient")
+        return HTTPResponse(status_code=200, headers={}, body=b"{}", url=request.full_url)
+    client_stub._make_request = flaky_transport
+    slept = []
+    _real_sleep = time.sleep
+    time.sleep = lambda s: slept.append(s)
+    try:
+        resp = client_stub.request("GET", "http://stub.local/x")
+        assert resp.status_code == 200
+        assert attempts[0] == 3, f"2 transients + success must take 3 attempts, took {attempts[0]}"
+        assert slept == [0.01, 0.02], f"backoff sleeps must be [0.01, 0.02], got {slept}"
+
+        # Permanent failure: exactly max_attempts tries, then HTTPException.
+        attempts[0] = 0
+        def always_down(request):
+            attempts[0] += 1
+            raise urllib.error.URLError("dead")
+        client_stub._make_request = always_down
+        try:
+            client_stub.request("GET", "http://stub.local/x")
+            assert False, "dead endpoint returned a response"
+        except HTTPException:
+            pass
+        assert attempts[0] == 3, f"must stop at max_attempts=3, tried {attempts[0]}"
+    finally:
+        time.sleep = _real_sleep
+
+    _live_server_check()
+    print("http_retry_client: backoff 0.5/1/2/4/cap5 exact, breaker "
+          "open→half-open→closed, retries 3/3 with sleeps [0.01,0.02], "
+          "live 200 — PASS")
+
+
+def _live_server_check():
+    """One real request through the full urllib stack against a local server."""
     import http.server
     import threading
 
@@ -373,75 +464,24 @@ def main():
     threading.Thread(target=server.serve_forever, daemon=True).start()
     base = f"http://127.0.0.1:{server.server_address[1]}"
 
-    # Create a client with custom retry policy and backoff
     client = HTTPClient(
-        retry_policy=RetryPolicy(
-            max_attempts=3,
-            status_codes=(429, 500, 502, 503, 504),
-            exceptions=(urllib.error.URLError,)
-        ),
-        backoff_strategy=ExponentialBackoff(
-            base_delay=0.5,
-            max_delay=5.0,
-            multiplier=2.0,
-            jitter=True
-        ),
-        circuit_breaker=CircuitBreaker(
-            failure_threshold=3,
-            recovery_timeout=2.0
-        )
+        retry_policy=RetryPolicy(max_attempts=2),
+        backoff_strategy=ExponentialBackoff(base_delay=0.05, max_delay=0.2,
+                                            multiplier=2.0, jitter=False),
+        circuit_breaker=CircuitBreaker(failure_threshold=10, recovery_timeout=1.0),
     )
-    
-    # Demo 1: Successful request
-    print("=== Demo 1: Successful Request ===")
-    try:
-        response = client.get(f"{base}/get")
-        print(f"Status: {response.status_code}")
-        print(f"URL: {response.url}")
-        print("Success!")
-    except Exception as e:
-        print(f"Error: {e}")
-    
-    print()
-    
-    # Demo 2: Retryable error
-    print("=== Demo 2: Retryable Error ===")
-    try:
-        # This will fail with 500 error and retry
-        response = client.get(f"{base}/status/500")
-        print(f"Status: {response.status_code}")
-    except HTTPException as e:
-        print(f"Failed after retries: {e}")
-    except Exception as e:
-        print(f"Unexpected error: {e}")
-    
-    print()
-    
-    # Demo 3: Circuit breaker
-    print("=== Demo 3: Circuit Breaker ===")
-    print("Making several failing requests to trigger circuit breaker...")
-    
-    for i in range(5):
-        try:
-            response = client.get(f"{base}/status/503")
-            print(f"Request {i+1}: Success (unexpected)")
-        except CircuitBreakerException as e:
-            print(f"Request {i+1}: Circuit breaker open - {e}")
-        except HTTPException as e:
-            print(f"Request {i+1}: Failed - {e}")
-        except Exception as e:
-            print(f"Request {i+1}: Unexpected error - {e}")
-    
-    print("Waiting for circuit breaker to recover...")
-    time.sleep(3)  # Wait for recovery timeout
 
-    print("Making request after recovery time:")
+    # A real 200 through the full stack, body parsed.
+    response = client.get(f"{base}/get")
+    assert response.status_code == 200, f"live GET returned {response.status_code}"
+    assert response.json()["url"] == "/get", f"live body wrong: {response.body!r}"
+
+    # A retryable 500 exhausts its attempts and raises honestly.
     try:
-        response = client.get(f"{base}/get")
-        print(f"Status: {response.status_code}")
-        print("Recovered successfully!")
-    except Exception as e:
-        print(f"Recovery failed: {e}")
+        client.get(f"{base}/status/500")
+        assert False, "500 endpoint returned a response"
+    except HTTPException:
+        pass
 
     server.shutdown()
 

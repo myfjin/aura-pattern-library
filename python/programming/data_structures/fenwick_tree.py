@@ -129,95 +129,58 @@ class FenwickTree:
 
 
 def main() -> None:
-    """Demo the FenwickTree with 1000 random operations."""
-    print("Fenwick Tree Demo")
-    print("=" * 50)
-    
-    # Initialize
+    """Self-test: exact planted sums (0-indexed) + a 1000-op ASSERTED oracle
+    fuzz (the old demo printed mismatches instead of failing on them)."""
+    random.seed(42)
+
+    # Planted values: [2, 7, 1, 8, 2, 8] at indices 0..5.
+    ft = FenwickTree(10)
+    for i, v in enumerate([2, 7, 1, 8, 2, 8]):
+        ft.point_update(i, v)
+    assert ft.prefix_sum(5) == 28, f"2+7+1+8+2+8 must be 28, got {ft.prefix_sum(5)}"
+    assert ft.range_sum(1, 3) == 16, f"7+1+8 must be 16, got {ft.range_sum(1, 3)}"
+    assert ft.range_sum(0, 0) == 2 and ft.range_sum(5, 5) == 8
+    assert ft.prefix_sum(9) == 28, "untouched tail changed the total"
+
+    # Negative deltas subtract exactly.
+    ft.point_update(3, -8)
+    assert ft.range_sum(3, 3) == 0 and ft.prefix_sum(9) == 20
+
+    # THE OLD DEMO'S HOLE: mismatches were printed, not fatal. Now they fail.
     size = 100
-    ft = FenwickTree(size)
-    arr = [0] * size  # Parallel array to verify correctness
-    
-    print(f"Initialized Fenwick Tree with size {size}")
-    
-    # Perform 1000 random operations
-    num_ops = 1000
-    correct_ops = 0
-    
-    for i in range(num_ops):
-        op_type = random.choice(['update', 'prefix_sum', 'range_sum'])
-        
+    fresh = FenwickTree(size)
+    arr = [0] * size
+    for _ in range(1000):
+        op = random.choice(["update", "prefix", "range"])
+        if op == "update":
+            idx, val = random.randint(0, size - 1), random.randint(-100, 100)
+            fresh.point_update(idx, val)
+            arr[idx] += val
+        elif op == "prefix":
+            idx = random.randint(0, size - 1)
+            assert fresh.prefix_sum(idx) == sum(arr[:idx + 1]), \
+                f"prefix_sum({idx}) diverged from the oracle"
+        else:
+            left = random.randint(0, size - 1)
+            right = random.randint(left, size - 1)
+            assert fresh.range_sum(left, right) == sum(arr[left:right + 1]), \
+                f"range_sum({left},{right}) diverged from the oracle"
+    # Full final sweep: every prefix agrees.
+    for i in range(size):
+        assert fresh.prefix_sum(i) == sum(arr[:i + 1]), f"final prefix {i} diverged"
+
+    # Refusals.
+    for call in (lambda: ft.point_update(10, 1), lambda: ft.point_update(-1, 1),
+                 lambda: ft.prefix_sum(10), lambda: ft.range_sum(5, 2),
+                 lambda: FenwickTree(0)):
         try:
-            if op_type == 'update':
-                # Point update
-                idx = random.randint(0, size - 1)
-                val = random.randint(-100, 100)
-                ft.point_update(idx, val)
-                arr[idx] += val
-                correct_ops += 1
-                
-            elif op_type == 'prefix_sum':
-                # Prefix sum query
-                idx = random.randint(0, size - 1)
-                fenwick_result = ft.prefix_sum(idx)
-                
-                # Calculate expected result
-                expected = sum(arr[:idx+1])
-                
-                if fenwick_result == expected:
-                    correct_ops += 1
-                else:
-                    print(f"ERROR in prefix_sum: idx={idx}, got {fenwick_result}, expected {expected}")
-                    
-            elif op_type == 'range_sum':
-                # Range sum query
-                left = random.randint(0, size - 1)
-                right = random.randint(left, size - 1)
-                fenwick_result = ft.range_sum(left, right)
-                
-                # Calculate expected result
-                expected = sum(arr[left:right+1])
-                
-                if fenwick_result == expected:
-                    correct_ops += 1
-                else:
-                    print(f"ERROR in range_sum: [{left},{right}], got {fenwick_result}, expected {expected}")
-                    
-        except Exception as e:
-            print(f"Exception in operation {op_type}: {e}")
-    
-    print(f"\nPerformed {num_ops} operations")
-    print(f"Correct operations: {correct_ops}/{num_ops}")
-    print(f"Success rate: {correct_ops/num_ops*100:.2f}%")
-    
-    # Final verification: check all prefix sums
-    print("\nFinal verification:")
-    all_correct = True
-    for i in range(min(10, size)):  # Check first 10 elements
-        fenwick_result = ft.prefix_sum(i)
-        expected = sum(arr[:i+1])
-        if fenwick_result != expected:
-            print(f"MISMATCH at index {i}: got {fenwick_result}, expected {expected}")
-            all_correct = False
-    
-    if all_correct:
-        print("All verification checks passed!")
-    else:
-        print("Some verification checks failed!")
-    
-    # Show some example operations
-    print("\nExample operations:")
-    print(f"Initial array[0:10] = {arr[0:10]}")
-    
-    # Update some values
-    ft.point_update(0, 5)
-    arr[0] += 5
-    ft.point_update(5, -3)
-    arr[5] += -3
-    
-    print(f"After updates array[0:10] = {arr[0:10]}")
-    print(f"Prefix sum [0..5] = {ft.prefix_sum(5)} (expected: {sum(arr[0:6])})")
-    print(f"Range sum [2..7] = {ft.range_sum(2, 7)} (expected: {sum(arr[2:8])})")
+            call()
+            assert False, "invalid call accepted"
+        except (IndexError, ValueError):
+            pass
+
+    print("fenwick_tree: planted sums 28/16 exact, negative delta, 1000-op "
+          "oracle asserted, 100 final prefixes agreed — PASS")
 
 
 if __name__ == "__main__":

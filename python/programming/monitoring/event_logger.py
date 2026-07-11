@@ -207,85 +207,77 @@ class EventLogger:
 
 
 def main():
-    """Demo of the structured event logger functionality."""
-    # Create a temporary log file for demo
-    log_file = "demo_logs/events.log"
-    
-    # Create filters
-    level_filter = LevelFilter(min_level="INFO")
-    keyword_filter = KeywordFilter(["error", "warning"], exclude=False)
-    
-    # Create rotator (small size for demo)
-    rotator = LogRotator(max_size_mb=1, backup_count=3)
-    
-    # Create logger
-    logger = EventLogger(
-        filepath=log_file,
-        filters=[level_filter],
-        rotator=rotator,
-        auto_timestamp=True
-    )
-    
-    print("Logging demo events...")
-    
-    # Log various events
-    logger.log({
-        "level": "DEBUG",
-        "message": "This is a debug message",
-        "component": "demo"
-    })
-    
-    logger.log({
-        "level": "INFO",
-        "message": "Application started successfully",
-        "component": "main",
-        "version": "1.0.0"
-    })
-    
-    logger.log({
-        "level": "WARNING",
-        "message": "Low disk space detected",
-        "component": "monitor",
-        "available_gb": 2.5
-    })
-    
-    logger.log({
-        "level": "ERROR",
-        "message": "Failed to connect to database",
-        "component": "database",
-        "error_code": 500
-    })
-    
-    logger.log({
-        "level": "INFO",
-        "message": "User login successful",
-        "component": "auth",
-        "user_id": "user123"
-    })
-    
-    # Show log contents
-    print(f"\nContents of {log_file}:")
-    if os.path.exists(log_file):
-        with open(log_file, "r") as f:
-            for i, line in enumerate(f, 1):
-                event = json.loads(line.strip())
-                print(f"{i:2d}. {event}")
-    else:
-        print("Log file not found")
-    
-    # Demo rotation by creating a large entry
-    print("\nDemonstrating log rotation...")
-    large_event = {
-        "level": "INFO",
-        "message": "Large data entry",
-        "component": "demo",
-        "data": "A" * 1024 * 1024  # 1MB of data
-    }
-    
-    # This will likely trigger rotation due to the large size
-    logger.log(large_event)
-    
-    print("Demo completed. Check the demo_logs directory for output files.")
+    """Self-test: level filtering exact, JSONL round-trip, keyword filters
+    both directions, rotation actually rotates with bounded backups."""
+    import tempfile
+    tmpdir = tempfile.mkdtemp(prefix="evlog_")
+    log_file = os.path.join(tmpdir, "events.log")
+
+    # Level filter INFO+: DEBUG dropped, the other four written.
+    logger = EventLogger(filepath=log_file, filters=[LevelFilter(min_level="INFO")],
+                         rotator=LogRotator(max_size_mb=1, backup_count=3),
+                         auto_timestamp=True)
+    events = [
+        {"level": "DEBUG", "message": "debug msg", "component": "demo"},
+        {"level": "INFO", "message": "started", "component": "main"},
+        {"level": "WARNING", "message": "low disk", "available_gb": 2.5},
+        {"level": "ERROR", "message": "db down", "error_code": 500},
+        {"level": "INFO", "message": "login", "user_id": "user123"},
+    ]
+    for e in events:
+        logger.log(dict(e))
+
+    with open(log_file) as f:
+        written = [json.loads(line) for line in f]
+    assert len(written) == 4, f"INFO+ filter must keep 4 of 5 events, kept {len(written)}"
+    assert all(w["level"] != "DEBUG" for w in written), "DEBUG leaked past the filter"
+
+    # JSONL round-trip preserves fields and types exactly.
+    err = next(w for w in written if w["level"] == "ERROR")
+    assert err["error_code"] == 500 and isinstance(err["error_code"], int)
+    warn = next(w for w in written if w["level"] == "WARNING")
+    assert warn["available_gb"] == 2.5
+    assert all("timestamp" in w for w in written), "auto_timestamp missing"
+
+    # Keyword filter, include and exclude directions.
+    inc = KeywordFilter(["error", "warning"])
+    assert inc.should_log({"message": "an ERROR happened"}) is True
+    assert inc.should_log({"message": "all fine"}) is False
+    exc = KeywordFilter(["heartbeat"], exclude=True)
+    assert exc.should_log({"message": "heartbeat ok"}) is False
+    assert exc.should_log({"message": "real event"}) is True
+
+    # Multiple filters AND together.
+    both = EventLogger(filepath=os.path.join(tmpdir, "both.log"),
+                       filters=[LevelFilter("INFO"), inc], auto_timestamp=False)
+    both.log({"level": "ERROR", "message": "error in db"})     # passes both
+    both.log({"level": "ERROR", "message": "quiet failure"})   # fails keyword
+    both.log({"level": "DEBUG", "message": "error detail"})    # fails level
+    with open(os.path.join(tmpdir, "both.log")) as f:
+        kept = [json.loads(l) for l in f]
+    assert len(kept) == 1 and kept[0]["message"] == "error in db", \
+        f"AND-filtering wrong: {[k['message'] for k in kept]}"
+
+    # ROTATION: tiny threshold; each oversized write rotates the file.
+    rot_file = os.path.join(tmpdir, "rot.log")
+    rot = LogRotator(max_size_mb=1, backup_count=2)
+    rot.max_size_bytes = 200  # tighten for the test
+    rlog = EventLogger(filepath=rot_file, rotator=rot, auto_timestamp=False)
+    for i in range(6):
+        rlog.log({"level": "INFO", "message": f"entry {i}", "pad": "x" * 200})
+    backups = sorted(os.path.basename(p) for p in Path(tmpdir).glob("rot.log.*"))
+    assert backups == ["rot.log.1", "rot.log.2"], \
+        f"backup_count=2 must leave exactly .1 and .2, got {backups}"
+    assert os.path.exists(rot_file), "active log missing after rotation"
+    # The newest backup (.1) holds the previous generation — content rotated, not lost.
+    with open(os.path.join(tmpdir, "rot.log.1")) as f:
+        assert "entry" in f.read(), "rotated backup lost its content"
+
+    for p in Path(tmpdir).rglob("*"):
+        if p.is_file():
+            p.unlink()
+    print("event_logger: 4/5 kept (DEBUG dropped), types survive JSONL, "
+          "AND-filters exact, rotation bounded at 2 backups — PASS")
 
 
 if __name__ == "__main__":

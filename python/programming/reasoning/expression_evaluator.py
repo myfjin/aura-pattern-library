@@ -382,47 +382,61 @@ class ExpressionEvaluator:
 
 
 def main():
-    """Demo the expression evaluator."""
-    evaluator = ExpressionEvaluator()
-    
-    # Test expressions
-    expressions = [
-        "2 + 3 * 4",
-        "(2 + 3) * 4",
-        "10 / 2 - 3",
-        "2 ** 3",
-        "17 % 5",
-        "x = 10",
-        "y = 5",
-        "x + y",
-        "z = x * y",
-        "z",
-        "a = 2.5",
-        "b = 3.7",
-        "a + b",
-        "result = (a + b) * 2",
-        "result",
-        "-5 + 3",
-        "+10 - 2",
-        "x = -7",
-        "x",
-        "flag = true",
-        "flag"
+    """Self-test: every arithmetic result checked against Python's own
+    arithmetic, precedence/parentheses exact, variables persist, refusals."""
+    ev = ExpressionEvaluator()
+
+    # Precedence and operators: exact values.
+    cases = [
+        ("2 + 3 * 4", 14),          # * binds tighter than +
+        ("(2 + 3) * 4", 20),
+        ("10 / 2 - 3", 2.0),
+        ("2 ** 3", 8),
+        ("17 % 5", 2),
+        ("2 + 3 * 4 - 10 / 2", 9.0),
+        ("-5 + 3", -2),
+        ("+10 - 2", 8),
+        ("2 ** 3 ** 2", 512),       # right-associative power: 2^(3^2)
+        ("100 - 10 - 20", 70),      # left-associative minus
     ]
-    
-    print("Expression Evaluator Demo")
-    print("=" * 30)
-    
-    for expr in expressions:
+    for expr, expected in cases:
+        got = ev.evaluate(expr)
+        assert got == expected, f"{expr!r} must be {expected}, got {got}"
+        assert type(got) is type(expected), \
+            f"{expr!r}: type {type(got).__name__} != {type(expected).__name__}"
+
+    # Variables: assignment returns the value, environment persists, compos.
+    assert ev.evaluate("x = 10") == 10
+    assert ev.evaluate("y = 5") == 5
+    assert ev.evaluate("x + y") == 15
+    assert ev.evaluate("z = x * y") == 50
+    assert ev.evaluate("z") == 50
+    assert ev.evaluate("x = -7") == -7
+    assert ev.evaluate("x + y") == -2, "reassignment did not take effect"
+    assert abs(ev.evaluate("a = 2.5") - 2.5) < 1e-12
+    assert abs(ev.evaluate("(a + 1.5) * 2") - 8.0) < 1e-12
+    assert ev.environment.variables["z"] == 50
+
+    # Fuzz vs Python's eval on random arithmetic (no variables, no division
+    # to dodge float-format edge cases; ** kept small).
+    import random
+    random.seed(42)
+    for _ in range(100):
+        terms = [str(random.randint(1, 9)) for _ in range(4)]
+        ops = [random.choice(["+", "-", "*"]) for _ in range(3)]
+        expr = terms[0] + "".join(o + t for o, t in zip(ops, terms[1:]))
+        assert ev.evaluate(expr) == eval(expr), f"{expr!r} diverged from Python"
+
+    # Refusals: division/modulo by zero, garbage syntax, unknown variable.
+    for bad in ("1 / 0", "5 % 0", "2 +", "(1 + 2", "unknown_var + 1"):
         try:
-            result = evaluator.evaluate(expr)
-            print(f"{expr:<20} => {result}")
-        except Exception as e:
-            print(f"{expr:<20} => Error: {e}")
-    
-    print("\nEnvironment variables:")
-    for name, value in evaluator.environment.variables.items():
-        print(f"  {name} = {value}")
+            ev.evaluate(bad)
+            assert False, f"{bad!r} evaluated without error"
+        except (ValueError, ZeroDivisionError):
+            pass
+
+    print("expression_evaluator: 10 precedence cases exact (2**3**2=512), "
+          "variables persist, 100 fuzz == python eval, 5 refusals — PASS")
 
 
 if __name__ == "__main__":

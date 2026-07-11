@@ -105,15 +105,22 @@ class TimeSeries:
             
         result: List[Point] = []
         current_start = start
-        
+
         while current_start < end:
             current_end = min(current_start + interval, end)
-            aggregated = self.aggregate(current_start, current_end, agg_func)
-            
-            if aggregated is not None:
+            # Interior buckets are HALF-OPEN [start, end): with the former
+            # inclusive aggregate, the point at each boundary was counted
+            # into two adjacent buckets. Only the final bucket includes end.
+            points = self.query_range(current_start, current_end)
+            if current_end < end:
+                values = [p.value for p in points if p.timestamp < current_end]
+            else:
+                values = [p.value for p in points]
+
+            if values:
                 # Use midpoint of interval as timestamp for downsampled point
                 midpoint = (current_start + current_end) / 2
-                result.append(Point(midpoint, aggregated))
+                result.append(Point(midpoint, agg_func(values)))
                 
             current_start = current_end
             
@@ -217,49 +224,56 @@ def min_func(values: List[float]) -> float:
 
 
 if __name__ == "__main__":
-    # Create a series collection
-    series_collection = Series()
-    
-    # Generate sample data
-    base_time = time.time()
+    # Self-test on a FIXED time base: every aggregate is exact arithmetic.
+    db = Series()
+    base = 1000.0
     for i in range(100):
-        # Insert into two different series
-        series_collection.insert("temperature", 
-                                Point(base_time + i, 20 + (i % 10)))
-        series_collection.insert("humidity", 
-                                Point(base_time + i, 50 + (i % 20)))
-    
-    # Query a range
-    print("Querying temperature data from last 10 points:")
-    temp_points = series_collection.query_range(
-        "temperature", base_time + 90, base_time + 99)
-    for point in temp_points:
-        print(f"  {point.timestamp:.0f}: {point.value}")
-    
-    # Aggregate data
-    print("\nAggregations over all temperature data:")
-    total = series_collection.aggregate("temperature", base_time, base_time + 99, sum_func)
-    average = series_collection.aggregate("temperature", base_time, base_time + 99, avg_func)
-    maximum = series_collection.aggregate("temperature", base_time, base_time + 99, max_func)
-    minimum = series_collection.aggregate("temperature", base_time, base_time + 99, min_func)
-    
-    print(f"  Sum: {total}")
-    print(f"  Average: {average:.2f}")
-    print(f"  Maximum: {maximum}")
-    print(f"  Minimum: {minimum}")
-    
-    # Downsample data
-    print("\nDownsampled temperature data (interval=10, avg):")
-    downsampled = series_collection.downsample(
-        "temperature", base_time, base_time + 99, 10, avg_func)
-    for point in downsampled:
-        print(f"  {point.timestamp:.0f}: {point.value:.2f}")
-    
-    # Show all series names
-    print(f"\nAll series: {series_collection.get_series_names()}")
-    
-    # Test error handling
+        db.insert("temperature", Point(base + i, 20 + (i % 10)))
+        db.insert("humidity", Point(base + i, 50 + (i % 20)))
+
+    # Range query [90..99]: exactly 10 points, values 20..29 in time order.
+    pts = db.query_range("temperature", base + 90, base + 99)
+    assert [p.value for p in pts] == [20, 21, 22, 23, 24, 25, 26, 27, 28, 29], \
+        f"range values wrong: {[p.value for p in pts]}"
+    assert [p.timestamp for p in pts] == [base + 90 + k for k in range(10)]
+
+    # Aggregates over all 100 points: 10 full cycles of 20..29.
+    assert db.aggregate("temperature", base, base + 99, sum_func) == 2450, \
+        "sum of 10 cycles of 20..29 must be 2450"
+    assert db.aggregate("temperature", base, base + 99, avg_func) == 24.5
+    assert db.aggregate("temperature", base, base + 99, max_func) == 29
+    assert db.aggregate("temperature", base, base + 99, min_func) == 20
+
+    # Downsample into 10-second buckets: each bucket is one full cycle → avg 24.5.
+    buckets = db.downsample("temperature", base, base + 99, 10, avg_func)
+    assert len(buckets) == 10, f"100s at interval 10 must give 10 buckets, got {len(buckets)}"
+    assert all(b.value == 24.5 for b in buckets), \
+        f"every full-cycle bucket must average 24.5: {[b.value for b in buckets]}"
+    # Downsample with sum: each bucket holds one cycle summing to 245.
+    sum_buckets = db.downsample("temperature", base, base + 99, 10, sum_func)
+    assert [b.value for b in sum_buckets] == [245] * 10
+
+    # Series are independent.
+    assert db.aggregate("humidity", base, base + 99, min_func) == 50
+    assert sorted(db.get_series_names()) == ["humidity", "temperature"]
+
+    # Out-of-order inserts still query in time order.
+    db.insert("ooo", Point(base + 5, 3))
+    db.insert("ooo", Point(base + 1, 1))
+    db.insert("ooo", Point(base + 3, 2))
+    assert [p.value for p in db.query_range("ooo", base, base + 10)] == [1, 2, 3], \
+        "out-of-order inserts broke time ordering"
+
+    # Empty range → no aggregate value, empty query.
+    assert db.query_range("temperature", base + 500, base + 600) == []
+    assert db.aggregate("temperature", base + 500, base + 600, avg_func) is None
+
+    # Inverted range refused.
     try:
-        series_collection.aggregate("temperature", 100, 50, avg_func)
-    except ValueError as e:
-        print(f"\nCaught expected error: {e}")
+        db.aggregate("temperature", base + 100, base + 50, avg_func)
+        assert False, "inverted range accepted"
+    except ValueError:
+        pass
+
+    print("time_series_db: sum 2450 / avg 24.5 / max 29 / min 20 exact, "
+          "10 buckets @245, out-of-order sorted, inverted range refused — PASS")

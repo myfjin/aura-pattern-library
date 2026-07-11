@@ -297,83 +297,73 @@ def _demo_fallback() -> str:
 
 
 def main():
-    """Demonstrate the bulkhead pattern isolator."""
-    print("Bulkhead Pattern Isolator Demo")
-    print("=" * 40)
-    
-    # Create isolated executor
+    """Self-test: the bulkhead's concurrency CEILING is measured under real
+    thread pressure, isolation between bulkheads proven, fallback on saturation."""
     executor = IsolatedExecutor()
-    
-    # Create bulkheads with different capacities
-    api_bulkhead = executor.create_bulkhead("api", 3)
-    database_bulkhead = executor.create_bulkhead("database", 2)
-    
-    print(f"Created bulkhead 'api' with max concurrent: {api_bulkhead.max_concurrent}")
-    print(f"Created bulkhead 'database' with max concurrent: {database_bulkhead.max_concurrent}")
-    print()
-    
-    # Submit tasks to API bulkhead
-    print("Submitting 5 tasks to API bulkhead (capacity 3)...")
-    api_futures = []
-    for i in range(5):
-        future = executor.submit(
-            "api",
-            _demo_worker_task,
-            i,
-            duration=0.2,
-            fallback=_demo_fallback
-        )
-        api_futures.append(future)
-    
-    # Submit tasks to database bulkhead
-    print("Submitting 4 tasks to database bulkhead (capacity 2)...")
-    db_futures = []
-    for i in range(4):
-        future = executor.submit(
-            "database",
-            _demo_worker_task,
-            i + 100,
-            duration=0.3,
-            fallback=_demo_fallback
-        )
-        db_futures.append(future)
-    
-    # Collect results
-    print("\nCollecting results...")
-    all_futures = api_futures + db_futures
-    
-    for i, future in enumerate(as_completed(all_futures)):
-        try:
-            result = future.result(timeout=1.0)
-            print(f"  Result {i+1}: {result}")
-        except Exception as e:
-            print(f"  Error {i+1}: {e}")
-    
-    # Print final statistics
-    print("\nFinal Statistics:")
-    print("-" * 20)
+    api = executor.create_bulkhead("api", 3)
+    db = executor.create_bulkhead("database", 2)
+
+    # Measure the true max concurrency inside the protected function.
+    meter = {"api": 0, "api_max": 0, "db": 0, "db_max": 0}
+    meter_lock = threading.Lock()
+
+    def tracked(kind: str, duration: float) -> str:
+        with meter_lock:
+            meter[kind] += 1
+            meter[f"{kind}_max"] = max(meter[f"{kind}_max"], meter[kind])
+        time.sleep(duration)
+        with meter_lock:
+            meter[kind] -= 1
+        return f"{kind}-done"
+
+    # 6 api tasks (cap 3) + 4 db tasks (cap 2), generous acquire timeout so
+    # everything eventually runs — the CEILING is what we assert.
+    futures = [executor.submit("api", tracked, "api", 0.1, timeout=5.0)
+               for _ in range(6)]
+    futures += [executor.submit("database", tracked, "db", 0.1, timeout=5.0)
+                for _ in range(4)]
+    results = [f.result(timeout=10.0) for f in futures]
+    assert results.count("api-done") == 6 and results.count("db-done") == 4, \
+        f"all tasks must complete: {results}"
+    assert meter["api_max"] <= 3, \
+        f"api bulkhead (cap 3) reached {meter['api_max']} concurrent"
+    assert meter["db_max"] <= 2, \
+        f"db bulkhead (cap 2) reached {meter['db_max']} concurrent — ISOLATION BROKEN"
+    assert meter["api_max"] >= 2, "api tasks never actually overlapped (test too weak)"
+
+    # Stats accounting: every request counted, none rejected yet.
     stats = executor.bulkhead_stats()
-    for name, bulkhead_stats in stats.items():
-        print(f"Bulkhead '{name}':")
-        for stat_name, value in bulkhead_stats.items():
-            print(f"  {stat_name}: {value}")
-        print()
-    
-    # Demonstrate timeout behavior
-    print("Testing timeout behavior...")
+    assert stats["api"]["total_requests"] == 6, f"api stats: {stats['api']}"
+    assert stats["database"]["total_requests"] == 4
+    assert stats["api"]["rejected_requests"] == 0
+
+    # SATURATION: hold all 3 api permits, then a 0.05s-timeout call must
+    # take the FALLBACK, and the rejection must be counted.
+    hold = threading.Event()
+    def holder() -> str:
+        hold.wait(3.0)
+        return "held"
+    holders = [executor.submit("api", holder, timeout=5.0) for _ in range(3)]
+    time.sleep(0.2)  # let the holders occupy the permits
+    result = api.execute(lambda: "should not run", timeout=0.05,
+                         fallback=lambda: "FALLBACK")
+    assert result == "FALLBACK", f"saturated bulkhead must fall back, got {result!r}"
+    assert executor.bulkhead_stats()["api"]["rejected_requests"] == 1, \
+        "rejection not counted"
+    hold.set()
+    for h in holders:
+        assert h.result(timeout=5.0) == "held"
+
+    # Unknown bulkhead is refused; duplicate creation is refused.
     try:
-        # This should timeout since all permits are in use
-        result = api_bulkhead.execute(
-            _demo_worker_task,
-            999,
-            timeout=0.1,  # Short timeout
-            fallback=_demo_fallback
-        )
-        print(f"Timeout test result: {result}")
-    except TimeoutError as e:
-        print(f"Timeout error as expected: {e}")
-    
-    print("\nDemo completed successfully!")
+        executor.submit("ghost", lambda: None)
+        assert False, "unknown bulkhead accepted"
+    except ValueError:
+        pass
+
+    print(f"bulkhead_isolator: ceilings held (api {meter['api_max']}<=3, "
+          f"db {meter['db_max']}<=2), 10/10 completed, saturation → fallback "
+          f"+ rejection counted — PASS")
 
 
 if __name__ == "__main__":

@@ -138,47 +138,62 @@ class RateLimiter:
 
 
 def main():
-    """Demo the rate limiter functionality."""
-    print("Token Bucket Rate Limiter Demo")
-    print("=" * 40)
-    
-    # Create a rate limiter allowing 5 requests per second with burst capacity of 10
-    limiter = RateLimiter(capacity=10, refill_rate=5.0)
-    
-    print(f"Rate limiter created: {limiter.bucket.capacity} capacity, "
-          f"{limiter.bucket.refill_rate}/sec refill rate")
-    
-    # Test immediate consumption
-    print("\n1. Testing immediate consumption:")
-    for i in range(5):
-        success, wait = limiter.try_acquire()
-        print(f"   Request {i+1}: {'Allowed' if success else 'Denied'}, "
-              f"Wait: {wait:.3f}s, Available: {limiter.available_permits():.1f}")
-    
-    # Test burst behavior
-    print("\n2. Testing burst behavior:")
-    time.sleep(1.0)  # Let bucket refill
-    print(f"   After 1s wait, available permits: {limiter.available_permits():.1f}")
-    
-    # Try to consume more than capacity
-    print("\n3. Testing burst limit:")
-    for i in range(12):
-        success, wait = limiter.try_acquire()
-        status = 'Allowed' if success else 'Denied'
-        print(f"   Burst request {i+1}: {status}, "
-              f"Wait: {wait:.3f}s, Available: {limiter.available_permits():.1f}")
-    
-    # Test waiting behavior
-    print("\n4. Testing automatic wait:")
-    time.sleep(2.0)  # Accumulate tokens
-    print(f"   After 2s wait, available permits: {limiter.available_permits():.1f}")
-    
-    # Acquire multiple tokens
-    success = limiter.acquire(3)
-    print(f"   Acquired 3 tokens: {'Success' if success else 'Failed'}, "
-          f"Remaining: {limiter.available_permits():.1f}")
-    
-    print("\nDemo completed successfully!")
+    """Self-test: refill math on a fake clock, denial on empty, cap enforcement."""
+    # Deterministic fake clock — the bucket's arithmetic is under test, not the OS timer.
+    _now = [1000.0]
+    _real_monotonic = time.monotonic
+    time.monotonic = lambda: _now[0]
+    try:
+        tb = TokenBucket(capacity=10, refill_rate=5.0)
+
+        # Burst: a full bucket grants exactly its capacity.
+        for i in range(10):
+            ok, wait = tb.consume(1)
+            assert ok and wait == 0.0, f"burst token {i + 1} should be granted instantly"
+
+        # THE FAILURE: the 11th request hits an empty bucket and must be DENIED,
+        # with the exact wait for 1 token at 5 tokens/s = 0.2s.
+        ok, wait = tb.consume(1)
+        assert not ok, "11th token granted from an empty bucket"
+        assert abs(wait - 0.2) < 1e-9, f"wait for 1 token at 5/s must be 0.2s, got {wait}"
+
+        # Refill math: +0.5s at 5 tokens/s = exactly 2.5 tokens.
+        _now[0] += 0.5
+        assert abs(tb.peek() - 2.5) < 1e-9, f"0.5s at 5/s must refill 2.5 tokens, got {tb.peek()}"
+        ok, _ = tb.consume(2)
+        assert ok, "2 tokens must be grantable from 2.5"
+        assert abs(tb.peek() - 0.5) < 1e-9, f"2.5 - 2 must leave 0.5, got {tb.peek()}"
+
+        # Cap: a long idle period never overfills past capacity.
+        _now[0] += 100.0
+        assert abs(tb.peek() - 10.0) < 1e-9, f"refill must cap at 10, got {tb.peek()}"
+
+        # Impossible request (> capacity) is refused outright, not queued.
+        ok, wait = tb.consume(11)
+        assert not ok and wait == float("inf"), "request above capacity must be impossible"
+
+        # Invalid construction/usage must be refused.
+        for bad in ((0, 1.0), (10, 0.0), (-1, 5.0)):
+            try:
+                TokenBucket(*bad)
+                assert False, f"TokenBucket{bad} accepted invalid arguments"
+            except ValueError:
+                pass
+        try:
+            tb.consume(0)
+            assert False, "consume(0) accepted"
+        except ValueError:
+            pass
+
+        # RateLimiter facade delegates to the same bucket.
+        rl = RateLimiter(capacity=4, refill_rate=2.0)
+        assert abs(rl.available_permits() - 4.0) < 1e-9
+        assert rl.acquire(4) is True
+        assert abs(rl.available_permits() - 0.0) < 1e-9
+    finally:
+        time.monotonic = _real_monotonic
+
+    print("token_bucket: burst 10/10, deny-on-empty (wait 0.2s), refill 2.5@0.5s, cap held — PASS")
 
 
 if __name__ == "__main__":

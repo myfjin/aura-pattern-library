@@ -162,19 +162,24 @@ class MinimaxSolver:
         self.evaluator = evaluator
         self.nodes_explored = 0
     
-    def solve(self, state: GameState, depth_limit: int = 10) -> Tuple[Optional[Any], float]:
+    def solve(self, state: GameState, depth_limit: int = 10,
+              maximizing: bool = True) -> Tuple[Optional[Any], float]:
         """
         Solve the game from the given state.
-        
+
         Args:
             state: Current game state
             depth_limit: Maximum search depth
-            
+            maximizing: Whether the side to move maximizes the evaluation.
+                (This was hardcoded True, so choosing a move for the
+                minimizing player actually optimized for the OPPONENT.)
+
         Returns:
             Tuple of (best_move, best_score)
         """
         self.nodes_explored = 0
-        best_move, best_score = self._minimax(state, depth_limit, True, float('-inf'), float('inf'))
+        best_move, best_score = self._minimax(state, depth_limit, maximizing,
+                                              float('-inf'), float('inf'))
         return best_move, best_score
     
     def _minimax(self, state: GameState, depth: int, maximizing: bool, 
@@ -218,52 +223,60 @@ class MinimaxSolver:
 
 
 def main():
-    """Demo: Play Tic-TacToe with minimax AI."""
-    print("Tic-TacToe Minimax Demo")
-    print("=======================")
-    
-    # Create game components
-    evaluator = TicTacToeEvaluator()
-    solver = MinimaxSolver(evaluator)
-    
-    # Create initial state
-    state = TicTacToeState()
-    print("Initial board:")
-    print(state)
-    
-    # Play a few moves
-    moves_played = 0
-    while not state.is_terminal() and moves_played < 9:
-        if state.player == 'X':
-            # Human player (or could be another AI)
-            legal_moves = state.get_legal_moves()
-            move = legal_moves[0]  # Just pick first available move for demo
-            print(f"Player {state.player} moves: {move}")
-        else:
-            # AI player using minimax
-            print(f"AI ({state.player}) thinking...")
-            move, score = solver.solve(state, depth_limit=9)  # Full depth for small game
-            print(f"AI chooses move {move} with score {score} (explored {solver.nodes_explored} nodes)")
-        
-        if move is None:
-            break
-            
-        state = state.make_move(move)
-        print(f"Board after move {moves_played + 1}:")
-        print(state)
-        
-        moves_played += 1
-    
-    # Show final result
-    result = state.get_result()
-    if result == 1:
-        print("X wins!")
-    elif result == -1:
-        print("O wins!")
-    elif result == 0:
-        print("It's a draw!")
-    else:
-        print("Game not finished")
+    """Self-test against game-theoretic truths of tic-tac-toe: the empty
+    board is a draw, wins-in-1 are taken, threats are blocked, and perfect
+    self-play always draws."""
+    solver = MinimaxSolver(TicTacToeEvaluator())
+
+    # Truth 1: tic-tac-toe with perfect play is a DRAW — value exactly 0.
+    move, score = solver.solve(TicTacToeState(), depth_limit=9, maximizing=True)
+    assert score == 0, f"game value of tic-tac-toe must be 0, got {score}"
+    assert move is not None and solver.nodes_explored > 9, \
+        "search barely explored anything"
+
+    # Truth 2: X completes its row immediately (win-in-1).
+    board = [["X", "X", None], ["O", "O", None], [None, None, None]]
+    move, score = solver.solve(TicTacToeState(board, "X"), depth_limit=9,
+                               maximizing=True)
+    assert move == (0, 2), f"X must take the winning square (0,2), chose {move}"
+    assert score == 1, f"winning position must score 1, got {score}"
+    assert solver.nodes_explored == 36, \
+        f"alpha-beta on this position explores exactly 36 nodes, got {solver.nodes_explored}"
+
+    # Truth 3: O (the minimizer) must BLOCK X's open row — the exact bug
+    # this test pins: with maximizing hardcoded True, O helped X win.
+    board = [["X", "X", None], [None, "O", None], [None, None, None]]
+    move, score = solver.solve(TicTacToeState(board, "O"), depth_limit=9,
+                               maximizing=False)
+    assert move == (0, 2), f"O must block at (0,2), chose {move}"
+
+    # Truth 4: O to move with a win available — the position's VALUE is a
+    # forced O win (-1). Several moves force it (immediate (1,2), or block
+    # (0,2) then fork), so pin the value and verify the chosen move by
+    # playing the line out.
+    board = [["X", "X", None], ["O", "O", None], [None, None, "X"]]
+    move, score = solver.solve(TicTacToeState(board, "O"), depth_limit=9,
+                               maximizing=False)
+    assert score == -1, f"O-to-move position must be a forced O win (-1), got {score}"
+    line = TicTacToeState(board, "O").make_move(move)
+    while not line.is_terminal():
+        mv, _ = solver.solve(line, depth_limit=9, maximizing=(line.player == "X"))
+        line = line.make_move(mv)
+    assert line.get_result() == -1, "the chosen move failed to convert the forced win"
+
+    # Truth 5 (the crown): perfect vs perfect self-play ends in a draw,
+    # from every one of the 9 possible opening moves.
+    for opening in TicTacToeState().get_legal_moves():
+        state = TicTacToeState().make_move(opening)
+        while not state.is_terminal():
+            mv, _ = solver.solve(state, depth_limit=9,
+                                 maximizing=(state.player == "X"))
+            state = state.make_move(mv)
+        assert state.get_result() == 0, \
+            f"perfect self-play after opening {opening} ended {state.get_result()}, not a draw"
+
+    print("minimax_game_search: game value 0, win-in-1 taken, block forced, "
+          "O's win taken, 9/9 perfect self-plays drew — PASS")
 
 
 if __name__ == "__main__":
