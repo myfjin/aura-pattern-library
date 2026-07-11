@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-10",
+  "created": "2026-07-11",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -9,6 +9,16 @@
       "path": ".folder-mark.yaml",
       "sha256": "0b22bcb530918dfbdd7104b90db88cac148ac3d69c9bd5fbe3463e55bca60eb0",
       "bytes": 74
+    },
+    {
+      "path": "composed-systems/authenticated_message_channel.rs",
+      "sha256": "934255bb20fea60187affb0ec58f128dd81786217e9e20539c3302a7222fe0e9",
+      "bytes": 5645
+    },
+    {
+      "path": "composed-systems/backup_snapshot_restore.rs",
+      "sha256": "e33a47423e750da283e15bfad3a44521f97c38afb284cbefc0ab3268f71fd0ea",
+      "bytes": 6686
     },
     {
       "path": "composed-systems/bloom_backed_cache.rs",
@@ -21,9 +31,24 @@
       "bytes": 9285
     },
     {
+      "path": "composed-systems/compressed_block_store.rs",
+      "sha256": "3d78514e18e372c2df9147b96b5e64f3cd99a87f9ef8705a6d8618f7b41b8973",
+      "bytes": 6159
+    },
+    {
+      "path": "composed-systems/content_addressed_blob_store.rs",
+      "sha256": "957fe4127543f6c967f0b1961fdf8a51cfd1b97626bef471522cbee7be28608e",
+      "bytes": 5879
+    },
+    {
       "path": "composed-systems/content_addressed_store.rs",
       "sha256": "1ab542c1f462c93e2878e91c2162e99b3391624aabebfcda2d52a46657350fb7",
       "bytes": 10072
+    },
+    {
+      "path": "composed-systems/csv_typed_record_validator.rs",
+      "sha256": "9ebcfaa94c2bff1312aef2d373af31a74af5a0f8749bbcb005d9f8a18cfcb119",
+      "bytes": 6579
     },
     {
       "path": "composed-systems/dag_task_runner.rs",
@@ -36,9 +61,69 @@
       "bytes": 7988
     },
     {
+      "path": "composed-systems/framed_message_router.rs",
+      "sha256": "645a24e557e18a989d714b0e1e78bd6c067a47746a7e4e88a70d118c869a2a10",
+      "bytes": 7228
+    },
+    {
+      "path": "composed-systems/health_checked_lb_router.rs",
+      "sha256": "71c8f368173808d6c8a61300ab4877d65bd628b3489518e98b577175a77552fe",
+      "bytes": 6396
+    },
+    {
+      "path": "composed-systems/idempotent_request_dedup.rs",
+      "sha256": "dd801665f39d202528d27823b7e227b94b0ba91ee535a13d59c52bc08e28814d",
+      "bytes": 6275
+    },
+    {
+      "path": "composed-systems/index_compaction_pipeline.rs",
+      "sha256": "97271e9573ac1c8aba49068ad8140fb4bf2e51b0b5c0e883d834b45df6da38ed",
+      "bytes": 6458
+    },
+    {
+      "path": "composed-systems/log_ingest_dedup_index.rs",
+      "sha256": "2282fd01dfc4e522d8ea246c264c57d18d24df852928b76d44b126d8d3ccfbf6",
+      "bytes": 6628
+    },
+    {
+      "path": "composed-systems/lsm_write_read_path.rs",
+      "sha256": "bb28cb6f355c691acda9943520d2786ba7d73b5354eddcb16477042cc6b0bd0a",
+      "bytes": 5840
+    },
+    {
       "path": "composed-systems/merkle_tree.rs",
       "sha256": "18d0c553b95eac250ba3a19a8d5dc87ee7cc690338df7fdae86c33256e9d0165",
       "bytes": 11517
+    },
+    {
+      "path": "composed-systems/merkle_verified_sync.rs",
+      "sha256": "1e228e0bce273c18cd40b895c80ef98a62c4d2461cc38060e274d02b93b4192d",
+      "bytes": 8028
+    },
+    {
+      "path": "composed-systems/mvcc_snapshot_query_engine.rs",
+      "sha256": "47cb38dd9aa88ec6f99e1d7b7fccf7f649e4a41de0e482f4236d4a37bce98ea5",
+      "bytes": 6372
+    },
+    {
+      "path": "composed-systems/rate_limited_request_pipeline.rs",
+      "sha256": "5252d2b7d3f9d18c928a5684fffa38640534ee11168b5c5874df8ce014f5c786",
+      "bytes": 6648
+    },
+    {
+      "path": "composed-systems/read_through_cache_store.rs",
+      "sha256": "1485b40379130f6e6061bf7d8ea385460097d404f306fbd85273f5ee1c7742f5",
+      "bytes": 7151
+    },
+    {
+      "path": "composed-systems/replicated_log_quorum.rs",
+      "sha256": "4a90811d8c8061212b206a366ddf19d8b588d086e21667d018cd6fc5f79bc354",
+      "bytes": 7126
+    },
+    {
+      "path": "composed-systems/retry_circuit_backoff_client.rs",
+      "sha256": "312f8f48232f4d3adcbc82a1449a521c93a2006100971577ef50170266cb8abe",
+      "bytes": 6659
     },
     {
       "path": "composed-systems/rotating_log_checksum.rs",
@@ -46,9 +131,24 @@
       "bytes": 7481
     },
     {
+      "path": "composed-systems/sharded_kv_rehash_router.rs",
+      "sha256": "33f9968f1808ce5dc84ea72a1cde444afdf388e8e07a4afbf3710ed66d83c6d2",
+      "bytes": 6587
+    },
+    {
       "path": "composed-systems/signed_snapshot.rs",
       "sha256": "c3f6692c60455c6fafaac09b8ddc892c80f5f6dcdd39f1edcd79d03ec065d1e2",
       "bytes": 10679
+    },
+    {
+      "path": "composed-systems/streaming_bloom_distinct.rs",
+      "sha256": "2e4d07801897a28b8dfff75ae483546cfe65ff62c6afbd1b954df619c3115d60",
+      "bytes": 7490
+    },
+    {
+      "path": "composed-systems/streaming_percentile_monitor.rs",
+      "sha256": "839db297c2dd37a8ca87303025e7d56468aa88f83aa4d0d0040f3fb373f6807e",
+      "bytes": 6618
     },
     {
       "path": "composed-systems/tamper_evident_log.rs",
@@ -56,9 +156,29 @@
       "bytes": 11901
     },
     {
+      "path": "composed-systems/token_gated_priority_scheduler.rs",
+      "sha256": "61d5ff0d3ae122140182d311d773c0f3113830ba1beb34a016b190721352309a",
+      "bytes": 6314
+    },
+    {
+      "path": "composed-systems/tokenizer_ast_evaluator.rs",
+      "sha256": "2e7c8a5f557f3a3a143f71a9c8ff02e674f9c2d29eee8e9281f5b893cde41172",
+      "bytes": 8104
+    },
+    {
+      "path": "composed-systems/validated_config_loader.rs",
+      "sha256": "b9f9d46fa5b7a1a91bc15fd0b9753bbbd1afbf1ba48ff3a1dfbb8f26f20d7f54",
+      "bytes": 7448
+    },
+    {
       "path": "composed-systems/wal_append_replay.rs",
       "sha256": "e53348115edab0145b22b85fd754700b21caeccc49d2cd4930a55d08925e8019",
       "bytes": 9579
+    },
+    {
+      "path": "composed-systems/wal_backed_kv_store.rs",
+      "sha256": "c00cae79a6611541e98796e82945cd8a82e8ffc0daad6be6e24e7478bc3a31b9",
+      "bytes": 6062
     },
     {
       "path": "concurrency-resilience/atomic_counter_sharded.rs",
@@ -66,9 +186,49 @@
       "bytes": 6477
     },
     {
+      "path": "concurrency-resilience/atomic_max_tracker.rs",
+      "sha256": "04201279844e757bf9da6c36a856de27f1e455e9ac0524fa59e17895ac1c25bc",
+      "bytes": 6404
+    },
+    {
+      "path": "concurrency-resilience/atomic_refcount.rs",
+      "sha256": "ed5773f66a55d8393a901d43be6f2cf4e70f450bd7706cb17542b08626f3707f",
+      "bytes": 6706
+    },
+    {
+      "path": "concurrency-resilience/atomic_spinlock.rs",
+      "sha256": "06a8378c353262b3d37984b2c1717c3f6f7efd4eedb870a2a78c2d2ac871643b",
+      "bytes": 6543
+    },
+    {
+      "path": "concurrency-resilience/barrier_sync.rs",
+      "sha256": "1e19b6c93a1718e6a70435620ac7b55add0607f86c239b5371eae587c6efd178",
+      "bytes": 6627
+    },
+    {
+      "path": "concurrency-resilience/broadcast_fanout.rs",
+      "sha256": "9ae8d5715a1b9473475034efad23ce9ea4e0626a2f8b335ccac4447d11cc5009",
+      "bytes": 7462
+    },
+    {
+      "path": "concurrency-resilience/cas_stack_arena.rs",
+      "sha256": "a3023752ff5472196774a88d779607ef87a8d2cb5b81b4e2dd598518ece9d4d3",
+      "bytes": 7491
+    },
+    {
       "path": "concurrency-resilience/circuit_breaker.rs",
       "sha256": "a5b9f847ec0133dec3737f357f668d5bdd0ab3f210750eacbcd25e473a438cb8",
       "bytes": 8197
+    },
+    {
+      "path": "concurrency-resilience/concurrent_histogram.rs",
+      "sha256": "712cada773f6abbab1832dcdd6c65ffa11f6a235f2f713e816c1549f83e36a57",
+      "bytes": 6999
+    },
+    {
+      "path": "concurrency-resilience/countdown_latch.rs",
+      "sha256": "8123611a26993430b0bced06d2eda7fa31b2184f6157abc196f059330acc2e7a",
+      "bytes": 6933
     },
     {
       "path": "concurrency-resilience/deadline_guard.rs",
@@ -76,9 +236,19 @@
       "bytes": 7103
     },
     {
+      "path": "concurrency-resilience/double_buffer.rs",
+      "sha256": "55528afee0d59dc83a092c8c5df48d87da0c2000718099b64db376bd4082564f",
+      "bytes": 7643
+    },
+    {
       "path": "concurrency-resilience/exponential_backoff.rs",
       "sha256": "9ac17fa01c21b718cfaf787355d9d27e4d5121b922f460238d65312cf1c2d6f7",
       "bytes": 7095
+    },
+    {
+      "path": "concurrency-resilience/future_lite_executor.rs",
+      "sha256": "30be7cfa97abd5ad0c405bef81cebcb4ec9f6369d14cbd2f673bcaf53eb31e60",
+      "bytes": 7048
     },
     {
       "path": "concurrency-resilience/graceful_shutdown.rs",
@@ -86,9 +256,29 @@
       "bytes": 6092
     },
     {
+      "path": "concurrency-resilience/mpmc_queue.rs",
+      "sha256": "50b6b0432ca437706fc532fd0f8032eaa87eb2639b0406eca516e449e12aa0b0",
+      "bytes": 6793
+    },
+    {
+      "path": "concurrency-resilience/once_init_guard.rs",
+      "sha256": "b34ab6ae4542b3dd87565b09f758528f03e512152055e6554b7eb6f7556d1501",
+      "bytes": 6363
+    },
+    {
+      "path": "concurrency-resilience/rendezvous_channel.rs",
+      "sha256": "4a1f8199708e6624448df959d0c3887274c34a66db97ad4aafe6306799a4d24a",
+      "bytes": 6827
+    },
+    {
       "path": "concurrency-resilience/retry_with_budget.rs",
       "sha256": "8fab6f7d10e14682247cc62d87cf9442c1917b75764eece017f1c384ab4150bb",
       "bytes": 7523
+    },
+    {
+      "path": "concurrency-resilience/reusable_phaser.rs",
+      "sha256": "1c7d56fe1cdffc07126f9683e71a839fedb4bbdb0e3f6a691b7e8c27475555f3",
+      "bytes": 7379
     },
     {
       "path": "concurrency-resilience/rwlock_cache.rs",
@@ -96,14 +286,44 @@
       "bytes": 6602
     },
     {
+      "path": "concurrency-resilience/rwlock_readers.rs",
+      "sha256": "cf959b1f4446716b6efcfaa3573cb21f9aa2eea08b4333ee22c0c1e6f7cb5bf2",
+      "bytes": 6640
+    },
+    {
       "path": "concurrency-resilience/semaphore_limit.rs",
       "sha256": "3eaef4f43d9b73de623e45956eca2334b605666f10b1cf57ff31249f886f570a",
       "bytes": 6916
     },
     {
+      "path": "concurrency-resilience/seqlock_snapshot.rs",
+      "sha256": "481e93d3d5a395536f8b49466cc69f819cd5252f85ba0b83772f9ab0a8bf962d",
+      "bytes": 7849
+    },
+    {
+      "path": "concurrency-resilience/spsc_ring_buffer.rs",
+      "sha256": "dba7599cc7f5f627b9490b374fca174c9d9ab261f830397d868bb3c68bd7bcae",
+      "bytes": 7224
+    },
+    {
+      "path": "concurrency-resilience/ticket_lock.rs",
+      "sha256": "82999b30bf344f71a3d11203b51f048774eff8cfa7dbc3dd4cc9e050be1461f7",
+      "bytes": 6479
+    },
+    {
       "path": "concurrency-resilience/token_bucket.rs",
       "sha256": "8f38da6b37b062607a3ef7ee0c8ae9bcf243c0ec3dbbd5773d58259f9817f8b6",
       "bytes": 6981
+    },
+    {
+      "path": "concurrency-resilience/wait_group.rs",
+      "sha256": "ba8372666bc3f20d557b28b453d29392b3b7ae2ef1ce7aae9bc49af0398c7c3e",
+      "bytes": 6260
+    },
+    {
+      "path": "concurrency-resilience/work_stealing_deque.rs",
+      "sha256": "0ed40c25bfb5bafb4dba6a35a239a7169e78eeedf85ad3ede08b5790a7f6ad4e",
+      "bytes": 10344
     },
     {
       "path": "concurrency-resilience/worker_pool_mpsc.rs",
@@ -261,9 +481,129 @@
       "bytes": 8895
     },
     {
+      "path": "networking-resilience/backpressure_bounded_queue.rs",
+      "sha256": "b469f1aefa22c029959b6ee128a3ecbe8c643efc8efd3f061c7cb7848062098b",
+      "bytes": 7330
+    },
+    {
+      "path": "networking-resilience/bulkhead_isolation_limiter.rs",
+      "sha256": "74204be90a53d416f65970e9108aac6339eb55dd13e570b1631c2ac53b2b0a1b",
+      "bytes": 5979
+    },
+    {
+      "path": "networking-resilience/cidr_allowlist_match.rs",
+      "sha256": "cf236ace260361c31a87075832ecea149f0be92445caa6ecc01d140b453c1e2d",
+      "bytes": 6988
+    },
+    {
+      "path": "networking-resilience/connection_pool_manager.rs",
+      "sha256": "b389f917dd4b0cc41c2a7e6c4a15921ecb4e8de339d17bd7e0c33de54585aa38",
+      "bytes": 6411
+    },
+    {
+      "path": "networking-resilience/count_min_sketch_ip_freq.rs",
+      "sha256": "f721c444a09c9b3b89e7125733ab10b0ed9ba3aa782ac3a92ad85976c323ed48",
+      "bytes": 7064
+    },
+    {
+      "path": "networking-resilience/dns_name_wire_parser.rs",
+      "sha256": "e4d3d0803d5cddd6e597fa02430bf8a77fce9ebe6c9d419a06bf72e76027a20c",
+      "bytes": 8182
+    },
+    {
+      "path": "networking-resilience/ewma_latency_tracker.rs",
+      "sha256": "9a4e188f9bacebad80bd7583db17887af2493b17f84fdf6505b93a19de5b3d15",
+      "bytes": 7047
+    },
+    {
+      "path": "networking-resilience/failover_priority_list.rs",
+      "sha256": "ba38f7fbf7296a4cfe76e035eb6d6dc0b9a2cb2e649b1e012f26ad2326aec4f5",
+      "bytes": 6505
+    },
+    {
+      "path": "networking-resilience/gcra_rate_limiter.rs",
+      "sha256": "6ddcc611ebfc94db1f618e71d5ea63b4338f75a93b0550905b3ec9e7bac4cc19",
+      "bytes": 6431
+    },
+    {
+      "path": "networking-resilience/hedged_request_scheduler.rs",
+      "sha256": "c0037117d6bcc94fc0ec7401f0bd6c8b42091827d604b18cf5a8ef67ec6d1db9",
+      "bytes": 6299
+    },
+    {
+      "path": "networking-resilience/http_status_retry_classifier.rs",
+      "sha256": "b22b9df1729af98458119cca93553d6507b806b248a36121dffd349abd8bbb5f",
+      "bytes": 6924
+    },
+    {
+      "path": "networking-resilience/least_connections_lb.rs",
+      "sha256": "a0676ae7a3fb44dd6d8cac72772a30dc79f7716f7fe44fe233af5d2b1342a0f7",
+      "bytes": 6174
+    },
+    {
+      "path": "networking-resilience/port_scan_detector.rs",
+      "sha256": "9cef5805ada4f1ab39e9a97c017542c134f4aa8a4fd5e9dbdf3cd487f87f10d4",
+      "bytes": 7434
+    },
+    {
+      "path": "networking-resilience/rendezvous_hash_hrw.rs",
+      "sha256": "c23529a078e3772b86ad045eb1078b01e1650f6678c555ebba7910048c5566b6",
+      "bytes": 7541
+    },
+    {
+      "path": "networking-resilience/retry_after_header_parser.rs",
+      "sha256": "91976176fd5e539721af903bb544a3916de84b33de1c30df523b1d6cd897c62e",
+      "bytes": 9253
+    },
+    {
+      "path": "networking-resilience/sliding_window_flow_control.rs",
+      "sha256": "dce582cf376b09762e83668a1a4810bfccfbf4ea021a51ba486b96c0f8527615",
+      "bytes": 6120
+    },
+    {
+      "path": "networking-resilience/sliding_window_rate_limiter.rs",
+      "sha256": "556182eb7af6a312e07b6d1a07042eaf067844ec9956573ff0ef501a3af1f774",
+      "bytes": 6129
+    },
+    {
+      "path": "networking-resilience/tcp_rto_estimator.rs",
+      "sha256": "6dd9c47d87af5750979e3a1e0954c31bdc2cc7041069d4f21c647c661e7e15b2",
+      "bytes": 6793
+    },
+    {
+      "path": "networking-resilience/url_authority_parser.rs",
+      "sha256": "be723552a1108f07b24f1b2829d73f93005dd3ebb28f3c702092e583f7a0c81b",
+      "bytes": 6807
+    },
+    {
+      "path": "networking-resilience/weighted_round_robin_lb.rs",
+      "sha256": "3289230f193e12663ae32a84ba10566c09aa95a496d8e70711fe59e589ca720a",
+      "bytes": 6071
+    },
+    {
+      "path": "parsing-protocols/ansi_escape_stripper.rs",
+      "sha256": "ac1681b95832eba290b80344bd774a8964affe3888be4c7bbe135ef84429c213",
+      "bytes": 6960
+    },
+    {
+      "path": "parsing-protocols/backslash_escape_codec.rs",
+      "sha256": "023063f8aaf223e10973e4b41ae0bd11c14c7def2210d5428545e15f23689a58",
+      "bytes": 8358
+    },
+    {
+      "path": "parsing-protocols/balanced_delimiter_check.rs",
+      "sha256": "7c9fd382097abe1d3673251201a02135948d1f87c4138746c29be84b1032cc48",
+      "bytes": 7186
+    },
+    {
       "path": "parsing-protocols/byte_unit_parse.rs",
       "sha256": "a9561b898946de37ebcd1de7ff359ef4e9f998ac4f55921708ba116ea509500e",
       "bytes": 7365
+    },
+    {
+      "path": "parsing-protocols/chunked_transfer_decoder.rs",
+      "sha256": "6869b4d4ad8047d0f570e931af2c4b151eab3cf09630c5f9627ac49132d2eea9",
+      "bytes": 6837
     },
     {
       "path": "parsing-protocols/cidr_ip_math.rs",
@@ -274,6 +614,21 @@
       "path": "parsing-protocols/cli_args_parser.rs",
       "sha256": "087fa5b6b307b3cf265b86dfa9644141700340704286aebffa78229eeb19526f",
       "bytes": 7931
+    },
+    {
+      "path": "parsing-protocols/cobs_framing.rs",
+      "sha256": "e395f2d9d8c236905b6bf4bcada8e1efb837e5c416a90e06c968074cd8c2bf70",
+      "bytes": 7867
+    },
+    {
+      "path": "parsing-protocols/crc_framed_packet.rs",
+      "sha256": "579d33d97a766e8adedc9f4545ccb779f0f89f333d8d4623776cae624eb78b65",
+      "bytes": 8589
+    },
+    {
+      "path": "parsing-protocols/csv_quote_escape.rs",
+      "sha256": "f398b9cc27bfa52fbb98f84d9807cc6424a2325cb9225cebd1daf3971e07347c",
+      "bytes": 7072
     },
     {
       "path": "parsing-protocols/csv_reader_typed.rs",
@@ -291,9 +646,19 @@
       "bytes": 8063
     },
     {
+      "path": "parsing-protocols/handshake_typestate_fsm.rs",
+      "sha256": "8804cc7990b43ea248385fdda392a56ed8ca6368ca839d15f10a37cea68cd3c2",
+      "bytes": 6879
+    },
+    {
       "path": "parsing-protocols/http_header_parse.rs",
       "sha256": "435cff7e3e29068ade895a0928ba89d444425ef8d58dfb3c42cf97d1bdd4b67b",
       "bytes": 7801
+    },
+    {
+      "path": "parsing-protocols/http_request_line_parser.rs",
+      "sha256": "ac0e63bf95e8d836bfddb0a17d28af36e1245649bd12c71688bfc250a5034e1c",
+      "bytes": 6956
     },
     {
       "path": "parsing-protocols/ini_config_parser.rs",
@@ -301,9 +666,44 @@
       "bytes": 8106
     },
     {
+      "path": "parsing-protocols/json_string_unescape.rs",
+      "sha256": "ce11d8ca5128fee8f5e194f8e49c43a88d912140197c1d505ccddc1bcd1d14fd",
+      "bytes": 7660
+    },
+    {
+      "path": "parsing-protocols/key_value_line_scanner.rs",
+      "sha256": "4a5d8f32560dfa257df25bac5a9443ce49a5231deb65f5f995717e78b58db23e",
+      "bytes": 8262
+    },
+    {
       "path": "parsing-protocols/log_line_parser.rs",
       "sha256": "e7fcff12607cf1aa0e25b78df6546edf5c991ff423d6398ae9a627435325374d",
       "bytes": 7922
+    },
+    {
+      "path": "parsing-protocols/query_string_parser.rs",
+      "sha256": "15ac82be3aa4c8d4dea226b566272d0b7835a4a9819de1f8ed5979aac4924836",
+      "bytes": 7383
+    },
+    {
+      "path": "parsing-protocols/shell_word_split.rs",
+      "sha256": "69528b12d645b3cb8b9679f00275270d4f5a407b4d1c18e6da0852202496e56b",
+      "bytes": 7516
+    },
+    {
+      "path": "parsing-protocols/slip_escape_framer.rs",
+      "sha256": "1b7ac76ae379690f10a57ffb8c1b81f17d31e526afb3dd9f67e6de318a06370c",
+      "bytes": 8450
+    },
+    {
+      "path": "parsing-protocols/state_machine_tokenizer.rs",
+      "sha256": "e7e5368957010a0f35e80c27652bf37532bff6c6b3faab007def94a729eb2ec0",
+      "bytes": 7961
+    },
+    {
+      "path": "parsing-protocols/tlv_parser.rs",
+      "sha256": "11b5170f94b1c1acd3718f4ce8bdb4a563028a153aac8ca1f7e5617f34732b12",
+      "bytes": 6744
     },
     {
       "path": "parsing-protocols/url_parse.rs",
@@ -409,6 +809,106 @@
       "path": "security-crypto/totp.rs",
       "sha256": "ee00202a866b6172c3318b8d7815d80d0ad3da3883716a9cec8914d98162cd46",
       "bytes": 8393
+    },
+    {
+      "path": "storage-persistence/arc_adaptive_cache.rs",
+      "sha256": "6fdeffe459769e01bea6525fc0cab01893872ef183c82cb4b714ebab53d3f173",
+      "bytes": 9785
+    },
+    {
+      "path": "storage-persistence/bitmap_free_space_manager.rs",
+      "sha256": "33d4b86e31d30e3c5db9b792eb4ee63f0faeff562fd6ece5c6e7eb96249713e3",
+      "bytes": 7274
+    },
+    {
+      "path": "storage-persistence/btree_node_split.rs",
+      "sha256": "1e4061bc5008ad97d0787f1fecb6f9443bceaa5a2191134ee0710df4ef442061",
+      "bytes": 7605
+    },
+    {
+      "path": "storage-persistence/checkpoint_truncate_log.rs",
+      "sha256": "95fed3d1ad78465731c27a85aff82e6f538c95619ffba6e008bf2f5b1fb8e371",
+      "bytes": 7853
+    },
+    {
+      "path": "storage-persistence/clock_second_chance_cache.rs",
+      "sha256": "cf151ed66984157e4b52700cdf054c39d736f7e7d2018ef10fc1f783bf51b502",
+      "bytes": 7332
+    },
+    {
+      "path": "storage-persistence/copy_on_write_btree.rs",
+      "sha256": "e045e9148a3da769a2e5d0581db2ec80947132fd1b687a15cedde5d2cb6537b3",
+      "bytes": 8480
+    },
+    {
+      "path": "storage-persistence/crash_safe_atomic_write.rs",
+      "sha256": "ffc65cf195ca6308634e098f6ae72843926f565348239991b9f94b77f21b3bd1",
+      "bytes": 7110
+    },
+    {
+      "path": "storage-persistence/double_write_buffer.rs",
+      "sha256": "501cb6d052507509bbd8366f4531936fffa720e076cd800ae0432f6cb8b1f208",
+      "bytes": 7697
+    },
+    {
+      "path": "storage-persistence/extendible_hash_index.rs",
+      "sha256": "02a7f5de70aee2e72a22f1d5473b1fea27079b5c64c58406dd87e321b6dfd0cf",
+      "bytes": 9744
+    },
+    {
+      "path": "storage-persistence/free_list_coalescing_allocator.rs",
+      "sha256": "e2cd27e28f99570df5bd9d0ac25bf88d3c4c90ad857750f115af88667a54c984",
+      "bytes": 8270
+    },
+    {
+      "path": "storage-persistence/fsync_barrier_ordering.rs",
+      "sha256": "6995d14d4f3765a3e8badbd4c46124fabb1d02b8d80a9e16ac42ce2a2c0ea2c7",
+      "bytes": 7080
+    },
+    {
+      "path": "storage-persistence/log_segment_gc_compaction.rs",
+      "sha256": "b247a4da91b68f6c5806a2bc3997fd443378135e8a3892c754bf13fa8c1e3c1e",
+      "bytes": 8827
+    },
+    {
+      "path": "storage-persistence/manifest_versioned_snapshot.rs",
+      "sha256": "d6853c5c0da11ebcdfad98362363781e16936e19a27913878186126fe7c09aea",
+      "bytes": 7632
+    },
+    {
+      "path": "storage-persistence/mvcc_version_chain.rs",
+      "sha256": "8bb946eed5812461e222ac98cd58c5c1cafe54282d3b557d7b39062a6120944e",
+      "bytes": 7948
+    },
+    {
+      "path": "storage-persistence/redo_undo_log.rs",
+      "sha256": "3b8d8a0cabbc3673636c1310a24697f9d4594bd9d42367b5d2b11f16bf1e9ed8",
+      "bytes": 9060
+    },
+    {
+      "path": "storage-persistence/slotted_page_layout.rs",
+      "sha256": "9cacf4a2d9518c3be7477cd23f6460dd7f9877f48d7130ba421817b412c4657c",
+      "bytes": 8669
+    },
+    {
+      "path": "storage-persistence/sstable_block_index.rs",
+      "sha256": "c3e568e995615e672ed0a0e46194123fcb145aa39a1893068fc38fda623a1116",
+      "bytes": 6593
+    },
+    {
+      "path": "storage-persistence/tombstone_deletion_merge.rs",
+      "sha256": "60a6b144a6c6d1768c683d41941f8aa4fcbaf180cf8748e490a6e9e4f8c4d950",
+      "bytes": 8904
+    },
+    {
+      "path": "storage-persistence/two_phase_commit_coordinator.rs",
+      "sha256": "2e4841f9f469a7385da91d012bd59ba8333d93efb62a15b03f765f265e501686",
+      "bytes": 8206
+    },
+    {
+      "path": "storage-persistence/wal_group_commit.rs",
+      "sha256": "f27a820403b1392c7f889edf285bdcd806e2cb0024ca8da313501cd36ce5dad1",
+      "bytes": 7141
     },
     {
       "path": "systems-math-encoding/adler32.rs",
