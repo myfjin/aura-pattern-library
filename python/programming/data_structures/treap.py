@@ -67,20 +67,26 @@ class Treap:
         self.root = self._merge(self._merge(left, new_node), right)
     
     def erase(self, value: Any) -> bool:
-        """Remove a value from the treap. Returns True if found and removed."""
-        if self.root is None:
-            return False
-        
-        left, right = self._split(self.root, value)
-        mid, right = self._split(right, value)
-        
-        if mid is None:  # Value not found
-            self.root = self._merge(left, right)
-            return False
-        
-        # Value found, remove one instance
-        self.root = self._merge(left, right)
-        return True
+        """Remove ONE instance of value from the treap. Returns True if removed.
+
+        (The former split-based version split (<=v | >v) and then searched for
+        v inside the >v half — it could never find it, so erase was a no-op
+        that always returned False. Replaced with a recursive find-and-merge.)
+        """
+        def _erase(node: Optional[TreapNode]) -> Tuple[Optional[TreapNode], bool]:
+            if node is None:
+                return None, False
+            if value == node.value:
+                return self._merge(node.left, node.right), True
+            if value < node.value:
+                node.left, removed = _erase(node.left)
+            else:
+                node.right, removed = _erase(node.right)
+            node.update_size()
+            return node, removed
+
+        self.root, removed = _erase(self.root)
+        return removed
     
     def find(self, value: Any) -> bool:
         """Check if a value exists in the treap."""
@@ -130,49 +136,74 @@ class Treap:
         self._inorder(self.root, result)
         return result
 
+def _check_heap(node: Optional[TreapNode]) -> bool:
+    """Every parent's priority must dominate its children (the treap invariant)."""
+    if node is None:
+        return True
+    for child in (node.left, node.right):
+        if child is not None and child.priority > node.priority:
+            return False
+    return _check_heap(node.left) and _check_heap(node.right)
+
+
 def main():
-    """Demo of treap operations."""
-    treap = Treap()
-    
-    # Insert operations
+    """Self-test: BST+heap invariants, kth vs sorted truth, multiset erase,
+    and a sorted-list oracle fuzz."""
+    random.seed(42)
+    t = Treap()
     values = [10, 5, 15, 3, 7, 12, 20, 1, 6, 8]
-    print("Inserting values:", values)
-    for val in values:
-        treap.insert(val)
-    
-    print("Treap as sorted list:", treap.to_list())
-    print("Size:", treap.size())
-    
-    # Find operations
-    print("\nFind operations:")
-    for val in [7, 9, 15]:
-        found = treap.find(val)
-        print(f"Find {val}: {found}")
-    
-    # K-th element operations
-    print("\nK-th element operations:")
-    for k in range(min(5, treap.size())):
+    for v in values:
+        t.insert(v)
+
+    # In-order traversal must equal the sorted input; sizes must agree.
+    assert t.to_list() == sorted(values), f"inorder {t.to_list()} != sorted input"
+    assert t.size() == 10
+
+    # Both invariants hold structurally: BST order (checked above via inorder)
+    # AND the heap property on priorities.
+    assert _check_heap(t.root), "heap property violated somewhere in the treap"
+
+    # kth is exactly the sorted rank, over every valid k.
+    truth = sorted(values)
+    for k in range(10):
+        assert t.kth(k) == truth[k], f"kth({k}) must be {truth[k]}, got {t.kth(k)}"
+    for bad_k in (-1, 10):
         try:
-            kth_val = treap.kth(k)
-            print(f"{k}-th element: {kth_val}")
-        except IndexError as e:
-            print(f"Error accessing {k}-th element: {e}")
-    
-    # Erase operations
-    print("\nErasing values: 5, 15, 25")
-    for val in [5, 15, 25]:
-        erased = treap.erase(val)
-        print(f"Erase {val}: {'Success' if erased else 'Not found'}")
-    
-    print("Treap after erasures:", treap.to_list())
-    print("Final size:", treap.size())
-    
-    # Additional insertions
-    print("\nInserting more values: 4, 9, 18")
-    for val in [4, 9, 18]:
-        treap.insert(val)
-    
-    print("Final treap:", treap.to_list())
+            t.kth(bad_k)
+            assert False, f"kth({bad_k}) accepted out-of-range index"
+        except IndexError:
+            pass
+
+    # find: exact membership.
+    assert t.find(7) is True and t.find(9) is False
+
+    # Multiset semantics: duplicate inserts count, erase removes ONE instance.
+    t.insert(7)
+    assert t.size() == 11 and t.to_list().count(7) == 2
+    assert t.erase(7) is True
+    assert t.to_list().count(7) == 1, "erase removed more than one duplicate"
+    assert t.erase(99) is False, "erasing a missing value reported success"
+    assert t.size() == 10
+
+    # Oracle fuzz: 500 random insert/erase ops against a plain sorted list.
+    import bisect
+    oracle = sorted(t.to_list())
+    for _ in range(500):
+        v = random.randint(0, 40)
+        if random.random() < 0.6:
+            t.insert(v)
+            bisect.insort(oracle, v)
+        else:
+            expected = v in oracle
+            assert t.erase(v) == expected, f"erase({v}) disagrees with oracle"
+            if expected:
+                oracle.remove(v)
+    assert t.to_list() == oracle, "final treap diverged from the sorted oracle"
+    assert t.size() == len(oracle)
+    assert _check_heap(t.root), "heap property lost during the fuzz"
+
+    print(f"treap: inorder sorted, heap invariant held, kth==rank for all k, "
+          f"multiset erase-one, 500-op oracle agreed (size {t.size()}) — PASS")
 
 if __name__ == "__main__":
     main()

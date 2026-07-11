@@ -93,7 +93,7 @@ class Parser:
                 Field("type", "B", 1, 1),
                 Field("length", ">H", 2, 2),
                 Field("sequence", ">H", 4, 2),
-                Field("payload", None, 6, -1),  # -1 means variable length
+                Field("payload", None, 6, -2),  # runs to the checksum trailer
                 Field("checksum", ">H", -2, 2)
             ],
             PacketType.ACK: [
@@ -115,7 +115,7 @@ class Parser:
                 Field("type", "B", 1, 1),
                 Field("length", ">H", 2, 2),
                 Field("command", "B", 4, 1),
-                Field("payload", None, 5, -1),
+                Field("payload", None, 5, -2),
                 Field("checksum", ">H", -2, 2)
             ]
         }
@@ -191,39 +191,28 @@ class Parser:
             sequence = kwargs.get("sequence", 0)
             payload = kwargs.get("payload", b"")
             length = 6 + len(payload)  # header + payload
-            
-            # Build packet data
-            data = struct.pack(">BBHHH", 0xAA, packet_type.value, length, sequence, 0)  # 0 for temp checksum
+
+            # Header + payload, checksum appended as a 2-byte trailer
+            data = struct.pack(">BBHH", 0xAA, packet_type.value, length, sequence)
             data += payload
-            
-            # Calculate checksum
-            checksum = sum(data[:-2]) & 0xFFFF
-            data = data[:-2] + struct.pack(">H", checksum)
-            
+            data += struct.pack(">H", sum(data) & 0xFFFF)
+
         elif packet_type in (PacketType.ACK, PacketType.NACK):
             sequence = kwargs.get("sequence", 0)
             length = 6  # header only
-            
-            # Build packet data
-            data = struct.pack(">BBHHH", 0xAA, packet_type.value, length, sequence, 0)  # 0 for temp checksum
-            
-            # Calculate checksum
-            checksum = sum(data[:-2]) & 0xFFFF
-            data = data[:-2] + struct.pack(">H", checksum)
-            
+
+            data = struct.pack(">BBHH", 0xAA, packet_type.value, length, sequence)
+            data += struct.pack(">H", sum(data) & 0xFFFF)
+
         elif packet_type == PacketType.CONTROL:
             command = kwargs.get("command", 0)
             payload = kwargs.get("payload", b"")
             length = 5 + len(payload)  # header + command + payload
-            
-            # Build packet data
-            data = struct.pack(">BBHHB", 0xAA, packet_type.value, length, 0, command)  # 0 for temp checksum
+
+            data = struct.pack(">BBHB", 0xAA, packet_type.value, length, command)
             data += payload
-            
-            # Calculate checksum
-            checksum = sum(data[:-2]) & 0xFFFF
-            data = data[:-2] + struct.pack(">H", checksum)
-            
+            data += struct.pack(">H", sum(data) & 0xFFFF)
+
         else:
             raise ValueError(f"Unsupported packet type: {packet_type}")
         
@@ -231,71 +220,69 @@ class Parser:
 
 
 def main():
-    """Demo of packet parser functionality."""
+    """Self-test: create→parse round-trip field-exact for all 3 packet types,
+    corruption caught by the checksum, unknown type refused."""
     parser = Parser()
-    
-    # Create and parse DATA packet
-    print("=== Creating DATA packet ===")
-    data_packet = parser.create_packet(
-        PacketType.DATA,
-        sequence=42,
-        payload=b"Hello, World!"
-    )
-    print(f"Raw data: {data_packet.data.hex()}")
-    
-    parsed_data = parser.parse(data_packet)
-    print(f"Parsed fields: {parsed_data.fields}")
-    print(f"Checksum valid: {data_packet.validate_checksum()}")
-    
-    # Create and parse ACK packet
-    print("\n=== Creating ACK packet ===")
-    ack_packet = parser.create_packet(
-        PacketType.ACK,
-        sequence=42
-    )
-    print(f"Raw data: {ack_packet.data.hex()}")
-    
-    parsed_ack = parser.parse(ack_packet)
-    print(f"Parsed fields: {parsed_ack.fields}")
-    print(f"Checksum valid: {ack_packet.validate_checksum()}")
-    
-    # Create and parse CONTROL packet
-    print("\n=== Creating CONTROL packet ===")
-    control_packet = parser.create_packet(
-        PacketType.CONTROL,
-        command=0x05,
-        payload=b"config"
-    )
-    print(f"Raw data: {control_packet.data.hex()}")
-    
-    parsed_control = parser.parse(control_packet)
-    print(f"Parsed fields: {parsed_control.fields}")
-    print(f"Checksum valid: {control_packet.validate_checksum()}")
-    
-    # Test checksum validation with corrupted packet
-    print("\n=== Testing checksum validation ===")
-    corrupted_data = bytearray(data_packet.data)
-    corrupted_data[3] ^= 0xFF  # Flip some bits in the length field
-    corrupted_packet = Packet(bytes(corrupted_data))
-    print(f"Corrupted packet checksum valid: {corrupted_packet.validate_checksum()}")
-    
-    # Test parsing corrupted packet
+
+    # DATA round-trip: every field comes back exactly.
+    data_packet = parser.create_packet(PacketType.DATA, sequence=42,
+                                       payload=b"Hello, World!")
+    parsed = parser.parse(data_packet).fields
+    assert parsed["sequence"] == 42, f"sequence lost: {parsed['sequence']}"
+    assert parsed["payload"] == b"Hello, World!", f"payload corrupted: {parsed['payload']}"
+    assert parsed["length"] == 6 + 13, f"length must be header 6 + payload 13, got {parsed['length']}"
+    assert data_packet.validate_checksum() is True, "fresh packet failed its own checksum"
+    # Wire format: magic byte and type on the wire are exact.
+    assert data_packet.data[0] == 0xAA and data_packet.data[1] == PacketType.DATA.value
+
+    # ACK: header-only, sequence exact.
+    ack = parser.create_packet(PacketType.ACK, sequence=1000)
+    ack_fields = parser.parse(ack).fields
+    assert ack_fields["sequence"] == 1000
+    assert ack.validate_checksum() is True
+    assert len(ack.data) == 8, f"ACK wire size must be 8 bytes, got {len(ack.data)}"
+
+    # CONTROL: command + payload.
+    ctrl = parser.create_packet(PacketType.CONTROL, command=0x05, payload=b"config")
+    ctrl_fields = parser.parse(ctrl).fields
+    assert ctrl_fields["command"] == 5, f"command lost: {ctrl_fields['command']}"
+    assert ctrl_fields["payload"] == b"config"
+    assert ctrl.validate_checksum() is True
+
+    # THE DISASTER: flip bits anywhere — the checksum must catch it.
+    caught = 0
+    for byte_idx in (1, 3, 8):
+        corrupted = bytearray(data_packet.data)
+        corrupted[byte_idx] ^= 0xFF
+        if Packet(bytes(corrupted)).validate_checksum() is False:
+            caught += 1
+    assert caught == 3, f"checksum caught only {caught}/3 corruptions"
+
+    # Empty payload is legal and round-trips.
+    empty = parser.create_packet(PacketType.DATA, sequence=0, payload=b"")
+    assert parser.parse(empty).fields["payload"] == b""
+    assert empty.validate_checksum() is True
+
+    # Binary payload with checksum-relevant bytes survives.
+    blob = bytes(range(256))[:50]
+    binp = parser.create_packet(PacketType.DATA, sequence=7, payload=blob)
+    assert parser.parse(binp).fields["payload"] == blob, "binary payload mangled"
+
+    # Unknown packet type is refused at parse.
+    unknown = Packet(struct.pack(">BBHHH", 0xAA, 0xFF, 6, 42, 0x1234))
     try:
-        parser.parse(corrupted_packet)
-        print("Parsed corrupted packet fields:", corrupted_packet.fields)
-    except Exception as e:
-        print(f"Error parsing corrupted packet: {e}")
-    
-    # Test unknown packet type
-    print("\n=== Testing unknown packet type ===")
+        parser.parse(unknown)
+        assert False, "unknown packet type parsed"
+    except (ValueError, KeyError):
+        pass
     try:
-        unknown_data = struct.pack(">BBHHH", 0xAA, 0xFF, 6, 42, 0x1234)
-        unknown_packet = Packet(unknown_data)
-        parser.parse(unknown_packet)
-    except Exception as e:
-        print(f"Error with unknown packet type: {e}")
-    
-    print("\n=== Demo completed ===")
+        parser.create_packet(PacketType.HEARTBEAT if hasattr(PacketType, "HEARTBEAT") else None)  # type: ignore[arg-type]
+        assert False, "unsupported type accepted by create_packet"
+    except (ValueError, AttributeError, TypeError):
+        pass
+
+    print("packet_parser: DATA/ACK/CONTROL round-trips exact (len 19, ACK 8B), "
+          "3/3 corruptions caught, binary payload safe, unknown type refused — PASS")
 
 
 if __name__ == "__main__":

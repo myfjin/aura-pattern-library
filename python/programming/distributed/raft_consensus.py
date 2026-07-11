@@ -388,49 +388,91 @@ class RaftCluster:
 
 
 def main():
-    """Demo: Create a 5-node Raft cluster and run leader election."""
-    print("Starting Raft consensus demo with 5 nodes...")
-    
-    # Create a cluster with 5 nodes
-    cluster = RaftCluster([1, 2, 3, 4, 5])
-    
-    # Allow some time for election to occur
-    print("Waiting for leader election...")
-    time.sleep(3.0)
-    
-    # Check cluster state
-    leader = cluster.get_leader()
-    if leader:
-        print(f"Leader elected: Node {leader}")
-    else:
-        print("No leader elected yet")
-    
-    print("\nCluster state:")
-    for node_id, state in cluster.get_cluster_state().items():
-        print(f"  Node {node_id}: {state['state']} (term {state['term']})")
-    
-    # Simulate a leader failure and new election
-    if leader:
-        print(f"\nSimulating failure of leader Node {leader}...")
-        cluster.nodes[leader].stop()
-        del cluster.nodes[leader]
-        
-        print("Waiting for new leader election...")
-        time.sleep(3.0)
-        
-        new_leader = cluster.get_leader()
-        if new_leader:
-            print(f"New leader elected: Node {new_leader}")
-        else:
-            print("No new leader elected")
-    
-    print("\nFinal cluster state:")
-    for node_id, state in cluster.get_cluster_state().items():
-        print(f"  Node {node_id}: {state['state']} (term {state['term']})")
-    
-    # Stop all remaining nodes
-    cluster.stop_all_nodes()
-    print("\nDemo completed.")
+    """Self-test: Raft's SAFETY rules driven by hand (no timer threads, no
+    randomness) — one vote per term, term monotonicity, log up-to-dateness
+    veto, append-entries consistency check, commit advancement."""
+    # Disable the background election timers: the protocol itself is under
+    # test, not the scheduler.
+    RaftNode._initialize_node = lambda self: None
+
+    ids = [1, 2, 3, 4, 5]
+    nodes = {i: RaftNode(i, ids) for i in ids}
+
+    # ELECTION SAFETY: candidate 2 (term 1) gathers all 4 votes...
+    votes = sum(1 for i in (1, 3, 4, 5)
+                if nodes[i].receive_vote_request(2, 1, -1, 0))
+    assert votes == 4, f"up-to-date candidate must get 4/4 votes, got {votes}"
+    # ...and a SECOND candidate in the SAME term gets none (one vote per term).
+    votes3 = sum(1 for i in (1, 4, 5)
+                 if nodes[i].receive_vote_request(3, 1, -1, 0))
+    assert votes3 == 0, f"double voting in one term: {votes3} votes granted"
+
+    # TERM MONOTONICITY: a higher term unseats the old vote...
+    assert nodes[1].receive_vote_request(3, 2, -1, 0) is True, \
+        "higher-term candidate denied"
+    assert nodes[1].current_term == 2, "voter did not adopt the higher term"
+    # ...and a stale term is refused outright.
+    assert nodes[1].receive_vote_request(4, 1, -1, 0) is False, \
+        "stale-term vote request granted"
+
+    # LOG UP-TO-DATENESS VETO: a voter with a term-3 entry refuses a
+    # candidate whose log ends in term 2.
+    nodes[5].log.append(LogEntry(term=3, command="x", index=0))
+    nodes[5].current_term = 3
+    assert nodes[5].receive_vote_request(2, 4, -1, 0) is False, \
+        "candidate with a STALE log was granted a vote"
+    assert nodes[5].receive_vote_request(2, 4, 0, 3) is True, \
+        "candidate with an up-to-date log was denied"
+
+    # APPEND ENTRIES: replication, consistency check, commit advancement.
+    f = nodes[4]
+    e0 = LogEntry(term=1, command="set x=1", index=0)
+    e1 = LogEntry(term=1, command="set y=2", index=1)
+    assert f.append_entries(1, leader_id=2, prev_log_index=-1, prev_log_term=0,
+                            entries=[e0, e1], leader_commit=0) is True
+    assert len(f.log) == 2 and f.log[1].command == "set y=2"
+    assert f.commit_index == 0, f"commit index must advance to 0, got {f.commit_index}"
+    assert f.leader_id == 2
+
+    # A GAP is refused (prev entry we don't have).
+    e9 = LogEntry(term=1, command="orphan", index=9)
+    assert f.append_entries(1, 2, prev_log_index=8, prev_log_term=1,
+                            entries=[e9], leader_commit=0) is False, \
+        "append with a log gap accepted"
+
+    # A stale-term leader is refused.
+    f.current_term = 5
+    assert f.append_entries(1, 2, -1, 0, [], 0) is False, \
+        "stale leader's append accepted"
+
+    # CONFLICT: an entry with a different term at an existing index replaces
+    # the tail (the Raft overwrite rule).
+    g = nodes[3]
+    g.append_entries(1, 2, -1, 0, [LogEntry(term=1, command="a", index=0),
+                                   LogEntry(term=1, command="b", index=1)], -1)
+    g.append_entries(2, 5, 0, 1, [LogEntry(term=2, command="B", index=1)], -1)
+    assert len(g.log) == 2 and g.log[1].term == 2 and g.log[1].command == "B", \
+        f"conflicting tail not overwritten: {[(e.term, e.command) for e in g.log]}"
+
+    # Heartbeat: a candidate steps down to follower for an equal/higher term.
+    c = nodes[2]
+    c.state = NodeState.CANDIDATE
+    c.current_term = 3
+    c.receive_heartbeat(leader_id=5, term=4)
+    assert c.state == NodeState.FOLLOWER, "candidate did not step down on heartbeat"
+    assert c.current_term == 4 and c.leader_id == 5
+
+    # Cluster wrapper: leader visibility.
+    cluster = RaftCluster([])
+    cluster.nodes = nodes
+    assert cluster.get_leader() is None
+    nodes[5].state = NodeState.LEADER
+    assert cluster.get_leader() == 5
+    assert cluster.simulate_network_message(5, 99, "heartbeat", {}) is None
+
+    print("raft_consensus: 4/4 then 0/3 votes (one per term), stale terms "
+          "refused, log veto held, gap refused, conflict tail overwritten, "
+          "candidate stepped down — PASS")
 
 
 if __name__ == "__main__":

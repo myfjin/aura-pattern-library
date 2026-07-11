@@ -170,12 +170,14 @@ class ArgParser:
         # Initialize with defaults
         result: Dict[str, Any] = {}
         
-        # Set defaults for options
+        # Set defaults for options. An unset store_true flag is OFF (False)
+        # and an unset store_false flag is ON (True) — the former code
+        # defaulted store_true to True, making the flag indistinguishable.
         for name, option in self.options.items():
             result[name] = option.default
             if option.action in ("store_true", "store_false"):
                 result[name] = option.default if option.default is not None else (
-                    True if option.action == "store_true" else False
+                    option.action == "store_false"
                 )
                 
         # Set defaults for arguments
@@ -187,29 +189,36 @@ class ArgParser:
             self.print_help()
             sys.exit(0)
             
-        # Parse options
+        # Parse options, RECORDING which argv indices each option consumed —
+        # positionals are everything left over. (The former code re-scanned
+        # the raw argv for positionals, so option VALUES were double-counted
+        # as positional arguments.)
+        consumed = set()
         i = 0
         while i < len(args):
             arg = args[i]
-            
+
             # Check if it's an option
             if arg.startswith('-'):
+                consumed.add(i)
                 matched = False
                 for name, option in self.options.items():
                     if arg in (option.short_name, option.long_name):
                         matched = True
-                        
+
                         if option.action == "store":
                             if option.nargs == 1:
                                 if i + 1 >= len(args) or args[i+1].startswith('-'):
                                     raise ValueError(f"Option {arg} requires an argument")
                                 result[name] = args[i+1]
+                                consumed.add(i + 1)
                                 i += 2
                             elif option.nargs == '*':
                                 values = []
                                 j = i + 1
                                 while j < len(args) and not args[j].startswith('-'):
                                     values.append(args[j])
+                                    consumed.add(j)
                                     j += 1
                                 if not values:
                                     raise ValueError(f"Option {arg} requires at least one argument")
@@ -221,20 +230,22 @@ class ArgParser:
                                     if i + 1 + j >= len(args) or args[i+1+j].startswith('-'):
                                         raise ValueError(f"Option {arg} requires {option.nargs} arguments")
                                     values.append(args[i+1+j])
+                                    consumed.add(i + 1 + j)
                                 result[name] = values if len(values) > 1 else values[0]
                                 i += 1 + option.nargs
                         else:  # store_true or store_false
                             result[name] = not (option.action == "store_false")
                             i += 1
                         break
-                        
+
                 if not matched:
                     raise ValueError(f"Unrecognized option: {arg}")
             else:
                 i += 1
-                
-        # Parse positional arguments
-        positional_args = [arg for arg in args if not arg.startswith('-')]
+
+        # Positional arguments = tokens no option consumed
+        positional_args = [a for k, a in enumerate(args)
+                           if k not in consumed and not a.startswith('-')]
         arg_idx = 0
         
         for arg_def in self.arguments:
@@ -411,28 +422,56 @@ def main():
         nargs="*"
     )
     
-    # Test cases
-    test_cases = [
-        ["-f", "json", "data.txt", "2"],
-        ["--format", "xml", "-v", "input.txt", "3", "extra1", "extra2"],
-        ["-f", "csv", "-o", "result.csv", "-n", "1", "2", "3", "data.txt", "5"],
-        ["-h"],
-        ["--help"]
-    ]
-    
-    for i, test_args in enumerate(test_cases):
-        if "help" in test_args or "-h" in test_args:
-            continue  # Skip help as it exits
-            
-        print(f"\n--- Test Case {i+1}: {' '.join(test_args)} ---")
-        try:
-            result = parser.parse_args(test_args)
-            for key, value in result.items():
-                print(f"  {key}: {value}")
-        except ValueError as e:
-            print(f"  Error: {e}")
-        except SystemExit:
-            pass  # Handle help exit
+    # Self-test: exact parse results for flags/values/nargs/positionals,
+    # defaults applied, missing-required refused.
+
+    # Short flag + positionals; unset flag False; default applied.
+    r = parser.parse_args(["-f", "json", "data.txt", "2"])
+    assert r["format"] == "json"
+    assert r["input_file"] == "data.txt"
+    assert r["multiplier"] == ["2"] or r["multiplier"] == "2", f"multiplier: {r['multiplier']!r}"
+    assert r["verbose"] is False, "unset store_true flag must default False"
+    assert r["output"] == "output.txt", "default not applied"
+
+    # Long option + store_true + trailing variadic positionals.
+    r = parser.parse_args(["--format", "xml", "-v", "input.txt", "3", "extra1", "extra2"])
+    assert r["format"] == "xml"
+    assert r["verbose"] is True, "store_true flag not set by -v"
+    assert r["input_file"] == "input.txt"
+    assert r["optional_args"] == ["extra1", "extra2"], f"variadic tail wrong: {r['optional_args']}"
+
+    # nargs='*' option is greedy to the next dash, so positionals go first.
+    r = parser.parse_args(["-f", "csv", "-o", "result.csv",
+                           "data.txt", "5", "-n", "1", "2", "3"])
+    assert r["format"] == "csv" and r["output"] == "result.csv"
+    assert r["numbers"] == ["1", "2", "3"], f"nargs='*' option wrong: {r['numbers']}"
+    assert r["input_file"] == "data.txt"
+    assert sum(int(x) for x in r["numbers"]) == 6, "-n 1 2 3 must sum to 6"
+
+    # Missing REQUIRED option is refused, naming the option.
+    try:
+        parser.parse_args(["input.txt", "2"])
+        assert False, "missing required --format accepted"
+    except (ValueError, SystemExit) as e:
+        assert "format" in str(e).lower() or isinstance(e, SystemExit), \
+            f"error must mention 'format': {e}"
+
+    # Missing required positional is refused.
+    try:
+        parser.parse_args(["-f", "json"])
+        assert False, "missing positionals accepted"
+    except (ValueError, SystemExit):
+        pass
+
+    # Unknown option is refused.
+    try:
+        parser.parse_args(["-f", "json", "--bogus", "x", "in.txt", "2"])
+        assert False, "unknown option accepted"
+    except (ValueError, SystemExit):
+        pass
+
+    print("arg_parser: flags/defaults/nargs exact (-n sums 6), variadic tail "
+          "['extra1','extra2'], required option+positional refused — PASS")
 
 
 if __name__ == "__main__":

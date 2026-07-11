@@ -306,79 +306,79 @@ class Gossip:
 
 
 def main():
-    """Demo the gossip protocol with 5 peers."""
-    print("Starting gossip protocol demo with 5 peers...")
-    
-    # Create 5 gossip nodes
-    nodes: List[Gossip] = []
-    for i in range(5):
-        node = Gossip(
-            member_id=f"node-{i}",
-            address="127.0.0.1",
-            port=8000 + i,
-            suspicion_timeout=3.0,
-            cleanup_timeout=6.0,
-            gossip_interval=0.5
-        )
-        nodes.append(node)
-    
-    # Start all nodes
-    for node in nodes:
-        node.start()
-    
-    # Simulate nodes joining the network
-    print("Simulating network formation...")
-    for i in range(1, 5):
-        # Node i joins by contacting node 0
-        nodes[i].add_member(nodes[0].member)
-        nodes[0].add_member(nodes[i].member)
-    
-    # Let the network stabilize
-    time.sleep(2)
-    
-    # Print initial membership
-    print("\nInitial membership lists:")
-    for i, node in enumerate(nodes):
-        alive_count = len(node.get_alive_members())
-        print(f"Node {i}: {alive_count} alive members")
-    
-    # Simulate node failure (node 4 dies)
-    print("\nSimulating node 4 failure...")
-    nodes[4].stop()  # Stop the gossip thread
-    
-    # Manually mark node 4 as suspect in other nodes
-    for i in range(4):
-        nodes[i].mark_suspect("node-4")
-    
-    # Wait for suspicion timeout
-    print("Waiting for suspicion timeout...")
-    time.sleep(4)
-    
-    # Check membership after timeout
-    print("\nMembership after suspicion timeout:")
-    for i in range(4):
-        alive_count = len(nodes[i].get_alive_members())
-        suspect_count = len(nodes[i].get_suspect_members())
-        dead_count = len(nodes[i].get_dead_members())
-        print(f"Node {i}: {alive_count} alive, {suspect_count} suspect, {dead_count} dead")
-    
-    # Wait for cleanup timeout
-    print("\nWaiting for cleanup timeout...")
-    time.sleep(7)
-    
-    # Check membership after cleanup
-    print("\nMembership after cleanup timeout:")
-    for i in range(4):
-        alive_count = len(nodes[i].get_alive_members())
-        suspect_count = len(nodes[i].get_suspect_members())
-        dead_count = len(nodes[i].get_dead_members())
-        print(f"Node {i}: {alive_count} alive, {suspect_count} suspect, {dead_count} dead")
-    
-    # Stop all remaining nodes
-    for i in range(4):
-        nodes[i].stop()
-    
-    print("\nDemo completed successfully!")
+    """Self-test (no background threads — the state machine is driven by
+    hand on a fake clock): membership exact, SWIM lifecycle
+    alive→suspect→dead→forgotten at the configured timeouts, incarnation
+    ordering on updates."""
+    _real_time = time.time
+    _now = [_real_time()]          # align with Member's default_factory
+    time.time = lambda: _now[0]
+    try:
+        node = Gossip(member_id="node-0", address="127.0.0.1", port=8000,
+                      suspicion_timeout=3.0, cleanup_timeout=6.0,
+                      gossip_interval=0.5)
+        for i in range(1, 5):
+            node.add_member(Member(id=f"node-{i}", address="127.0.0.1",
+                                   port=8000 + i))
+        alive = {m.id for m in node.get_alive_members()}
+        assert alive >= {f"node-{i}" for i in range(1, 5)}, f"members missing: {alive}"
+        n_members = len(node.get_membership_list())
+        assert n_members == 5, f"self + 4 peers must be 5 members, got {n_members}"
+
+        # Duplicate adds don't duplicate.
+        node.add_member(Member(id="node-1", address="127.0.0.1", port=8001))
+        assert len(node.get_membership_list()) == 5, "duplicate add grew the list"
+
+        # SUSPECT: honest transition, honest returns.
+        assert node.mark_suspect("node-4") is True
+        assert node.mark_suspect("ghost") is False
+        assert {m.id for m in node.get_suspect_members()} == {"node-4"}
+        assert "node-4" not in {m.id for m in node.get_alive_members()}
+
+        # Before the suspicion timeout the suspect is NOT declared dead.
+        _now[0] += 2.9
+        node._check_timeouts()
+        assert node.get_dead_members() == [], "suspect declared dead before timeout"
+
+        # Past the timeout it becomes DEAD.
+        _now[0] += 0.2
+        node._check_timeouts()
+        assert {m.id for m in node.get_dead_members()} == {"node-4"}, \
+            "suspect not promoted to dead after suspicion_timeout"
+        assert len(node.get_suspect_members()) == 0
+
+        # Past the cleanup timeout the corpse is forgotten entirely.
+        _now[0] += 6.1
+        node._check_timeouts()
+        assert "node-4" not in {m.id for m in node.get_membership_list()}, \
+            "dead member not cleaned up after cleanup_timeout"
+        assert len(node.get_membership_list()) == 4
+
+        # Direct mark_dead works too.
+        assert node.mark_dead("node-3") is True
+        assert {m.id for m in node.get_dead_members()} == {"node-3"}
+
+        # INCARNATION: an older incarnation must not overwrite a newer one.
+        fresh = Member(id="node-2", address="127.0.0.1", port=8002, incarnation=5)
+        node.add_member(fresh)
+        assert node.members["node-2"].incarnation == 5
+        stale = Member(id="node-2", address="127.0.0.1", port=8002, incarnation=3)
+        node.add_member(stale)
+        assert node.members["node-2"].incarnation == 5, \
+            "stale incarnation overwrote a newer member record"
+
+        # Gossip exchange converges membership between two live nodes.
+        other = Gossip(member_id="node-9", address="127.0.0.1", port=8009,
+                       suspicion_timeout=3.0, cleanup_timeout=6.0)
+        for m in node.get_membership_list():
+            other.add_member(m)
+        assert {m.id for m in other.get_alive_members()} >= \
+            {m.id for m in node.get_alive_members()}, "membership transfer lost members"
+    finally:
+        time.time = _real_time
+
+    print("gossip_protocol: 5 members exact, suspect held at 2.9s / dead at 3.1s "
+          "/ forgotten at +6.1s, stale incarnation rejected — PASS")
 
 
 if __name__ == "__main__":

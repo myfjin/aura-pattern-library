@@ -152,8 +152,13 @@ class Trie:
             
             return False
         
-        result = _delete_helper(self.root, word, 0)
-        return result or self.search(word)  # Return True if word existed
+        # (The former return `result or self.search(word)` reported False for
+        # nearly every successful delete: `result` is only the node-pruning
+        # signal, and search() is False precisely when deletion worked.)
+        if not self.search(word):
+            return False
+        _delete_helper(self.root, word, 0)
+        return True
     
     def autocomplete(self, prefix: str, max_suggestions: int = 10) -> List[str]:
         """
@@ -194,92 +199,63 @@ class Trie:
 
 
 def main() -> None:
-    """Demo the Trie functionality with word suggestions."""
-    # Create a Trie and insert some words
+    """Self-test: exact membership/prefix/autocomplete sets, delete-a-prefix
+    without harming longer words, and honest delete return values."""
     trie = Trie()
-    
-    words = [
-        "apple", "app", "application", "apply", "apt",
-        "banana", "band", "bandana", "bandit",
-        "cat", "car", "card", "care", "careful",
-        "dog", "door", "down", "download"
-    ]
-    
-    print("Inserting words into Trie:")
+    words = ["apple", "app", "application", "apply", "apt",
+             "banana", "band", "bandana", "bandit",
+             "cat", "car", "card", "care", "careful",
+             "dog", "door", "down", "download"]
     for word in words:
         trie.insert(word)
-        print(f"  Inserted: {word}")
-    
-    print("\n" + "="*50)
-    
-    # Test search functionality
-    print("\nTesting search functionality:")
-    test_words = ["app", "apple", "application", "appl", "bandana", "car", "card", "xyz"]
-    for word in test_words:
-        found = trie.search(word)
-        print(f"  Search '{word}': {'Found' if found else 'Not found'}")
-    
-    print("\n" + "="*50)
-    
-    # Test starts_with functionality
-    print("\nTesting prefix checking:")
-    prefixes = ["app", "ban", "ca", "do", "xyz"]
-    for prefix in prefixes:
-        has_prefix = trie.starts_with(prefix)
-        print(f"  Starts with '{prefix}': {'Yes' if has_prefix else 'No'}")
-    
-    print("\n" + "="*50)
-    
-    # Test autocomplete functionality
-    print("\nTesting autocomplete suggestions:")
-    test_prefixes = ["app", "ban", "car", "do", "ca"]
-    for prefix in test_prefixes:
-        suggestions = trie.autocomplete(prefix, max_suggestions=5)
-        print(f"  Suggestions for '{prefix}': {suggestions}")
-    
-    print("\n" + "="*50)
-    
-    # Test deletion functionality
-    print("\nTesting deletion:")
-    words_to_delete = ["app", "bandana", "careful"]
-    for word in words_to_delete:
-        deleted = trie.delete(word)
-        print(f"  Delete '{word}': {'Success' if deleted else 'Failed'}")
-        
-        # Verify deletion
-        found = trie.search(word)
-        print(f"    Verify deletion: {'Still exists' if found else 'Successfully deleted'}")
-    
-    print("\n" + "="*50)
-    
-    # Test autocomplete after deletion
-    print("\nAutocomplete after deletion:")
-    suggestions = trie.autocomplete("app", max_suggestions=5)
-    print(f"  Suggestions for 'app': {suggestions}")
-    
-    print("\n" + "="*50)
-    
-    # Interactive demo
-    print("\nInteractive demo (type 'quit' to exit):")
-    while True:
-        try:
-            prefix = input("Enter a prefix for autocomplete: ").strip()
-            if prefix.lower() == 'quit':
-                break
-            if prefix:
-                suggestions = trie.autocomplete(prefix, max_suggestions=10)
-                if suggestions:
-                    print(f"Suggestions: {suggestions}")
-                else:
-                    print("No suggestions found.")
-            else:
-                print("Please enter a non-empty prefix.")
-        except KeyboardInterrupt:
-            print("\nExiting...")
-            break
-        except EOFError:
-            print("\nExiting...")
-            break
+
+    # Membership is exact: whole words yes, prefixes-of-words no.
+    for w in ("app", "apple", "bandana", "card"):
+        assert trie.search(w) is True, f"inserted word {w!r} not found"
+    for w in ("appl", "ban", "xyz", "downloads", ""):
+        assert trie.search(w) is False, f"non-word {w!r} reported found"
+
+    # Prefix checks.
+    for p in ("app", "ban", "ca", "do"):
+        assert trie.starts_with(p) is True
+    assert trie.starts_with("xyz") is False
+    assert trie.starts_with("") is True, "empty prefix must match everything"
+
+    # Autocomplete returns exactly the words under the prefix.
+    assert sorted(trie.autocomplete("app", 10)) == \
+        ["app", "apple", "application", "apply"], "autocomplete('app') set wrong"
+    assert sorted(trie.autocomplete("band", 10)) == ["band", "bandana", "bandit"]
+    assert trie.autocomplete("xyz", 10) == []
+    assert len(trie.autocomplete("ca", 2)) == 2, "max_suggestions cap not honored"
+
+    # THE DELETE CONTRACT (the bug this test pins): deleting a word that is a
+    # PREFIX of others must succeed, report True, and leave the longer words.
+    assert trie.delete("app") is True, "successful delete reported False"
+    assert trie.search("app") is False, "deleted word still found"
+    assert trie.search("apple") is True and trie.search("application") is True, \
+        "deleting a prefix destroyed longer words"
+    assert sorted(trie.autocomplete("app", 10)) == ["apple", "application", "apply"]
+
+    # Deleting a leaf-path word prunes without touching siblings.
+    assert trie.delete("bandana") is True
+    assert trie.search("bandana") is False
+    assert trie.search("band") is True and trie.search("bandit") is True
+
+    # Deleting the unknown/already-deleted reports False.
+    assert trie.delete("xyz") is False, "deleting a missing word reported success"
+    assert trie.delete("app") is False, "double delete reported success"
+    assert trie.delete("") is False
+
+    # Insert after delete works (no poisoned nodes on the pruned path).
+    trie.insert("bandana")
+    assert trie.search("bandana") is True
+
+    # 16 of the original 18 words remain intact (app deleted; bandana re-added).
+    survivors = sum(1 for w in words if trie.search(w))
+    assert survivors == 17, f"expected 17 surviving words, found {survivors}"
+
+    print("trie: exact sets for search/prefix/autocomplete, prefix-delete safe, "
+          "delete returns honest True/False, 17/18 survivors — PASS")
 
 
 if __name__ == "__main__":

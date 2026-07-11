@@ -232,10 +232,14 @@ class OrderedMap(MutableMapping):
         if node is None:
             return
         
-        # In-order traversal starting from node, stopping at end_key
+        # In-order traversal, stopping at end_key. The fallback traversal
+        # starts from the ROOT, so entries below start_key must be skipped —
+        # without the filter, range(3, 7) also yielded keys 1 and 2.
         for entry in self._inorder_traversal_from(node):
             if entry.key >= end_key:
                 break
+            if entry.key < start_key:
+                continue
             yield entry
     
     def _inorder_traversal_from(self, node: _Node) -> Iterator[MapEntry]:
@@ -246,50 +250,75 @@ class OrderedMap(MutableMapping):
 
 
 def main():
-    """Demo the OrderedMap functionality."""
-    print("Creating OrderedMap...")
+    """Self-test: sorted iteration, exact bounds and half-open range (the bug
+    this pins), all three delete cases, and a dict oracle fuzz."""
+    import random
+    random.seed(42)
+
     omap = OrderedMap()
-    
-    # Insert some data
-    data = [(5, "five"), (2, "two"), (8, "eight"), (1, "one"), (3, "three"), 
-            (7, "seven"), (9, "nine"), (4, "four"), (6, "six")]
-    
-    print("Inserting data:")
-    for key, value in data:
+    for key, value in [(5, "five"), (2, "two"), (8, "eight"), (1, "one"),
+                       (3, "three"), (7, "seven"), (9, "nine"), (4, "four"), (6, "six")]:
         omap[key] = value
-        print(f"  Inserted {key}: {value}")
-    
-    print(f"\nMap size: {len(omap)}")
-    print(f"Map contents: {omap}")
-    
-    # Test access
-    print(f"\nAccessing key 5: {omap[5]}")
-    
-    # Test lower_bound and upper_bound
-    print(f"\nLower bound of 4: {omap.lower_bound(4)}")
-    print(f"Upper bound of 4: {omap.upper_bound(4)}")
-    print(f"Lower bound of 10: {omap.lower_bound(10)}")
-    print(f"Upper bound of 0: {omap.upper_bound(0)}")
-    
-    # Test range iteration
-    print("\nRange [3, 7):")
-    for entry in omap.range(3, 7):
-        print(f"  {entry}")
-    
-    # Test deletion
-    print(f"\nDeleting key 5...")
-    del omap[5]
-    print(f"Map after deletion: {omap}")
-    print(f"Map size: {len(omap)}")
-    
-    # Test contains
-    print(f"\nContains key 5: {5 in omap}")
-    print(f"Contains key 2: {2 in omap}")
-    
-    # Test iteration
-    print("\nIterating through keys:")
-    for key in omap:
-        print(f"  {key}: {omap[key]}")
+    assert len(omap) == 9
+    assert list(omap) == list(range(1, 10)), f"keys not sorted: {list(omap)}"
+    assert omap[5] == "five"
+    assert sum(omap.keys()) == 45, "1..9 must sum to 45"
+
+    # Update-in-place never grows the map.
+    omap[5] = "FIVE"
+    assert omap[5] == "FIVE" and len(omap) == 9
+
+    # Bounds: lower_bound is >=, upper_bound is strictly >.
+    assert omap.lower_bound(4).key == 4
+    assert omap.upper_bound(4).key == 5
+    assert omap.lower_bound(10) is None, "lower_bound past max must be None"
+    assert omap.upper_bound(0).key == 1
+    assert omap.lower_bound(-5).key == 1
+
+    # THE RANGE BUG: [3, 7) must be exactly 3,4,5,6 — nothing below start.
+    got = [e.key for e in omap.range(3, 7)]
+    assert got == [3, 4, 5, 6], f"range [3,7) must be [3,4,5,6], got {got}"
+    assert [e.key for e in omap.range(100, 200)] == []
+
+    # Delete all three BST cases: leaf (1), one child, two children (5, root-ish).
+    del omap[1]                       # leaf
+    del omap[5]                       # two children
+    del omap[8]                       # one child (9)
+    assert list(omap) == [2, 3, 4, 6, 7, 9], f"post-delete keys wrong: {list(omap)}"
+    assert 5 not in omap and 2 in omap
+    try:
+        del omap[100]
+        assert False, "deleting a missing key succeeded"
+    except KeyError:
+        pass
+    try:
+        omap[100]
+        assert False, "reading a missing key succeeded"
+    except KeyError:
+        pass
+
+    # Oracle fuzz: 500 ops vs a plain dict; order must equal sorted(dict).
+    fuzz = OrderedMap()
+    oracle = {}
+    for _ in range(500):
+        op = random.random()
+        k = random.randint(0, 60)
+        if op < 0.55:
+            v = random.randint(0, 999)
+            fuzz[k] = v
+            oracle[k] = v
+        elif op < 0.8:
+            if k in oracle:
+                del fuzz[k]
+                del oracle[k]
+            assert (k in fuzz) == (k in oracle)
+        else:
+            assert fuzz.get(k) == oracle.get(k), f"get({k}) disagrees with oracle"
+    assert list(fuzz.items()) == sorted(oracle.items()), "final order diverged from oracle"
+    assert len(fuzz) == len(oracle)
+
+    print(f"ordered_map: sorted keys sum 45, bounds exact, range [3,7)==[3,4,5,6], "
+          f"3 delete cases held, 500-op dict oracle agreed ({len(fuzz)} final) — PASS")
 
 
 if __name__ == "__main__":

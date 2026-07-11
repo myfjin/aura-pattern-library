@@ -160,92 +160,74 @@ class LRUCache:
         for key in expired_keys:
             del self._cache[key]
 
-def _worker(cache: LRUCache, worker_id: int, results: Dict[int, list]) -> None:
-    """Worker function for concurrent access testing."""
-    results[worker_id] = []
-    
-    # Put some values
-    for i in range(5):
-        key = f"worker{worker_id}_key{i}"
-        cache.put(key, f"value_{worker_id}_{i}", ttl=2.0)
-        results[worker_id].append(f"Put {key}")
-    
-    # Get some values
-    for i in range(3):
-        key = f"worker{worker_id}_key{i}"
-        value = cache.get(key)
-        results[worker_id].append(f"Got {key}: {value}")
-    
-    # Let some entries expire
-    time.sleep(1.1)
-    
-    # Try to get expired values
-    for i in range(5):
-        key = f"worker{worker_id}_key{i}"
-        value = cache.get(key)
-        results[worker_id].append(f"Got {key} after sleep: {value}")
-
 if __name__ == "__main__":
-    # Basic usage demo
-    print("=== LRU Cache with TTL Demo ===")
-    
-    # Create cache with capacity 3 and default TTL of 1 second
-    cache = LRUCache(capacity=3, default_ttl=1.0)
-    
-    print(f"Cache capacity: {cache.capacity}")
-    
-    # Add some items
-    cache.put("key1", "value1")
-    cache.put("key2", "value2", ttl=0.5)  # Shorter TTL
-    cache.put("key3", "value3")
-    cache.put("key4", "value4")  # This should evict key1 (LRU)
-    
-    print(f"Cache size after 4 inserts: {cache.size}")
-    print(f"Keys in cache: {cache.keys()}")
-    
-    # Retrieve items
-    print(f"Get key1 (should be None, evicted): {cache.get('key1')}")
-    print(f"Get key2: {cache.get('key2')}")
-    print(f"Get key3: {cache.get('key3')}")
-    print(f"Get key4: {cache.get('key4')}")
-    
-    # Wait for key2 to expire
-    print("Waiting for key2 to expire (0.5s)...")
-    time.sleep(0.6)
-    
-    print(f"Get key2 after expiration (should be None): {cache.get('key2')}")
-    
-    # Test capacity eviction
-    cache.put("key5", "value5")
-    cache.put("key6", "value6")
-    print(f"Cache size after 2 more inserts: {cache.size}")
-    print(f"Keys in cache: {cache.keys()}")
-    print(f"Get key3 (should be None, evicted by capacity): {cache.get('key3')}")
-    
-    # Concurrent access demo
-    print("\n=== Concurrent Access Demo ===")
-    concurrent_cache = LRUCache(capacity=10)
-    
-    threads = []
-    results: Dict[int, list] = {}
-    
-    # Start 3 worker threads
-    for i in range(3):
-        thread = threading.Thread(target=_worker, args=(concurrent_cache, i, results))
-        threads.append(thread)
-        thread.start()
-    
-    # Wait for all threads to complete
-    for thread in threads:
-        thread.join()
-    
-    # Print results
-    for worker_id, worker_results in results.items():
-        print(f"Worker {worker_id} results:")
-        for result in worker_results:
-            print(f"  {result}")
-    
-    print(f"Final cache size: {concurrent_cache.size}")
-    print(f"Final cache keys: {concurrent_cache.keys()}")
-    
-    print("\n=== Demo completed ===")
+    # Self-test: LRU eviction order, recency-on-get, TTL expiry on a fake clock,
+    # type/capacity enforcement, and thread-safety under real contention.
+    _now = [10_000.0]
+    _real_time = time.time
+    time.time = lambda: _now[0]
+    try:
+        cache = LRUCache(capacity=3)
+
+        # Fill to capacity, then overflow: the LEAST recently used key must go.
+        cache.put("k1", "v1")
+        cache.put("k2", "v2")
+        cache.put("k3", "v3")
+        cache.put("k4", "v4")                     # evicts k1
+        assert cache.size == 3, f"capacity-3 cache holds {cache.size}"
+        assert cache.get("k1") is None, "k1 survived eviction at capacity"
+        assert cache.get("k2") == "v2"
+
+        # THE FAILURE the pattern exists to prevent: get() must refresh recency.
+        # k2 was just read, so inserting k5 must evict k3 (now the LRU), not k2.
+        cache.put("k5", "v5")
+        assert cache.get("k3") is None, "recency not updated on get: k3 should have been evicted"
+        assert cache.get("k2") == "v2", "recently-read k2 was wrongly evicted"
+
+        # TTL expiry, driven by the fake clock, not sleeps.
+        cache.put("short", "s", ttl=0.5)
+        assert cache.get("short") == "s"
+        _now[0] += 0.6
+        assert cache.get("short") is None, "entry readable 0.6s past a 0.5s TTL"
+        # ttl=None with default_ttl=None means no expiration, ever.
+        cache.put("forever", "f")
+        _now[0] += 1_000_000.0
+        assert cache.get("forever") == "f", "no-TTL entry expired"
+
+        # delete() reports what it did.
+        assert cache.delete("forever") is True
+        assert cache.delete("forever") is False, "double delete reported success"
+
+        # Invalid usage is refused.
+        try:
+            LRUCache(capacity=0)
+            assert False, "capacity=0 accepted"
+        except ValueError:
+            pass
+        try:
+            cache.get(42)  # type: ignore[arg-type]
+            assert False, "non-string key accepted"
+        except TypeError:
+            pass
+    finally:
+        time.time = _real_time
+
+    # Real contention: 8 threads × 50 distinct keys into a capacity-400 cache.
+    # Every write must survive (no lost updates, no corruption, exact final size).
+    big = LRUCache(capacity=400)
+    def _hammer(wid: int) -> None:
+        for i in range(50):
+            big.put(f"w{wid}_k{i}", wid * 1000 + i)
+    threads = [threading.Thread(target=_hammer, args=(w,)) for w in range(8)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    assert big.size == 400, f"8x50 distinct puts into capacity 400 left size {big.size}"
+    for w in range(8):
+        for i in range(50):
+            got = big.get(f"w{w}_k{i}")
+            assert got == w * 1000 + i, f"lost/corrupt entry w{w}_k{i}: {got}"
+
+    print("lru_cache: LRU order held, get-refreshes-recency, TTL on fake clock, "
+          "400/400 concurrent entries intact — PASS")

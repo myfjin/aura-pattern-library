@@ -194,55 +194,63 @@ class ConnectionPool:
 
 
 def main():
-    """Demo the connection pool functionality."""
-    print("=== Connection Pool Demo ===")
-    
-    # Create a pool with max size of 3
-    pool = ConnectionPool(max_size=3)
-    print(f"Created pool with max size: {pool.max_size}")
-    
-    # Borrow connections
-    connections = []
-    for i in range(5):  # Try to borrow 5 connections
-        conn = pool.borrow_connection()
-        if conn:
-            connections.append(conn)
-            print(f"Borrowed {conn}")
-        else:
-            print(f"Failed to borrow connection {i+1} - pool at capacity")
-    
-    print(f"Pool status: {pool.available_count} available, {pool.in_use_count} in use")
-    
-    # Return some connections
-    for i in range(2):
-        if connections:
-            conn = connections.pop()
-            pool.return_connection(conn)
-            print(f"Returned {conn}")
-    
-    print(f"Pool status: {pool.available_count} available, {pool.in_use_count} in use")
-    
-    # Borrow more connections (should succeed now)
-    for i in range(2):
-        conn = pool.borrow_connection()
-        if conn:
-            connections.append(conn)
-            print(f"Borrowed {conn}")
-    
-    print(f"Pool status: {pool.available_count} available, {pool.in_use_count} in use")
-    
-    # Cleanup demo
-    removed = pool.cleanup_unhealthy_connections()
-    print(f"Cleaned up {removed} unhealthy connections")
-    
-    # Return all remaining connections
-    while connections:
-        conn = connections.pop()
-        pool.return_connection(conn)
-        print(f"Returned {conn}")
-    
-    print(f"Final pool status: {pool.available_count} available, {pool.in_use_count} in use")
-    print("=== Demo Complete ===")
+    """Self-test on a fake clock: capacity exact, reuse-not-recreate,
+    foreign returns refused, aged connections evicted not re-pooled."""
+    _now = [1_000.0]
+    _real_time = time.time
+    time.time = lambda: _now[0]
+    try:
+        pool = ConnectionPool(max_size=3)
+
+        # Capacity: exactly 3 borrows succeed, the 4th and 5th are refused.
+        conns = [pool.borrow_connection() for _ in range(5)]
+        granted = [c for c in conns if c is not None]
+        assert len(granted) == 3, f"max_size=3 pool granted {len(granted)}"
+        assert conns[3] is None and conns[4] is None
+        assert pool.in_use_count == 3 and pool.available_count == 0
+
+        # Return two: they become available, not destroyed.
+        ids_returned = {granted[0].id, granted[1].id}
+        assert pool.return_connection(granted[0]) is True
+        assert pool.return_connection(granted[1]) is True
+        assert pool.available_count == 2 and pool.in_use_count == 1
+
+        # Re-borrow REUSES the returned connections (same ids, no new builds).
+        re1 = pool.borrow_connection()
+        re2 = pool.borrow_connection()
+        assert {re1.id, re2.id} == ids_returned, \
+            f"pool built new connections instead of reusing {ids_returned}"
+
+        # A connection the pool never lent (or already returned) is refused.
+        foreign = Connection(999)
+        assert pool.return_connection(foreign) is False, "foreign connection accepted"
+        pool.return_connection(re1)
+        assert pool.return_connection(re1) is False, "double return accepted"
+
+        # AGE-OUT: at +31s every existing connection fails its health check.
+        # Returning an aged connection must NOT put it back in the pool.
+        _now[0] += 31
+        aged_in_use = pool.in_use_count            # re2 + granted[2]
+        assert pool.return_connection(re2) is True
+        assert pool.available_count == 1, \
+            "aged (unhealthy) connection was re-pooled on return"
+        # ...and cleanup evicts the aged available one (re1) too.
+        removed = pool.cleanup_unhealthy_connections()
+        assert removed >= 1, f"cleanup found no unhealthy connections, removed {removed}"
+        assert pool.available_count == 0, "unhealthy connection survived cleanup"
+
+        # Fresh borrows still work after eviction (new connections built).
+        fresh = pool.borrow_connection()
+        assert fresh is not None and fresh.health_check() is True
+
+        # close_all empties both sides.
+        pool.close_all_connections()
+        assert pool.available_count == 0 and pool.in_use_count == 0
+    finally:
+        time.time = _real_time
+
+    print("connection_pool: 3/5 granted at cap, reuse by id, foreign+double "
+          "returns refused, 31s age-out evicted, close_all clean — PASS")
 
 
 if __name__ == "__main__":

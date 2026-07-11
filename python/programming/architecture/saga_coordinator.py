@@ -236,168 +236,69 @@ class CompensatingAction:
 
 
 def main():
-    """Demo: Order processing saga with payment and inventory management."""
-    
-    # Create a saga for order processing
-    order_saga = Saga("Order Processing Saga")
-    
-    # Step 1: Validate order
-    def validate_order(context: SagaContext) -> bool:
-        order_data = context.get("order")
-        if not order_data:
-            raise ValueError("No order data provided")
-        
-        if order_data.get("amount", 0) <= 0:
-            raise ValueError("Invalid order amount")
-        
-        context.set("order_validated", True)
-        logger.info(f"Order {order_data.get('id')} validated")
-        return True
-    
-    def compensate_validate_order(context: SagaContext) -> None:
-        order_data = context.get("order")
-        logger.info(f"Compensating order validation for order {order_data.get('id')}")
-        context.set("order_validated", False)
-    
-    validate_step = SagaStep(
-        "Validate Order",
-        validate_order,
-        compensate_validate_order
-    )
-    order_saga.add_step(validate_step)
-    
-    # Step 2: Process payment
-    def process_payment(context: SagaContext) -> str:
-        order_data = context.get("order")
-        if not context.get("order_validated"):
-            raise RuntimeError("Order not validated")
-        
-        # Simulate payment processing
-        payment_id = f"payment_{order_data.get('id')}"
-        context.set("payment_id", payment_id)
-        logger.info(f"Payment processed: {payment_id}")
-        return payment_id
-    
-    def compensate_payment(context: SagaContext) -> None:
-        payment_id = context.get("payment_id")
-        logger.info(f"Refunding payment: {payment_id}")
-        context.set("payment_refunded", True)
-    
-    payment_step = SagaStep(
-        "Process Payment",
-        process_payment,
-        compensate_payment
-    )
-    order_saga.add_step(payment_step)
-    
-    # Step 3: Reserve inventory
-    def reserve_inventory(context: SagaContext) -> List[str]:
-        order_data = context.get("order")
-        items = order_data.get("items", [])
-        
-        if not items:
-            raise ValueError("No items in order")
-        
-        # Simulate inventory reservation
-        reserved_items = [f"reserved_{item}" for item in items]
-        context.set("reserved_items", reserved_items)
-        logger.info(f"Inventory reserved: {reserved_items}")
-        return reserved_items
-    
-    def compensate_inventory(context: SagaContext) -> None:
-        reserved_items = context.get("reserved_items", [])
-        logger.info(f"Releasing reserved inventory: {reserved_items}")
-        context.set("inventory_released", True)
-    
-    inventory_step = SagaStep(
-        "Reserve Inventory",
-        reserve_inventory,
-        compensate_inventory
-    )
-    order_saga.add_step(inventory_step)
-    
-    # Step 4: Confirm order (this step will fail to demonstrate compensation)
-    def confirm_order(context: SagaContext) -> str:
-        # Simulate a failure in the final step
-        raise RuntimeError("Warehouse system unavailable")
-        
-        # This code would normally execute:
-        # order_id = context.get("order", {}).get("id")
-        # confirmation_id = f"confirm_{order_id}"
-        # context.set("confirmation_id", confirmation_id)
-        # logger.info(f"Order confirmed: {confirmation_id}")
-        # return confirmation_id
-    
-    def compensate_confirm(context: SagaContext) -> None:
-        confirmation_id = context.get("confirmation_id")
-        if confirmation_id:
-            logger.info(f"Canceling order confirmation: {confirmation_id}")
-            context.set("confirmation_canceled", True)
-    
-    confirm_step = SagaStep(
-        "Confirm Order",
-        confirm_order,
-        compensate_confirm
-    )
-    order_saga.add_step(confirm_step)
-    
-    # Set up order data in context
-    order_saga.context.set("order", {
-        "id": "order_12345",
-        "amount": 99.99,
-        "items": ["item_A", "item_B"]
-    })
-    
-    # Execute the saga
-    success = order_saga.execute()
-    
-    # Print results
-    print(f"\nSaga Execution Result: {'SUCCESS' if success else 'FAILED'}")
-    print(f"Final Saga Status: {order_saga.status.value}")
-    print(f"Context Data: {order_saga.context.data}")
-    
-    # Demonstrate a successful saga
-    print("\n" + "="*50)
-    print("DEMONSTRATING SUCCESSFUL SAGA")
-    print("="*50)
-    
-    # Create a successful saga
-    successful_saga = Saga("Successful Order Processing")
-    
-    # Add the same steps but with a working confirmation
-    def working_confirm_order(context: SagaContext) -> str:
-        order_id = context.get("order", {}).get("id")
-        confirmation_id = f"confirm_{order_id}"
-        context.set("confirmation_id", confirmation_id)
-        logger.info(f"Order confirmed: {confirmation_id}")
-        return confirmation_id
-    
-    # Add all steps to the successful saga
-    successful_saga.add_step(validate_step)
-    successful_saga.add_step(payment_step)
-    successful_saga.add_step(inventory_step)
-    
-    # Add working confirmation step
-    working_confirm_step = SagaStep(
-        "Confirm Order",
-        working_confirm_order,
-        compensate_confirm
-    )
-    successful_saga.add_step(working_confirm_step)
-    
-    # Set up order data
-    successful_saga.context.set("order", {
-        "id": "order_67890",
-        "amount": 149.99,
-        "items": ["item_C", "item_D"]
-    })
-    
-    # Execute the successful saga
-    success2 = successful_saga.execute()
-    
-    print(f"\nSaga Execution Result: {'SUCCESS' if success2 else 'FAILED'}")
-    print(f"Final Saga Status: {successful_saga.status.value}")
-    print(f"Context Data: {successful_saga.context.data}")
+    """Self-test: a failing saga compensates every EXECUTED step in exact
+    reverse order and reports FAILED; a clean saga completes with no
+    compensation and exact context state."""
+    trace = []
+
+    def mk_step(name, fail=False):
+        def action(context):
+            if fail:
+                raise RuntimeError(f"{name} exploded")
+            trace.append(f"do:{name}")
+            context.set(name, True)
+            return name
+        def compensate(context):
+            trace.append(f"undo:{name}")
+            context.set(f"{name}_compensated", True)
+        return SagaStep(name, action, compensate)
+
+    # FAILING SAGA: steps A, B succeed; C fails; D never runs.
+    saga = Saga("failing")
+    for step in (mk_step("A"), mk_step("B"), mk_step("C", fail=True), mk_step("D")):
+        saga.add_step(step)
+    ok = saga.execute()
+    assert ok is False, "failing saga reported success"
+    assert saga.status == SagaStatus.FAILED
+
+    # Execution stopped at the failure; D never ran; nothing after C did.
+    assert trace == ["do:A", "do:B", "undo:B", "undo:A"], \
+        f"compensation must undo executed steps in REVERSE order: {trace}"
+    assert saga.context.get("A_compensated") is True
+    assert saga.context.get("B_compensated") is True
+    assert saga.context.get("C_compensated") is None, \
+        "the FAILING step (never executed) was compensated"
+    assert saga.context.get("D") is None, "step after the failure executed"
+
+    # SUCCESSFUL SAGA: all steps run, zero compensations, exact context.
+    trace.clear()
+    good = Saga("good")
+    for name in ("V", "P", "I"):
+        good.add_step(mk_step(name))
+    ok = good.execute()
+    assert ok is True and good.status == SagaStatus.COMPLETED
+    assert trace == ["do:V", "do:P", "do:I"], f"clean run trace wrong: {trace}"
+    assert not any(t.startswith("undo") for t in trace), \
+        "a successful saga ran compensations"
+    assert all(good.context.get(n) is True for n in ("V", "P", "I"))
+    n_executed = len(good.executed_steps)
+    assert n_executed == 3, f"3 steps must be recorded as executed, got {n_executed}"
+
+    # A failing COMPENSATION must not abort the remaining compensations.
+    trace.clear()
+    tough = Saga("tough-compensation")
+    def bad_undo(context):
+        raise RuntimeError("compensation itself failed")
+    tough.add_step(SagaStep("first", lambda c: trace.append("do:first"), bad_undo))
+    tough.add_step(mk_step("second"))
+    tough.add_step(mk_step("boom", fail=True))
+    assert tough.execute() is False
+    assert "undo:second" in trace, "good compensation skipped"
+    assert tough.context.get("second_compensated") is True, \
+        "a crashing compensation aborted the rest of the rollback"
+
+    print("saga_coordinator: failure → undo B,A in reverse (C/D untouched), "
+          "clean run 3/3 no undo, crashing compensation contained — PASS")
 
 
 if __name__ == "__main__":

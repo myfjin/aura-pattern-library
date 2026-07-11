@@ -104,27 +104,19 @@ class LogParser:
 
 
 def main():
-    """Demo the LogParser functionality."""
-    # Create a parser instance
+    """Self-test: exact field extraction per format, unmatched lines report
+    (None, None), match counts exact, first-pattern-wins ordering."""
     parser = LogParser()
-    
-    # Add patterns for common log formats
     parser.add_pattern(
         r'(?P<ip>\d+\.\d+\.\d+\.\d+) - - \[(?P<timestamp>[^\]]+)\] "(?P<method>\w+) (?P<path>\S+) HTTP/[\d.]+" (?P<status>\d+) (?P<size>\d+)',
-        "apache_common"
-    )
-    
+        "apache_common")
     parser.add_pattern(
         r'(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) \[(?P<level>\w+)\] (?P<message>.*)',
-        "app_log"
-    )
-    
+        "app_log")
     parser.add_pattern(
         r'(?P<user>\w+) logged in from (?P<ip>\d+\.\d+\.\d+\.\d+)',
-        "login_event"
-    )
-    
-    # Sample log lines
+        "login_event")
+
     log_lines = [
         '192.168.1.1 - - [10/Oct/2023:13:55:36 +0000] "GET /index.html HTTP/1.1" 200 2326',
         '192.168.1.2 - - [10/Oct/2023:13:55:37 +0000] "POST /api/login HTTP/1.1" 401 123',
@@ -134,36 +126,52 @@ def main():
         '2023-10-10 13:55:40 [DEBUG] Processing user request',
         'jane logged in from 192.168.1.4',
         'invalid log line that does not match any pattern',
-        '192.168.1.5 - - [10/Oct/2023:13:55:41 +0000] "GET /favicon.ico HTTP/1.1" 404 0'
+        '192.168.1.5 - - [10/Oct/2023:13:55:41 +0000] "GET /favicon.ico HTTP/1.1" 404 0',
     ]
-    
-    # Parse the log lines
     results = parser.parse_lines(log_lines)
-    
-    # Display results
-    print("Parsing Results:")
-    print("=" * 50)
-    for i, (pattern_name, data) in enumerate(results):
-        print(f"Line {i+1}:")
-        if pattern_name:
-            print(f"  Pattern: {pattern_name}")
-            print(f"  Data: {data}")
-        else:
-            print("  No matching pattern found")
-        print()
-    
-    # Show match counts
-    print("Match Counts:")
-    print("=" * 50)
-    counts = parser.get_match_counts()
-    for pattern_name, count in counts.items():
-        print(f"{pattern_name}: {count}")
-    
-    # Demonstrate reset functionality
-    print("\nResetting counts...")
+
+    # Exact field extraction for each format.
+    name, data = results[0]
+    assert name == "apache_common"
+    assert data == {"ip": "192.168.1.1", "timestamp": "10/Oct/2023:13:55:36 +0000",
+                    "method": "GET", "path": "/index.html", "status": "200",
+                    "size": "2326"}, f"apache fields wrong: {data}"
+    assert int(data["status"]) + int(data["size"]) == 2526, "200+2326 must be 2526"
+    name, data = results[3]
+    assert name == "app_log" and data["level"] == "ERROR"
+    assert data["message"] == "Database connection failed"
+    name, data = results[4]
+    assert name == "login_event"
+    assert data == {"user": "john", "ip": "192.168.1.3"}
+
+    # Unmatched lines are honestly (None, None) — not force-fit.
+    assert results[7] == (None, None), f"garbage line matched: {results[7]}"
+
+    # Counts are exact per pattern.
+    assert parser.get_match_counts() == {"apache_common": 3, "app_log": 3,
+                                         "login_event": 2}, \
+        f"match counts wrong: {parser.get_match_counts()}"
+
+    # First-pattern-wins: a line matching two patterns credits the first.
+    dual = LogParser()
+    dual.add_pattern(r'(?P<word>\w+)', "greedy_first")
+    dual.add_pattern(r'(?P<word>hello)', "specific_second")
+    name, _ = dual.parse_line("hello world")
+    assert name == "greedy_first", "pattern priority order not respected"
+
+    # reset_counts really zeroes.
     parser.reset_counts()
-    new_counts = parser.get_match_counts()
-    print(f"Counts after reset: {new_counts}")
+    assert parser.get_match_counts() == {}
+
+    # Invalid regex is refused at registration, not at match time.
+    try:
+        parser.add_pattern(r'(?P<broken', "bad")
+        assert False, "invalid regex accepted"
+    except ValueError:
+        pass
+
+    print("log_pattern_matcher: 3 formats extracted exactly (status+size 2526), "
+          "counts 3/3/2, first-wins order, bad regex refused — PASS")
 
 
 if __name__ == "__main__":

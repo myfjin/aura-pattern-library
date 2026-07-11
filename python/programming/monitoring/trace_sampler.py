@@ -260,66 +260,76 @@ def create_sampler(sampler_type: str, **kwargs) -> Sampler:
     return samplers[sampler_type](**kwargs)
 
 
+def _ctx(i: int, tags=None, priority=False) -> TraceContext:
+    c = TraceContext(trace_id=f"trace-{i}", span_id=f"span-{i}",
+                     service_name="svc", operation_name=f"op-{i % 5}",
+                     tags=tags or {})
+    if priority:
+        c.priority = True
+    return c
+
+
 def main():
-    """Demo of the distributed tracing sampler."""
-    print("Distributed Tracing Sampler Demo")
-    print("=" * 40)
-    
-    # Test different samplers
-    samplers = {
-        "Always On": AlwaysOnSampler(),
-        "Always Off": AlwaysOffSampler(),
-        "Probabilistic (10%)": ProbabilisticSampler(0.1),
-        "Rate Limiting (5/sec)": RateLimitingSampler(5),
-        "Adaptive (target 3/sec)": AdaptiveSampler(3),
-    }
-    
-    # Add priority sampler
-    base_sampler = ProbabilisticSampler(0.1)
-    priority_sampler = PrioritySampler(
-        base_sampler, 
-        {"error": True}
-    )
-    samplers["Priority"] = priority_sampler
-    
-    # Generate test traces
-    trace_count = 50
-    results = {name: {"sampled": 0, "total": 0} for name in samplers}
-    
-    print(f"Generating {trace_count} traces for each sampler...\n")
-    
-    for name, sampler in samplers.items():
-        sampled_count = 0
-        
-        for i in range(trace_count):
-            # Create a trace context
-            context = TraceContext(
-                trace_id=f"trace-{i}",
-                span_id=f"span-{i}",
-                service_name="test-service",
-                operation_name=f"operation-{i % 5}",
-                tags={"error": i % 10 == 0}  # 10% error traces
-            )
-            
-            # For priority sampler, mark some as priority
-            if name == "Priority" and i % 7 == 0:
-                context.priority = True
-            
-            # Make sampling decision
-            result = sampler.should_sample(context)
-            
-            if result.decision == SamplingDecision.SAMPLE:
-                sampled_count += 1
-        
-        results[name]["sampled"] = sampled_count
-        results[name]["total"] = trace_count
-        
-        # Print results
-        rate = (sampled_count / trace_count) * 100 if trace_count > 0 else 0
-        print(f"{name:25}: {sampled_count:2d}/{trace_count:2d} ({rate:5.1f}%)")
-    
-    print("\n" + "=" * 40)
-    print("Demo completed successfully!")
+    """Self-test: exact deciders exact, probabilistic within seeded bounds,
+    rate limiter caps per second on a fake clock, priority always wins."""
+    random.seed(42)
+
+    # AlwaysOn / AlwaysOff are total functions with exact answers.
+    on, off = AlwaysOnSampler(), AlwaysOffSampler()
+    assert all(on.should_sample(_ctx(i)).decision == SamplingDecision.SAMPLE
+               for i in range(50)), "AlwaysOn dropped a trace"
+    assert all(off.should_sample(_ctx(i)).decision == SamplingDecision.DROP
+               for i in range(50)), "AlwaysOff sampled a trace"
+
+    # Probabilistic edges: rate 0 samples nothing, rate 1 samples everything.
+    assert all(ProbabilisticSampler(1.0).should_sample(_ctx(i)).decision
+               == SamplingDecision.SAMPLE for i in range(50))
+    assert all(ProbabilisticSampler(0.0).should_sample(_ctx(i)).decision
+               == SamplingDecision.DROP for i in range(50))
+    # Seeded 10% over 2000 draws lands near 200 (binomial, generous bounds).
+    p = ProbabilisticSampler(0.1)
+    hits = sum(1 for i in range(2000)
+               if p.should_sample(_ctx(i)).decision == SamplingDecision.SAMPLE)
+    assert 140 <= hits <= 260, f"10% of 2000 must be ~200, got {hits}"
+
+    # Rate limiter on a fake clock: exactly max/sec, resets next second.
+    _real_time = time.time
+    _now = [90_000.0]
+    time.time = lambda: _now[0]
+    try:
+        rl = RateLimitingSampler(5)
+        first = sum(1 for i in range(20)
+                    if rl.should_sample(_ctx(i)).decision == SamplingDecision.SAMPLE)
+        assert first == 5, f"limiter must pass exactly 5 of 20 in one second, got {first}"
+        _now[0] += 1.1  # next second: budget refills
+        second = sum(1 for i in range(20)
+                     if rl.should_sample(_ctx(i)).decision == SamplingDecision.SAMPLE)
+        assert second == 5, f"budget must refill to 5 after the window, got {second}"
+    finally:
+        time.time = _real_time
+
+    # Priority sampler: priority flag or matching tag ALWAYS samples,
+    # everything else falls through to the (never-sampling) base.
+    pr = PrioritySampler(AlwaysOffSampler(), {"error": True})
+    assert pr.should_sample(_ctx(1, priority=True)).decision == SamplingDecision.SAMPLE
+    assert pr.should_sample(_ctx(2, tags={"error": True})).decision == SamplingDecision.SAMPLE
+    assert pr.should_sample(_ctx(3, tags={"error": False})).decision == SamplingDecision.DROP, \
+        "non-matching tag value escalated to priority"
+    assert pr.should_sample(_ctx(4)).decision == SamplingDecision.DROP, \
+        "plain trace bypassed the base sampler"
+
+    # Factory: builds the right types, refuses unknown ones.
+    assert isinstance(create_sampler("always_on"), AlwaysOnSampler)
+    assert isinstance(create_sampler("probabilistic", sampling_rate=0.5),
+                      ProbabilisticSampler)
+    try:
+        create_sampler("quantum")
+        assert False, "unknown sampler type accepted"
+    except ValueError:
+        pass
+
+    print(f"trace_sampler: on/off exact 50/50, seeded 10% hit {hits}/2000, "
+          f"rate limit 5+5 across the window, priority always wins — PASS")
 
 
 if __name__ == "__main__":

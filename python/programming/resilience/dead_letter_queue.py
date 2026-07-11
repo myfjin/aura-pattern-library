@@ -300,63 +300,78 @@ def demo_processor(message: DLQMessage) -> bool:
 
 
 def main():
-    """Demo the Dead Letter Queue functionality."""
-    print("=== Dead Letter Queue Demo ===\n")
-    
-    # Create DLQ with custom retry policy
-    retry_policy = RetryPolicy(max_retries=3, base_delay=1.0)
-    dlq = DeadLetterQueue(retry_policy)
-    
-    # Enqueue some test messages
-    messages = [
-        {"data": "normal message 1", "should_fail": False},
-        {"data": "failing message 1", "should_fail": True},
-        {"data": "normal message 2", "should_fail": False},
-        {"data": "poison pill message", "should_fail": False},  # Will fail due to content
-        {"data": "failing message 2", "should_fail": True},
-    ]
-    
-    for msg_data in messages:
-        dlq.enqueue(msg_data)
-    
-    print(f"Initial queue stats: {dlq.get_queue_stats()}\n")
-    
-    # Process messages multiple times to demonstrate retries
-    for i in range(5):
-        print(f"--- Processing Round {i+1} ---")
-        stats = dlq.process_queue(demo_processor)
-        print(f"Round stats: {stats}")
-        print(f"Queue stats: {dlq.get_queue_stats()}\n")
-        
-        if dlq.get_queue_stats()["pending"] == 0:
-            print("No more pending messages.")
-            break
-        
-        # Wait a bit to allow retry delays to pass
-        time.sleep(1.5)
-    
-    # Show dead letter queue contents
-    print("=== Dead Letter Queue Contents ===")
-    dead_letters = dlq.get_dead_letter_messages()
-    for msg in dead_letters:
-        print(f"ID: {msg.id}")
-        print(f"Payload: {msg.payload}")
-        print(f"Attempts: {msg.attempt_count}")
-        print(f"Error: {msg.error_message}")
-        print("---")
-    
-    # Demonstrate retrying a dead letter message
-    if dead_letters:
-        print("\n=== Retrying Dead Letter Message ===")
-        message_to_retry = dead_letters[0]
-        success = dlq.retry_dead_letter_message(message_to_retry.id)
-        print(f"Retry initiated for {message_to_retry.id}: {success}")
-        print(f"Queue stats after retry: {dlq.get_queue_stats()}")
-    
-    print("\n=== Final Queue Statistics ===")
-    final_stats = dlq.get_queue_stats()
-    for queue_name, count in final_stats.items():
-        print(f"{queue_name.capitalize()}: {count}")
+    """Self-test on a fake clock: good messages process once, poison messages
+    exhaust max_retries and land in the DLQ (never lost), manual retry
+    resurrects them."""
+    _now = [70_000.0]
+    _real_time = time.time
+    time.time = lambda: _now[0]
+    try:
+        dlq = DeadLetterQueue(RetryPolicy(max_retries=3, base_delay=1.0))
+        for payload in ({"data": "good 1", "should_fail": False},
+                        {"data": "bad", "should_fail": True},
+                        {"data": "good 2", "should_fail": False}):
+            dlq.enqueue(payload)
+        assert dlq.get_queue_stats() == {"pending": 3, "processing": 0,
+                                         "dead_letter": 0, "processed": 0}
+
+        def processor(message: DLQMessage) -> bool:
+            if message.payload.get("should_fail"):
+                raise Exception("simulated failure")
+            return True
+
+        # Round 1: the two good messages process; the bad one schedules a retry.
+        dlq.process_queue(processor)
+        s = dlq.get_queue_stats()
+        assert s["processed"] == 2, f"2 good messages must process, got {s['processed']}"
+        assert s["dead_letter"] == 0, "message dead-lettered before exhausting retries"
+        assert s["pending"] == 1, "failing message must be re-queued as pending"
+
+        # Retries honor the backoff schedule: before the delay passes, the
+        # message must NOT be attempted again.
+        attempts_before = dlq.pending_queue[0].attempt_count
+        dlq.process_queue(processor)   # too early — backoff not elapsed
+        assert dlq.pending_queue[0].attempt_count == attempts_before, \
+            "message retried before its backoff delay elapsed"
+
+        # Advance the clock through the retries until exhaustion.
+        rounds = 0
+        while dlq.get_queue_stats()["pending"] > 0 and rounds < 10:
+            _now[0] += 300
+            dlq.process_queue(processor)
+            rounds += 1
+        s = dlq.get_queue_stats()
+        assert s["dead_letter"] == 1, f"exhausted message must be dead-lettered: {s}"
+        assert s["pending"] == 0 and s["processed"] == 2
+
+        # The dead letter carries its history — nothing was silently lost.
+        dead = dlq.get_dead_letter_messages()
+        assert len(dead) == 1
+        assert dead[0].payload["data"] == "bad"
+        assert dead[0].attempt_count == 3, \
+            f"must record max_retries=3 attempts, got {dead[0].attempt_count}"
+        assert dead[0].error_message is not None
+
+        # Manual resurrection: back to pending with a clean slate; a now-fixed
+        # processor completes it.
+        assert dlq.retry_dead_letter_message(dead[0].id) is True
+        assert dlq.retry_dead_letter_message("ghost") is False
+        assert dlq.get_queue_stats()["pending"] == 1
+        dlq.process_queue(lambda m: True)
+        s = dlq.get_queue_stats()
+        assert s == {"pending": 0, "processing": 0, "dead_letter": 0,
+                     "processed": 3}, f"resurrected message did not complete: {s}"
+
+        # Backoff arithmetic is exponential and capped.
+        rp = RetryPolicy(max_retries=5, base_delay=1.0, max_delay=4.0)
+        assert [rp.calculate_delay(a) for a in (0, 1, 2, 3)] == [1.0, 2.0, 4.0, 4.0], \
+            "backoff must double then cap at max_delay (0-indexed attempts)"
+        assert rp.should_retry(4) and not rp.should_retry(5)
+    finally:
+        time.time = _real_time
+
+    print("dead_letter_queue: 2 good processed, poison retried 3x then "
+          "dead-lettered with history, backoff respected, resurrection 3/3 — PASS")
 
 
 if __name__ == "__main__":

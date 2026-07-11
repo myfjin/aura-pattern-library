@@ -238,50 +238,75 @@ class Quorum:
 
 
 def main() -> None:
-    """Demo of the quorum consensus simulator."""
-    # Create nodes
+    """Self-test: majority math exact, full acceptance reaches consensus and
+    every node learns, MINORITY acceptance does NOT, conflicting values veto."""
     nodes = [Node(f"node_{i}") for i in range(5)]
     quorum = Quorum(nodes)
-    
-    print("Quorum Consensus Simulator Demo")
-    print(f"Created {len(nodes)} nodes with majority threshold: {quorum.majority}")
-    print()
-    
-    # Test 1: Successful consensus
-    print("Test 1: Proposing value 'A' from node_0")
-    proposal_id_a = quorum.propose_value("node_0", "A")
-    consensus_value = quorum.check_consensus(proposal_id_a)
-    
-    if consensus_value:
-        print(f"Consensus reached: {consensus_value}")
-    else:
-        print("No consensus reached")
-    
-    learned = quorum.get_learned_value(proposal_id_a)
-    print(f"Learned value: {learned}")
-    print()
-    
-    # Test 2: Another proposal
-    print("Test 2: Proposing value 42 from node_2")
-    proposal_id_b = quorum.propose_value("node_2", 42)
-    consensus_value = quorum.check_consensus(proposal_id_b)
-    
-    if consensus_value:
-        print(f"Consensus reached: {consensus_value}")
-    else:
-        print("No consensus reached")
-    
-    learned = quorum.get_learned_value(proposal_id_b)
-    print(f"Learned value: {learned}")
-    print()
-    
-    # Test 3: Show message log count
-    print(f"Total messages exchanged: {len(quorum.message_log)}")
-    
-    # Test 4: Try to get non-existent proposal
-    print("Test 4: Checking non-existent proposal")
-    non_existent = quorum.check_consensus("fake-id")
-    print(f"Non-existent proposal consensus: {non_existent}")
+    assert quorum.majority == 3, f"majority of 5 must be 3, got {quorum.majority}"
+    assert quorum.has_majority(3) and not quorum.has_majority(2)
+
+    # Full acceptance: consensus on 'A', and every node LEARNS it.
+    pid_a = quorum.propose_value("node_0", "A")
+    assert quorum.check_consensus(pid_a) == "A", "unanimous proposal failed consensus"
+    for node in nodes:
+        assert node.get_learned_value(pid_a) == "A", \
+            f"{node.node_id} did not learn the decided value"
+    assert quorum.get_learned_value(pid_a) == "A"
+
+    # Values are carried verbatim (int survives).
+    pid_b = quorum.propose_value("node_2", 42)
+    assert quorum.check_consensus(pid_b) == 42
+    assert quorum.get_learned_value(pid_b) == 42
+
+    # THE FAILURE MODES a quorum system exists to catch:
+    # 1. Minority acceptance (2 of 5) → NO consensus, nothing learned.
+    minority_pid = "manual-minority"
+    nodes[0].accept(minority_pid, "M", "node_0")
+    nodes[1].accept(minority_pid, "M", "node_0")
+    assert quorum.check_consensus(minority_pid) is None, \
+        "2/5 acceptances produced consensus"
+    assert quorum.get_learned_value(minority_pid) is None, \
+        "value learned without a quorum"
+
+    # 2. Conflicting accepted values → consensus impossible.
+    split_pid = "manual-split"
+    for n in nodes[:3]:
+        n.accept(split_pid, "X", "node_0")
+    for n in nodes[3:]:
+        n.accept(split_pid, "Y", "node_3")
+    assert quorum.check_consensus(split_pid) is None, \
+        "conflicting values still reached 'consensus'"
+
+    # 3. Unknown proposal → honest None.
+    assert quorum.check_consensus("fake-id") is None
+
+    # Message accounting: propose(1) + 4 accepts, then 5 learns on success.
+    fresh = Quorum([Node(f"m{i}") for i in range(5)])
+    pid = fresh.propose_value("m0", "v")
+    assert len(fresh.message_log) == 5, \
+        f"1 propose + 4 accepts must log 5 messages, got {len(fresh.message_log)}"
+    fresh.check_consensus(pid)
+    assert len(fresh.message_log) == 10, \
+        f"+5 learn messages must total 10, got {len(fresh.message_log)}"
+
+    # Edge quorums: 1 node decides alone; 2 nodes need both.
+    solo = Quorum([Node("only")])
+    assert solo.majority == 1
+    pair = Quorum([Node("p0"), Node("p1")])
+    assert pair.majority == 2, "majority of 2 must be 2 (no split-brain)"
+    try:
+        Quorum([])
+        assert False, "empty quorum accepted"
+    except ValueError:
+        pass
+    try:
+        quorum.propose_value("ghost", "v")
+        assert False, "unknown proposer accepted"
+    except ValueError:
+        pass
+
+    print("quorum_consensus: majority 3/5 exact, unanimous decided + 5 learned, "
+          "2/5 refused, split vote refused, messages 5→10 — PASS")
 
 
 if __name__ == "__main__":

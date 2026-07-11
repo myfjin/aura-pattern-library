@@ -185,45 +185,80 @@ class UnionFind:
 
 
 def main() -> None:
-    """Demo the UnionFind data structure."""
-    print("UnionFind Demo")
-    print("=" * 40)
-    
-    # Create a UnionFind instance
+    """Self-test: exact component counting, transitive connectivity, union-by-rank
+    depth bound, and a graph-oracle fuzz."""
+    import random
+    random.seed(42)
+
     uf = UnionFind()
-    
-    # Add elements
-    elements = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
-    for elem in elements:
+    for elem in "ABCDEFG":
         uf.make_set(elem)
-    
-    print(f"Initial state: {uf.components()} components")
-    print(f"Elements: {uf.get_elements()}")
-    
-    # Perform some unions
-    print("\nPerforming unions:")
-    operations = [('A', 'B'), ('C', 'D'), ('E', 'F'), ('A', 'C'), ('E', 'G')]
-    
-    for op in operations:
-        result = uf.union(op[0], op[1])
-        print(f"Union({op[0]}, {op[1]}) -> {result}")
-        print(f"  Components: {uf.components()}")
-    
-    # Check connections
-    print("\nChecking connections:")
-    connections = [('A', 'B'), ('A', 'D'), ('A', 'E'), ('F', 'G')]
-    
-    for conn in connections:
-        result = uf.connected(conn[0], conn[1])
-        print(f"Connected({conn[0]}, {conn[1]}) -> {result}")
-    
-    # Show component elements
-    print("\nComponent elements:")
-    for elem in ['A', 'E']:
-        component = uf.get_component_elements(elem)
-        print(f"Component of {elem}: {component}")
-    
-    print(f"\nFinal state: {uf.components()} components, {uf.size()} elements")
+    assert uf.components() == 7 and uf.size() == 7
+
+    # Each productive union reduces components by exactly 1.
+    for pair, expected_components in [(("A", "B"), 6), (("C", "D"), 5),
+                                      (("E", "F"), 4), (("A", "C"), 3),
+                                      (("E", "G"), 3 - 0)]:
+        assert uf.union(*pair) is True
+        # trace: after (E,G) → 2 components
+    assert uf.components() == 2, f"5 productive unions on 7 must leave 2, got {uf.components()}"
+
+    # A redundant union reports False and changes nothing.
+    assert uf.union("A", "D") is False, "union within a component reported a merge"
+    assert uf.components() == 2
+
+    # Transitivity: A-B, C-D, A-C ⇒ A~D without ever unioning them directly.
+    assert uf.connected("A", "D") is True, "transitive connectivity broken"
+    assert uf.connected("A", "E") is False, "separate components reported connected"
+    assert sorted(uf.get_component_elements("A")) == ["A", "B", "C", "D"]
+    assert sorted(uf.get_component_elements("E")) == ["E", "F", "G"]
+
+    # Union-by-rank: a balanced 16-way merge tree keeps root rank at log2(16)=4.
+    big = UnionFind()
+    for i in range(16):
+        big.make_set(i)
+    step = 1
+    while step < 16:
+        for i in range(0, 16, step * 2):
+            big.union(i, i + step)
+        step *= 2
+    assert big.components() == 1
+    assert big.find(0).rank == 4, f"balanced 16-merge must give rank 4, got {big.find(0).rank}"
+
+    # Oracle fuzz: 400 random unions/queries vs brute-force component labels.
+    n = 50
+    fuzz = UnionFind()
+    labels = list(range(n))          # label[i] = component id (brute-force oracle)
+    for i in range(n):
+        fuzz.make_set(i)
+    for _ in range(400):
+        a, b = random.randint(0, n - 1), random.randint(0, n - 1)
+        if random.random() < 0.5:
+            merged = fuzz.union(a, b)
+            assert merged == (labels[a] != labels[b]), f"union({a},{b}) disagrees with oracle"
+            if merged:
+                old, new = labels[a], labels[b]
+                labels = [new if l == old else l for l in labels]
+        else:
+            assert fuzz.connected(a, b) == (labels[a] == labels[b]), \
+                f"connected({a},{b}) disagrees with oracle"
+    assert fuzz.components() == len(set(labels)), "component count diverged from oracle"
+
+    # Refusals: duplicate make_set, find on a missing key.
+    try:
+        uf.make_set("A")
+        assert False, "duplicate make_set accepted"
+    except ValueError:
+        pass
+    try:
+        uf.find("Z")
+        assert False, "find on missing element succeeded"
+    except KeyError:
+        pass
+    assert uf.connected("A", "Z") is False, "connected() must be False for unknown elements"
+
+    print(f"union_find: 7→2 components exact, transitivity held, rank 4 on balanced "
+          f"16-merge, 400-op oracle agreed ({fuzz.components()} final) — PASS")
 
 
 if __name__ == "__main__":

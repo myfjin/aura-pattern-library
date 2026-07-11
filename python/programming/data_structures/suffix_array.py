@@ -263,11 +263,14 @@ def longest_common_substring(text1: str, text2: str) -> Tuple[str, List[Tuple[in
                 max_len = lcp[i]
                 positions = []
             if lcp[i] == max_len:
-                # Adjust positions to be relative to original texts
+                # Adjust positions to be relative to original texts,
+                # always as (text1_pos, text2_pos) — the substring is
+                # extracted from text1 via the FIRST coordinate, so the
+                # former swapped order returned garbage substrings.
                 if in_text1_1:
                     positions.append((pos1, pos2 - len(text1) - 1))
                 else:
-                    positions.append((pos1 - len(text1) - 1, pos2))
+                    positions.append((pos2, pos1 - len(text1) - 1))
     
     if max_len == 0:
         return ("", [])
@@ -279,49 +282,72 @@ def longest_common_substring(text1: str, text2: str) -> Tuple[str, List[Tuple[in
 
 
 def main() -> None:
-    """Demo the suffix array and LCP array functionality."""
-    # Test text
-    text = "banana"
-    print(f"Text: {text}")
-    
-    # Build suffix array
-    sa = SuffixArray(text)
-    print("\nSuffix Array:")
-    for i in range(len(sa)):
-        print(f"SA[{i}] = {sa[i]} -> '{sa.to_suffix(i)}'")
-    
-    # Build LCP array
-    lcp = LCPArray(text, sa)
-    print("\nLCP Array:")
-    for i in range(len(lcp)):
-        print(f"LCP[{i}] = {lcp[i]}")
-    
-    # Test pattern search
-    patterns = ["ana", "na", "ban", "xyz"]
-    print("\nPattern Search:")
-    for pattern in patterns:
-        positions = sa.search(pattern)
-        print(f"'{pattern}' found at positions: {positions}")
-    
-    # Test RMQ
-    if len(lcp) > 0:
-        rmq = RMQ(lcp)
-        if len(lcp) >= 3:
-            min_pos = rmq.query(1, 3)
-            print(f"\nRMQ of LCP[1..3]: min at index {min_pos} with value {lcp[min_pos]}")
-    
-    # Test longest common substring
-    print("\nLongest Common Substring:")
-    text1 = "programming"
-    text2 = "algorithm"
-    substring, positions = longest_common_substring(text1, text2)
-    print(f"LCS of '{text1}' and '{text2}': '{substring}' at {positions}")
-    
-    # Additional test case
-    text1 = "abcdef"
-    text2 = "cdefgh"
-    substring, positions = longest_common_substring(text1, text2)
-    print(f"LCS of '{text1}' and '{text2}': '{substring}' at {positions}")
+    """Self-test: the classical banana truths, Kasai LCP vs direct comparison,
+    pattern search vs brute-force, and LCS on planted overlaps."""
+    import random
+    random.seed(42)
+
+    # "banana": the textbook suffix array is [5, 3, 1, 0, 4, 2].
+    sa = SuffixArray("banana")
+    assert sa.suffixes == [5, 3, 1, 0, 4, 2], f"banana SA wrong: {sa.suffixes}"
+    assert sa.to_suffix(0) == "a" and sa.to_suffix(3) == "banana"
+
+    # Kasai LCP for banana: [1, 3, 0, 0, 2, 0] (lcp[i] = LCP(SA[i], SA[i+1])).
+    lcp = LCPArray("banana", sa)
+    assert lcp.lcp == [1, 3, 0, 0, 2, 0], f"banana LCP wrong: {lcp.lcp}"
+
+    # Pattern search: exact position sets.
+    assert sorted(sa.search("ana")) == [1, 3]
+    assert sorted(sa.search("na")) == [2, 4]
+    assert sa.search("ban") == [0]
+    assert sa.search("xyz") == []
+    assert sorted(sa.search("a")) == [1, 3, 5]
+
+    # RMQ over LCP[1..3] = [3, 0, 0]: the minimum VALUE must be 0.
+    rmq = RMQ(lcp)
+    assert lcp[rmq.query(1, 3)] == 0, "RMQ failed to find the 0 in [3,0,0]"
+    assert lcp[rmq.query(0, 1)] == 1, "RMQ of [1,3] must return value 1"
+
+    # Oracle fuzz on a random 120-char 'ab' string: SA vs sorted-suffix truth,
+    # every adjacent LCP vs direct character comparison, search vs brute force.
+    text = "".join(random.choice("ab") for _ in range(120))
+    fsa = SuffixArray(text)
+    assert fsa.suffixes == sorted(range(120), key=lambda i: text[i:]), \
+        "SA diverged from sorted-suffix oracle"
+    flcp = LCPArray(text, fsa)
+    for i in range(119):
+        s1, s2 = text[fsa[i]:], text[fsa[i + 1]:]
+        true_lcp = 0
+        while true_lcp < min(len(s1), len(s2)) and s1[true_lcp] == s2[true_lcp]:
+            true_lcp += 1
+        assert flcp[i] == true_lcp, f"LCP[{i}] = {flcp[i]}, direct comparison {true_lcp}"
+    for _ in range(20):
+        plen = random.randint(1, 6)
+        start = random.randint(0, 120 - plen)
+        pat = text[start:start + plen]
+        want = [i for i in range(120 - plen + 1) if text[i:i + plen] == pat]
+        assert sorted(fsa.search(pat)) == want, f"search({pat!r}) diverged from brute force"
+
+    # Longest common substring on a planted 4-char overlap.
+    substring, positions = longest_common_substring("abcdef", "cdefgh")
+    assert substring == "cdef", f"LCS of abcdef/cdefgh must be 'cdef', got {substring!r}"
+    assert (2, 0) in positions, f"LCS position (2,0) missing: {positions}"
+    # Disjoint alphabets share nothing.
+    assert longest_common_substring("aaa", "bbb") == ("", [])
+    # programming/algorithm share only single characters.
+    s, _ = longest_common_substring("programming", "algorithm")
+    assert len(s) == 1 and s in "programming" and s in "algorithm", \
+        f"LCS of programming/algorithm must be a single shared char, got {s!r}"
+
+    # Refusal: non-string input.
+    try:
+        SuffixArray(42)  # type: ignore[arg-type]
+        assert False, "non-string text accepted"
+    except TypeError:
+        pass
+
+    print("suffix_array: banana SA [5,3,1,0,4,2] + LCP [1,3,0,0,2,0] exact, "
+          "120-char oracle (SA/LCP/search) agreed, LCS 'cdef' planted — PASS")
 
 
 if __name__ == "__main__":

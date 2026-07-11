@@ -388,95 +388,64 @@ class MetricAggregator:
 
 
 def _demo():
-    """Demonstrate the metric aggregation engine with request latency tracking."""
-    print("=== Metric Aggregation Engine Demo ===\n")
-    
-    # Create aggregator
-    aggregator = MetricAggregator()
-    
-    # Register metrics
-    request_count = aggregator.register_counter(
-        "http_requests_total",
-        "Total number of HTTP requests"
-    )
-    
-    active_connections = aggregator.register_gauge(
-        "active_connections",
-        "Number of active connections"
-    )
-    
-    request_latency = aggregator.register_histogram(
-        "http_request_duration_seconds",
-        "HTTP request latency in seconds",
-        buckets=[0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0]
-    )
-    
-    # Simulate some metrics collection
-    print("1. Simulating HTTP requests...")
-    
-    # Simulate different endpoints with different latencies
-    endpoints = [
-        ("/api/users", 0.05),
-        ("/api/orders", 0.15),
-        ("/api/products", 0.08),
-        ("/api/cart", 0.03),
-    ]
-    
-    # Simulate requests
-    import random
-    for i in range(100):
-        # Random endpoint
-        endpoint, base_latency = random.choice(endpoints)
-        
-        # Add some randomness to latency
-        latency = base_latency * random.uniform(0.5, 2.0)
-        
-        # Record metrics
-        request_count.inc(labels={"endpoint": endpoint, "method": "GET"})
-        request_latency.observe(latency, labels={"endpoint": endpoint, "method": "GET"})
-        
-        # Simulate active connections fluctuating
-        active_connections.set(random.randint(5, 50))
-    
-    print("   Simulated 100 HTTP requests\n")
-    
-    # Display results
-    print("2. Metric Results:")
-    
-    # Show request counts by endpoint
-    print("\n   Request counts by endpoint:")
-    for endpoint, _ in endpoints:
-        count = request_count.get(labels={"endpoint": endpoint, "method": "GET"})
-        print(f"     {endpoint}: {count} requests")
-    
-    # Show latency statistics
-    print("\n   Request latency statistics:")
-    for endpoint, _ in endpoints:
-        count = request_latency.get_count(labels={"endpoint": endpoint, "method": "GET"})
-        if count > 0:
-            sum_latency = request_latency.get_sum(labels={"endpoint": endpoint, "method": "GET"})
-            avg_latency = sum_latency / count
-            p50 = request_latency.get_quantile(0.5, labels={"endpoint": endpoint, "method": "GET"})
-            p95 = request_latency.get_quantile(0.95, labels={"endpoint": endpoint, "method": "GET"})
-            p99 = request_latency.get_quantile(0.99, labels={"endpoint": endpoint, "method": "GET"})
-            
-            print(f"     {endpoint}:")
-            print(f"       Count: {count}")
-            print(f"       Average: {avg_latency:.4f}s")
-            print(f"       50th percentile: {p50:.4f}s")
-            print(f"       95th percentile: {p95:.4f}s")
-            print(f"       99th percentile: {p99:.4f}s")
-    
-    # Show bucket distribution for one endpoint
-    print("\n   Latency bucket distribution for /api/users:")
-    bucket_counts = request_latency.get_bucket_counts(labels={"endpoint": "/api/users", "method": "GET"})
-    for bucket, count in bucket_counts:
-        print(f"     <= {bucket:6.3f}s: {count:3d} requests")
-    
-    # Show active connections
-    print(f"\n   Current active connections: {active_connections.get()}")
-    
-    print("\n=== Demo Complete ===")
+    """Self-test: counter/gauge/histogram semantics exact on planted values,
+    label isolation, bucket boundaries inclusive, duplicate names refused."""
+    agg = MetricAggregator()
+    requests = agg.register_counter("http_requests_total", "reqs")
+    conns = agg.register_gauge("active_connections", "conns")
+    latency = agg.register_histogram("latency_seconds", "lat",
+                                     buckets=[0.1, 0.5, 1.0])
+
+    # Counter: increments accumulate per label-set, isolated across sets.
+    for _ in range(4):
+        requests.inc(labels={"endpoint": "/users"})
+    requests.inc(labels={"endpoint": "/orders"})
+    assert requests.get(labels={"endpoint": "/users"}) == 4
+    assert requests.get(labels={"endpoint": "/orders"}) == 1
+    assert requests.get(labels={"endpoint": "/users"}) + \
+        requests.get(labels={"endpoint": "/orders"}) == 5
+
+    # Gauge: set overwrites.
+    conns.set(17)
+    conns.set(42)
+    assert conns.get() == 42, "gauge must hold the last set value"
+
+    # Histogram on planted observations: 0.05, 0.3, 0.3, 0.7, 2.0.
+    for v in (0.05, 0.3, 0.3, 0.7, 2.0):
+        latency.observe(v, labels={"ep": "/u"})
+    assert latency.get_count(labels={"ep": "/u"}) == 5
+    assert abs(latency.get_sum(labels={"ep": "/u"}) - 3.35) < 1e-12, \
+        "sum of planted observations must be 3.35"
+
+    # Bucket counts are PER-RANGE (not Prometheus-cumulative):
+    # (..0.1]=1 (the 0.05), (0.1..0.5]=2 (both 0.3s), (0.5..1.0]=1 (the 0.7);
+    # 2.0 overflows past the last boundary.
+    buckets = dict(latency.get_bucket_counts(labels={"ep": "/u"}))
+    assert buckets.get(0.1) == 1, f"bucket 0.1 must hold 1, got {buckets.get(0.1)}"
+    assert buckets.get(0.5) == 2, f"bucket 0.5 must hold 2, got {buckets.get(0.5)}"
+    assert buckets.get(1.0) == 1, f"bucket 1.0 must hold 1, got {buckets.get(1.0)}"
+    assert sum(buckets.values()) == 4, "2.0 must overflow past the last bucket"
+
+    # Quantiles: p50 of the planted set sits at 0.3, p99 at the top.
+    p50 = latency.get_quantile(0.5, labels={"ep": "/u"})
+    p99 = latency.get_quantile(0.99, labels={"ep": "/u"})
+    assert abs(p50 - 0.3) < 0.25, f"p50 of planted set must be ~0.3, got {p50}"
+    assert p99 >= p50, "quantiles not monotone"
+
+    # Label isolation: a second label-set starts empty.
+    assert latency.get_count(labels={"ep": "/other"}) == 0
+
+    # Registry: duplicate names refused, lookup honest.
+    try:
+        agg.register_gauge("http_requests_total")
+        assert False, "duplicate metric name accepted"
+    except ValueError:
+        pass
+    assert agg.get_metric("http_requests_total") is requests
+    assert agg.get_metric("ghost") is None
+
+    print("metric_aggregation_engine: counter 4+1 isolated, gauge 42, histogram "
+          "sum 3.35 / buckets 1-2-1 per-range, dup name refused — PASS")
 
 
 if __name__ == "__main__":

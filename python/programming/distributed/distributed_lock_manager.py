@@ -211,105 +211,70 @@ class LockManager:
 
 
 if __name__ == "__main__":
-    # Demo the distributed lock manager
-    print("Distributed Lock Manager Demo")
-    print("=" * 40)
-    
-    # Create lock manager
+    # Self-test: mutual exclusion, waiter handoff on release, lease expiry
+    # (real time, short leases), refresh extends, foreign release refused.
+    import threading
+
     manager = LockManager()
-    
-    # Test 1: Basic acquire/release
-    print("\n1. Basic acquire/release test:")
+
+    # Mutual exclusion: second client cannot take a held lock.
     token1 = manager.acquire("resource1", "client1", lease_time=5.0)
-    if token1:
-        print(f"✓ Client1 acquired lock: {token1.token_id[:8]}...")
-        info = manager.get_lock_info("resource1")
-        print(f"  Lock info: {info}")
-        
-        # Try to acquire same resource - should fail
-        token2 = manager.acquire("resource1", "client2", timeout=0.1)
-        if not token2:
-            print("✓ Client2 correctly blocked from acquiring locked resource")
-        
-        # Release the lock
-        if manager.release(token1):
-            print("✓ Client1 released lock")
-        else:
-            print("✗ Failed to release lock")
-    else:
-        print("✗ Client1 failed to acquire lock")
-    
-    # Test 2: Fairness queue
-    print("\n2. Fairness queue test:")
-    # Acquire lock with client1
-    token1 = manager.acquire("resource2", "client1", lease_time=1.0)
-    if token1:
-        print(f"✓ Client1 acquired lock")
-        
-        # Have client2 and client3 wait
-        import threading
-        
-        results = {}
-        def try_acquire(client_id, resource_id):
-            token = manager.acquire(resource_id, client_id, timeout=3.0)
-            results[client_id] = token is not None
-        
-        t2 = threading.Thread(target=try_acquire, args=("client2", "resource2"))
-        t3 = threading.Thread(target=try_acquire, args=("client3", "resource2"))
-        
-        t2.start()
-        t3.start()
-        
-        # Release after 0.5 seconds to let one client in
-        time.sleep(0.5)
-        manager.release(token1)
-        
-        t2.join()
-        t3.join()
-        
-        acquired_count = sum(1 for result in results.values() if result)
-        print(f"✓ {acquired_count}/2 waiting clients acquired lock")
-        
-        # Clean up any remaining locks
-        for client_id, success in results.items():
-            if success:
-                # In a real scenario, we'd have the actual tokens
-                pass
-    
-    # Test 3: Expiration
-    print("\n3. Expiration test:")
-    token = manager.acquire("resource3", "client1", lease_time=0.5)
-    if token:
-        print(f"✓ Acquired lock with 0.5s expiration")
-        time.sleep(0.6)  # Wait for expiration
-        
-        # Try to acquire again - should succeed now
-        token2 = manager.acquire("resource3", "client2", timeout=0.1)
-        if token2:
-            print("✓ Lock correctly expired and was reacquired")
-        else:
-            print("✗ Lock did not expire as expected")
-    
-    # Test 4: Refresh
-    print("\n4. Refresh test:")
-    token = manager.acquire("resource4", "client1", lease_time=1.0)
-    if token:
-        print(f"✓ Acquired lock with 1s expiration")
-        time.sleep(0.7)
-        
-        # Refresh the lock
-        new_token = manager.refresh(token, lease_time=2.0)
-        if new_token:
-            print("✓ Lock refreshed with 2s extension")
-            time.sleep(1.0)
-            
-            # Try to acquire - should fail as lock is still valid
-            token2 = manager.acquire("resource4", "client2", timeout=0.1)
-            if not token2:
-                print("✓ Lock still valid after refresh")
-            else:
-                print("✗ Lock was incorrectly acquired")
-        else:
-            print("✗ Failed to refresh lock")
-    
-    print("\nDemo completed successfully!")
+    assert token1 is not None, "first acquire failed"
+    info = manager.get_lock_info("resource1")
+    assert info["owner_id"] == "client1" and not info["expired"]
+    assert manager.acquire("resource1", "client2", timeout=0.1) is None, \
+        "second client acquired a HELD lock — mutual exclusion broken"
+
+    # Release: honest returns; double release refused.
+    assert manager.release(token1) is True
+    assert manager.release(token1) is False, "double release reported success"
+
+    # After release the resource is takeable.
+    token2 = manager.acquire("resource1", "client2", timeout=0.1)
+    assert token2 is not None and token2.owner_id == "client2"
+    manager.release(token2)
+
+    # Waiter handoff: two clients block; releasing lets EXACTLY one in
+    # (the other still holds it when its own acquire returns).
+    t1 = manager.acquire("resource2", "client1", lease_time=10.0)
+    results = {}
+    def try_acquire(client_id):
+        tok = manager.acquire("resource2", client_id, timeout=3.0, lease_time=10.0)
+        results[client_id] = tok
+    threads = [threading.Thread(target=try_acquire, args=(c,))
+               for c in ("client2", "client3")]
+    for t in threads:
+        t.start()
+    time.sleep(0.3)
+    assert not results, "a waiter acquired while the lock was held"
+    manager.release(t1)
+    for t in threads:
+        t.join()
+    n_winners = sum(1 for tok in results.values() if tok is not None)
+    assert n_winners * 2 == 2, \
+        f"exactly one waiter must win the handoff, got {n_winners}: {results}"
+    winners = [c for c, tok in results.items() if tok is not None]
+    manager.release(results[winners[0]])
+
+    # Lease expiry: a 0.3s lease is reacquirable by another client at 0.5s.
+    manager.acquire("resource3", "client1", lease_time=0.3)
+    assert manager.acquire("resource3", "client2", timeout=0.05) is None
+    time.sleep(0.5)
+    expired_info = manager.get_lock_info("resource3")
+    assert expired_info["expired"] is True, "lease did not expire"
+    stolen = manager.acquire("resource3", "client2", timeout=0.5)
+    assert stolen is not None, "expired lock not reacquirable"
+    manager.release(stolen)
+
+    # Refresh extends the lease past its original expiry.
+    tok = manager.acquire("resource4", "client1", lease_time=0.4)
+    time.sleep(0.2)
+    refreshed = manager.refresh(tok, lease_time=2.0)
+    assert refreshed is not None, "refresh of a live lock failed"
+    time.sleep(0.4)   # past the ORIGINAL lease
+    assert manager.acquire("resource4", "client2", timeout=0.05) is None, \
+        "lock lapsed despite the refresh"
+    assert manager.get_lock_info("resource4")["expires_in"] > 0.5
+
+    print("distributed_lock_manager: exclusion held, 1/2 waiters won handoff, "
+          "0.3s lease expired+stolen, refresh outlived original lease — PASS")

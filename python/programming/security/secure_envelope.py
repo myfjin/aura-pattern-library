@@ -232,98 +232,81 @@ class Envelope:
 
 
 def main():
-    """Demo of the Secure Envelope functionality."""
-    print("Secure Envelope Demo")
-    print("=" * 50)
-    
-    # Create a keyring and generate initial key
+    """Self-test: seal→open round-trip byte-exact, THE ATTACKS actually run
+    (payload tampering, wrong keyring, garbage) and every one is refused."""
     keyring = KeyRing(max_keys=3)
     key_id1 = keyring.generate_key("initial-key")
-    print(f"Generated initial key: {key_id1}")
-    
-    # Create envelope instance
     envelope = Envelope(keyring)
-    
-    # Seal some messages
-    messages = [
-        b"Hello, World!",
-        b"Secret message for Alice",
-        b"Another confidential message"
-    ]
-    
+
+    # Round-trip: bytes and metadata come back exactly.
+    messages = [b"Hello, World!", b"Secret message for Alice", b"\x00\xff binary \x7f"]
     sealed_messages = []
     for i, msg in enumerate(messages):
-        metadata = {"sender": "user1", "priority": "high" if i == 0 else "normal"}
-        sealed = envelope.seal(msg, metadata)
+        sealed = envelope.seal(msg, {"sender": "user1", "n": i})
         sealed_messages.append(sealed)
-        print(f"\nSealed message {i+1}:")
-        print(f"  Original: {msg}")
-        print(f"  Sealed: {sealed[:50]}...")
-    
-    # Open the messages
-    print("\n" + "=" * 50)
-    print("Opening messages:")
-    for i, sealed in enumerate(sealed_messages):
-        try:
-            message, metadata, key_id = envelope.open(sealed)
-            print(f"\nOpened message {i+1}:")
-            print(f"  Message: {message}")
-            print(f"  Metadata: {metadata}")
-            print(f"  Key ID: {key_id}")
-        except Exception as e:
-            print(f"Failed to open message {i+1}: {e}")
-    
-    # Demonstrate key rotation
-    print("\n" + "=" * 50)
-    print("Key rotation demo:")
+    opened = [envelope.open(s) for s in sealed_messages]
+    for i, (message, metadata, key_id) in enumerate(opened):
+        assert message == messages[i], f"message {i} corrupted in round-trip"
+        assert metadata == {"sender": "user1", "n": i}, f"metadata {i} corrupted"
+        assert key_id == key_id1
+    assert sum(m[1]["n"] for m in opened) == 3, "metadata n-values 0+1+2 must sum to 3"
+    assert opened[2][0] == b"\x00\xff binary \x7f", "binary payload mangled"
+
+    # Two seals of the same message differ (timestamped envelopes)
+    # but both open to the same plaintext.
+    s1, s2 = envelope.seal(b"same"), envelope.seal(b"same")
+    assert envelope.open(s1)[0] == envelope.open(s2)[0] == b"same"
+
+    # Key rotation: new seals use the new key; OLD envelopes still open
+    # while the old key remains on the ring.
     key_id2 = keyring.rotate_key()
-    print(f"Rotated to new key: {key_id2}")
-    
-    # Seal a message with the new key
-    new_sealed = envelope.seal(b"Message with new key", {"rotation": "test"})
-    message, metadata, key_id = envelope.open(new_sealed)
-    print(f"\nMessage sealed with new key:")
-    print(f"  Message: {message}")
-    print(f"  Key ID: {key_id}")
-    
-    # Try to open with a different keyring (should fail)
-    print("\n" + "=" * 50)
-    print("Tamper detection demo:")
+    assert key_id2 != key_id1
+    new_sealed = envelope.seal(b"with new key")
+    message, _, key_id = envelope.open(new_sealed)
+    assert message == b"with new key" and key_id == key_id2, "seal not using rotated key"
+    assert envelope.open(sealed_messages[0])[0] == messages[0], \
+        "rotation broke old envelopes while their key is still on the ring"
+
+    # ATTACK 1: wrong keyring — must refuse, not decrypt garbage.
+    stranger = Envelope(KeyRing())
+    stranger._keyring.generate_key("wrong-key")
     try:
-        # Create a new keyring without the original keys
-        new_keyring = KeyRing()
-        new_keyring.generate_key("wrong-key")
-        new_envelope = Envelope(new_keyring)
-        
-        # This should fail
-        new_envelope.open(sealed_messages[0])
-        print("ERROR: Tampering was not detected!")
-    except (ValueError, KeyError) as e:
-        print(f"Tampering correctly detected: {e}")
-    
-    # Try to tamper with a message
+        stranger.open(sealed_messages[0])
+        assert False, "envelope opened by a keyring that never held the key"
+    except (ValueError, KeyError):
+        pass
+
+    # ATTACK 2: modify the payload, keep the old signature — HMAC must catch it.
+    env_data = json.loads(base64.b64decode(sealed_messages[0]))
+    payload = json.loads(env_data["payload"])
+    payload["message"] = base64.b64encode(b"Tampered message").decode()
+    env_data["payload"] = json.dumps(payload, separators=(",", ":"))
+    tampered = base64.b64encode(json.dumps(env_data, separators=(",", ":")).encode()).decode()
     try:
-        # Decode and tamper with the envelope
-        envelope_bytes = base64.b64decode(sealed_messages[0].encode('utf-8'))
-        envelope_data = json.loads(envelope_bytes.decode('utf-8'))
-        
-        # Tamper with the payload
-        payload = json.loads(envelope_data["payload"])
-        payload["message"] = base64.b64encode(b"Tampered message").decode('utf-8')
-        envelope_data["payload"] = json.dumps(payload, separators=(',', ':'))
-        
-        # Re-encode
-        tampered = base64.b64encode(
-            json.dumps(envelope_data, separators=(',', ':')).encode('utf-8')
-        ).decode('utf-8')
-        
-        # Try to open tampered message
         envelope.open(tampered)
-        print("ERROR: Tampering was not detected!")
+        assert False, "TAMPERED payload opened successfully"
     except ValueError as e:
-        print(f"Tampering correctly detected: {e}")
-    
-    print("\nDemo completed successfully!")
+        assert "tamper" in str(e).lower() or "HMAC" in str(e), \
+            f"tampering error must say why: {e}"
+
+    # ATTACK 3: flip one character of the sealed blob.
+    flipped = sealed_messages[0][:-2] + ("A" if sealed_messages[0][-2] != "A" else "B") \
+        + sealed_messages[0][-1]
+    try:
+        envelope.open(flipped)
+        assert False, "bit-flipped envelope opened"
+    except ValueError:
+        pass
+
+    # ATTACK 4: plain garbage.
+    try:
+        envelope.open("bm90IGFuIGVudmVsb3Bl")
+        assert False, "garbage accepted as an envelope"
+    except ValueError:
+        pass
+
+    print("secure_envelope: 3 round-trips byte-exact (incl. binary), rotation "
+          "keeps old envelopes, 4/4 attacks refused — PASS")
 
 
 if __name__ == "__main__":

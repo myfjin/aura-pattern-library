@@ -127,53 +127,65 @@ def create_test_file(filename: str, num_lines: int) -> None:
 
 
 def main() -> None:
-    """Demo the line parser with a generated test file."""
-    test_filename = "test_lines.txt"
+    """Self-test: EVERY line byte-identical across buffer sizes that force
+    splits mid-line (the failure this pattern exists to prevent), plus
+    edge shapes: no trailing newline, empty lines, long lines."""
+    import tempfile
+    tmpdir = tempfile.mkdtemp(prefix="chunked_")
+    path = os.path.join(tmpdir, "lines.txt")
     num_lines = 1000
-    
-    # Create test file
-    print(f"Creating test file with {num_lines} lines...")
-    create_test_file(test_filename, num_lines)
-    
-    # Parse with different buffer sizes
-    for buffer_size in [128, 512, 2048]:
-        print(f"\nParsing with buffer size: {buffer_size}")
+    create_test_file(path, num_lines)
+    truth = [f"This is line number {i+1} with some content" for i in range(num_lines)]
+
+    # Buffer sizes chosen to split lines at awkward places (1 byte = every
+    # boundary possible; 43/128 land mid-line constantly).
+    for buffer_size in (1, 43, 128, 2048, 1 << 20):
         parser = LineParser(buffer_size=buffer_size)
-        
-        line_count = 0
-        try:
-            for i, line in enumerate(parser.parse_lines(test_filename)):
-                line_count += 1
-                # Validate first and last few lines
-                if i < 3 or i >= num_lines - 3:
-                    expected = f"This is line number {i+1} with some content"
-                    if line != expected:
-                        print(f"ERROR: Line {i+1} mismatch!")
-                        print(f"  Expected: {expected}")
-                        print(f"  Got:      {line}")
-                        break
-                # Limit output for readability
-                if i < 5:
-                    print(f"  Line {i+1}: {line}")
-                elif i == 5:
-                    print("  ...")
-                elif i >= num_lines - 3:
-                    print(f"  Line {i+1}: {line}")
-            
-            if line_count == num_lines:
-                print(f"SUCCESS: Parsed {line_count} lines correctly")
-            else:
-                print(f"ERROR: Expected {num_lines} lines, got {line_count}")
-                
-        except Exception as e:
-            print(f"ERROR: {e}")
-    
-    # Clean up test file
+        got = list(parser.parse_lines(path))
+        assert got == truth, (
+            f"buffer {buffer_size}: parsed lines differ from truth "
+            f"(first divergence at line {next(i for i, (a, b) in enumerate(zip(got, truth)) if a != b) if got != truth else '?'})")
+    assert len(got) == 1000
+
+    # No trailing newline: the final partial line must still be yielded.
+    path2 = os.path.join(tmpdir, "no_newline.txt")
+    with open(path2, "w") as f:
+        f.write("first\nsecond\nlast-without-newline")
+    got = list(LineParser(buffer_size=4).parse_lines(path2))
+    assert got == ["first", "second", "last-without-newline"], f"tail line lost: {got}"
+
+    # Empty lines survive; a line longer than the buffer is reassembled whole.
+    path3 = os.path.join(tmpdir, "edges.txt")
+    long_line = "x" * 10_000
+    with open(path3, "w") as f:
+        f.write(f"\n\n{long_line}\nend\n")
+    got = list(LineParser(buffer_size=64).parse_lines(path3))
+    assert got == ["", "", long_line, "end"], \
+        f"edge shapes broken: {[len(g) for g in got]}"
+    assert len(got[2]) == 10000, "10k-char line not reassembled across ~156 chunks"
+
+    # File objects (text mode) work too, not just paths.
+    from io import StringIO
+    got = list(LineParser(buffer_size=7).parse_lines(StringIO("a\nbb\nccc")))
+    assert got == ["a", "bb", "ccc"]
+
+    # Refusals.
     try:
-        os.remove(test_filename)
-        print(f"\nCleaned up test file: {test_filename}")
-    except OSError:
+        ChunkedReader(0)
+        assert False, "buffer_size=0 accepted"
+    except ValueError:
         pass
+    try:
+        list(ChunkedReader().read_chunks(12345))
+        assert False, "non-file object accepted"
+    except ValueError:
+        pass
+
+    for p in (path, path2, path3):
+        os.remove(p)
+    os.rmdir(tmpdir)
+    print("chunked_reader: 1000 lines byte-identical at buffers 1/43/128/2048/1M, "
+          "tail-without-newline kept, 10k line reassembled — PASS")
 
 
 if __name__ == "__main__":

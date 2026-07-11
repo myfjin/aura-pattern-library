@@ -157,7 +157,7 @@ class CreateUserCommandHandler(CommandHandler):
             email=command.email
         )
         self._events.append(event)
-        print(f"Created user: {command.name} ({command.email}) with ID {command.id}")
+        print(f"Created user: {command.name} ({command.email})")
 
 
 class GetUserQueryHandler(QueryHandler):
@@ -178,45 +178,63 @@ class GetUserQueryHandler(QueryHandler):
 
 
 def main() -> None:
-    """Demo the CQRS implementation"""
-    # Create buses
+    """Self-test: commands route to their handler and produce events with the
+    exact payloads; queries return exact data; unregistered types refused."""
     command_bus = CommandBus()
     query_bus = QueryBus()
-    
-    # Create and register handlers
     create_user_handler = CreateUserCommandHandler()
-    get_user_handler = GetUserQueryHandler()
-    
     command_bus.register_handler(CreateUserCommand, create_user_handler)
-    query_bus.register_handler(GetUserQuery, get_user_handler)
-    
-    # Dispatch commands
-    command1 = CreateUserCommand("Alice Johnson", "alice@example.com")
-    command2 = CreateUserCommand("Bob Wilson", "bob@example.com")
-    
-    command_bus.dispatch(command1)
-    command_bus.dispatch(command2)
-    
-    # Dispatch queries
-    query1 = GetUserQuery("123")
-    query2 = GetUserQuery("456")
-    
-    result1 = query_bus.dispatch(query1)
-    result2 = query_bus.dispatch(query2)
-    
-    print(f"Query 1 result: {result1}")
-    print(f"Query 2 result: {result2}")
-    
-    # Test error handling
+    query_bus.register_handler(GetUserQuery, GetUserQueryHandler())
+
+    # Commands: each dispatch produces exactly one event carrying the payload.
+    c1 = CreateUserCommand("Alice Johnson", "alice@example.com")
+    c2 = CreateUserCommand("Bob Wilson", "bob@example.com")
+    command_bus.dispatch(c1)
+    command_bus.dispatch(c2)
+    events = create_user_handler._events
+    assert len(events) == 2, f"2 commands must yield 2 events, got {len(events)}"
+    assert events[0].name == "Alice Johnson" and events[0].email == "alice@example.com"
+    assert events[1].name == "Bob Wilson"
+    assert sum(1 for e in events if "@" in e.email) == 2, \
+        "both events must carry the command's email payload"
+    assert events[0].user_id == c1.id and events[1].user_id == c2.id, \
+        "event user_id does not trace back to its command"
+    assert c1.id != c2.id, "commands share an id"
+
+    # Queries: exact stored data returned.
+    r1 = query_bus.dispatch(GetUserQuery("123"))
+    assert r1 == {"name": "John Doe", "email": "john@example.com"}, f"query wrong: {r1}"
+    r2 = query_bus.dispatch(GetUserQuery("456"))
+    assert r2["name"] == "Jane Smith"
+
+    # Handler errors surface (missing user).
     try:
-        query_bus.dispatch(GetUserQuery("999"))  # Non-existent user
-    except ValueError as e:
-        print(f"Caught expected error: {e}")
-    
+        query_bus.dispatch(GetUserQuery("999"))
+        assert False, "missing user returned a result"
+    except ValueError:
+        pass
+
+    # Unregistered message types are refused by the right bus.
     try:
-        command_bus.dispatch(Query())  # Not a registered command
-    except HandlerNotRegisteredException as e:
-        print(f"Caught expected error: {e}")
+        command_bus.dispatch(Query())
+        assert False, "unregistered command dispatched"
+    except HandlerNotRegisteredException:
+        pass
+    try:
+        query_bus.dispatch(Command())
+        assert False, "unregistered query dispatched"
+    except HandlerNotRegisteredException:
+        pass
+
+    # Registration replaces cleanly: a second handler takes over.
+    fresh_handler = CreateUserCommandHandler()
+    command_bus.register_handler(CreateUserCommand, fresh_handler)
+    command_bus.dispatch(CreateUserCommand("Cara", "cara@example.com"))
+    assert len(fresh_handler._events) == 1 and len(events) == 2, \
+        "re-registration did not switch handlers"
+
+    print("cqrs_bus: 2 commands → 2 traced events, queries exact, unregistered "
+          "refused on both buses, re-registration switches — PASS")
 
 
 if __name__ == "__main__":

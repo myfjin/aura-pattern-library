@@ -150,70 +150,51 @@ class HyperLogLog:
 
 
 def _demo() -> None:
-    """Demonstrate the HyperLogLog implementation."""
-    print("HyperLogLog Demo")
-    print("=" * 40)
-    
-    # Create a HyperLogLog with default precision
-    hll = HyperLogLog(precision=10)  # Smaller precision for faster demo
-    
-    # Add some items
+    """Self-test: estimate accuracy vs known cardinalities (sha1 → fully deterministic)."""
+    hll = HyperLogLog(precision=10)
+
+    # 1000 known-distinct items: estimate must land within 5% of the truth.
     items = [f"item_{i}" for i in range(1000)]
     for item in items:
         hll.add(item)
-    
-    estimated = hll.estimate_cardinality()
-    actual = len(set(items))
-    
-    print(f"Added {actual} distinct items")
-    print(f"Estimated cardinality: {estimated:.2f}")
-    print(f"Error: {abs(estimated - actual) / actual * 100:.2f}%")
-    
-    # Test with some duplicates
-    print("\nAdding duplicates...")
+    est = hll.estimate_cardinality()
+    assert abs(est - 1000.0) < 50.0, f"estimate {est:.1f} off true cardinality 1000 by >5%"
+
+    # Duplicates cannot move a single register: the estimate is bit-identical.
     for i in range(500):
-        hll.add(f"item_{i}")  # These are duplicates
-    
-    estimated_after = hll.estimate_cardinality()
-    print(f"Estimated after adding duplicates: {estimated_after:.2f}")
-    print(f"Should still be ~{actual} (duplicates ignored)")
-    
-    # Test merging
-    print("\nTesting merge...")
+        hll.add(f"item_{i}")
+    est_after = hll.estimate_cardinality()
+    assert est_after == est, "duplicate adds changed the estimate"
+
+    # Merge with an overlapping set (500..1499): union truth is 1500.
     hll2 = HyperLogLog(precision=10)
-    items2 = [f"item_{i}" for i in range(500, 1500)]  # 500-1499
-    for item in items2:
-        hll2.add(item)
-    
-    print(f"HLL2 estimated cardinality: {hll2.estimate_cardinality():.2f}")
-    
-    # Merge hll2 into hll
+    for i in range(500, 1500):
+        hll2.add(f"item_{i}")
+    est2 = hll2.estimate_cardinality()
+    assert abs(est2 - 1000.0) < 50.0, f"hll2 estimate {est2:.1f} off true 1000 by >5%"
     hll.merge(hll2)
-    merged_estimate = hll.estimate_cardinality()
-    expected_unique = len(set(items + items2))  # Should be 1500 unique items
-    
-    print(f"After merge, estimated cardinality: {merged_estimate:.2f}")
-    print(f"Actual unique items: {expected_unique}")
-    print(f"Error: {abs(merged_estimate - expected_unique) / expected_unique * 100:.2f}%")
-    
-    # Test error handling
-    print("\nTesting error handling...")
+    merged = hll.estimate_cardinality()
+    assert abs(merged - 1500.0) < 75.0, f"merged estimate {merged:.1f} off union truth 1500 by >5%"
+
+    # Merge is idempotent (register-wise max): merging again changes nothing.
+    hll.merge(hll2)
+    assert hll.estimate_cardinality() == merged, "re-merge moved the estimate"
+
+    # THE FAILURE: invalid precisions and mismatched merges must be refused.
+    for bad in (3, 17):
+        try:
+            HyperLogLog(precision=bad)
+            assert False, f"precision={bad} accepted outside [4, 16]"
+        except ValueError:
+            pass
     try:
-        bad_hll = HyperLogLog(precision=3)  # Too small
-    except ValueError as e:
-        print(f"Caught expected error: {e}")
-    
-    try:
-        bad_hll = HyperLogLog(precision=17)  # Too large
-    except ValueError as e:
-        print(f"Caught expected error: {e}")
-    
-    # Test merging with different precision
-    hll3 = HyperLogLog(precision=8)
-    try:
-        hll.merge(hll3)
-    except ValueError as e:
-        print(f"Caught expected merge error: {e}")
+        hll.merge(HyperLogLog(precision=8))
+        assert False, "merge across precisions accepted"
+    except ValueError:
+        pass
+
+    print(f"hyperloglog: est {est:.0f}/1000, merged {merged:.0f}/1500, dup-stable, "
+          f"bad precision refused — PASS")
 
 
 if __name__ == "__main__":

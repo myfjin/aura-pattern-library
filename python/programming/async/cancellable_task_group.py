@@ -119,31 +119,58 @@ def quick_task(name: str) -> str:
 
 
 if __name__ == "__main__":
-    # Demo the TaskGroup functionality
-    print("Starting TaskGroup demo...")
-    
+    # Self-test: results and exceptions captured per task, cancellation
+    # actually interrupts long tasks and blocks new spawns.
+
+    # Clean group: results exact, the failing task's exception is captured
+    # in ITS slot without harming the others.
     with TaskGroup() as tg:
-        # Spawn various tasks
-        task1 = tg.spawn(example_task, "Quick", 0.5, tg.token)
-        task2 = tg.spawn(example_task, "Slow", 2.0, tg.token)
-        task3 = tg.spawn(quick_task, "Instant")
-        task4 = tg.spawn(failing_task, "Failure")
-        
-        print(f"Spawned {len(tg.tasks)} tasks")
-        
-        # Wait a bit then cancel all tasks
-        time.sleep(0.8)
-        print("Cancelling all tasks...")
-        tg.cancel_all()
-        
-        # Wait for all tasks to complete
+        t_quick = tg.spawn(quick_task, "A")
+        t_fail = tg.spawn(failing_task, "B")
+        t_short = tg.spawn(example_task, "C", 0.2, tg.token)
         results = tg.wait_all()
-        
-        # Print results
-        for i, task in enumerate(results):
-            if task.exception:
-                print(f"Task {i+1}: Exception - {task.exception}")
-            else:
-                print(f"Task {i+1}: {task.result}")
-    
-    print("Demo completed.")
+        assert len(results) == 3
+        assert t_quick.result == "Task A finished instantly"
+        assert t_quick.completed and t_quick.exception is None
+        assert isinstance(t_fail.exception, ValueError), \
+            f"failing task's exception not captured: {t_fail.exception}"
+        assert t_fail.result is None
+        assert t_short.result == "Task C completed successfully"
+        n_done = sum(1 for t in results if t.completed)
+        assert n_done == 3, f"all 3 must complete, got {n_done}"
+
+    # CANCELLATION: a 10s task must come back as cancelled fast, not run out.
+    start = time.monotonic()
+    with TaskGroup() as tg:
+        long_task = tg.spawn(example_task, "Long", 10.0, tg.token)
+        time.sleep(0.3)          # let it get going
+        tg.cancel_all()
+        assert tg.token.is_cancelled
+        tg.wait_all()
+        elapsed = time.monotonic() - start
+        assert long_task.result == "Task Long was cancelled", \
+            f"long task did not observe cancellation: {long_task.result!r}"
+        assert elapsed < 5.0, f"cancellation did not cut the 10s task ({elapsed:.1f}s)"
+
+        # After cancellation, spawning is refused.
+        try:
+            tg.spawn(quick_task, "late")
+            assert False, "spawn accepted after cancel_all"
+        except RuntimeError:
+            pass
+
+    # A task that never started (spawned then immediately cancelled group)
+    # is skipped rather than run.
+    with TaskGroup() as tg:
+        tg.token.cancel()
+        # spawn refuses, so submit through a fresh group with pre-set token:
+        pass
+    group = TaskGroup()
+    group.token.cancel()
+    tsk = Task(quick_task, "never")
+    tsk.run(group.token)
+    assert tsk.completed and tsk.result is None, \
+        "task body ran despite a cancelled token"
+
+    print("cancellable_task_group: 3/3 completed (exception captured in-slot), "
+          "10s task cancelled in <5s, post-cancel spawn refused — PASS")

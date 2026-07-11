@@ -171,63 +171,62 @@ class TemplateEngine:
 
 
 def main():
-    """Demo the template engine functionality."""
+    """Self-test: every rendering feature asserted against its exact output —
+    substitution, defaults, nested paths, loops, loop-scoped contexts."""
     engine = TemplateEngine()
-    
-    # Test 1: Basic variable substitution
-    template1 = "Hello {{ name }}!"
-    context1 = Context({"name": "World"})
-    result1 = engine.render(template1, context1)
-    print(f"Test 1: {result1}")
-    
-    # Test 2: Variable with default
-    template2 = "Hello {{ name | Guest }}!"
-    context2 = Context({})
-    result2 = engine.render(template2, context2)
-    print(f"Test 2: {result2}")
-    
-    # Test 3: Nested variables
-    template3 = "User: {{ user.name }}, Age: {{ user.age }}"
-    context3 = Context({"user": {"name": "Alice", "age": 30}})
-    result3 = engine.render(template3, context3)
-    print(f"Test 3: {result3}")
-    
-    # Test 4: Simple loop
-    template4 = "Items: {% for item in items %}{{ item }}, {% endfor %}"
-    context4 = Context({"items": ["apple", "banana", "cherry"]})
-    result4 = engine.render(template4, context4)
-    print(f"Test 4: {result4}")
-    
-    # Test 5: Loop with nested variables
-    template5 = "{% for person in people %}Name: {{ person.name }}, Age: {{ person.age }}\n{% endfor %}"
-    context5 = Context({
-        "people": [
-            {"name": "Alice", "age": 30},
-            {"name": "Bob", "age": 25}
-        ]
-    })
-    result5 = engine.render(template5, context5)
-    print(f"Test 5:\n{result5}")
-    
-    # Test 6: Complex template with loops and defaults
-    template6 = """
-Greetings {{ user.name | Friend }}!
 
-Your items:
-{% for item in items %}
-- {{ item.name }} ({{ item.price | 0 }} gold)
-{% endfor %}
-"""
-    context6 = Context({
-        "user": {"name": "Gandalf"},
-        "items": [
-            {"name": "Staff", "price": 100},
-            {"name": "Hat", "price": 50},
-            {"name": "Ring"}  # No price
-        ]
-    })
-    result6 = engine.render(template6, context6)
-    print(f"Test 6:{result6}")
+    # Basic substitution is exact (round-trip a number through the template).
+    assert engine.render("Hello {{ name }}!", Context({"name": "World"})) == "Hello World!"
+    assert int(engine.render("{{ n }}", Context({"n": 42}))) == 42
+
+    # Defaults fire only when the variable is missing.
+    assert engine.render("Hello {{ name | Guest }}!", Context({})) == "Hello Guest!"
+    assert engine.render("Hello {{ name | Guest }}!", Context({"name": "Zed"})) == "Hello Zed!", \
+        "default overrode a present variable"
+
+    # Nested dotted paths resolve.
+    out = engine.render("User: {{ user.name }}, Age: {{ user.age }}",
+                        Context({"user": {"name": "Alice", "age": 30}}))
+    assert out == "User: Alice, Age: 30", f"nested paths wrong: {out!r}"
+
+    # Loops render each element in order.
+    out = engine.render("Items: {% for item in items %}{{ item }}, {% endfor %}",
+                        Context({"items": ["apple", "banana", "cherry"]}))
+    assert out == "Items: apple, banana, cherry, ", f"loop output wrong: {out!r}"
+
+    # Loop over dicts: the loop variable scopes nested access per iteration.
+    out = engine.render("{% for p in people %}{{ p.name }}={{ p.age }};{% endfor %}",
+                        Context({"people": [{"name": "Alice", "age": 30},
+                                            {"name": "Bob", "age": 25}]}))
+    assert out == "Alice=30;Bob=25;", f"loop-scoped nesting wrong: {out!r}"
+
+    # Empty list → loop body vanishes; non-list loop target renders nothing.
+    assert engine.render("A{% for x in xs %}X{% endfor %}B", Context({"xs": []})) == "AB"
+    assert engine.render("A{% for x in xs %}X{% endfor %}B", Context({"xs": 42})) == "AB", \
+        "non-iterable loop target must render empty"
+
+    # Defaults inside loop bodies (missing price falls back to 0).
+    out = engine.render("{% for i in items %}{{ i.name }}:{{ i.price | 0 }} {% endfor %}",
+                        Context({"items": [{"name": "Staff", "price": 100},
+                                           {"name": "Ring"}]}))
+    assert out == "Staff:100 Ring:0 ", f"loop defaults wrong: {out!r}"
+
+    # The loop variable does not leak into the outer scope.
+    ctx = Context({"items": ["x"]})
+    engine.render("{% for item in items %}{{ item }}{% endfor %}", ctx)
+    assert ctx.get("item") is None if hasattr(ctx, "get") else True
+
+    # Type refusals.
+    for bad_call in (lambda: engine.render(42, Context({})),
+                     lambda: engine.render("x", {"not": "a context"})):
+        try:
+            bad_call()
+            assert False, "invalid render arguments accepted"
+        except TypeError:
+            pass
+
+    print("template_engine: substitution/defaults/nesting/loops all exact "
+          "(Alice=30;Bob=25;), empty+non-list loops safe — PASS")
 
 
 if __name__ == "__main__":

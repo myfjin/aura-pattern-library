@@ -145,8 +145,11 @@ class AlertManager:
         return True
 
     def get_active_alerts(self) -> List[Alert]:
-        """Get all currently active alerts."""
-        return list(self.active_alerts.values())
+        """Get all currently active, non-suppressed alerts. (Suppressed
+        alerts are tracked in the same store; returning them as 'active'
+        would page on exactly the alerts suppression exists to silence.)"""
+        return [alert for alert in self.active_alerts.values()
+                if alert.id not in self.suppressed_alerts]
 
     def get_suppressed_alerts(self) -> List[Alert]:
         """Get all currently suppressed alerts."""
@@ -206,111 +209,77 @@ class AlertManager:
         return recent_count >= rule.max_escalation_count
 
 
-def main():
-    """Demo the AlertManager functionality."""
-    # Create alert manager
-    manager = AlertManager()
-    
-    # Create a rule
-    rule = Rule(
-        id="service_rule",
-        name="Service Alert Rule",
-        dedup_window_seconds=10.0,
-        suppression_tags={"maintenance"},
-        max_escalation_count=2,
-        escalation_interval_seconds=30.0
-    )
-    manager.add_rule(rule)
-    
-    # Create some alerts
-    alert1 = Alert(
-        title="High CPU Usage",
-        description="CPU usage exceeded 90%",
-        severity=AlertSeverity.HIGH,
-        source="server01",
-        tags={"production", "cpu"},
-        rule_id="service_rule"
-    )
-    
-    alert2 = Alert(
-        title="High CPU Usage",
-        description="CPU usage still high",
-        severity=AlertSeverity.HIGH,
-        source="server01",
-        tags={"production", "cpu"},
-        rule_id="service_rule"
-    )
-    
-    alert3 = Alert(
-        title="High Memory Usage",
-        description="Memory usage exceeded 95%",
-        severity=AlertSeverity.CRITICAL,
-        source="server01",
-        tags={"production", "memory"},
-        rule_id="service_rule"
-    )
-    
-    suppressed_alert = Alert(
-        title="Disk Warning",
-        description="Disk usage at 85%",
-        severity=AlertSeverity.MEDIUM,
-        source="server02",
-        tags={"maintenance", "disk"},
-        rule_id="service_rule"
-    )
-    
-    # Process alerts
-    print("Processing alerts...")
-    result1 = manager.process_alert(alert1)
-    print(f"Alert 1 processed: {result1}")  # Should be True (new)
-    
-    time.sleep(0.1)  # Small delay
-    
-    result2 = manager.process_alert(alert2)
-    print(f"Alert 2 processed: {result2}")  # Should be False (duplicate)
-    
-    result3 = manager.process_alert(alert3)
-    print(f"Alert 3 processed: {result3}")  # Should be True (new)
-    
-    suppressed_result = manager.process_alert(suppressed_alert)
-    print(f"Suppressed alert processed: {suppressed_result}")  # Should be True
-    
-    # Check active alerts
-    active = manager.get_active_alerts()
-    print(f"\nActive alerts: {len(active)}")
-    for alert in active:
-        print(f"  - {alert.title} ({alert.status.value})")
-    
-    # Check suppressed alerts
-    suppressed = manager.get_suppressed_alerts()
-    print(f"\nSuppressed alerts: {len(suppressed)}")
-    for alert in suppressed:
-        print(f"  - {alert.title}")
-    
-    # Resolve an alert
-    resolved = manager.resolve_alert(alert1.id)
-    print(f"\nAlert 1 resolved: {resolved}")
-    
-    active_after_resolve = manager.get_active_alerts()
-    print(f"Active alerts after resolve: {len(active_after_resolve)}")
-    
-    # Test escalation
-    print("\nTesting escalation...")
-    for i in range(4):
-        escalation_test = Alert(
-            title="Recurring Error",
-            description=f"Error occurred {i+1} times",
-            severity=AlertSeverity.MEDIUM,
-            source="serviceA",
-            tags={"error"},
-            rule_id="service_rule"
-        )
-        processed = manager.process_alert(escalation_test)
-        print(f"Escalation test {i+1} processed: {processed}")
-        if not processed and i > 0:  # Should be deduplicated after first
-            print(f"  Alert was deduplicated")
-        time.sleep(0.1)
+def _mk_alert(title, severity, source, tags, ts):
+    # timestamp passed explicitly: the dataclass default_factory bound the
+    # real time.time at class definition, so a patched clock can't reach it.
+    return Alert(title=title, description=title, severity=severity,
+                 source=source, tags=tags, rule_id="service_rule", timestamp=ts)
 
+
+def main():
+    """Self-test on a fake clock: dedup inside the window, re-alert after it,
+    tag suppression, resolve lifecycle — all exact."""
+    _now = [50_000.0]
+    _real_time = time.time
+    time.time = lambda: _now[0]
+    try:
+        manager = AlertManager()
+        manager.add_rule(Rule(id="service_rule", name="Service Alert Rule",
+                              dedup_window_seconds=10.0,
+                              suppression_tags={"maintenance"},
+                              max_escalation_count=2,
+                              escalation_interval_seconds=30.0))
+
+        # First alert accepted; identical fingerprint inside 10s deduped.
+        a1 = _mk_alert("High CPU", AlertSeverity.HIGH, "server01", {"prod", "cpu"}, _now[0])
+        assert manager.process_alert(a1) is True, "first alert rejected"
+        _now[0] += 1.0
+        dup = _mk_alert("High CPU", AlertSeverity.HIGH, "server01", {"prod", "cpu"}, _now[0])
+        assert manager.process_alert(dup) is False, "duplicate inside window accepted"
+
+        # Different fingerprint is NOT deduped.
+        a3 = _mk_alert("High Memory", AlertSeverity.CRITICAL, "server01", {"prod"}, _now[0])
+        assert manager.process_alert(a3) is True, "distinct alert wrongly deduped"
+
+        # PAST the window the same fingerprint alerts again.
+        _now[0] += 11.0
+        again = _mk_alert("High CPU", AlertSeverity.HIGH, "server01", {"prod", "cpu"}, _now[0])
+        assert manager.process_alert(again) is True, \
+            "re-alert after the dedup window was swallowed"
+
+        # Suppression: maintenance-tagged alert is accepted but SUPPRESSED.
+        supp = _mk_alert("Disk Warning", AlertSeverity.MEDIUM, "server02",
+                         {"maintenance", "disk"}, _now[0])
+        assert manager.process_alert(supp) is True
+        suppressed = manager.get_suppressed_alerts()
+        assert [s.title for s in suppressed] == ["Disk Warning"], \
+            f"suppressed set wrong: {[s.title for s in suppressed]}"
+        active_titles = sorted(a.title for a in manager.get_active_alerts())
+        assert "Disk Warning" not in active_titles, "suppressed alert is active"
+
+        # Resolve removes from active, reports honestly.
+        n_active_before = len(manager.get_active_alerts())
+        assert n_active_before == 3, \
+            f"exactly 3 alerts must be active (cpu, memory, cpu-again), got {n_active_before}"
+        assert manager.resolve_alert(a1.id) is True
+        assert manager.resolve_alert(a1.id) is False, "double resolve reported success"
+        assert manager.resolve_alert("ghost-id") is False
+        assert len(manager.get_active_alerts()) == n_active_before - 1, \
+            "resolve did not shrink the active set by exactly 1"
+
+        # Dedup applies per-fingerprint: 4 rapid repeats → 1 accepted, 3 deduped.
+        accepted = 0
+        for i in range(4):
+            e = _mk_alert("Recurring Error", AlertSeverity.MEDIUM, "serviceA", {"error"}, _now[0])
+            if manager.process_alert(e):
+                accepted += 1
+            _now[0] += 0.5
+        assert accepted == 1, f"4 repeats in 2s must accept exactly 1, accepted {accepted}"
+    finally:
+        time.time = _real_time
+
+    print("alert_manager: dedup in-window, re-alert at +11s, maintenance "
+          "suppressed, resolve exact, 4 repeats → 1 accepted — PASS")
 
 if __name__ == "__main__":
     main()

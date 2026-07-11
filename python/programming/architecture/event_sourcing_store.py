@@ -65,17 +65,24 @@ class Snapshot:
 class EventStore:
     """Event store implementation with snapshot optimization."""
     
-    def __init__(self, snapshot_interval: int = 10):
+    def __init__(self, snapshot_interval: int = 10,
+                 applier: Optional[Callable[[Dict[str, Any], Event], Dict[str, Any]]] = None):
         """
         Initialize the event store.
-        
+
         Args:
             snapshot_interval: Number of events between snapshots
+            applier: Function used to reconstruct real state for snapshots.
+                Without it, NO snapshots are taken — a missing snapshot only
+                costs a full replay, whereas the former placeholder snapshot
+                ({"version", "last_event_type"}) was TRUSTED by
+                replay_to_version and corrupted every read past it.
         """
         self._events: List[Event] = []
         self._snapshots: Dict[str, Snapshot] = {}
         self._snapshot_interval = snapshot_interval
         self._aggregate_versions: Dict[str, int] = {}
+        self._applier = applier
     
     def append_event(self, event: Event) -> None:
         """
@@ -182,17 +189,18 @@ class EventStore:
         Args:
             aggregate_id: The aggregate ID
         """
-        # In a real implementation, this would use a registered applier function
-        # For this example, we'll create a simple snapshot
+        # Only snapshot when we can reconstruct REAL state; a hollow
+        # snapshot is worse than none because replay_to_version trusts it.
+        if self._applier is None:
+            return
+
         version = self._aggregate_versions[aggregate_id]
-        events = self.get_events(aggregate_id)
-        
-        # Simple state reconstruction (in practice, you'd use the aggregate's apply methods)
-        state = {"version": version}
-        if events:
-            # This is a simplified example - in practice you'd reconstruct actual state
-            state["last_event_type"] = events[-1].event_type
-        
+        state: Dict[str, Any] = {}
+        for event in self.get_events(aggregate_id):
+            if event.version > version:
+                break
+            state = self._applier(state, event)
+
         snapshot = Snapshot(
             aggregate_id=aggregate_id,
             version=version,
@@ -340,73 +348,55 @@ def create_money_withdrawn_event(account_id: str, amount: int, version: int) -> 
 
 
 def main():
-    """Demonstrate the event sourcing store with bank account events."""
-    print("=== Event Sourcing Store Demo ===\n")
-    
-    # Create event store
-    store = EventStore(snapshot_interval=3)
-    
-    # Create account
+    """Self-test: replay arithmetic exact at every version (time travel),
+    snapshots taken at the interval, export→import reproduces the state."""
+    store = EventStore(snapshot_interval=3, applier=BankAccount.apply_to_state)
     account_id = "account-123"
-    print(f"1. Creating account {account_id}")
-    event1 = create_account_created_event(account_id, "John Doe", 1000, 1)
-    store.append_event(event1)
-    print(f"   Created account for {event1.payload['owner']} with initial balance ${event1.payload['initial_balance']}")
-    
-    # Deposit money
-    print(f"2. Depositing $500 to {account_id}")
-    event2 = create_money_deposited_event(account_id, 500, 2)
-    store.append_event(event2)
-    print(f"   Deposited ${event2.payload['amount']}")
-    
-    # Withdraw money
-    print(f"3. Withdrawing $200 from {account_id}")
-    event3 = create_money_withdrawn_event(account_id, 200, 3)
-    store.append_event(event3)
-    print(f"   Withdrew ${event3.payload['amount']}")
-    
-    # Another deposit (this will trigger a snapshot)
-    print(f"4. Depositing $300 to {account_id} (triggers snapshot)")
-    event4 = create_money_deposited_event(account_id, 300, 4)
-    store.append_event(event4)
-    print(f"   Deposited ${event4.payload['amount']}")
-    
-    # Check current state
-    print(f"5. Current state of {account_id}:")
-    current_state = store.replay_to_version(account_id, 4, BankAccount.apply_to_state)
-    print(f"   Owner: {current_state.get('owner', 'Unknown')}")
-    print(f"   Balance: ${current_state.get('balance', 0)}")
-    print(f"   Version: {current_state.get('version', 0)}")
-    
-    # Replay to previous version
-    print(f"6. State of {account_id} at version 2:")
-    version_2_state = store.replay_to_version(account_id, 2, BankAccount.apply_to_state)
-    print(f"   Owner: {version_2_state.get('owner', 'Unknown')}")
-    print(f"   Balance: ${version_2_state.get('balance', 0)}")
-    print(f"   Version: {version_2_state.get('version', 0)}")
-    
-    # Show snapshots
-    print("7. Available snapshots:")
+
+    # History: create(1000) → +500 → -200 → +300.
+    store.append_event(create_account_created_event(account_id, "John Doe", 1000, 1))
+    store.append_event(create_money_deposited_event(account_id, 500, 2))
+    store.append_event(create_money_withdrawn_event(account_id, 200, 3))
+    store.append_event(create_money_deposited_event(account_id, 300, 4))
+
+    # TIME TRAVEL: the balance at every version is exact arithmetic.
+    truths = {1: 1000, 2: 1500, 3: 1300, 4: 1600}
+    for version, expected in truths.items():
+        state = store.replay_to_version(account_id, version, BankAccount.apply_to_state)
+        assert state.get("balance") == expected, \
+            f"balance at v{version} must be {expected}, got {state.get('balance')}"
+        assert state.get("version") == version, \
+            f"replayed version must be {version}, got {state.get('version')}"
+    assert state.get("owner") == "John Doe", "owner lost in replay"
+
+    # SNAPSHOT: interval 3 means a snapshot exists at (or after) version 3.
     snapshot = store.get_snapshot(account_id)
-    if snapshot:
-        print(f"   Account {snapshot.aggregate_id}: version {snapshot.version}")
-        print(f"   State: {snapshot.state}")
-    else:
-        print("   No snapshots available")
-    
-    # Export and import demonstration
-    print("8. Exporting events:")
-    exported_events = store.export_events()
-    print(f"   Exported {len(exported_events)} events")
-    
-    # Create new store and import
-    print("9. Importing events to new store:")
+    assert snapshot is not None, "no snapshot despite crossing the interval"
+    assert snapshot.aggregate_id == account_id
+    assert snapshot.version >= 3, f"snapshot version {snapshot.version} below interval"
+    assert snapshot.state.get("balance") == truths[snapshot.version], \
+        "snapshot state disagrees with the replayed truth at its version"
+
+    # EXPORT → IMPORT: a fresh store rebuilds the identical final state.
+    exported = store.export_events()
+    n_exported = len(exported)
+    assert n_exported == 4, f"4 events must export, got {n_exported}"
     new_store = EventStore()
-    new_store.import_events(exported_events)
-    imported_state = new_store.replay_to_version(account_id, 4, BankAccount.apply_to_state)
-    print(f"   Imported state: Balance ${imported_state.get('balance', 0)}")
-    
-    print("\n=== Demo Complete ===")
+    new_store.import_events(exported)
+    imported = new_store.replay_to_version(account_id, 4, BankAccount.apply_to_state)
+    assert imported.get("balance") == 1600, \
+        f"imported store replayed {imported.get('balance')}, want 1600"
+    assert imported.get("owner") == "John Doe"
+
+    # Aggregate isolation: a second account's events don't leak.
+    store.append_event(create_account_created_event("account-999", "Jane", 50, 1))
+    a2 = store.replay_to_version("account-999", 1, BankAccount.apply_to_state)
+    assert a2.get("balance") == 50 and a2.get("owner") == "Jane"
+    a1 = store.replay_to_version(account_id, 4, BankAccount.apply_to_state)
+    assert a1.get("balance") == 1600, "second aggregate polluted the first"
+
+    print("event_sourcing_store: replay exact at v1..v4 (1000/1500/1300/1600), "
+          "snapshot at v>=3 agrees, export/import rebuilt 1600, isolation — PASS")
 
 
 if __name__ == "__main__":

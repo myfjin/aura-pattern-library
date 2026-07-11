@@ -122,58 +122,75 @@ class MetricsFormatter:
 
 
 def main() -> None:
-    """Demo of the metrics formatter functionality."""
+    """Self-test: exact Prometheus exposition lines, HELP/TYPE grouping,
+    label escaping (the injection trap), name/key validation refused."""
     formatter = MetricsFormatter()
-
-    # Add some sample metrics
     formatter.add_metric(Metric(
-        name="http_requests_total",
-        value=42,
-        metric_type=MetricType.COUNTER,
+        name="http_requests_total", value=42, metric_type=MetricType.COUNTER,
         help_text="Total number of HTTP requests",
-        labels=[Label("method", "GET"), Label("endpoint", "/api/users")]
-    ))
-
+        labels=[Label("method", "GET"), Label("endpoint", "/api/users")]))
     formatter.add_metric(Metric(
-        name="http_requests_total",
-        value=17,
-        metric_type=MetricType.COUNTER,
-        labels=[Label("method", "POST"), Label("endpoint", "/api/users")]
-    ))
-
+        name="http_requests_total", value=17, metric_type=MetricType.COUNTER,
+        labels=[Label("method", "POST"), Label("endpoint", "/api/users")]))
     formatter.add_metric(Metric(
-        name="cpu_usage_percent",
-        value=75.5,
-        metric_type=MetricType.GAUGE,
+        name="cpu_usage_percent", value=75.5, metric_type=MetricType.GAUGE,
         help_text="Current CPU usage percentage",
-        labels=[Label("instance", "server01")]
-    ))
+        labels=[Label("instance", "server01")]))
 
-    formatter.add_metric(Metric(
-        name="temperature_celsius",
-        value=23.4,
-        metric_type=MetricType.GAUGE,
-        labels=[Label("location", "datacenter\nrack1"), Label("sensor", "s1\"main")]
-    ))
+    out = formatter.format_metrics()
+    lines = out.strip().split("\n")
 
-    # Format and print the metrics
-    output = formatter.format_metrics()
-    print(output)
+    # Exact exposition lines.
+    assert 'http_requests_total{method="GET",endpoint="/api/users"} 42' in lines, \
+        f"GET sample line wrong:\n{out}"
+    assert 'http_requests_total{method="POST",endpoint="/api/users"} 17' in lines
+    assert 'cpu_usage_percent{instance="server01"} 75.5' in lines
 
-    # Clear and show empty state
+    # HELP/TYPE emitted once per metric family, HELP before TYPE before samples.
+    assert lines.count("# TYPE http_requests_total counter") == 1, \
+        "TYPE must appear exactly once per family"
+    assert "# HELP http_requests_total Total number of HTTP requests" in lines
+    h = lines.index("# HELP http_requests_total Total number of HTTP requests")
+    t = lines.index("# TYPE http_requests_total counter")
+    s = lines.index('http_requests_total{method="GET",endpoint="/api/users"} 42')
+    assert h < t < s, "HELP/TYPE/sample ordering broken"
+    assert s == 2, f"first sample must be line 2 (after HELP, TYPE), got {s}"
+
+    # THE INJECTION TRAP: quotes, backslashes and newlines in label values
+    # must be escaped, or one hostile label corrupts the whole exposition.
+    esc = MetricsFormatter()
+    esc.add_metric(Metric(name="t", value=1, metric_type=MetricType.GAUGE,
+                          labels=[Label("loc", 'rack"1'), Label("path", "a\\b"),
+                                  Label("note", "line1\nline2")]))
+    esc_out = esc.format_metrics()
+    assert '\\"' in esc_out, "quote not escaped in label value"
+    assert "\\\\" in esc_out, "backslash not escaped"
+    assert "\\n" in esc_out and "\nline2" not in esc_out, \
+        "raw newline leaked into the exposition format"
+    assert len([l for l in esc_out.strip().split("\n") if not l.startswith("#")]) == 1, \
+        "escaped metric must still be exactly one sample line"
+
+    # Timestamps append after the value.
+    ts = Metric(name="ts_metric", value=5, metric_type=MetricType.COUNTER,
+                timestamp=1700000000)
+    assert ts.to_prometheus_format() == "ts_metric 5 1700000000"
+
+    # Validation: bad names/keys refused at construction.
+    for bad in (lambda: Metric(name="9leading", value=1, metric_type=MetricType.GAUGE),
+                lambda: Metric(name="", value=1, metric_type=MetricType.GAUGE),
+                lambda: Label("bad-key", "v"), lambda: Label("", "v")):
+        try:
+            bad()
+            assert False, "invalid metric/label name accepted"
+        except ValueError:
+            pass
+
+    # Empty formatter states its emptiness rather than emitting garbage.
     formatter.clear_metrics()
-    print("After clearing:")
-    print(formatter.format_metrics())
+    assert formatter.format_metrics() == "# No metrics available\n"
 
-    # Add one more metric to show cleared state
-    formatter.add_metric(Metric(
-        name="memory_usage_bytes",
-        value=1024000,
-        metric_type=MetricType.GAUGE,
-        help_text="Memory usage in bytes"
-    ))
-    print("After adding one metric:")
-    print(formatter.format_metrics())
+    print("metrics_formatter: exposition lines exact (42/17/75.5), HELP<TYPE<sample, "
+          "quote/backslash/newline escaped, bad names refused — PASS")
 
 
 if __name__ == "__main__":

@@ -234,62 +234,65 @@ class CSVtoJSON:
 
 
 def main():
-    """Demo the CSV to JSON converter functionality."""
-    # Create sample CSV data
+    """Self-test: type inference exact, nested mapping builds real structure,
+    string/stream/file(x2 modes) all agree, missing file refused."""
+    import tempfile
     sample_csv = """name,age,city,country,salary,is_employed,department.name,department.budget
 John Doe,30,New York,USA,75000.50,true,Engineering,500000
 Jane Smith,25,London,UK,65000,false,Marketing,250000
 Bob Johnson,45,Sydney,Australia,85000.75,true,Sales,300000"""
-    
-    # Create column mapper for nested structure
+
     mapper = ColumnMapper()
     mapper.add_mapping('department.name', 'department.name')
     mapper.add_mapping('department.budget', 'department.budget')
     mapper.add_mapping('is_employed', 'employment.status')
-    
-    # Initialize converter
     converter = CSVtoJSON(mapper)
-    
-    # Demo 1: Convert string content
-    print("Demo 1: String conversion")
-    json_result = converter.convert_string(sample_csv)
-    print(json_result[:200] + "..." if len(json_result) > 200 else json_result)
-    print()
-    
-    # Demo 2: Stream conversion
-    print("Demo 2: Stream conversion")
+
+    # String conversion: types inferred, nesting built, values exact.
+    rows = json.loads(converter.convert_string(sample_csv))
+    assert len(rows) == 3
+    john = rows[0]
+    assert john["name"] == "John Doe"
+    assert john["age"] == 30 and isinstance(john["age"], int), "int not inferred"
+    assert john["salary"] == 75000.50 and isinstance(john["salary"], float), "float not inferred"
+    assert john["employment"]["status"] is True, "mapped bool not nested/converted"
+    assert john["department"] == {"name": "Engineering", "budget": 500000}, \
+        f"nested mapping wrong: {john.get('department')}"
+    assert rows[1]["employment"]["status"] is False
+    assert sum(r["age"] for r in rows) == 100, "ages 30+25+45 must sum to 100"
+    assert sum(r["department"]["budget"] for r in rows) == 1050000
+
+    # Stream conversion agrees with string conversion.
     from io import StringIO
-    csv_io = StringIO(sample_csv)
-    next(csv_io)  # Skip header for stream demo
-    csv_io.seek(0)
-    
-    stream_results = list(converter.stream_convert(csv_io))
-    print(f"Processed {len(stream_results)} records:")
-    for i, record in enumerate(stream_results):
-        print(f"  Record {i+1}: {record}")
-        if i >= 2:  # Limit output
-            break
-    print()
-    
-    # Demo 3: File conversion (in-memory)
-    print("Demo 3: File conversion")
-    # Create temporary CSV file
-    with open('demo.csv', 'w') as f:
-        f.write(sample_csv)
-    
-    # Convert file
-    converter.convert_file('demo.csv', 'demo.json', streaming=False)
-    
-    # Read and display result
-    with open('demo.json', 'r') as f:
-        file_result = f.read()
-    print(file_result[:200] + "..." if len(file_result) > 200 else file_result)
-    
-    # Cleanup
-    Path('demo.csv').unlink(missing_ok=True)
-    Path('demo.json').unlink(missing_ok=True)
-    
-    print("\nAll demos completed successfully!")
+    streamed = list(converter.stream_convert(StringIO(sample_csv)))
+    assert streamed == rows, "stream_convert diverged from convert_string"
+
+    # File conversion, BOTH modes, must produce the same data.
+    tmpdir = tempfile.mkdtemp(prefix="csv2json_")
+    csv_path = Path(tmpdir) / "in.csv"
+    csv_path.write_text(sample_csv)
+    for streaming in (False, True):
+        out = Path(tmpdir) / f"out_{streaming}.json"
+        converter.convert_file(csv_path, out, streaming=streaming)
+        assert json.loads(out.read_text()) == rows, \
+            f"file conversion (streaming={streaming}) diverged"
+
+    # Unmapped converter keeps flat keys (dots stay literal).
+    flat = json.loads(CSVtoJSON().convert_string("a.b,c\n1,x\n"))
+    assert flat == [{"a.b": 1, "c": "x"}], f"unmapped conversion wrong: {flat}"
+
+    # Missing input file is refused.
+    try:
+        converter.convert_file(Path(tmpdir) / "ghost.csv", Path(tmpdir) / "o.json")
+        assert False, "missing input accepted"
+    except FileNotFoundError:
+        pass
+
+    for p in Path(tmpdir).iterdir():
+        p.unlink()
+    Path(tmpdir).rmdir()
+    print("csv_to_json: types inferred (30/75000.5/true), nesting exact, "
+          "string==stream==file(x2 modes), ages sum 100 — PASS")
 
 
 if __name__ == '__main__':

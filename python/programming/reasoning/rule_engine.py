@@ -269,74 +269,58 @@ def main() -> None:
         priority=15
     ))
     
-    print("Initial state:")
-    print(f"Facts: {len(kb.facts)}")
-    print(f"Rules: {len(kb.rules)}")
-    print()
-    
-    # Perform inference
+    # Self-test: forward chaining derives the exact transitive closure —
+    # both diagnoses AND both treatments (the two-hop chain must fire).
+    assert len(kb.facts) == 3 and len(kb.rules) == 4
     iterations, facts_added = kb.forward_chain()
-    
-    print(f"Forward chaining completed in {iterations} iterations")
-    print(f"Added {facts_added} new facts")
-    print()
-    
-    # Check results
-    print("Derived facts:")
-    for fact in kb.facts:
-        print(f"  {fact}")
-    print()
-    
-    # Query specific facts
-    print("Queries:")
-    flu_query = kb.query(Fact("diagnosis", disease="flu"))
-    migraine_query = kb.query(Fact("diagnosis", disease="migraine"))
-    treatment_query = kb.query(Fact("treatment", medication="antipyretic"))
-    
-    print(f"Flu diagnosis: {flu_query}")
-    print(f"Migraine diagnosis: {migraine_query}")
-    print(f"Antipyretic treatment: {treatment_query}")
-    
-    # Test conflict resolution with another example
-    print("\n" + "="*50)
-    print("Testing conflict resolution:")
-    
+    assert facts_added == 4, \
+        f"chaining must add flu+migraine+2 treatments = 4 facts, added {facts_added}"
+    assert iterations >= 2, "the treatment rules need a second pass to see diagnoses"
+
+    assert kb.query(Fact("diagnosis", disease="flu")), "flu not derived"
+    assert kb.query(Fact("diagnosis", disease="migraine")), "migraine not derived"
+    assert kb.query(Fact("treatment", medication="antipyretic")), \
+        "two-hop chain broke: flu diagnosis did not trigger its treatment"
+    assert kb.query(Fact("treatment", medication="analgesic")), \
+        "two-hop chain broke: migraine treatment missing"
+    assert not kb.query(Fact("diagnosis", disease="cancer")), \
+        "query invented an underived fact"
+    assert len(kb.facts) == 7, f"3 given + 4 derived must be 7, got {len(kb.facts)}"
+
+    # Re-running is idempotent: fired rules stay fired, nothing duplicates.
+    _, added_again = kb.forward_chain()
+    assert added_again == 0, f"re-chaining duplicated {added_again} facts"
+    assert len(kb.facts) == 7
+
+    # reset() re-arms the rules: chaining derives everything again from
+    # scratch on a fresh copy of the base facts.
+    kb.reset()
+    _, added_after_reset = kb.forward_chain()
+    assert added_after_reset == 0, "facts already present must not re-add"
+
+    # Second KB: partial premise matching and non-firing rules.
     kb2 = KnowledgeBase()
-    
-    # Facts
     kb2.add_fact(Fact("animal", has_fur=True))
     kb2.add_fact(Fact("animal", says="meow"))
     kb2.add_fact(Fact("animal", has_tail=True))
-    
-    # Rules with different priorities
-    kb2.add_rule(Rule(
-        "cat_id",
-        [Fact("animal", has_fur=True), Fact("animal", says="meow")],
-        [Fact("classification", species="cat")],
-        priority=5
-    ))
-    
-    kb2.add_rule(Rule(
-        "mammal_id",
-        [Fact("animal", has_fur=True)],
-        [Fact("classification", species="mammal")],
-        priority=1  # Lower priority
-    ))
-    
-    # This rule should fire first due to higher priority
-    kb2.add_rule(Rule(
-        "pet_id",
-        [Fact("animal", says="meow"), Fact("animal", has_tail=True)],
-        [Fact("classification", category="pet")],
-        priority=10
-    ))
-    
-    iterations2, facts_added2 = kb2.forward_chain()
-    print(f"Completed in {iterations2} iterations, added {facts_added2} facts")
-    
-    print("Final facts:")
-    for fact in kb2.facts:
-        print(f"  {fact}")
+    kb2.add_rule(Rule("cat_id",
+                      [Fact("animal", has_fur=True), Fact("animal", says="meow")],
+                      [Fact("classification", species="cat")], priority=5))
+    kb2.add_rule(Rule("mammal_id", [Fact("animal", has_fur=True)],
+                      [Fact("classification", species="mammal")], priority=1))
+    kb2.add_rule(Rule("dog_id",
+                      [Fact("animal", has_fur=True), Fact("animal", says="woof")],
+                      [Fact("classification", species="dog")], priority=20))
+
+    _, added2 = kb2.forward_chain()
+    assert added2 == 2, f"cat+mammal must fire (2 facts), dog must not; added {added2}"
+    assert kb2.query(Fact("classification", species="cat"))
+    assert kb2.query(Fact("classification", species="mammal"))
+    assert not kb2.query(Fact("classification", species="dog")), \
+        "rule fired with an unmet premise (says=woof)"
+
+    print("rule_engine: 4 facts derived incl. two-hop chains (3+4=7 total), "
+          "idempotent re-run, unmet-premise rule silent — PASS")
 
 
 if __name__ == "__main__":

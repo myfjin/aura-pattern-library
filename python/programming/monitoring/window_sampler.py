@@ -231,72 +231,74 @@ class AnomalyDetector:
 
 
 def main() -> None:
-    """Demo of the anomaly detection sampler functionality."""
-    print("Anomaly Detection Sampler Demo")
-    print("=" * 40)
-    
-    # Create detector with default parameters
-    detector = AnomalyDetector(window_size=50, z_threshold=2.0)
-    
-    # Generate normal data (mean=100, std=10)
-    import random
-    random.seed(42)
-    
-    print("Feeding normal data...")
-    normal_count = 0
-    anomaly_count = 0
-    
-    # Feed 100 normal values
-    for i in range(100):
-        value = random.gauss(100, 10)
-        is_anomaly, z_score = detector.add_value(value)
-        
-        if is_anomaly:
-            anomaly_count += 1
-            print(f"  Anomaly detected at step {i}: value={value:.2f}, z-score={z_score:.2f}")
-        else:
-            normal_count += 1
-    
-    print(f"Normal data summary: {normal_count} normal points, {anomaly_count} anomalies")
-    
-    # Feed some obvious anomalies
-    print("\nFeeding obvious anomalies...")
-    anomalies = [150, 160, 50, 175, 30]
-    
-    for i, value in enumerate(anomalies):
-        is_anomaly, z_score = detector.add_value(value)
-        if is_anomaly:
-            anomaly_count += 1
-            print(f"  Anomaly detected: value={value}, z-score={z_score:.2f}")
-        else:
-            print(f"  Value {value} not flagged as anomaly (z-score={z_score:.2f})")
-    
-    # Show baseline statistics
-    mean, std_dev = detector.get_baseline_stats()
-    if mean is not None and std_dev is not None:
-        print(f"\nCurrent baseline: mean={mean:.2f}, std_dev={std_dev:.2f}")
-    
-    # Demonstrate parameter validation
-    print("\nTesting error handling...")
-    try:
-        detector.add_value("invalid")
-    except TypeError as e:
-        print(f"  Caught expected error: {e}")
-    
-    try:
-        AnomalyDetector(window_size=-1)
-    except ValueError as e:
-        print(f"  Caught expected error: {e}")
-    
-    # Test window sampler directly
-    print("\nTesting WindowSampler...")
+    """Self-test: window eviction exact, z-scores on a PLANTED baseline,
+    the anomaly is caught and the normal point is not."""
+    # WindowSampler: fixed capacity, oldest evicted first.
     sampler = WindowSampler(5)
     for i in range(7):
         sampler.add(i)
-        print(f"  After adding {i}: {sampler.get_values()}")
-    
-    print(f"  Window full: {sampler.is_full()}")
-    print(f"  Current size: {sampler.size()}")
+    assert sampler.get_values() == [2, 3, 4, 5, 6], \
+        f"window must keep the newest 5: {sampler.get_values()}"
+    assert sampler.is_full() and sampler.size() == 5
+    assert sum(sampler.get_values()) == 20, "2+3+4+5+6 must be 20"
+
+    # AnomalyDetector with baseline == full window (factor 1.0). The z-score
+    # is computed against a baseline INCLUDING the new value, so a single
+    # outlier v after 9 zeros gives exactly z = (v - v/10)/(3v/10) = 3.0.
+    det = AnomalyDetector(window_size=10, z_threshold=2.5,
+                          baseline_window_factor=1.0)
+    for _ in range(9):
+        det.add_value(0.0)
+    is_anom, z = det.add_value(100.0)
+    assert z == 3.0, f"single outlier in a 10-window flat baseline must be z=3, got {z}"
+    assert is_anom, "a 3-sigma value was not flagged at threshold 2.5"
+    mean, std = det.get_baseline_stats()
+    assert mean == 10.0, f"baseline mean must be 100/10 = 10, got {mean}"
+    assert std == 30.0, f"baseline pstdev must be 30, got {std}"
+
+    # A value AT the flat baseline is exactly z=0 and not flagged.
+    det2 = AnomalyDetector(window_size=10, z_threshold=2.5,
+                           baseline_window_factor=1.0)
+    for _ in range(9):
+        det2.add_value(0.0)
+    is_anom, z = det2.add_value(0.0)
+    assert not is_anom and z == 0.0, f"flat continuation must be z=0, got {z}"
+
+    # Zero-variance branch: via add_value the new value always joins the
+    # baseline (flat + different is impossible), so probe the scorer directly.
+    flat = AnomalyDetector(window_size=4, z_threshold=2.0,
+                           baseline_window_factor=1.0)
+    for _ in range(4):
+        flat.add_value(7.0)
+    assert flat._calculate_z_score(99.0) == float("inf"), \
+        "deviation above a flat baseline must score inf"
+    assert flat._calculate_z_score(-99.0) == float("-inf")
+    assert flat._calculate_z_score(7.0) == 0.0
+
+    # Before the baseline window fills, no verdicts are issued.
+    young = AnomalyDetector(window_size=10, z_threshold=2.0)
+    is_anom, z = young.add_value(1000.0)
+    assert not is_anom and z is None, "detector judged before the baseline was full"
+    assert young.get_baseline_stats() == (None, None)
+
+    # reset() returns to the young state.
+    det2.reset()
+    assert det2.get_baseline_stats() == (None, None)
+
+    # Refusals.
+    try:
+        det.add_value("invalid")  # type: ignore[arg-type]
+        assert False, "non-numeric value accepted"
+    except TypeError:
+        pass
+    try:
+        AnomalyDetector(window_size=-1)
+        assert False, "negative window accepted"
+    except ValueError:
+        pass
+
+    print("window_sampler: eviction exact (sum 20), outlier z=3.0 flagged, "
+          "baseline mean 10/std 30, flat scorer ±inf, young detector abstains — PASS")
 
 
 if __name__ == "__main__":

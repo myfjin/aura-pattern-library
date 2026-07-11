@@ -137,43 +137,60 @@ class ServiceRegistry:
 
 
 def main():
-    """Demo of the service registry."""
-    registry = ServiceRegistry()
-    
-    # Register some services
-    web_id = registry.register("web-server", "192.168.1.10", 8080, {"production", "frontend"})
-    api_id = registry.register("api-server", "192.168.1.20", 3000, {"production", "backend"})
-    db_id = registry.register("database", "192.168.1.30", 5432, {"production", "database"})
-    
-    print(f"Registered services: {web_id}, {api_id}, {db_id}")
-    
-    # Find services
-    web_services = registry.find("web-server")
-    print(f"Found {len(web_services)} web services")
-    
-    production_services = registry.find("web-server", {"production"})
-    print(f"Found {len(production_services)} production web services")
-    
-    # Send heartbeats
-    for _ in range(5):
-        registry.heartbeat(web_id)
-        registry.heartbeat(api_id)
-        time.sleep(0.1)
-    
-    print("Sent heartbeats")
-    
-    # Deregister a service
-    registry.deregister(db_id)
-    db_services = registry.find("database")
-    print(f"Found {len(db_services)} database services after deregistering")
-    
-    # Test expiration by waiting
-    print("Waiting for service expiration...")
-    time.sleep(1)
-    
-    # This service should still be alive due to heartbeats
-    web_services = registry.find("web-server")
-    print(f"Found {len(web_services)} web services after waiting")
+    """Self-test on a fake clock: exact lookup by name+tags, heartbeats keep
+    a service alive past the TTL, silence kills it, deregister honest."""
+    _real_time = time.time
+    _now = [_real_time()]          # fake clock starts at real now so the
+    time.time = lambda: _now[0]    # dataclass default heartbeat aligns
+    try:
+        registry = ServiceRegistry()
+        web_id = registry.register("web-server", "10.0.0.1", 8080,
+                                   {"production", "frontend"})
+        web2_id = registry.register("web-server", "10.0.0.2", 8080,
+                                    {"staging", "frontend"})
+        db_id = registry.register("database", "10.0.0.3", 5432, {"production"})
+
+        # Name lookup returns exactly the matching healthy instances.
+        assert {s.service_id for s in registry.find("web-server")} == {web_id, web2_id}
+        assert len(registry.find("database")) == 1
+        assert registry.find("ghost-service") == []
+
+        # Tag filtering is subset matching.
+        prod_web = registry.find("web-server", {"production"})
+        assert [s.service_id for s in prod_web] == [web_id], \
+            f"tag filter wrong: {[s.service_id for s in prod_web]}"
+        assert registry.find("web-server", {"production", "frontend"}) != []
+        assert registry.find("web-server", {"production", "backend"}) == [], \
+            "tag subset match accepted a missing tag"
+        found = registry.find("web-server", {"frontend"})
+        assert len(found) == 2 and found[0].port == 8080
+
+        # TTL: advance 20s, heartbeat only web_id; at +31s from registration
+        # the silent instances are dead, the heartbeated one lives.
+        _now[0] += 20
+        assert registry.heartbeat(web_id) is True
+        assert registry.heartbeat("ghost") is False
+        _now[0] += 15    # web2/db are now 35s silent (ttl 30); web_id 15s
+        alive = registry.find("web-server")
+        assert [s.service_id for s in alive] == [web_id], \
+            f"silent instance survived its TTL: {[s.service_id for s in alive]}"
+        assert registry.find("database") == [], "database outlived its TTL"
+
+        # A heartbeat resurrects nothing once expired — but keeps the living alive.
+        _now[0] += 10
+        assert registry.heartbeat(web_id) is True
+        _now[0] += 25    # web_id heartbeat 25s ago < 30 ttl
+        assert len(registry.find("web-server")) == 1
+
+        # Deregister: honest returns, immediate disappearance.
+        assert registry.deregister(web_id) is True
+        assert registry.deregister(web_id) is False, "double deregister reported success"
+        assert registry.find("web-server") == []
+    finally:
+        time.time = _real_time
+
+    print("service_registry: name+tag lookups exact (2/1/0), TTL killed the "
+          "silent at 35s, heartbeat kept web alive, deregister honest — PASS")
 
 
 if __name__ == "__main__":

@@ -207,13 +207,17 @@ class INIParser:
 
 
 if __name__ == "__main__":
-    # Demo the INI parser
+    # Self-test: exact typed reads, quote stripping, comments skipped,
+    # set + dumps→parse round-trip, malformed input refused with line number.
     ini_content = """
-; This is a comment
+; comment with ; semicolon
+# hash comment too
 key1=value1
 key2=123
 key3=45.67
 key4=true
+quoted="hello world"
+single='spaced value'
 
 [section1]
 name=example
@@ -226,52 +230,56 @@ host=localhost
 port=8080
 debug=false
 """
-
-    # Parse the content
     parser = INIParser()
     parser.parse(ini_content)
-    
-    # Test default section access
-    print("Default section values:")
-    print(f"key1: {parser.get('key1')}")
-    print(f"key2 (as int): {parser.get_int('key2')}")
-    print(f"key3 (as float): {parser.get_float('key3')}")
-    print(f"key4 (as bool): {parser.get_bool('key4')}")
-    print()
-    
-    # Test section access
-    print("Section1 values:")
-    section1 = parser.get_section("section1")
-    if section1:
-        print(f"name: {section1.get('name')}")
-        print(f"count (as int): {section1.get_int('count')}")
-        print(f"enabled (as bool): {section1.get_bool('enabled')}")
-        print(f"price (as float): {section1.get_float('price')}")
-    print()
-    
-    # Test section2
-    print("Section2 values:")
-    section2 = parser.get_section("section2")
-    if section2:
-        print(f"host: {section2.get('host')}")
-        print(f"port (as int): {section2.get_int('port')}")
-        print(f"debug (as bool): {section2.get_bool('debug')}")
-    print()
-    
-    # Test sections listing
-    print(f"Sections: {parser.sections()}")
-    print()
-    
-    # Test adding new values
-    print("Adding new values:")
+
+    # Typed reads are exact.
+    assert parser.get("key1") == "value1"
+    assert parser.get_int("key2") == 123
+    assert abs(parser.get_float("key3") - 45.67) < 1e-12
+    assert parser.get_bool("key4") is True
+    assert parser.get("quoted") == "hello world", "double quotes not stripped"
+    assert parser.get("single") == "spaced value", "single quotes not stripped"
+
+    s1 = parser.get_section("section1")
+    assert s1 is not None
+    assert s1.get("name") == "example"
+    assert s1.get_int("count") == 42
+    assert s1.get_bool("enabled") is True
+    assert abs(s1.get_float("price") - 99.99) < 1e-12
+    s2 = parser.get_section("section2")
+    assert s2.get_int("port") == 8080 and s2.get_bool("debug") is False
+    assert sorted(parser.sections()) == ["section1", "section2"], \
+        f"sections wrong: {parser.sections()}"
+    assert parser.get_section("ghost") is None
+
+    # set() writes into the right scope.
     parser.set("new_key", "new_value")
     parser.set("new_int", 999)
     parser.set("new_bool", True, "section1")
-    print(f"new_key in default section: {parser.get('new_key')}")
-    print(f"new_int in default section: {parser.get_int('new_int')}")
-    print(f"new_bool in section1: {parser.get_bool('new_bool', 'section1')}")
-    print()
-    
-    # Test serialization
-    print("Serialized INI content:")
-    print(parser.dumps())
+    assert parser.get("new_key") == "new_value"
+    assert parser.get_int("new_int") == 999
+    assert parser.get_bool("new_bool", "section1") is True
+
+    # ROUND-TRIP: dumps() then parse() must preserve every value.
+    dumped = parser.dumps()
+    reparsed = INIParser()
+    reparsed.parse(dumped)
+    assert reparsed.get("key1") == "value1"
+    assert reparsed.get_int("key2") == 123
+    assert reparsed.get("quoted") == "hello world"
+    assert reparsed.get_section("section1").get_int("count") == 42
+    assert reparsed.get_section("section1").get_bool("new_bool") is True
+    assert reparsed.get_section("section2").get_int("port") == 8080
+    assert sorted(reparsed.sections()) == ["section1", "section2"], \
+        "round-trip lost sections"
+
+    # Malformed input is refused, naming the offending line.
+    try:
+        INIParser().parse("key1=ok\nthis line has no equals sign\n")
+        assert False, "invalid line accepted"
+    except ValueError as e:
+        assert "2" in str(e), f"error must name line 2, said: {e}"
+
+    print("ini_parser: typed reads exact (123/45.67/true), quotes stripped, "
+          "dumps→parse round-trip held, bad line 2 refused — PASS")

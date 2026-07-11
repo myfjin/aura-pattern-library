@@ -67,14 +67,16 @@ class CSVValidator:
         """
         errors = []
         
-        # Check for missing required fields
+        # Check for missing required fields. A present-but-EMPTY value is
+        # missing too — csv.DictReader always supplies the key, so the old
+        # `name not in row` check let required-but-blank fields through.
         for field in self.schema:
-            if field.required and field.name not in row:
+            if field.required and row.get(field.name) in (None, ""):
                 errors.append(ValidationError(
                     row_index=row_index,
                     field_name=field.name,
-                    value=None,
-                    error_message=f"Required field '{field.name}' is missing"
+                    value=row.get(field.name),
+                    error_message=f"Required field '{field.name}' is missing or empty"
                 ))
                 continue
                 
@@ -231,8 +233,8 @@ def validate_and_transform_csv(
 
 
 def main():
-    """Demo of CSV validator and transformer."""
-    # Define schema
+    """Self-test: typed coercion exact, bad values produce NAMED errors on the
+    RIGHT rows, clean rows survive, boolean spellings normalize."""
     schema = [
         FieldSchema("id", DataType.INTEGER, required=True),
         FieldSchema("name", DataType.STRING, required=True),
@@ -240,26 +242,58 @@ def main():
         FieldSchema("salary", DataType.FLOAT, required=True),
         FieldSchema("active", DataType.BOOLEAN, required=False, default=True),
     ]
-    
-    # Sample CSV data
     csv_data = """id,name,age,salary,active
 1,John Doe,30,50000.50,true
 2,Jane Smith,,60000.75,1
 3,Bob Johnson,45,invalid_salary,false
 4,Alice Brown,28,55000.0,invalid_bool
 5,Charlie Wilson,35,70000.25,TRUE"""
-    
-    # Validate and transform
+
     result = validate_and_transform_csv(csv_data, schema)
-    
-    # Print results
-    print("Transformed Rows:")
-    for i, row in enumerate(result['rows'], start=1):
-        print(f"  Row {i}: {row}")
-    
-    print("\nValidation Errors:")
-    for error in result['errors']:
-        print(f"  Row {error.row_index}, Field '{error.field_name}': {error.error_message}")
+    rows, errors = result["rows"], result["errors"]
+
+    # Clean row 1: every coercion exact and typed.
+    john = next(r for r in rows if r["name"] == "John Doe")
+    assert john["id"] == 1 and isinstance(john["id"], int)
+    assert john["age"] == 30
+    assert john["salary"] == 50000.50 and isinstance(john["salary"], float)
+    assert john["active"] is True
+
+    # Boolean spellings: "1" and "TRUE" are true, "false" is false.
+    jane = next(r for r in rows if r["name"] == "Jane Smith")
+    assert jane["active"] is True, "'1' must coerce to True"
+    charlie = next(r for r in rows if r["name"] == "Charlie Wilson")
+    assert charlie["active"] is True, "'TRUE' must coerce to True"
+    assert charlie["salary"] == 70000.25
+
+    # THE POINT: bad values are flagged on the right row and field.
+    salary_errors = [e for e in errors if e.field_name == "salary"]
+    assert len(salary_errors) == 1 and salary_errors[0].row_index == 3, \
+        f"invalid_salary must error on row 3: {[(e.row_index, e.field_name) for e in errors]}"
+    bool_errors = [e for e in errors if e.field_name == "active"]
+    assert len(bool_errors) == 1 and bool_errors[0].row_index == 4, \
+        "invalid_bool must error on row 4"
+
+    # Missing optional value (Jane's age) is not an error.
+    assert not any(e.field_name == "age" for e in errors), \
+        "optional empty field flagged as an error"
+
+    # A missing REQUIRED field errors AND excludes the row.
+    strict = validate_and_transform_csv("id,name,salary\n,NoId,100.0\n7,Ok,1.5\n", schema[:2] + [schema[3]])
+    assert any(e.field_name == "id" and e.row_index == 1 for e in strict["errors"]), \
+        "missing required id not flagged"
+    kept = [r["name"] for r in strict["rows"]]
+    assert kept == ["Ok"], f"row with missing required field must be excluded: {kept}"
+    assert strict["rows"][0]["salary"] == 1.5
+
+    # Alternate delimiter works.
+    semi = validate_and_transform_csv("id;name;salary\n9;Semi;2.5\n",
+                                      [schema[0], schema[1], schema[3]], delimiter=";")
+    assert semi["rows"][0] == {"id": 9, "name": "Semi", "salary": 2.5}
+    assert semi["errors"] == []
+
+    print("csv_validator: coercions exact (1/30/50000.5/True), errors pinned to "
+          "rows 3+4, required-miss excluded, ';' delimiter OK — PASS")
 
 
 if __name__ == "__main__":

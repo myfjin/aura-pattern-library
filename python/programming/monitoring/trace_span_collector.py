@@ -253,8 +253,12 @@ class SpanCollector:
             else:
                 trace_id = str(uuid.uuid4())
         
-        # Determine if this trace should be sampled
-        sampled = self.sampler.should_sample(trace_id)
+        # Determine if this trace should be sampled. Children inherit the
+        # root's decision so a trace is never half-collected.
+        if parent_context is not None:
+            sampled = parent_context.sampled
+        else:
+            sampled = self.sampler.should_sample(trace_id)
         
         # Create span context
         span_id = str(uuid.uuid4())
@@ -276,10 +280,13 @@ class SpanCollector:
         # Create span
         span = Span(name, context)
         
-        # Add to trace
-        if trace_id not in self.traces:
-            self.traces[trace_id] = Trace(trace_id)
-        self.traces[trace_id].add_span(span)
+        # Add to trace ONLY if sampled — the former code computed the
+        # sampling decision and then collected every span anyway, making
+        # the sampler decorative.
+        if sampled:
+            if trace_id not in self.traces:
+                self.traces[trace_id] = Trace(trace_id)
+            self.traces[trace_id].add_span(span)
         
         # Set as current span
         self._local.current_span = span
@@ -346,101 +353,75 @@ def trace_span(collector: SpanCollector, name: str, parent_context: Optional[Spa
 
 
 def main():
-    """Demo of the distributed tracing system."""
-    print("Distributed Tracing Span Collector Demo")
-    print("=" * 50)
-    
-    # Create collector with 100% sampling rate
+    """Self-test: nested spans share one trace with correct parent ids,
+    baggage propagates parent→child, sampling 0% collects nothing,
+    to_dict round-trips the structure."""
     collector = SpanCollector(Sampler(sampling_rate=1.0))
-    
-    # Demo 1: Simple span
-    print("\n1. Creating a simple span...")
-    with trace_span(collector, "main-operation") as span:
-        span.set_tag("operation", "demo")
-        span.log("Starting main operation")
-        time.sleep(0.1)  # Simulate work
-        span.log("Main operation completed")
-        span.set_tag("status", "success")
-        
-        # Add baggage
-        span.add_baggage_item("user_id", "12345")
-        span.add_baggage_item("session_id", "abcde")
-    
-    # Demo 2: Nested spans
-    print("\n2. Creating nested spans...")
-    with trace_span(collector, "parent-operation") as parent_span:
-        parent_span.set_tag("component", "backend")
-        parent_span.log("Parent operation started")
-        
-        # Child span 1
-        with trace_span(collector, "child-operation-1", parent_span.context) as child1:
-            child1.set_tag("db.query", "SELECT * FROM users")
-            child1.log("Executing database query")
-            time.sleep(0.05)  # Simulate DB work
-            child1.set_tag("db.rows_affected", 10)
-            
-            # Grandchild span
-            with trace_span(collector, "grandchild-operation", child1.context) as grandchild:
+
+    # Nested spans: parent → child1 → grandchild, plus child2 under parent.
+    with trace_span(collector, "parent") as parent:
+        parent.set_tag("component", "backend")
+        parent.add_baggage_item("user_id", "12345")
+        with trace_span(collector, "child1", parent.context) as child1:
+            child1.set_tag("db.rows", 10)
+            with trace_span(collector, "grandchild", child1.context) as grandchild:
                 grandchild.set_tag("cache.hit", False)
-                grandchild.log("Cache miss, fetching from database")
-                time.sleep(0.02)  # Simulate cache work
-                grandchild.set_tag("cache.updated", True)
-        
-        # Child span 2
-        with trace_span(collector, "child-operation-2", parent_span.context) as child2:
-            child2.set_tag("http.method", "GET")
-            child2.set_tag("http.url", "/api/users")
-            child2.log("Making HTTP request")
-            time.sleep(0.03)  # Simulate HTTP work
-            child2.set_tag("http.status_code", 200)
-            
-            # Access baggage from parent
-            user_id = child2.get_baggage_item("user_id")
-            if user_id:
-                child2.set_tag("user.id", user_id)
-        
-        parent_span.log("Parent operation completed")
-    
-    # Demo 3: Multiple traces
-    print("\n3. Creating multiple traces...")
-    trace_ids = []
-    for i in range(3):
-        with trace_span(collector, f"trace-{i}-operation") as span:
-            span.set_tag("trace_number", i)
-            time.sleep(0.01)
-            trace_ids.append(span.context.trace_id)
-    
-    # Demo 4: Display results
-    print("\n4. Collected traces:")
+        with trace_span(collector, "child2", parent.context) as child2:
+            child2.set_tag("http.status", 200)
+            # Baggage must have propagated from the parent context.
+            assert child2.get_baggage_item("user_id") == "12345", \
+                "baggage did not propagate parent → child"
+
+    # All four spans belong to ONE trace.
     traces = collector.get_all_traces()
-    for trace in traces:
-        print(f"\nTrace ID: {trace.trace_id}")
-        print(f"Number of spans: {len(trace.spans)}")
-        for span in trace.spans:
-            indent = "  " * (len(span.context.span_id.split('-')) % 3)  # Simple indent
-            duration_ms = (span.duration or 0) * 1000
-            print(f"{indent}- {span.name} ({duration_ms:.2f}ms)")
-            if span.tags:
-                print(f"{indent}  Tags: {span.tags}")
-            if span.context.baggage:
-                print(f"{indent}  Baggage: {span.context.baggage}")
-    
-    # Demo 5: Sampling
-    print("\n5. Demonstrating sampling...")
-    # Create collector with 0% sampling rate
-    sampled_collector = SpanCollector(Sampler(sampling_rate=0.0))
-    with trace_span(sampled_collector, "unsampled-operation") as span:
-        span.set_tag("should_appear", False)
-    
-    print(f"Traces with 100% sampling: {len(collector.get_all_traces())}")
-    print(f"Traces with 0% sampling: {len(sampled_collector.get_all_traces())}")
-    
-    # Demo 6: Export trace data
-    print("\n6. Exporting trace data...")
-    trace_data = traces[0].to_dict()
-    print(f"First trace exported as dict with {len(trace_data['spans'])} spans")
-    
-    print("\nDemo completed successfully!")
+    assert len(traces) == 1, f"nested spans created {len(traces)} traces, want 1"
+    trace = traces[0]
+    assert len(trace.spans) == 4, f"trace must hold 4 spans, got {len(trace.spans)}"
+    by_name = {s.name: s for s in trace.spans}
+    assert set(by_name) == {"parent", "child1", "grandchild", "child2"}
+
+    # Parent links are exact.
+    assert by_name["parent"].context.parent_span_id is None
+    assert by_name["child1"].context.parent_span_id == by_name["parent"].context.span_id
+    assert by_name["child2"].context.parent_span_id == by_name["parent"].context.span_id
+    assert by_name["grandchild"].context.parent_span_id == by_name["child1"].context.span_id, \
+        "grandchild not linked to child1"
+    assert all(s.context.trace_id == trace.trace_id for s in trace.spans)
+
+    # Tags survive; durations set by finish and children fit inside parents.
+    assert by_name["child1"].tags["db.rows"] == 10
+    assert by_name["grandchild"].tags["cache.hit"] is False
+    for s in trace.spans:
+        assert s.duration is not None and s.duration >= 0, f"{s.name} has no duration"
+    assert by_name["parent"].duration >= by_name["child1"].duration, \
+        "child outlived its parent"
+
+    # Separate root spans start separate traces.
+    for i in range(3):
+        with trace_span(collector, f"root-{i}") as s:
+            s.set_tag("n", i)
+    assert len(collector.get_all_traces()) == 4, \
+        f"3 new roots must give 4 traces total, got {len(collector.get_all_traces())}"
+
+    # 0% sampling collects nothing (but spans still work as no-ops).
+    quiet = SpanCollector(Sampler(sampling_rate=0.0))
+    with trace_span(quiet, "unsampled") as s:
+        s.set_tag("x", 1)
+    assert len(quiet.get_all_traces()) == 0, "0%-sampler still collected a trace"
+
+    # Export: to_dict carries all spans with their ids.
+    exported = trace.to_dict()
+    assert len(exported["spans"]) == 4
+    assert exported["trace_id"] == trace.trace_id
+    exported_names = sorted(s["name"] for s in exported["spans"])
+    assert exported_names == ["child1", "child2", "grandchild", "parent"]
+
+    # Honest lookups.
+    assert collector.get_trace(trace.trace_id) is trace
+    assert collector.get_trace("ghost") is None
+
+    print("trace_span_collector: 4 spans/1 trace, parent ids exact, baggage "
+          "propagated, 0% sampler silent, to_dict complete — PASS")
 
 
 if __name__ == "__main__":

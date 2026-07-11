@@ -43,8 +43,9 @@ class TimeoutGuard:
         raise TimeoutError(f"Operation timed out after {self.timeout_seconds} seconds")
     
     def _thread_timeout(self) -> None:
-        """Timeout function for thread-based implementation."""
-        time.sleep(self.timeout_seconds)
+        """Timeout function for thread-based implementation. (Runs inside a
+        threading.Timer that already waited timeout_seconds — the former
+        extra sleep here flagged the timeout at DOUBLE the deadline.)"""
         self._timed_out = True
     
     @contextmanager
@@ -58,18 +59,27 @@ class TimeoutGuard:
         Raises:
             TimeoutError: If operation exceeds timeout
         """
-        # Try signal-based timeout first (Unix systems)
-        if hasattr(signal, 'SIGALRM'):
+        # Try signal-based timeout first (Unix systems). setitimer takes
+        # FLOAT seconds — the former signal.alarm(int(0.3)) truncated to
+        # alarm(0), which CANCELS the alarm: every sub-second timeout
+        # silently disarmed itself. Setup errors are separated from body
+        # errors: catching around the yield swallowed the operation's own
+        # exceptions and fell through to a second yield (RuntimeError).
+        use_signal = False
+        if hasattr(signal, 'SIGALRM') and hasattr(signal, 'setitimer'):
             try:
                 self._original_handler = signal.signal(signal.SIGALRM, self._signal_handler)
-                signal.alarm(int(self.timeout_seconds))
-                yield
-                signal.alarm(0)  # Cancel the alarm
-                return
+                signal.setitimer(signal.ITIMER_REAL, self.timeout_seconds)
+                use_signal = True
             except (ValueError, AttributeError):
-                # Signal-based timeout not available, fall back to thread-based
-                pass
+                use_signal = False  # e.g. not the main thread
+
+        if use_signal:
+            try:
+                yield
+                return
             finally:
+                signal.setitimer(signal.ITIMER_REAL, 0)  # Cancel the timer
                 if self._original_handler is not None:
                     signal.signal(signal.SIGALRM, self._original_handler)
         
@@ -171,62 +181,63 @@ def fallback_task(message: str = "Fallback Result") -> str:
 
 
 if __name__ == "__main__":
-    print("Testing TimeoutGuard and TimedOperation...")
-    
-    # Test 1: Fast operation within timeout
-    print("\n1. Testing fast operation within timeout:")
-    timed_op = TimedOperation(fast_task, timeout=1.0)
+    # Self-test: THE DISASTER (a hung task) must actually happen and be cut
+    # off; fast tasks pass through; fallbacks fire only on timeout.
+
+    # Fast path: result passes through untouched, well under the deadline.
+    assert TimedOperation(fast_task, timeout=1.0).execute("Quick") == "Quick"
+
+    # THE HANG: a 2s task under a 0.3s deadline must be interrupted and the
+    # fallback must answer. Wall time proves the cut-off actually happened.
+    start = time.monotonic()
+    result = TimedOperation(
+        lambda: slow_task(2.0, "should never return"),
+        timeout=0.3,
+        fallback=lambda: fallback_task("too slow"),
+    ).execute()
+    elapsed = time.monotonic() - start
+    assert result == "Fallback: too slow", f"fallback did not answer: {result}"
+    assert elapsed < 1.5, f"timeout did not cut the 2s hang (took {elapsed:.2f}s)"
+    assert abs(elapsed - 0.3) < 0.25, \
+        f"cut must land near the 0.3s deadline, took {elapsed:.2f}s"
+
+    # Without a fallback, the timeout surfaces as TimeoutError.
+    start = time.monotonic()
     try:
-        result = timed_op.execute("Quick Result")
-        print(f"   Result: {result}")
-    except Exception as e:
-        print(f"   Error: {e}")
-    
-    # Test 2: Slow operation that times out with fallback
-    print("\n2. Testing slow operation with fallback:")
-    timed_op = TimedOperation(
-        lambda: slow_task(2.0, "Should timeout"), 
-        timeout=0.5, 
-        fallback=lambda: fallback_task("Operation took too long")
-    )
-    try:
-        result = timed_op.execute()
-        print(f"   Result: {result}")
-    except Exception as e:
-        print(f"   Error: {e}")
-    
-    # Test 3: Slow operation that times out without fallback
-    print("\n3. Testing slow operation without fallback:")
-    timed_op = TimedOperation(lambda: slow_task(2.0), timeout=0.1)
-    try:
-        result = timed_op.execute()
-        print(f"   Result: {result}")
-    except TimeoutError as e:
-        print(f"   TimeoutError: {e}")
-    except Exception as e:
-        print(f"   Other Error: {e}")
-    
-    # Test 4: Direct use of TimeoutGuard
-    print("\n4. Testing direct TimeoutGuard usage:")
-    guard = TimeoutGuard(timeout_seconds=0.2, fallback_value="Guard Fallback")
+        TimedOperation(lambda: slow_task(2.0), timeout=0.2).execute()
+        assert False, "hung task returned"
+    except TimeoutError:
+        pass
+    assert time.monotonic() - start < 1.5, "TimeoutError came too late to matter"
+
+    # Direct guard usage: the with-block is interrupted.
+    guard = TimeoutGuard(timeout_seconds=0.2, fallback_value="guard-fb")
+    interrupted = False
     try:
         with guard():
-            result = slow_task(1.0, "Direct Guard Test")
-            print(f"   Result: {result}")
-    except TimeoutError as e:
-        print(f"   TimeoutError: {e}")
-        print(f"   Fallback would be: {guard.fallback_value}")
-    
-    # Test 5: Operation that completes just within timeout
-    print("\n5. Testing operation that completes just within timeout:")
-    timed_op = TimedOperation(
-        lambda: slow_task(0.1, "Just in time!"), 
-        timeout=0.15
-    )
+            slow_task(2.0)
+    except TimeoutError:
+        interrupted = True
+    assert interrupted, "TimeoutGuard let the slow block finish"
+    assert guard.fallback_value == "guard-fb"
+
+    # A task that fits inside its deadline completes normally.
+    assert TimedOperation(lambda: slow_task(0.05, "in time"),
+                          timeout=1.0).execute() == "in time"
+
+    # The operation's own exception is not swallowed as a timeout.
+    def own_error():
+        raise ValueError("mine")
     try:
-        result = timed_op.execute()
-        print(f"   Result: {result}")
-    except Exception as e:
-        print(f"   Error: {e}")
-    
-    print("\nAll tests completed.")
+        TimedOperation(own_error, timeout=1.0).execute()
+        assert False, "operation's exception vanished"
+    except ValueError:
+        pass
+
+    # Fallback receives the original call's arguments.
+    echo = TimedOperation(lambda tag: slow_task(2.0),
+                          timeout=0.2, fallback=lambda tag: f"fb:{tag}")
+    assert echo.execute("xyz") == "fb:xyz", "fallback lost the call arguments"
+
+    print("timeout_guard: 2s hang cut at 0.3s (fallback answered), bare "
+          "TimeoutError timely, in-deadline task fine, own errors surface — PASS")

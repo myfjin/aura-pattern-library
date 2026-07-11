@@ -174,107 +174,73 @@ class EventBus:
         self._subscribers.clear()
 
 
-# Demo section
 async def main():
-    """Demo producer-consumer flow with typed channels."""
-    # Create event bus
+    """Self-test: fan-out to every subscriber in order, channel isolation,
+    type enforcement, unsubscribe stops delivery."""
     bus = EventBus()
+    bus.create_channel("strings", str)
+    bus.create_channel("integers", int)
+    bus.create_channel("dictionaries", dict)
 
-    # Create typed channels
-    string_channel = bus.create_channel("strings", str)
-    int_channel = bus.create_channel("integers", int)
-    dict_channel = bus.create_channel("dictionaries", dict)
+    received = {"s1": [], "s2": [], "i": [], "d": []}
 
-    # Track received events
-    received_events = {
-        "string_consumer1": [],
-        "string_consumer2": [],
-        "int_consumer": [],
-        "dict_consumer": [],
-    }
-
-    # Create subscribers
-    def make_string_handler(name: str):
-        async def handler(event: Event[str]) -> None:
-            logger.info(f"{name} received: {event.payload}")
-            received_events[name].append(event.payload)
-            # Simulate async work
-            await asyncio.sleep(0.01)
+    def make_handler(name):
+        async def handler(event):
+            received[name].append(event.payload)
         return handler
 
-    def make_int_handler(name: str):
-        async def handler(event: Event[int]) -> None:
-            logger.info(f"{name} received: {event.payload}")
-            received_events[name].append(event.payload)
-            await asyncio.sleep(0.01)
-        return handler
+    sub_s1 = Subscriber("s1", make_handler("s1"))
+    sub_s2 = Subscriber("s2", make_handler("s2"))
+    bus.subscribe("strings", sub_s1)
+    bus.subscribe("strings", sub_s2)
+    bus.subscribe("integers", Subscriber("i", make_handler("i")))
+    bus.subscribe("dictionaries", Subscriber("d", make_handler("d")))
 
-    def make_dict_handler(name: str):
-        async def handler(event: Event[dict]) -> None:
-            logger.info(f"{name} received: {event.payload}")
-            received_events[name].append(event.payload)
-            await asyncio.sleep(0.01)
-        return handler
-
-    string_sub1 = Subscriber("string_consumer1", make_string_handler("string_consumer1"))
-    string_sub2 = Subscriber("string_consumer2", make_string_handler("string_consumer2"))
-    int_sub = Subscriber("int_consumer", make_int_handler("int_consumer"))
-    dict_sub = Subscriber("dict_consumer", make_dict_handler("dict_consumer"))
-
-    # Subscribe to channels
-    bus.subscribe("strings", string_sub1)
-    bus.subscribe("strings", string_sub2)
-    bus.subscribe("integers", int_sub)
-    bus.subscribe("dictionaries", dict_sub)
-
-    # Producer tasks
-    async def produce_strings():
-        for i in range(5):
-            await bus.publish("strings", f"Hello {i}")
-            await asyncio.sleep(0.05)
-
-    async def produce_ints():
-        for i in range(5):
-            await bus.publish("integers", i * 10)
-            await asyncio.sleep(0.05)
-
-    async def produce_dicts():
-        for i in range(3):
-            await bus.publish("dictionaries", {"id": i, "value": f"data_{i}"})
-            await asyncio.sleep(0.07)
-
-    # Run producers concurrently
+    # Publish concurrently from three producers.
+    async def produce(channel, payloads):
+        for p in payloads:
+            await bus.publish(channel, p)
     await asyncio.gather(
-        produce_strings(),
-        produce_ints(),
-        produce_dicts(),
+        produce("strings", [f"Hello {i}" for i in range(5)]),
+        produce("integers", [i * 10 for i in range(5)]),
+        produce("dictionaries", [{"id": i} for i in range(3)]),
     )
+    await asyncio.sleep(0.1)   # let handlers drain
 
-    # Allow time for all events to be processed
-    await asyncio.sleep(0.2)
+    # FAN-OUT: both string subscribers got all 5, in publish order.
+    assert received["s1"] == [f"Hello {i}" for i in range(5)], \
+        f"s1 missed or reordered events: {received['s1']}"
+    assert received["s2"] == received["s1"], "fan-out delivered different streams"
 
-    # Print summary
-    print("\n=== Event Bus Demo Summary ===")
-    for consumer, events in received_events.items():
-        print(f"{consumer}: {len(events)} events received")
-        if events:
-            print(f"  Sample: {events[:3]}{'...' if len(events) > 3 else ''}")
+    # CHANNEL ISOLATION: ints only to the int subscriber, exact values.
+    assert received["i"] == [0, 10, 20, 30, 40], f"int channel wrong: {received['i']}"
+    assert sum(received["i"]) == 100, "0+10+20+30+40 must be 100"
+    assert received["d"] == [{"id": 0}, {"id": 1}, {"id": 2}]
+    assert not any(isinstance(x, int) for x in received["s1"]), \
+        "integer leaked into the string channel"
 
-    # Test error handling
-    print("\n=== Error Handling Demo ===")
+    # TYPE ENFORCEMENT: wrong payload type refused, channel must exist.
     try:
-        await bus.publish("strings", 123)  # Wrong type
-    except TypeError as e:
-        print(f"Type error caught: {e}")
-
+        await bus.publish("strings", 123)
+        assert False, "int accepted on a str channel"
+    except TypeError:
+        pass
     try:
-        await bus.publish("nonexistent", "test")  # Nonexistent channel
-    except ValueError as e:
-        print(f"Value error caught: {e}")
+        await bus.publish("nonexistent", "x")
+        assert False, "publish to a missing channel accepted"
+    except (ValueError, KeyError):
+        pass
 
-    # Clean up
+    # UNSUBSCRIBE: s2 stops receiving; s1 continues.
+    bus.unsubscribe("strings", sub_s2)
+    await bus.publish("strings", "after-unsub")
+    await asyncio.sleep(0.05)
+    assert received["s1"][-1] == "after-unsub", "s1 lost delivery after s2 unsubscribed"
+    assert "after-unsub" not in received["s2"], "unsubscribed s2 still receives"
+
     await bus.close()
-    print("\nDemo completed successfully!")
+    print("event_bus: fan-out 5+5 in order, channels isolated (ints sum 100), "
+          "type+missing-channel refused, unsubscribe honored — PASS")
 
 
 if __name__ == "__main__":

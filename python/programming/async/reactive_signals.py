@@ -193,62 +193,61 @@ class _ReactiveContext:
 _reactive_context = _ReactiveContext()
 
 
-# Demo
 if __name__ == "__main__":
-    # Create signals
+    # Self-test: computed values track their signals exactly, effects fire
+    # per dependency change and stop after dispose, chains recompute.
     count = Signal(0)
     multiplier = Signal(2)
-    
-    # Create computed values
     doubled = Computed(lambda: count.value * 2)
     multiplied = Computed(lambda: count.value * multiplier.value)
-    
-    # Create effects
-    effect_count = 0
-    def print_doubled() -> None:
-        global effect_count
-        effect_count += 1
-        print(f"Doubled: {doubled.value}")
-    
-    def print_multiplied() -> None:
-        print(f"Multiplied: {multiplied.value}")
-    
-    effect1 = Effect(print_doubled)
-    effect2 = Effect(print_multiplied)
-    
-    # Test reactive updates
-    print("Initial values:")
-    print(f"Count: {count.value}")
-    print(f"Doubled: {doubled.value}")
-    print(f"Multiplied: {multiplied.value}")
-    print()
-    
-    print("Changing count to 5:")
+
+    log = []
+    effect1 = Effect(lambda: log.append(("doubled", doubled.value)))
+    effect2 = Effect(lambda: log.append(("multiplied", multiplied.value)))
+
+    # Initial: computed values exact; each effect ran once on creation.
+    assert doubled.value == 0 and multiplied.value == 0
+    assert log == [("doubled", 0), ("multiplied", 0)], f"initial effects wrong: {log}"
+
+    # count=5: doubled 10, multiplied 10; BOTH effects re-fire with new values.
     count.value = 5
-    print()
-    
-    print("Changing multiplier to 3:")
+    assert doubled.value == 10, f"doubled must track count: {doubled.value}"
+    assert multiplied.value == 10
+    assert ("doubled", 10) in log and ("multiplied", 10) in log, f"effects stale: {log}"
+
+    # multiplier=3 touches only `multiplied`: doubled's effect must NOT re-fire.
+    n_doubled_before = sum(1 for k, _ in log if k == "doubled")
     multiplier.value = 3
-    print()
-    
-    print("Changing count to 10:")
-    count.value = 10
-    print()
-    
-    # Test computed dependencies
-    sum_computed = Computed(lambda: doubled.value + multiplied.value)
-    print(f"Sum of doubled and multiplied: {sum_computed.value}")
-    print()
-    
-    print("Changing count to 3:")
+    assert multiplied.value == 15, f"5*3 must be 15, got {multiplied.value}"
+    assert doubled.value == 10
+    n_doubled_after = sum(1 for k, _ in log if k == "doubled")
+    assert n_doubled_after == n_doubled_before, \
+        "doubled's effect fired for an unrelated signal"
+    assert ("multiplied", 15) in log
+
+    # A computed of computeds chains: (2c) + (3c) = 5c.
+    total = Computed(lambda: doubled.value + multiplied.value)
+    assert total.value == 25, f"10 + 15 must be 25, got {total.value}"
     count.value = 3
-    print(f"New sum: {sum_computed.value}")
-    print()
-    
-    # Verify effect ran correctly
-    print(f"Effect ran {effect_count} times")
-    
-    # Test disposal
+    assert total.value == 15, f"chain must recompute: 6 + 9 = 15, got {total.value}"
+    assert doubled.value == 6 and multiplied.value == 9
+
+    # DISPOSE: the effect stops observing; the other continues.
+    n1 = len([1 for k, _ in log if k == "doubled"])
     effect1.dispose()
-    print("Disposed first effect")
-    count.value = 15  # This should not trigger the disposed effect
+    count.value = 100
+    assert doubled.value == 200, "computed itself must keep working after dispose"
+    assert len([1 for k, _ in log if k == "doubled"]) == n1, \
+        "disposed effect still fires"
+    assert ("multiplied", 300) in log, "surviving effect missed the update"
+
+    # Double-dispose is safe.
+    effect1.dispose()
+    effect2.dispose()
+    count.value = 1
+    n_total = len(log)
+    count.value = 2
+    assert len(log) == n_total, "all effects disposed but the log still grows"
+
+    print("reactive_signals: computed exact (25→15 chain), unrelated signal "
+          "didn't re-fire, dispose stops effects (200 vs silent) — PASS")

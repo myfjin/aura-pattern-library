@@ -153,14 +153,15 @@ class PluginRegistry:
         Raises:
             CircularDependencyError: If circular dependencies are detected.
         """
-        # Kahn's algorithm for topological sorting
-        in_degree: Dict[str, int] = {name: 0 for name in self._plugins}
-        
-        # Calculate in-degrees
-        for plugin_name in self._plugins:
-            for dep in self._dependency_graph[plugin_name]:
-                if dep in self._plugins:  # Only count if dependency is registered
-                    in_degree[dep] += 1
+        # Kahn's algorithm: in-degree = how many REGISTERED dependencies a
+        # plugin waits on. (The former code incremented in_degree[dep] —
+        # counting dependents — which seeded the queue with sinks and made
+        # any plugin with a dependency report a circular graph.)
+        in_degree: Dict[str, int] = {
+            name: sum(1 for dep in self._dependency_graph[name]
+                      if dep in self._plugins)
+            for name in self._plugins
+        }
         
         # Find all nodes with no incoming edges
         queue: deque = deque([name for name, degree in in_degree.items() if degree == 0])
@@ -269,67 +270,64 @@ class WebServerPlugin(Plugin):
 
 
 def main() -> None:
-    """Demo the plugin registry with sample plugins."""
-    print("=== Plugin Registry Demo ===")
-    
-    # Create registry and register plugins
+    """Self-test: dependency-ordered loading, lazy load on first access,
+    transitive dependency activation, missing plugin refused."""
     registry = PluginRegistry()
-    # Store registry in module for plugins to access during load
     sys.modules[__name__]._demo_registry = registry
-    
+
     registry.register(LoggerPlugin)
     registry.register(DatabasePlugin)
     registry.register(WebServerPlugin)
-    
-    print(f"Registered plugins: {registry.list_plugins()}")
-    
-    # Show dependency resolution
-    try:
-        load_order = registry.resolve_load_order()
-        print(f"Plugin load order: {load_order}")
-    except CircularDependencyError as e:
-        print(f"Error resolving load order: {e}")
-        return
-    
-    # Demonstrate lazy loading - only logger should be loaded initially
-    print("\n--- Before accessing plugins ---")
-    logger_instance = registry._instances.get("logger")
-    print(f"Logger loaded: {logger_instance.is_loaded() if logger_instance else False}")
-    
-    # Access webserver plugin (should trigger loading of dependencies)
-    print("\n--- Accessing webserver plugin ---")
+    assert sorted(registry.list_plugins()) == ["database", "logger", "webserver"]
+
+    # Load order respects dependencies: logger before database before webserver.
+    order = registry.resolve_load_order()
+    assert sorted(order) == ["database", "logger", "webserver"]
+    assert order.index("logger") < order.index("database") < order.index("webserver"), \
+        f"load order violates dependencies: {order}"
+
+    # LAZY: nothing is loaded until first access.
+    for name in ("logger", "database", "webserver"):
+        inst = registry._instances.get(name)
+        assert inst is None or not inst.is_loaded(), f"{name} loaded eagerly"
+
+    # Accessing webserver transitively loads BOTH dependencies.
     webserver = registry.get_plugin("webserver")
-    print(f"WebServer loaded: {webserver.is_loaded()}")
-    
-    # Check that dependencies were also loaded
+    assert webserver.is_loaded(), "requested plugin not loaded"
+    assert registry.get_plugin("logger").is_loaded(), \
+        "transitive dependency 'logger' not loaded"
+    assert registry.get_plugin("database").is_loaded(), \
+        "transitive dependency 'database' not loaded"
+
+    # Behavior: exact results through the loaded graph.
     logger = registry.get_plugin("logger")
     database = registry.get_plugin("database")
-    print(f"Logger loaded: {logger.is_loaded()}")
-    print(f"Database loaded: {database.is_loaded()}")
-    
-    # Execute plugins
-    print("\n--- Executing plugins ---")
-    result = logger.execute("Application started")
-    print(result)
-    
-    result = database.execute("SELECT * FROM users")
-    print(result)
-    
-    result = webserver.execute("/")
-    print(result)
-    
-    result = webserver.execute("/missing")
-    print(result)
-    
-    # Show logger messages
-    print(f"\nLogger messages: {logger.messages}")
-    
-    # Try to get non-existent plugin
-    print("\n--- Error handling ---")
+    assert database.execute("SELECT 1") == "Executed: SELECT 1"
+    assert webserver.execute("/") == "Welcome to the web server"
+    assert webserver.execute("/missing") == "404 Not Found"
+
+    # The load sequence itself is on the logger's record: database and
+    # webserver announced their loads, in dependency order.
+    msgs = logger.messages
+    db_i = next(i for i, m in enumerate(msgs) if "Database" in m)
+    web_i = next(i for i, m in enumerate(msgs) if "WebServer" in m)
+    assert db_i < web_i, f"database must load before webserver: {msgs}"
+
+    # get_plugin returns the SAME instance (no reload).
+    assert registry.get_plugin("webserver") is webserver
+
+    # Missing plugin refused.
     try:
         registry.get_plugin("nonexistent")
-    except PluginNotFoundError as e:
-        print(f"Caught expected error: {e}")
+        assert False, "missing plugin returned"
+    except PluginNotFoundError:
+        pass
+
+    n_loaded = sum(1 for n in ("logger", "database", "webserver")
+                   if registry.get_plugin(n).is_loaded())
+    assert n_loaded == 3, f"all 3 plugins must end loaded, got {n_loaded}"
+    print("plugin_registry: order logger<database<webserver, lazy until access, "
+          "transitive load proven via log, 404 exact, singleton instances — PASS")
 
 
 if __name__ == "__main__":

@@ -215,73 +215,61 @@ class Allocator:
 
 
 def main():
-    """Demonstrate the memory allocator functionality."""
-    print("Memory Allocator Simulator Demo")
-    print("=" * 40)
-    
-    # Create allocator with 1000 bytes
-    allocator = Allocator(1000)
-    print(f"Initialized allocator with {allocator.total_size} bytes")
-    
-    # Allocate some blocks
-    allocations = []
-    sizes = [100, 200, 50, 300, 75, 150]
-    
-    print("\nAllocating blocks:")
-    for i, size in enumerate(sizes):
-        addr = allocator.allocate(size)
-        if addr is not None:
-            allocations.append((addr, size))
-            print(f"  Allocated {size} bytes at address {addr}")
-        else:
-            print(f"  Failed to allocate {size} bytes")
-    
-    print(f"\n{allocator}")
-    
-    # Free some blocks
-    print("Freeing some blocks:")
-    # Free every other allocation
-    for i in range(0, len(allocations), 2):
-        addr, size = allocations[i]
-        if allocator.free(addr):
-            print(f"  Freed block of {size} bytes at address {addr}")
-        else:
-            print(f"  Failed to free block at address {addr}")
-    
-    print(f"\n{allocator}")
-    
-    # Try to allocate more memory
-    print("Trying to allocate more memory:")
-    new_sizes = [80, 250, 60]
-    for size in new_sizes:
-        addr = allocator.allocate(size)
-        if addr is not None:
-            print(f"  Allocated {size} bytes at address {addr}")
-        else:
-            print(f"  Failed to allocate {size} bytes")
-    
-    # Final state and fragmentation report
-    print(f"\n{allocator}")
-    free_blocks, free_mem, frag_ratio = allocator.fragmentation_report()
-    print(f"Fragmentation Report:")
-    print(f"  Free blocks: {free_blocks}")
-    print(f"  Free memory: {free_mem} bytes")
-    print(f"  Fragmentation ratio: {frag_ratio:.2%}")
-    
-    # Test error conditions
-    print("\nTesting error conditions:")
+    """Self-test: exact address arithmetic, best-fit choice, fragmentation
+    failure, and full coalescing back to one block."""
+    a = Allocator(1000)
+
+    # Sequential allocation carves from address 0 upward — addresses are exact.
+    assert a.allocate(100) == 0, "first allocation must start at 0"
+    assert a.allocate(200) == 100, "second allocation must start at 100"
+    assert a.allocate(50) == 300, "third allocation must start at 300"
+
+    # Free the middle 200-byte block: two holes now exist (200 @100, 650 @350).
+    assert a.free(100) is True
+    blocks, free_mem, frag = a.fragmentation_report()
+    assert blocks == 2 and free_mem == 850, f"expected 2 holes/850 free, got {blocks}/{free_mem}"
+    assert abs(frag - 200.0 / 850.0) < 1e-12, f"fragmentation must be 200/850, got {frag}"
+
+    # BEST-fit: a 150-byte request must take the 200-hole (@100), not the 650 tail.
+    addr = a.allocate(150)
+    assert addr == 100, f"best-fit must choose the 200-byte hole at 100, got {addr}"
+    blocks, free_mem, _ = a.fragmentation_report()
+    assert blocks == 2 and free_mem == 700, "split must leave a 50-byte remainder + tail"
+
+    # THE DISASTER fragmentation causes: 700 bytes are free, but no contiguous
+    # hole fits 700 — the allocation must fail honestly, not corrupt.
+    assert a.allocate(700) is None, "allocator satisfied a request no hole can hold"
+
+    # Freeing everything must coalesce back to ONE block of exactly 1000.
+    assert a.free(100) is True   # 150-block; merges with the 50-remainder
+    assert a.free(300) is True   # 50-block; bridges to the tail
+    assert a.free(0) is True     # first 100-block; completes the merge
+    blocks, free_mem, frag = a.fragmentation_report()
+    assert (blocks, free_mem, frag) == (1, 1000, 0.0), \
+        f"full coalesce must yield (1, 1000, 0.0), got ({blocks}, {free_mem}, {frag})"
+
+    # After coalescing, the full arena is allocatable again.
+    assert a.allocate(1000) == 0, "coalesced arena must satisfy a full-size allocation"
+    assert a.allocate(1) is None, "empty arena granted an allocation"
+    assert a.free(0) is True
+
+    # Refusals: double free, unknown address, invalid sizes.
+    assert a.free(9999) is False, "freeing an unknown address reported success"
+    assert a.free(0) is False, "double free reported success"
+    for ctor_arg in (0, -100):
+        try:
+            Allocator(ctor_arg)
+            assert False, f"Allocator({ctor_arg}) accepted"
+        except ValueError:
+            pass
     try:
-        Allocator(-100)
-    except ValueError as e:
-        print(f"  Caught expected error: {e}")
-    
-    try:
-        allocator.allocate(-50)
-    except ValueError as e:
-        print(f"  Caught expected error: {e}")
-    
-    success = allocator.free(9999)  # Non-existent address
-    print(f"  Freeing non-existent block: {'Success' if success else 'Failed'}")
+        a.allocate(-50)
+        assert False, "negative allocation accepted"
+    except ValueError:
+        pass
+
+    print("free_list_allocator: exact addresses, best-fit @100, frag 200/850, "
+          "700-in-700-free refused, coalesce → (1, 1000, 0.0) — PASS")
 
 
 if __name__ == "__main__":

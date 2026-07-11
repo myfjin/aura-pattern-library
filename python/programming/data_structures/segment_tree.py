@@ -165,44 +165,61 @@ class SegmentTree:
 
 
 if __name__ == "__main__":
-    # Create test data
-    test_data = list(range(1, 101))  # [1, 2, 3, ..., 100]
-    
-    # Build segment tree
-    seg_tree = SegmentTree(test_data)
-    
-    # Test range sum queries
-    print("Testing range sum queries:")
-    print(f"Sum of elements [0, 9]: {seg_tree.range_sum(0, 9)}")  # Should be 55
-    print(f"Sum of elements [10, 19]: {seg_tree.range_sum(10, 19)}")  # Should be 155
-    print(f"Sum of elements [0, 99]: {seg_tree.range_sum(0, 99)}")  # Should be 5050
-    
-    # Test range min queries
-    print("\nTesting range min queries:")
-    print(f"Min of elements [0, 9]: {seg_tree.range_min(0, 9)}")  # Should be 1
-    print(f"Min of elements [10, 19]: {seg_tree.range_min(10, 19)}")  # Should be 11
-    print(f"Min of elements [50, 99]: {seg_tree.range_min(50, 99)}")  # Should be 51
-    
-    # Test updates
-    print("\nTesting updates:")
-    print(f"Sum of elements [0, 4]: {seg_tree.range_sum(0, 4)}")  # Should be 15
-    seg_tree.update(2, 100)  # Update index 2 (value 3) to 100
-    print(f"After updating index 2 to 100, sum of elements [0, 4]: {seg_tree.range_sum(0, 4)}")  # Should be 112
-    print(f"After updating index 2 to 100, min of elements [0, 4]: {seg_tree.range_min(0, 4)}")  # Should be 1
-    
-    # Test edge cases
-    print("\nTesting edge cases:")
-    print(f"Sum of single element [5, 5]: {seg_tree.range_sum(5, 5)}")  # Should be 6
-    print(f"Min of single element [5, 5]: {seg_tree.range_min(5, 5)}")  # Should be 6
-    
-    # Test error handling
-    print("\nTesting error handling:")
-    try:
-        seg_tree.range_sum(5, 3)  # Should raise ValueError
-    except ValueError as e:
-        print(f"Caught expected error: {e}")
-    
-    try:
-        seg_tree.range_sum(-1, 5)  # Should raise IndexError
-    except IndexError as e:
-        print(f"Caught expected error: {e}")
+    # Self-test: the old demo SAID "Should be 55" in comments and never checked.
+    # Every planted truth is now asserted, plus an oracle fuzz.
+    import random
+    random.seed(42)
+
+    st = SegmentTree(list(range(1, 101)))  # [1..100]
+    assert st.range_sum(0, 9) == 55, f"1+..+10 must be 55, got {st.range_sum(0, 9)}"
+    assert st.range_sum(10, 19) == 155
+    assert st.range_sum(0, 99) == 5050, "Gauss disagrees: 1..100 must sum to 5050"
+    assert st.range_min(0, 9) == 1
+    assert st.range_min(10, 19) == 11
+    assert st.range_min(50, 99) == 51
+
+    # Point update propagates to sums AND mins along the path.
+    assert st.range_sum(0, 4) == 15
+    st.update(2, 100)
+    assert st.range_sum(0, 4) == 112, f"15 - 3 + 100 must be 112, got {st.range_sum(0, 4)}"
+    assert st.range_min(0, 4) == 1, "min corrupted by an unrelated update"
+    st.update(0, -7)
+    assert st.range_min(0, 4) == -7, "negative update must become the new min"
+    assert st.range_sum(0, 0) == -7
+
+    # Single-element ranges are their own truth.
+    assert st.range_sum(5, 5) == 6 and st.range_min(5, 5) == 6
+
+    # Oracle fuzz: 600 mixed update/sum/min ops against a plain list.
+    data = [random.randint(-50, 50) for _ in range(60)]
+    tree = SegmentTree(data)
+    for _ in range(600):
+        op = random.random()
+        if op < 0.4:
+            i, v = random.randint(0, 59), random.randint(-50, 50)
+            tree.update(i, v)
+            data[i] = v
+        else:
+            l = random.randint(0, 59)
+            r = random.randint(l, 59)
+            if op < 0.7:
+                assert tree.range_sum(l, r) == sum(data[l:r + 1]), \
+                    f"range_sum({l},{r}) diverged from the oracle"
+            else:
+                assert tree.range_min(l, r) == min(data[l:r + 1]), \
+                    f"range_min({l},{r}) diverged from the oracle"
+
+    # Refusals: inverted and out-of-bounds ranges, empty construction.
+    for call, exc in ((lambda: st.range_sum(5, 3), ValueError),
+                      (lambda: st.range_min(5, 3), ValueError),
+                      (lambda: st.range_sum(-1, 5), IndexError),
+                      (lambda: st.update(100, 1), IndexError),
+                      (lambda: SegmentTree([]), ValueError)):
+        try:
+            call()
+            assert False, "invalid call accepted"
+        except exc:
+            pass
+
+    print("segment_tree: 55/155/5050 exact, update → sum 112 & min -7, "
+          "600-op sum+min oracle agreed — PASS")

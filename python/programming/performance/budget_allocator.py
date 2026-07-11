@@ -189,83 +189,60 @@ class Collapser:
             return await loop.run_in_executor(None, self.backend_func, *args, **kwargs)
 
 
-# Demo backend function
-async def demo_backend_func(user_id: int, include_profile: bool = False) -> Dict[str, Any]:
-    """
-    Demo backend function that simulates fetching user data.
-    
-    Args:
-        user_id: ID of the user to fetch
-        include_profile: Whether to include profile information
-        
-    Returns:
-        User data dictionary
-    """
-    # Simulate some processing time
-    await asyncio.sleep(0.1)
-    
-    # Return mock user data
-    return {
-        "user_id": user_id,
-        "name": f"User {user_id}",
-        "email": f"user{user_id}@example.com",
-        "profile_included": include_profile,
-        "timestamp": time.time()
-    }
+async def _selftest() -> None:
+    """Self-test: identical requests collapse to ONE backend call; distinct
+    requests do not; a backend failure reaches every collapsed waiter."""
+    calls = {"n": 0, "args": []}
 
+    async def counting_backend(user_id: int, include_profile: bool = False) -> Dict[str, Any]:
+        calls["n"] += 1
+        calls["args"].append(user_id)
+        await asyncio.sleep(0)
+        return {"user_id": user_id, "call_no": calls["n"]}
 
-async def demo() -> None:
-    """Demonstrate the request collapser with concurrent identical queries."""
-    print("Request Collapser Demo")
-    print("=" * 50)
-    
-    # Create a collapser instance
-    collapser = Collapser(demo_backend_func, window_ms=50, max_batch_size=10)
-    
-    # Submit multiple identical requests concurrently
-    print("Submitting 5 identical requests for user 123...")
-    
-    start_time = time.time()
-    
-    # Create tasks for concurrent requests
-    tasks = [
-        collapser.submit(123, include_profile=True),
-        collapser.submit(123, include_profile=True),
-        collapser.submit(123, include_profile=True),
-        collapser.submit(123, include_profile=True),
-        collapser.submit(123, include_profile=True),
-    ]
-    
-    # Wait for all results
-    results = await asyncio.gather(*tasks)
-    
-    end_time = time.time()
-    
-    # Print results
-    print(f"Received {len(results)} results in {end_time - start_time:.2f} seconds")
-    
-    for i, result in enumerate(results):
-        print(f"Result {i+1}: User {result['user_id']}, Name: {result['name']}")
-    
-    # Verify all results are identical (deduplication worked)
-    all_identical = all(result == results[0] for result in results)
-    print(f"All results identical: {all_identical}")
-    
-    # Test with different requests (should not be collapsed)
-    print("\nSubmitting different requests...")
-    different_tasks = [
-        collapser.submit(123, include_profile=True),
-        collapser.submit(456, include_profile=True),
-        collapser.submit(789, include_profile=False),
-    ]
-    
-    different_results = await asyncio.gather(*different_tasks)
-    print(f"Received {len(different_results)} different results:")
-    
-    for i, result in enumerate(different_results):
-        print(f"Result {i+1}: User {result['user_id']}, Profile: {result['profile_included']}")
+    # Request-key derivation is exact and order-normalizes kwargs.
+    c = Collapser(counting_backend, window_ms=20, max_batch_size=10)
+    assert c._get_request_key((1,), {"b": 2, "a": 3}) == "1|a:3|b:2", \
+        "request key must sort kwargs for stable identity"
+
+    # THE POINT of the pattern: 5 identical concurrent requests = 1 backend call.
+    results = await asyncio.gather(*[c.submit(123, include_profile=True) for _ in range(5)])
+    assert calls["n"] == 1, f"5 identical requests caused {calls['n']} backend calls, not 1"
+    assert len(results) == 5
+    assert all(r == results[0] for r in results), "collapsed waiters got different results"
+    assert results[0]["user_id"] == 123 and results[0]["call_no"] == 1
+
+    # Distinct requests must NOT be collapsed: 3 keys → exactly 3 more calls.
+    r2 = await asyncio.gather(c.submit(123, include_profile=True),
+                              c.submit(456, include_profile=True),
+                              c.submit(789, include_profile=False))
+    assert calls["n"] == 4, f"3 distinct requests after 1 must total 4 calls, got {calls['n']}"
+    assert [r["user_id"] for r in r2] == [123, 456, 789]
+
+    # THE FAILURE: a backend exception must reach EVERY collapsed waiter —
+    # a silently-hung future is the disaster here.
+    async def failing_backend(user_id: int) -> None:
+        raise RuntimeError("backend down")
+
+    f = Collapser(failing_backend, window_ms=20, max_batch_size=10)
+    failures = await asyncio.gather(f.submit(7), f.submit(7), return_exceptions=True)
+    assert len(failures) == 2
+    assert all(isinstance(e, RuntimeError) and str(e) == "backend down" for e in failures), \
+        f"collapsed waiters did not all receive the backend failure: {failures}"
+
+    # Sync backends run via the executor path and still collapse.
+    sync_calls = {"n": 0}
+    def sync_backend(x: int) -> int:
+        sync_calls["n"] += 1
+        return x * 10
+    s = Collapser(sync_backend, window_ms=20, max_batch_size=10)
+    sr = await asyncio.gather(s.submit(4), s.submit(4), s.submit(4))
+    assert sr == [40, 40, 40], f"sync backend results wrong: {sr}"
+    assert sync_calls["n"] == 1, f"sync backend called {sync_calls['n']} times, not 1"
+
+    print("budget_allocator (request collapser): 5→1 collapsed, 3 distinct kept, "
+          "failure fanned out to all waiters, sync path collapsed — PASS")
 
 
 if __name__ == "__main__":
-    # Run the demo
-    asyncio.run(demo())
+    asyncio.run(_selftest())

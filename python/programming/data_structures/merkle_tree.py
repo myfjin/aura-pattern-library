@@ -99,13 +99,13 @@ class MerkleTree:
             
         # Create leaf nodes
         nodes = [MerkleNode(self._hash(leaf), is_leaf=True) for leaf in self.leaves]
-        
-        # Handle odd number of nodes by duplicating the last one
-        if len(nodes) % 2 == 1:
-            nodes.append(nodes[-1])
-        
-        # Build tree level by level
+
+        # Build tree level by level. An odd count can appear at ANY level
+        # (5 leaves → 6 after dup → 3 parents), so duplicate per level —
+        # the former leaf-only duplication crashed on 5+ odd shapes.
         while len(nodes) > 1:
+            if len(nodes) % 2 == 1:
+                nodes.append(nodes[-1])
             next_level = []
             for i in range(0, len(nodes), 2):
                 left = nodes[i]
@@ -154,14 +154,13 @@ class MerkleTree:
         
         proof: List[Tuple[str, bool]] = []
         nodes = [MerkleNode(self._hash(leaf), is_leaf=True) for leaf in self.leaves]
-        
-        # Handle odd number of nodes
-        if len(nodes) % 2 == 1:
-            nodes.append(nodes[-1])
-        
+
         target_index = index
-        
+
         while len(nodes) > 1:
+            # Mirror build(): odd levels duplicate their last node.
+            if len(nodes) % 2 == 1:
+                nodes.append(nodes[-1])
             next_level = []
             for i in range(0, len(nodes), 2):
                 left = nodes[i]
@@ -220,45 +219,78 @@ class MerkleTree:
 
 
 def main():
-    """Demo the Merkle tree with 8 leaves."""
-    # Create a Merkle tree
-    tree = MerkleTree()
-    
-    # Add 8 leaves
+    """Self-test: root independently re-derived, all proofs verify, and — the
+    point of a Merkle tree — every tampering attempt is DETECTED."""
+    h = MerkleTree._hash
+
+    # 8 leaves; fold the root by hand as an independent oracle.
     leaves = [f"data{i}" for i in range(8)]
+    tree = MerkleTree()
     for leaf in leaves:
         tree.add_leaf(leaf)
-    
-    # Build the tree
     tree.build()
-    
-    print("Merkle Tree Demo")
-    print("================")
-    print(f"Leaves: {leaves}")
-    print(f"Root hash: {tree.get_root()}")
-    print()
-    
-    # Generate and verify proofs for all leaves
-    for i in range(len(leaves)):
+    level = [h(x) for x in leaves]
+    while len(level) > 1:
+        level = [h(level[i] + level[i + 1]) for i in range(0, len(level), 2)]
+    assert tree.get_root() == level[0], "root differs from independent fold"
+
+    # Every leaf's proof verifies, and each proof has exactly log2(8)=3 steps.
+    total_steps = 0
+    for i, leaf in enumerate(leaves):
         proof = tree.get_proof(i)
-        is_valid = tree.verify_proof(leaves[i], i, proof)
-        
-        print(f"Leaf {i}: {leaves[i]}")
-        print(f"  Proof: {proof}")
-        print(f"  Valid: {is_valid}")
-        
-        # Test with invalid proof
-        if i < len(leaves) - 1:
-            # Try with wrong leaf value
-            invalid_valid = tree.verify_proof("wrong_value", i, proof)
-            print(f"  Valid with wrong value: {invalid_valid}")
-        print()
-    
-    # Test error handling
+        total_steps += len(proof)
+        assert tree.verify_proof(leaf, i, proof) is True, f"honest proof {i} rejected"
+    assert total_steps == 24, f"8 proofs x log2(8)=3 steps must total 24, got {total_steps}"
+
+    # THE DISASTER, three ways — all must be caught:
+    proof = tree.get_proof(3)
+    #  a) a forged leaf value
+    assert tree.verify_proof("evil_data", 3, proof) is False, "forged leaf accepted"
+    #  b) a tampered proof step
+    bad = [(("0" * 64) if k == 1 else s, side) for k, (s, side) in enumerate(proof)]
+    assert tree.verify_proof(leaves[3], 3, bad) is False, "tampered proof accepted"
+    #  c) a truncated proof
+    assert tree.verify_proof(leaves[3], 3, proof[:-1]) is False, "truncated proof accepted"
+
+    # Changing any single leaf changes the root (tamper-evidence of the tree).
+    old_root = tree.get_root()
+    t2 = MerkleTree()
+    for i, leaf in enumerate(leaves):
+        t2.add_leaf("TAMPERED" if i == 5 else leaf)
+    t2.build()
+    assert t2.get_root() != old_root, "root identical despite a modified leaf"
+
+    # Odd leaf count (5): last leaf duplicated; every proof still verifies.
+    odd = MerkleTree()
+    for x in ("a", "b", "c", "d", "e"):
+        odd.add_leaf(x)
+    odd.build()
+    for i, x in enumerate("abcde"):
+        assert odd.verify_proof(x, i, odd.get_proof(i)) is True, \
+            f"odd-count proof {i} rejected"
+
+    # Empty tree and refusals.
+    empty = MerkleTree()
+    assert empty.get_root() is None
     try:
-        tree.get_proof(100)  # Should raise ValueError
-    except ValueError as e:
-        print(f"Correctly caught error: {e}")
+        empty.get_proof(0)
+        assert False, "proof from an empty tree accepted"
+    except RuntimeError:
+        pass
+    for call in (lambda: tree.get_proof(100), lambda: tree.get_proof(-1)):
+        try:
+            call()
+            assert False, "out-of-range proof index accepted"
+        except ValueError:
+            pass
+    try:
+        tree.add_leaf(42)  # type: ignore[arg-type]
+        assert False, "non-string leaf accepted"
+    except TypeError:
+        pass
+
+    print("merkle_tree: root == independent fold, 8/8 + 5/5 proofs verify, "
+          "forged/tampered/truncated all caught, leaf-change moves root — PASS")
 
 
 if __name__ == "__main__":
