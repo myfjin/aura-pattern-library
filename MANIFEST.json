@@ -1,7 +1,7 @@
 {
   "library": "AURA Pattern Library",
   "owner": "Reality Optimizer",
-  "generated": "2026-07-09",
+  "generated": "2026-07-11",
   "signing_pubkey": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "languages": {
     "python/programming": {
@@ -11,8 +11,8 @@
       "signature": "authentic + unaltered"
     },
     "python/data-science": {
-      "files": 370,
-      "gate_ok": 370,
+      "files": 377,
+      "gate_ok": 377,
       "gate_fail": 0,
       "signature": "authentic + unaltered"
     },
@@ -28,21 +28,21 @@
       "gate_fail": 0,
       "signature": "authentic + unaltered"
     },
+    "cpp/data-science": {
+      "files": 370,
+      "gate_ok": 370,
+      "gate_fail": 0,
+      "signature": "authentic + unaltered"
+    },
     "rust": {
       "files": 200,
       "gate_ok": 200,
       "gate_fail": 0,
       "signature": "authentic + unaltered"
     },
-    "cpp/data-science": {
-      "files": 369,
-      "gate_ok": 369,
-      "gate_fail": 0,
-      "signature": "authentic + unaltered"
-    },
     "go/programming": {
-      "files": 34,
-      "gate_ok": 34,
+      "files": 35,
+      "gate_ok": 35,
       "gate_fail": 0,
       "signature": "authentic + unaltered"
     },
@@ -53,20 +53,21 @@
       "signature": "authentic + unaltered"
     }
   },
-  "cpp": {
-    "files": 0,
-    "note": "empty-ready; no final-approved twins"
-  },
-  "go": {
-    "files": 0,
-    "note": "phase 2"
-  },
   "quarantine": [
     "keyword_cooccurrence_graph.py",
     "spelling_corrector_norvig.py",
     "stratified_sampling.py",
     "value_iteration_gridworld.py"
   ],
-  "total_shippable": 529,
-  "unique_ids": 527
+  "total_shippable": 934,
+  "unique_ids": 934,
+  "total_signed_files": 1399,
+  "multi_language_patterns": 463,
+  "languages_present": [
+    "python",
+    "cpp",
+    "rust",
+    "go",
+    "r"
+  ]
 }

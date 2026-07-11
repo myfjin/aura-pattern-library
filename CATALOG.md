@@ -1,5 +1,5 @@
 # AURA Pattern Library — Master Catalog (ID-keyed)
-_Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (master 0). Key `a051daad9b472464…`. Run `library_verify.py`._
+_Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (master 0). Key `a051daad9b472464…`. Run `library_verify.py`._
 
 | pattern ID | languages | category |
 |---|---|---|
@@ -538,15 +538,6 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `write_ahead_log` | python | Persistence |
 | `zipf_law_fit` | python·cpp | Text / NLP II |
 
-## Counts
-- **python/programming**: 99 files · gate_ok 99 · gate_fail 0 · authentic + unaltered
-- **python/data-science**: 370 files · gate_ok 370 · gate_fail 0 · authentic + unaltered
-- **r**: 60 files · gate_ok 60 · gate_fail 0 · authentic + unaltered
-- **cpp / go**: 0 (empty-ready; no final-approved twins yet)
-- **_quarantine**: 4 (excluded)
-
-**TOTAL shippable: 529** · unique IDs: 527
-
 | `crash_loop_detector` | python·go | System Administration — Process Supervision |
 | `graceful_shutdown_sigterm` | python | System Administration — Process Supervision |
 | `heartbeat_liveness` | python | System Administration — Process Supervision |
@@ -948,3 +939,16 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `token_gated_priority_scheduler` | rust | Rust — Composed Systems (bridge) |
 | `validated_config_loader` | rust | Rust — Composed Systems (bridge) |
 | `merkle_verified_sync` | rust | Rust — Composed Systems (bridge) |
+
+## Counts (2026-07-11)
+- **python/programming**: 99 · gate_ok 99 · authentic + unaltered
+- **python/data-science**: 377 · gate_ok 377 · authentic + unaltered
+- **python/system-administration**: 200 · gate_ok 200 · authentic + unaltered
+- **r**: 60 · gate_ok 60 · authentic + unaltered
+- **cpp/data-science**: 370 · g++ ∧ clang -pedantic + run · authentic + unaltered
+- **rust**: 200 · rustc -O -D warnings · authentic + unaltered
+- **go** (programming 35 + system-administration 58): 93 · go build + run + 3× determinism · authentic + unaltered
+- **_quarantine**: 4 data-science (assert-linter REJECTs, excluded)
+
+**934 unique patterns · 1,399 signed files across five languages · 463 patterns in two or more languages.**
+Every language twin is coupling-pinned to its Python/R source hash and carries the source's proven asserts.
