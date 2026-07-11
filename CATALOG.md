@@ -14,30 +14,30 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `adaptive_simpson` | python·cpp | Numerical Methods |
 | `adversarial_perturbation_lite` | python·cpp | Fairness, Privacy & Robustness |
 | `adwin_drift_detector` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
-| `alert_manager` | python | Monitoring |
+| `alert_manager` | python·go | Monitoring |
 | `anova_tukey` | r | Hypothesis Testing — Parametric |
 | `apriori_frequent_itemsets` | python·cpp | Recommenders & Graph Sampling |
 | `ar1_fit_forecast` | r | Time Series — Models & Autocorrelation |
 | `ar_yule_walker` | r | Time Series — Models & Autocorrelation |
-| `arg_parser` | python | Io |
-| `astar_pathfinding` | python | Reasoning |
-| `async_task_queue` | python | Async |
+| `arg_parser` | python·go | Io |
+| `astar_pathfinding` | python·go | Reasoning |
+| `async_task_queue` | python·go | Async |
 | `autocorrelation_function` | python·cpp | Time Series |
 | `autocovariance_spectrum` | python·cpp | Signal Processing & Sequences |
 | `autoregressive_model` | python·cpp | Time Series |
-| `avl_tree` | python | Data Structures |
+| `avl_tree` | python·go | Data Structures |
 | `backdoor_vs_collider_adjustment` | python·cpp | Causal Inference II |
 | `bag_of_words` | python·cpp | Text / NLP |
 | `bagging_variance_reduction` | python·cpp | Ensembles & Robust Methods |
 | `banach_matchbox_or_gambler_ruin` | python·cpp | Probability III |
-| `batch_controller` | python | Performance |
+| `batch_controller` | python·go | Performance |
 | `bayes_diagnostic_test` | python·cpp | Information Theory & Probability |
 | `bayes_factor_normal_means` | python·cpp | Bayesian III — Approximate Inference |
 | `bayesian_ab_beta` | python·cpp | Recommenders & Graph Sampling |
 | `bayesian_changepoint_offline` | python·cpp | Bayesian III — Modeling & Selection |
 | `bayesian_linear_regression` | python·cpp | Probabilistic Modeling (Bayes II) |
 | `bayesian_linreg_conjugate` | python·cpp | Bayesian III — Modeling & Selection |
-| `bayesian_network` | python | Reasoning |
+| `bayesian_network` | python·go | Reasoning |
 | `bayesian_two_segment_changepoint` | python·cpp | Probabilistic Modeling (Bayes II) |
 | `benford_law_test` | python·cpp | Probability III |
 | `benjamini_hochberg` | python·cpp | Statistics & Testing |
@@ -45,11 +45,11 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `betweenness_centrality` | python·cpp | Clustering, Graph & Anomaly |
 | `bias_variance_decomposition` | python·cpp | Model Diagnostics |
 | `bic_selects_true_degree` | python·cpp | Bayesian III — Modeling & Selection |
-| `binary_indexed_tree` | python | Data Structures |
+| `binary_indexed_tree` | python·go | Data Structures |
 | `birthday_paradox_exact_vs_sim` | python·cpp | Probability III |
 | `bisection_newton_hybrid` | python·cpp | Numerical Methods |
 | `black_scholes_monte_carlo` | python·cpp | Econometrics & Finance |
-| `bloom_filter` | python | Data Structures |
+| `bloom_filter` | python·go | Data Structures |
 | `bloom_filter_fpr` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `bm25_ranking` | python·cpp | Rankings & Information Retrieval |
 | `bootstrap_ci` | r | Distributions & Resampling |
@@ -61,19 +61,19 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `box_muller_gaussian` | python·cpp | Information Theory & Probability |
 | `bpe_tokenizer_lite` | python·cpp | Text / NLP |
 | `broker_term_extraction` | python·cpp | Composed Tools (bridge-born) |
-| `budget_allocator` | python | Performance |
-| `bulkhead_isolator` | python | Resilience |
+| `budget_allocator` | python·go | Performance |
+| `bulkhead_isolator` | python·go | Resilience |
 | `calibration_curve` | python·cpp | Model Diagnostics |
 | `caliper_matching` | python·cpp | Causal Inference II |
-| `cancellable_task_group` | python | Async |
+| `cancellable_task_group` | python·go | Async |
 | `capability_access` | python | Security |
 | `catalog_coverage_diversity` | python·cpp | Recommenders II — kept survivors (wave 19 REJECTED as a fake-fest; these 5 verified; rest re-harvest) |
 | `ccf_lag_detection` | r | Time Series — Models & Autocorrelation |
 | `censoring_bias_demo` | python·cpp | Survival & Reliability |
 | `char_ngram_language_id` | python·cpp | Text / NLP II |
 | `chi_square_independence` | python·r·cpp | Statistics & Testing |
-| `chunked_reader` | python | Io |
-| `circuit_breaker` | python | Resilience |
+| `chunked_reader` | python·go | Io |
+| `circuit_breaker` | python·go | Resilience |
 | `class_weight_imbalance` | python·cpp | Model Understanding & Tuning |
 | `classic_mds` | python·cpp | Clustering, Graph & Anomaly |
 | `cluster_randomized_icc` | python·cpp | Experiments II |
@@ -85,9 +85,9 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `confusion_matrix_metrics` | python·cpp | Statistics & Testing |
 | `conjugate_gradient` | python·cpp | Linear Algebra |
 | `conjugate_priors` | python·cpp | Information Theory & Probability |
-| `connection_pool` | python | Networking |
-| `connection_pool_health_checks` | python | Networking |
-| `consistent_hash_ring` | python | Distributed |
+| `connection_pool` | python·go | Networking |
+| `connection_pool_health_checks` | python·go | Networking |
+| `consistent_hash_ring` | python·go | Distributed |
 | `content_tfidf_rec` | python·cpp | Recommenders II — kept survivors (wave 19 REJECTED as a fake-fest; these 5 verified; rest re-harvest) |
 | `conv1d_feature_detector` | python·cpp | Neural Networks From Scratch |
 | `convex_hull_graham` | python·cpp | Geospatial & Spatial |
@@ -100,16 +100,16 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `covariance_matrix` | python·cpp | Preprocessing & EDA |
 | `covariate_shift_reweighting` | python·cpp | Fairness, Privacy & Robustness |
 | `cox_partial_likelihood_lite` | python·cpp | Survival & Reliability |
-| `cqrs_bus` | python | Architecture |
+| `cqrs_bus` | python·go | Architecture |
 | `cramers_v_effect` | r | Nonparametric & Categorical |
-| `crdt_sets` | python | Distributed |
+| `crdt_sets` | python·go | Distributed |
 | `cross_correlation_lag` | python·cpp | Signal Processing & Sequences |
 | `cross_validation_leakage` | python·cpp | Applied DS Practice |
 | `crp_table_growth` | python·cpp | Bayesian III — Modeling & Selection |
-| `csp_solver` | python | Reasoning |
-| `csv_to_json` | python | Io |
+| `csp_solver` | python·go | Reasoning |
+| `csv_to_json` | python·go | Io |
 | `csv_type_inference` | python·cpp | Data Wrangling From Scratch |
-| `csv_validator` | python | Io |
+| `csv_validator` | python·go | Io |
 | `cubic_spline_interpolation` | python·cpp | Numerical Methods |
 | `cuped_variance_reduction` | python·cpp | Causal Inference & Experimentation |
 | `cusum_changepoint` | python·cpp | Time Series |
@@ -118,14 +118,14 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `date_features` | r | Data Wrangling & Feature Engineering |
 | `dbscan_clustering` | python·cpp | Clustering, Graph & Anomaly |
 | `ddm_error_drift` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
-| `dead_letter_queue` | python | Resilience |
-| `decision_tree` | python | Reasoning |
+| `dead_letter_queue` | python·go | Resilience |
+| `decision_tree` | python·go | Reasoning |
 | `decision_tree_id3` | python·cpp | Core ML |
 | `dedup_pipeline` | python·cpp | Composed Tools (bridge-born) |
 | `dedupe_records_fuzzy` | python·cpp | Data Wrangling From Scratch |
 | `demographic_parity_metrics` | python·cpp | Fairness, Privacy & Robustness |
 | `dependency_graph` | python | Reasoning |
-| `diff_engine` | python | Io |
+| `diff_engine` | python·go | Io |
 | `diff_seasonality_test` | r | Time Series — Trend, Spectral & Smoothing |
 | `difference_in_differences` | python·cpp | Causal Inference & Experimentation |
 | `differencing_stationarity` | python·cpp | Time Series |
@@ -136,8 +136,8 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `discrete_event_simulation` | python·cpp | Simulation & Decision Science |
 | `discrete_fourier_transform` | python·cpp | Signal Processing & Sequences |
 | `distance_metrics_toolkit` | python·cpp | Optimization & Distances |
-| `distributed_lock_manager` | python | Distributed |
-| `dns_cache` | python | Networking |
+| `distributed_lock_manager` | python·go | Distributed |
+| `dns_cache` | python·go | Networking |
 | `doubly_robust_aipw` | python·cpp | Causal Inference II |
 | `douglas_peucker` | python·cpp | Geospatial & Spatial |
 | `drift_detection_psi` | python·cpp | Applied DS Practice |
@@ -158,29 +158,29 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `epsilon_greedy_bandit` | python·cpp | Optimization & Distances |
 | `equalized_odds_thresholds` | python·cpp | Fairness, Privacy & Robustness |
 | `euler_vs_rk4_error_order` | python·cpp | Numerical Methods |
-| `event_bus` | python | Architecture |
-| `event_logger` | python | Monitoring |
-| `event_sourcing_store` | python | Architecture |
+| `event_bus` | python·go | Architecture |
+| `event_logger` | python·go | Monitoring |
+| `event_sourcing_store` | python·go | Architecture |
 | `evidence_ranks_true_model` | python·cpp | Bayesian III — Modeling & Selection |
 | `ewma_streaming_metrics` | python·cpp | Applied DS Practice |
 | `exponential_histogram_count` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `exponential_reliability_mtbf` | python·cpp | Survival & Reliability |
 | `exponential_smoothing` | python·cpp | Time Series |
-| `expression_evaluator` | python | Reasoning |
+| `expression_evaluator` | python·go | Reasoning |
 | `extreme_value_block_maxima` | python·cpp | Probability III |
 | `factor_onehot` | r | Data Wrangling & Feature Engineering |
 | `feature_hashing_trick` | python·cpp | Applied DS Practice |
 | `feature_scaling_toolkit` | python·cpp | Optimization & Distances |
-| `fenwick_tree` | python | Data Structures |
+| `fenwick_tree` | python·go | Data Structures |
 | `fft_cooley_tukey` | python·cpp | Signal Processing & Sequences |
 | `fisher_exact_2x2` | r | Nonparametric & Categorical |
 | `fixed_effects_within` | python·cpp | Econometrics & Finance |
 | `fixed_point_iteration` | python·cpp | Numerical Methods |
-| `free_list_allocator` | python | Performance |
+| `free_list_allocator` | python·go | Performance |
 | `frontdoor_criterion_lite` | python·cpp | Causal Inference II |
 | `frugal_streaming_median` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `funnel_conversion_analysis` | python·cpp | Applied DS Practice |
-| `g_counter_crdt` | python | Distributed |
+| `g_counter_crdt` | python·go | Distributed |
 | `gamma_poisson_conjugate` | python·cpp | Probabilistic Modeling (Bayes II) |
 | `garch_lite_volatility_clustering` | python·cpp | Econometrics & Finance |
 | `gauss_legendre_quadrature_lite` | python·cpp | Numerical Methods |
@@ -436,7 +436,7 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `rule_engine` | python | Reasoning |
 | `rw_lock` | python | Performance |
 | `saga_coordinator` | python | Architecture |
-| `sat_solver` | python | Reasoning |
+| `sat_solver` | python·go | Reasoning |
 | `savitzky_golay_lite` | python·cpp | Signal Processing & Sequences |
 | `sbc_rank_uniformity` | python·cpp | Bayesian III — Approximate Inference |
 | `schelling_segregation` | python·cpp | Simulation & Decision Science |
@@ -540,7 +540,7 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 
 **TOTAL shippable: 529** · unique IDs: 527
 
-| `crash_loop_detector` | python | System Administration — Process Supervision |
+| `crash_loop_detector` | python·go | System Administration — Process Supervision |
 | `graceful_shutdown_sigterm` | python | System Administration — Process Supervision |
 | `heartbeat_liveness` | python | System Administration — Process Supervision |
 | `keepalive_daemon` | python | System Administration — Process Supervision |
@@ -550,29 +550,29 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `supervised_child` | python | System Administration — Process Supervision |
 | `watchdog_restart` | python | System Administration — Process Supervision |
 | `zombie_reaper` | python | System Administration — Process Supervision |
-| `atomic_snapshot` | python | System Administration — Filesystem Integrity & Atomic Ops |
-| `atomic_write_temp_rename` | python | System Administration — Filesystem Integrity & Atomic Ops |
+| `atomic_snapshot` | python·go | System Administration — Filesystem Integrity & Atomic Ops |
+| `atomic_write_temp_rename` | python·go | System Administration — Filesystem Integrity & Atomic Ops |
 | `checksum_corruption_detect` | python | System Administration — Filesystem Integrity & Atomic Ops |
-| `cow_backup` | python | System Administration — Filesystem Integrity & Atomic Ops |
-| `dir_tree_diff` | python | System Administration — Filesystem Integrity & Atomic Ops |
-| `disk_full_write_guard` | python | System Administration — Filesystem Integrity & Atomic Ops |
-| `fsync_durability` | python | System Administration — Filesystem Integrity & Atomic Ops |
+| `cow_backup` | python·go | System Administration — Filesystem Integrity & Atomic Ops |
+| `dir_tree_diff` | python·go | System Administration — Filesystem Integrity & Atomic Ops |
+| `disk_full_write_guard` | python·go | System Administration — Filesystem Integrity & Atomic Ops |
+| `fsync_durability` | python·go | System Administration — Filesystem Integrity & Atomic Ops |
 | `restore_from_backup` | python | System Administration — Filesystem Integrity & Atomic Ops |
 | `safe_delete_trash` | python | System Administration — Filesystem Integrity & Atomic Ops |
 | `symlink_escape_guard` | python | System Administration — Filesystem Integrity & Atomic Ops |
-| `advisory_lock_timeout` | python | System Administration — Concurrency & Locking |
-| `atomic_append` | python | System Administration — Concurrency & Locking |
-| `cas_file_update` | python | System Administration — Concurrency & Locking |
-| `deadlock_timeout` | python | System Administration — Concurrency & Locking |
-| `double_launch_block` | python | System Administration — Concurrency & Locking |
+| `advisory_lock_timeout` | python·go | System Administration — Concurrency & Locking |
+| `atomic_append` | python·go | System Administration — Concurrency & Locking |
+| `cas_file_update` | python·go | System Administration — Concurrency & Locking |
+| `deadlock_timeout` | python·go | System Administration — Concurrency & Locking |
+| `double_launch_block` | python·go | System Administration — Concurrency & Locking |
 | `flock_singleton` | python | System Administration — Concurrency & Locking |
 | `idempotent_once_guard` | python | System Administration — Concurrency & Locking |
 | `named_mutex` | python | System Administration — Concurrency & Locking |
 | `reader_writer_lock` | python | System Administration — Concurrency & Locking |
 | `stale_lock_break` | python | System Administration — Concurrency & Locking |
-| `backup_rotation` | python | System Administration — State/DB Durability |
-| `corruption_repair` | python | System Administration — State/DB Durability |
-| `crash_consistent_snapshot` | python | System Administration — State/DB Durability |
+| `backup_rotation` | python·go | System Administration — State/DB Durability |
+| `corruption_repair` | python·go | System Administration — State/DB Durability |
+| `crash_consistent_snapshot` | python·go | System Administration — State/DB Durability |
 | `hot_copy` | python | System Administration — State/DB Durability |
 | `integrity_check` | python | System Administration — State/DB Durability |
 | `journaled_write` | python | System Administration — State/DB Durability |
@@ -580,7 +580,7 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `point_in_time_restore` | python | System Administration — State/DB Durability |
 | `transaction_rollback` | python | System Administration — State/DB Durability |
 | `wal_checkpoint` | python | System Administration — State/DB Durability |
-| `crash_log_capture` | python | System Administration — Log Management |
+| `crash_log_capture` | python·go | System Administration — Log Management |
 | `log_compression` | python | System Administration — Log Management |
 | `rate_limited_log` | python | System Administration — Log Management |
 | `retention_prune` | python | System Administration — Log Management |
@@ -590,17 +590,17 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `secret_redaction` | python | System Administration — Log Management |
 | `structured_json_log` | python | System Administration — Log Management |
 | `tail_follow` | python | System Administration — Log Management |
-| `backpressure_queue` | python | System Administration — Resource Guards & Quotas |
-| `circuit_breaker` | python | System Administration — Resource Guards & Quotas |
-| `cpu_throttle` | python | System Administration — Resource Guards & Quotas |
-| `disk_space_watchdog` | python | System Administration — Resource Guards & Quotas |
-| `fd_leak_detector` | python | System Administration — Resource Guards & Quotas |
+| `backpressure_queue` | python·go | System Administration — Resource Guards & Quotas |
+| `circuit_breaker` | python·go | System Administration — Resource Guards & Quotas |
+| `cpu_throttle` | python·go | System Administration — Resource Guards & Quotas |
+| `disk_space_watchdog` | python·go | System Administration — Resource Guards & Quotas |
+| `fd_leak_detector` | python·go | System Administration — Resource Guards & Quotas |
 | `inode_guard` | python | System Administration — Resource Guards & Quotas |
 | `load_shedding` | python | System Administration — Resource Guards & Quotas |
 | `memory_cap_guard` | python | System Administration — Resource Guards & Quotas |
 | `tmp_cleanup` | python | System Administration — Resource Guards & Quotas |
 | `token_bucket_limiter` | python | System Administration — Resource Guards & Quotas |
-| `cron_expr_next_fire` | python | System Administration — Scheduling & Jobs |
+| `cron_expr_next_fire` | python·go | System Administration — Scheduling & Jobs |
 | `dead_letter_queue` | python | System Administration — Scheduling & Jobs |
 | `idempotency_key` | python | System Administration — Scheduling & Jobs |
 | `interval_scheduler` | python | System Administration — Scheduling & Jobs |
@@ -609,9 +609,9 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `missed_run_catchup` | python | System Administration — Scheduling & Jobs |
 | `oneshot_at_time` | python | System Administration — Scheduling & Jobs |
 | `retry_with_backoff` | python | System Administration — Scheduling & Jobs |
-| `timeout_kill` | python | System Administration — Scheduling & Jobs |
-| `dns_resolve_check` | python | System Administration — Network Reachability & Health |
-| `exponential_backoff` | python | System Administration — Network Reachability & Health |
+| `timeout_kill` | python·go | System Administration — Scheduling & Jobs |
+| `dns_resolve_check` | python·go | System Administration — Network Reachability & Health |
+| `exponential_backoff` | python·go | System Administration — Network Reachability & Health |
 | `failover_switch` | python | System Administration — Network Reachability & Health |
 | `heartbeat_gossip` | python | System Administration — Network Reachability & Health |
 | `http_health_probe` | python | System Administration — Network Reachability & Health |
@@ -620,19 +620,19 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `retry_timeout` | python | System Administration — Network Reachability & Health |
 | `split_brain_detect` | python | System Administration — Network Reachability & Health |
 | `tcp_port_check` | python | System Administration — Network Reachability & Health |
-| `config_diff` | python | System Administration — Config Management |
-| `config_versioning` | python | System Administration — Config Management |
-| `dotenv_parse` | python | System Administration — Config Management |
-| `env_load_defaults` | python | System Administration — Config Management |
+| `config_diff` | python·go | System Administration — Config Management |
+| `config_versioning` | python·go | System Administration — Config Management |
+| `dotenv_parse` | python·go | System Administration — Config Management |
+| `env_load_defaults` | python·go | System Administration — Config Management |
 | `hot_reload` | python | System Administration — Config Management |
 | `layered_merge` | python | System Administration — Config Management |
 | `multiformat_load` | python | System Administration — Config Management |
 | `refuse_start_on_invalid` | python | System Administration — Config Management |
 | `schema_validate` | python | System Administration — Config Management |
 | `secret_separation` | python | System Administration — Config Management |
-| `enforce_600_perms` | python | System Administration — Secrets & Credentials |
-| `env_secret_load` | python | System Administration — Secrets & Credentials |
-| `expiry_check` | python | System Administration — Secrets & Credentials |
+| `enforce_600_perms` | python·go | System Administration — Secrets & Credentials |
+| `env_secret_load` | python·go | System Administration — Secrets & Credentials |
+| `expiry_check` | python·go | System Administration — Secrets & Credentials |
 | `keyring_store` | python | System Administration — Secrets & Credentials |
 | `leaked_secret_scan` | python | System Administration — Secrets & Credentials |
 | `least_privilege_check` | python | System Administration — Secrets & Credentials |
@@ -640,9 +640,9 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `secret_audit_trail` | python | System Administration — Secrets & Credentials |
 | `token_rotation` | python | System Administration — Secrets & Credentials |
 | `ttl_cache` | python | System Administration — Secrets & Credentials |
-| `clock_skew_detect` | python | System Administration — Time & Clock Correctness |
-| `deadline_ttl` | python | System Administration — Time & Clock Correctness |
-| `drift_compensation` | python | System Administration — Time & Clock Correctness |
+| `clock_skew_detect` | python·go | System Administration — Time & Clock Correctness |
+| `deadline_ttl` | python·go | System Administration — Time & Clock Correctness |
+| `drift_compensation` | python·go | System Administration — Time & Clock Correctness |
 | `leap_safe_interval` | python | System Administration — Time & Clock Correctness |
 | `monotonic_vs_wall` | python | System Administration — Time & Clock Correctness |
 | `ntp_offset_check` | python | System Administration — Time & Clock Correctness |
@@ -650,20 +650,20 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `timeout_budget` | python | System Administration — Time & Clock Correctness |
 | `two_clocks_reconcile` | python | System Administration — Time & Clock Correctness |
 | `tz_safe_timestamp` | python | System Administration — Time & Clock Correctness |
-| `atomic_symlink_swap` | python | System Administration — Deployment & Rollback |
-| `blue_green_deploy` | python | System Administration — Deployment & Rollback |
-| `canary_gate` | python | System Administration — Deployment & Rollback |
-| `config_drift_detect` | python | System Administration — Deployment & Rollback |
-| `deplock_verify` | python | System Administration — Deployment & Rollback |
-| `deploy_idempotency` | python | System Administration — Deployment & Rollback |
+| `atomic_symlink_swap` | python·go | System Administration — Deployment & Rollback |
+| `blue_green_deploy` | python·go | System Administration — Deployment & Rollback |
+| `canary_gate` | python·go | System Administration — Deployment & Rollback |
+| `config_drift_detect` | python·go | System Administration — Deployment & Rollback |
+| `deplock_verify` | python·go | System Administration — Deployment & Rollback |
+| `deploy_idempotency` | python·go | System Administration — Deployment & Rollback |
 | `health_gated_promote` | python | System Administration — Deployment & Rollback |
 | `immutable_release` | python | System Administration — Deployment & Rollback |
 | `rollback_on_failure` | python | System Administration — Deployment & Rollback |
 | `version_pin_verify` | python | System Administration — Deployment & Rollback |
-| `backup_catalog` | python | System Administration — Backup & Disaster Recovery |
-| `backup_dedup` | python | System Administration — Backup & Disaster Recovery |
-| `backup_encryption` | python | System Administration — Backup & Disaster Recovery |
-| `full_incremental_backup` | python | System Administration — Backup & Disaster Recovery |
+| `backup_catalog` | python·go | System Administration — Backup & Disaster Recovery |
+| `backup_dedup` | python·go | System Administration — Backup & Disaster Recovery |
+| `backup_encryption` | python·go | System Administration — Backup & Disaster Recovery |
+| `full_incremental_backup` | python·go | System Administration — Backup & Disaster Recovery |
 | `offsite_integrity` | python | System Administration — Backup & Disaster Recovery |
 | `restore_drill` | python | System Administration — Backup & Disaster Recovery |
 | `restore_verify` | python | System Administration — Backup & Disaster Recovery |
@@ -690,9 +690,9 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `resource_usage` | python | System Administration — Process/System Introspection |
 | `top_n_by_resource` | python | System Administration — Process/System Introspection |
 | `uptime_read` | python | System Administration — Process/System Introspection |
-| `ansi_strip` | python | System Administration — Text/Stream Processing |
-| `dedup_stream` | python | System Administration — Text/Stream Processing |
-| `field_extract` | python | System Administration — Text/Stream Processing |
+| `ansi_strip` | python·go | System Administration — Text/Stream Processing |
+| `dedup_stream` | python·go | System Administration — Text/Stream Processing |
+| `field_extract` | python·go | System Administration — Text/Stream Processing |
 | `logline_parse` | python | System Administration — Text/Stream Processing |
 | `merge_sorted_streams` | python | System Administration — Text/Stream Processing |
 | `multiline_join` | python | System Administration — Text/Stream Processing |
@@ -700,18 +700,18 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `structured_diff` | python | System Administration — Text/Stream Processing |
 | `tail_follow_stream` | python | System Administration — Text/Stream Processing |
 | `throughput_meter` | python | System Administration — Text/Stream Processing |
-| `binary_presence_check` | python | System Administration — Packaging & Environment |
-| `capability_probe` | python | System Administration — Packaging & Environment |
+| `binary_presence_check` | python·go | System Administration — Packaging & Environment |
+| `capability_probe` | python·go | System Administration — Packaging & Environment |
 | `depgraph_resolve` | python | System Administration — Packaging & Environment |
-| `deps_verify` | python | System Administration — Packaging & Environment |
-| `dryrun_installer` | python | System Administration — Packaging & Environment |
-| `env_diff` | python | System Administration — Packaging & Environment |
+| `deps_verify` | python·go | System Administration — Packaging & Environment |
+| `dryrun_installer` | python·go | System Administration — Packaging & Environment |
+| `env_diff` | python·go | System Administration — Packaging & Environment |
 | `lockfile_hash_integrity` | python | System Administration — Packaging & Environment |
 | `path_sanity` | python | System Administration — Packaging & Environment |
 | `reproducible_build_check` | python | System Administration — Packaging & Environment |
 | `version_constraint_solve` | python | System Administration — Packaging & Environment |
-| `append_only_audit` | python | System Administration — Access Control & Audit |
-| `command_allowlist` | python | System Administration — Access Control & Audit |
+| `append_only_audit` | python·go | System Administration — Access Control & Audit |
+| `command_allowlist` | python·go | System Administration — Access Control & Audit |
 | `immutable_audit` | python | System Administration — Access Control & Audit |
 | `least_privilege_verify` | python | System Administration — Access Control & Audit |
 | `permission_matrix` | python | System Administration — Access Control & Audit |
@@ -720,9 +720,9 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `session_record` | python | System Administration — Access Control & Audit |
 | `sudo_self_body_guard` | python | System Administration — Access Control & Audit |
 | `tamper_evident_chain` | python | System Administration — Access Control & Audit |
-| `backfill_range` | python | System Administration — Data Pipeline Ops |
-| `checkpoint_resume` | python | System Administration — Data Pipeline Ops |
-| `exactly_once_dedup` | python | System Administration — Data Pipeline Ops |
+| `backfill_range` | python·go | System Administration — Data Pipeline Ops |
+| `checkpoint_resume` | python·go | System Administration — Data Pipeline Ops |
+| `exactly_once_dedup` | python·go | System Administration — Data Pipeline Ops |
 | `idempotent_etl_step` | python | System Administration — Data Pipeline Ops |
 | `lineage_track` | python | System Administration — Data Pipeline Ops |
 | `partition_manage` | python | System Administration — Data Pipeline Ops |
