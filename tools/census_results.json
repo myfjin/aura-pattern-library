@@ -1,19 +1,19 @@
 {
  "census": {
-  "total_files": 1392,
-  "total_patterns_catalog_rows": 927,
-  "total_patterns_disk": 927,
-  "total_unique_stems": 916,
+  "total_files": 1399,
+  "total_patterns_catalog_rows": 934,
+  "total_patterns_disk": 934,
+  "total_unique_stems": 923,
   "duplicate_catalog_rows": [],
   "per_language_files": {
-   "python": 669,
+   "python": 676,
    "r": 60,
    "cpp": 370,
    "go": 93,
    "rust": 200
   },
   "per_language_unique_ids": {
-   "python": 667,
+   "python": 674,
    "r": 60,
    "cpp": 370,
    "go": 92,
@@ -21,17 +21,17 @@
   },
   "per_sphere_files": {
    "programming": 134,
-   "data-science": 740,
+   "data-science": 747,
    "system-administration": 258,
    "r-statistics": 60,
    "rust-systems": 200
   },
   "per_sphere_patterns": {
-   "rust-systems": 200,
-   "programming": 99,
-   "data-science": 370,
+   "r-statistics": 60,
+   "data-science": 377,
    "system-administration": 200,
-   "r-statistics": 60
+   "rust-systems": 200,
+   "programming": 99
   },
   "per_category": {
    "data-science": {
@@ -56,7 +56,7 @@
     "Clustering, Graph & Anomaly": 10,
     "Model Diagnostics": 10,
     "Econometrics & Finance": 10,
-    "Composed Tools (bridge-born)": 10,
+    "Composed Tools (bridge-born)": 17,
     "Recommenders II \u2014 kept survivors (wave 19 REJECTED as a fake-fest; these 5 verified; rest re-harvest)": 4,
     "Text / NLP II": 8,
     "Model Understanding & Tuning": 10,
@@ -141,11 +141,31 @@
    ],
    [
     "data-science",
+    "community_local_authority"
+   ],
+   [
+    "data-science",
+    "cross_domain_query_expansion"
+   ],
+   [
+    "data-science",
+    "cross_domain_search_engine"
+   ],
+   [
+    "data-science",
     "dedup_pipeline"
    ],
    [
     "data-science",
     "dtw_shape_drift_monitor"
+   ],
+   [
+    "data-science",
+    "forest_size_by_variance"
+   ],
+   [
+    "data-science",
+    "interleaving_significance"
    ],
    [
     "data-science",
@@ -170,6 +190,14 @@
    [
     "data-science",
     "rare_event_option_pricing"
+   ],
+   [
+    "data-science",
+    "rolling_ols_update"
+   ],
+   [
+    "data-science",
+    "topic_aware_recommender"
    ],
    [
     "data-science",
@@ -359,21 +387,21 @@
    "cpp+python": 368,
    "r": 58,
    "go+python": 93,
-   "python": 206,
+   "python": 213,
    "cpp+python+r": 2,
    "rust": 200
   },
   "stem_collisions_across_spheres": {
-   "dead_letter_queue": 2,
-   "lru_cache": 2,
-   "consistent_hash_ring": 2,
+   "bloom_filter": 2,
    "count_min_sketch": 2,
-   "exponential_backoff": 2,
-   "merkle_tree": 2,
    "skip_list": 2,
-   "circuit_breaker": 3,
    "token_bucket": 2,
-   "bloom_filter": 2
+   "circuit_breaker": 3,
+   "dead_letter_queue": 2,
+   "merkle_tree": 2,
+   "consistent_hash_ring": 2,
+   "lru_cache": 2,
+   "exponential_backoff": 2
   },
   "free_tier_patterns": 99,
   "free_tier_ids": [
@@ -488,15 +516,9 @@
    "rustc": true,
    "Rscript": true
   },
-  "manifest_deltas": [
-   {
-    "subtree": "cpp/data-science",
-    "manifest": 369,
-    "disk": 370
-   }
-  ],
-  "manifest_total_shippable": 529,
-  "manifest_unique_ids": 527,
+  "manifest_deltas": [],
+  "manifest_total_shippable": 934,
+  "manifest_unique_ids": 934,
   "twin_ledger": {
    "cpp": {
     "twins_on_disk": 370,
@@ -510,54 +532,83 @@
    },
    "go": {
     "twins_on_disk": 92,
-    "ledger_rows": 93,
-    "twins_without_ledger_row": [],
+    "ledger_rows": 35,
+    "twins_without_ledger_row": [
+     "advisory_lock_timeout",
+     "ansi_strip",
+     "append_only_audit",
+     "atomic_append",
+     "atomic_snapshot",
+     "atomic_symlink_swap",
+     "atomic_write_temp_rename",
+     "backfill_range",
+     "backpressure_queue",
+     "backup_catalog",
+     "backup_dedup",
+     "backup_encryption",
+     "backup_rotation",
+     "binary_presence_check",
+     "blue_green_deploy",
+     "canary_gate",
+     "capability_probe",
+     "cas_file_update",
+     "checkpoint_resume",
+     "clock_skew_detect",
+     "command_allowlist",
+     "config_diff",
+     "config_drift_detect",
+     "config_versioning",
+     "corruption_repair",
+     "cow_backup",
+     "cpu_throttle",
+     "crash_consistent_snapshot",
+     "crash_log_capture",
+     "crash_loop_detector",
+     "cron_expr_next_fire",
+     "deadline_ttl",
+     "deadlock_timeout",
+     "dedup_stream",
+     "deplock_verify",
+     "deploy_idempotency",
+     "deps_verify",
+     "dir_tree_diff",
+     "disk_full_write_guard",
+     "disk_space_watchdog",
+     "dns_resolve_check",
+     "dotenv_parse",
+     "double_launch_block",
+     "drift_compensation",
+     "dryrun_installer",
+     "enforce_600_perms",
+     "env_diff",
+     "env_load_defaults",
+     "env_secret_load",
+     "exactly_once_dedup",
+     "expiry_check",
+     "exponential_backoff",
+     "fd_leak_detector",
+     "field_extract",
+     "fsync_durability",
+     "full_incremental_backup",
+     "timeout_kill"
+    ],
     "ledger_rows_without_twin": [],
     "source_missing": [],
-    "source_hash_drift": [
-     "alert_manager",
-     "arg_parser",
-     "astar_pathfinding",
-     "async_task_queue",
-     "avl_tree",
-     "batch_controller",
-     "bayesian_network",
-     "binary_indexed_tree",
-     "bloom_filter",
-     "budget_allocator",
-     "bulkhead_isolator",
-     "cancellable_task_group",
-     "chunked_reader",
-     "circuit_breaker",
-     "connection_pool",
-     "connection_pool_health_checks",
-     "consistent_hash_ring",
-     "cqrs_bus",
-     "crdt_sets",
-     "csp_solver",
-     "csv_to_json",
-     "csv_validator",
-     "dead_letter_queue",
-     "decision_tree",
-     "diff_engine",
-     "distributed_lock_manager",
-     "dns_cache",
-     "event_bus",
-     "event_logger",
-     "event_sourcing_store",
-     "expression_evaluator",
-     "fenwick_tree",
-     "free_list_allocator",
-     "g_counter_crdt",
-     "sat_solver"
-    ]
+    "source_hash_drift": []
    }
   },
   "validity": {
-   "checked_files": 1392,
+   "checked_files": 1399,
    "skipped_languages": [],
-   "valid_files": 1381,
+   "valid_files": 1397,
    "failures": [
+    {
+     "id": "advisory_lock_timeout",
+     "sphere": "system-administration",
+     "lang": "python",
+     "layer_failed": "L3",
+     "reason": "exit codes [0, 1, 0]"
+    },
     {
      "id": "flock_singleton",
      "sphere": "system-administration",
@@ -566,324 +617,9 @@
      "reason": "exit codes [0, 1, 0]"
     },
     {
-     "id": "async_task_queue",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L2",
-     "reason": "no real failure paths (go scan)"
-    },
-    {
-     "id": "binary_indexed_tree",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L2",
-     "reason": "no real failure paths (go scan)"
-    },
-    {
-     "id": "crdt_sets",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L2",
-     "reason": "no real failure paths (go scan)"
-    },
-    {
-     "id": "distributed_lock_manager",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L2",
-     "reason": "no real failure paths (go scan)"
-    },
-    {
-     "id": "arg_parser",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L2",
-     "reason": "no real failure paths (go scan)"
-    },
-    {
-     "id": "diff_engine",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L2",
-     "reason": "no real failure paths (go scan)"
-    },
-    {
-     "id": "event_logger",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L2",
-     "reason": "no real failure paths (go scan)"
-    },
-    {
-     "id": "dns_cache",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L2",
-     "reason": "no real failure paths (go scan)"
-    },
-    {
-     "id": "astar_pathfinding",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L2",
-     "reason": "no real failure paths (go scan)"
-    },
-    {
-     "id": "csp_solver",
-     "sphere": "programming",
-     "lang": "go",
-     "layer_failed": "L2",
-     "reason": "no real failure paths (go scan)"
-    },
-    {
      "id": "peeking_alpha_inflation",
      "sphere": "data-science",
      "lang": "cpp",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "alert_manager",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "arg_parser",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "astar_pathfinding",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "async_task_queue",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "avl_tree",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "batch_controller",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "bayesian_network",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "binary_indexed_tree",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "bloom_filter",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "budget_allocator",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "bulkhead_isolator",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "cancellable_task_group",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "chunked_reader",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "circuit_breaker",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "connection_pool",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "connection_pool_health_checks",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "consistent_hash_ring",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "cqrs_bus",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "crdt_sets",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "csp_solver",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "csv_to_json",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "csv_validator",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "dead_letter_queue",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "decision_tree",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "diff_engine",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "distributed_lock_manager",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "dns_cache",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "event_bus",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "event_logger",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "event_sourcing_store",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "expression_evaluator",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "fenwick_tree",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "free_list_allocator",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "g_counter_crdt",
-     "sphere": "twin",
-     "lang": "go",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    },
-    {
-     "id": "sat_solver",
-     "sphere": "twin",
-     "lang": "go",
      "layer_failed": "COUPLING",
      "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
     }
@@ -905,71 +641,16 @@
      "lang": "python"
     },
     {
-     "id": "event_bus",
+     "id": "sat_solver",
      "sphere": "programming",
      "lang": "go"
-    },
-    {
-     "id": "async_task_queue",
-     "sphere": "programming",
-     "lang": "go"
-    },
-    {
-     "id": "fenwick_tree",
-     "sphere": "programming",
-     "lang": "go"
-    },
-    {
-     "id": "crdt_sets",
-     "sphere": "programming",
-     "lang": "go"
-    },
-    {
-     "id": "arg_parser",
-     "sphere": "programming",
-     "lang": "go"
-    },
-    {
-     "id": "alert_manager",
-     "sphere": "programming",
-     "lang": "go"
-    },
-    {
-     "id": "batch_controller",
-     "sphere": "programming",
-     "lang": "go"
-    },
-    {
-     "id": "decision_tree",
-     "sphere": "programming",
-     "lang": "go"
-    },
-    {
-     "id": "bulkhead_isolator",
-     "sphere": "programming",
-     "lang": "go"
-    },
-    {
-     "id": "circuit_breaker",
-     "sphere": "programming",
-     "lang": "go"
-    },
-    {
-     "id": "dead_letter_queue",
-     "sphere": "programming",
-     "lang": "go"
-    },
-    {
-     "id": "work_stealing_deque",
-     "sphere": "rust-systems",
-     "lang": "rust"
     }
    ],
-   "l2_warn_files": 356,
+   "l2_warn_files": 362,
    "clangxx_portability_fails": [],
    "runs_per_file": 3
   },
-  "date": "2026-07-11"
+  "date": "2026-07-12"
  },
  "files": [
   {
@@ -3930,6 +3611,57 @@
   {
    "sphere": "data-science",
    "lang": "python",
+   "id": "community_local_authority",
+   "path": "/Users/s_dio/aura-pattern-library/python/data-science/composed_tools/community_local_authority.py",
+   "twin": false,
+   "l2": "WARN",
+   "l2_detail": [
+    "directional",
+    "len-shape"
+   ],
+   "l1": true,
+   "l3": true,
+   "l3_note": false,
+   "clangxx_ok": null,
+   "detail": ""
+  },
+  {
+   "sphere": "data-science",
+   "lang": "python",
+   "id": "cross_domain_query_expansion",
+   "path": "/Users/s_dio/aura-pattern-library/python/data-science/composed_tools/cross_domain_query_expansion.py",
+   "twin": false,
+   "l2": "WARN",
+   "l2_detail": [
+    "directional",
+    "unknown"
+   ],
+   "l1": true,
+   "l3": true,
+   "l3_note": false,
+   "clangxx_ok": null,
+   "detail": ""
+  },
+  {
+   "sphere": "data-science",
+   "lang": "python",
+   "id": "cross_domain_search_engine",
+   "path": "/Users/s_dio/aura-pattern-library/python/data-science/composed_tools/cross_domain_search_engine.py",
+   "twin": false,
+   "l2": "WARN",
+   "l2_detail": [
+    "directional",
+    "unknown"
+   ],
+   "l1": true,
+   "l3": true,
+   "l3_note": false,
+   "clangxx_ok": null,
+   "detail": ""
+  },
+  {
+   "sphere": "data-science",
+   "lang": "python",
    "id": "dedup_pipeline",
    "path": "/Users/s_dio/aura-pattern-library/python/data-science/composed_tools/dedup_pipeline.py",
    "twin": false,
@@ -3954,6 +3686,39 @@
    "l2_detail": [
     "and-weak",
     "unknown"
+   ],
+   "l1": true,
+   "l3": true,
+   "l3_note": false,
+   "clangxx_ok": null,
+   "detail": ""
+  },
+  {
+   "sphere": "data-science",
+   "lang": "python",
+   "id": "forest_size_by_variance",
+   "path": "/Users/s_dio/aura-pattern-library/python/data-science/composed_tools/forest_size_by_variance.py",
+   "twin": false,
+   "l2": "WARN",
+   "l2_detail": [
+    "directional"
+   ],
+   "l1": true,
+   "l3": true,
+   "l3_note": false,
+   "clangxx_ok": null,
+   "detail": ""
+  },
+  {
+   "sphere": "data-science",
+   "lang": "python",
+   "id": "interleaving_significance",
+   "path": "/Users/s_dio/aura-pattern-library/python/data-science/composed_tools/interleaving_significance.py",
+   "twin": false,
+   "l2": "WARN",
+   "l2_detail": [
+    "directional",
+    "sign-only"
    ],
    "l1": true,
    "l3": true,
@@ -4057,6 +3822,41 @@
    "l2": "WARN",
    "l2_detail": [
     "directional"
+   ],
+   "l1": true,
+   "l3": true,
+   "l3_note": false,
+   "clangxx_ok": null,
+   "detail": ""
+  },
+  {
+   "sphere": "data-science",
+   "lang": "python",
+   "id": "rolling_ols_update",
+   "path": "/Users/s_dio/aura-pattern-library/python/data-science/composed_tools/rolling_ols_update.py",
+   "twin": false,
+   "l2": "PASS",
+   "l2_detail": [
+    "and-recovery",
+    "directional"
+   ],
+   "l1": true,
+   "l3": true,
+   "l3_note": false,
+   "clangxx_ok": null,
+   "detail": ""
+  },
+  {
+   "sphere": "data-science",
+   "lang": "python",
+   "id": "topic_aware_recommender",
+   "path": "/Users/s_dio/aura-pattern-library/python/data-science/composed_tools/topic_aware_recommender.py",
+   "twin": false,
+   "l2": "WARN",
+   "l2_detail": [
+    "all-hollow",
+    "directional",
+    "len-shape"
    ],
    "l1": true,
    "l3": true,
@@ -9475,10 +9275,10 @@
     "unknown"
    ],
    "l1": true,
-   "l3": true,
+   "l3": false,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": ""
+   "detail": "exit codes [0, 1, 0]"
   },
   {
    "sphere": "system-administration",
@@ -19553,7 +19353,7 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "3 failure path(s) (go scan)"
+    "13 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19573,7 +19373,7 @@
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -19585,7 +19385,7 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "4 failure path(s) (go scan)"
+    "14 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19599,13 +19399,13 @@
    "id": "async_task_queue",
    "path": "/Users/s_dio/aura-pattern-library/go/programming/async/async_task_queue.go",
    "twin": true,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no real failure paths (go scan)"
+    "22 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -19617,7 +19417,7 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "7 failure path(s) (go scan)"
+    "11 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19633,7 +19433,7 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "2 failure path(s) (go scan)"
+    "15 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19647,9 +19447,9 @@
    "id": "binary_indexed_tree",
    "path": "/Users/s_dio/aura-pattern-library/go/programming/data_structures/binary_indexed_tree.go",
    "twin": true,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no real failure paths (go scan)"
+    "13 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19665,7 +19465,7 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "7 failure path(s) (go scan)"
+    "16 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19681,11 +19481,11 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "3 failure path(s) (go scan)"
+    "14 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -19697,7 +19497,7 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "2 failure path(s) (go scan)"
+    "14 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19711,13 +19511,13 @@
    "id": "crdt_sets",
    "path": "/Users/s_dio/aura-pattern-library/go/programming/distributed/crdt_sets.go",
    "twin": true,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no real failure paths (go scan)"
+    "1 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -19727,9 +19527,9 @@
    "id": "distributed_lock_manager",
    "path": "/Users/s_dio/aura-pattern-library/go/programming/distributed/distributed_lock_manager.go",
    "twin": true,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no real failure paths (go scan)"
+    "18 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19745,7 +19545,7 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "2 failure path(s) (go scan)"
+    "29 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19759,13 +19559,13 @@
    "id": "arg_parser",
    "path": "/Users/s_dio/aura-pattern-library/go/programming/io/arg_parser.go",
    "twin": true,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no real failure paths (go scan)"
+    "21 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -19777,7 +19577,7 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "7 failure path(s) (go scan)"
+    "11 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19793,7 +19593,7 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "6 failure path(s) (go scan)"
+    "25 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19809,7 +19609,7 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "1 failure path(s) (go scan)"
+    "17 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19823,9 +19623,9 @@
    "id": "diff_engine",
    "path": "/Users/s_dio/aura-pattern-library/go/programming/io/diff_engine.go",
    "twin": true,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no real failure paths (go scan)"
+    "17 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19841,11 +19641,11 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "6 failure path(s) (go scan)"
+    "7 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -19855,9 +19655,9 @@
    "id": "event_logger",
    "path": "/Users/s_dio/aura-pattern-library/go/programming/monitoring/event_logger.go",
    "twin": true,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no real failure paths (go scan)"
+    "3 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19873,7 +19673,7 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "1 failure path(s) (go scan)"
+    "21 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19889,7 +19689,7 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "3 failure path(s) (go scan)"
+    "20 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19903,9 +19703,9 @@
    "id": "dns_cache",
    "path": "/Users/s_dio/aura-pattern-library/go/programming/networking/dns_cache.go",
    "twin": true,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no real failure paths (go scan)"
+    "19 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19921,11 +19721,11 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "2 failure path(s) (go scan)"
+    "60 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -19937,7 +19737,7 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "2 failure path(s) (go scan)"
+    "18 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19953,7 +19753,7 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "5 failure path(s) (go scan)"
+    "22 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19967,9 +19767,9 @@
    "id": "astar_pathfinding",
    "path": "/Users/s_dio/aura-pattern-library/go/programming/reasoning/astar_pathfinding.go",
    "twin": true,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no real failure paths (go scan)"
+    "18 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19985,7 +19785,7 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "5 failure path(s) (go scan)"
+    "19 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -19999,9 +19799,9 @@
    "id": "csp_solver",
    "path": "/Users/s_dio/aura-pattern-library/go/programming/reasoning/csp_solver.go",
    "twin": true,
-   "l2": "REJECT",
+   "l2": "PASS",
    "l2_detail": [
-    "no real failure paths (go scan)"
+    "12 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -20017,11 +19817,11 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "4 failure path(s) (go scan)"
+    "13 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -20033,7 +19833,7 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "4 failure path(s) (go scan)"
+    "17 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
@@ -20049,11 +19849,11 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "7 failure path(s) (go scan)"
+    "16 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": false,
+   "l3_note": true,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -20069,7 +19869,7 @@
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -20081,11 +19881,11 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "3 failure path(s) (go scan)"
+    "12 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -20097,11 +19897,11 @@
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
-    "1 failure path(s) (go scan)"
+    "18 failure path(s) (go scan)"
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -22037,7 +21837,7 @@
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
