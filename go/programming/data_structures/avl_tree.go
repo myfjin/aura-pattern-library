@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"math/rand"
 	"os"
 )
 
@@ -256,32 +257,130 @@ func (t *AVLTree) isBalancedRecursive(node *AVLNode) bool {
 }
 
 func main() {
-	avl := NewAVLTree()
+	rand.Seed(42)
 
-	keys := make([]int, 50)
-	for i := 0; i < 50; i++ {
-		keys[i] = i + 1
-	}
-	for _, key := range keys {
+	avl := NewAVLTree()
+	for key := 1; key <= 50; key++ {
 		avl.Insert(key)
 	}
+	if !avl.IsBalanced() {
+		fmt.Fprintln(os.Stderr, "sequential insert broke the AVL balance invariant")
+		os.Exit(1)
+	}
+	if avl.Root.Height > 8 {
+		fmt.Fprintf(os.Stderr, "50 nodes must fit in AVL height <=8, got %d (chain?)\n", avl.Root.Height)
+		os.Exit(1)
+	}
+	if sliceEqual(avl.InorderTraversal(), rangeSlice(1, 51)) == false {
+		fmt.Fprintln(os.Stderr, "inorder not sorted")
+		os.Exit(1)
+	}
+	sum := 0
+	for _, v := range avl.InorderTraversal() {
+		sum += v
+	}
+	if sum != 1275 {
+		fmt.Fprintln(os.Stderr, "1..50 must sum to 1275")
+		os.Exit(1)
+	}
+	if !(avl.Search(25) && avl.Search(1) && avl.Search(50)) {
+		fmt.Fprintln(os.Stderr, "search failed for present keys")
+		os.Exit(1)
+	}
+	if avl.Search(100) || avl.Search(0) {
+		fmt.Fprintln(os.Stderr, "search returned true for absent keys")
+		os.Exit(1)
+	}
 
-	fmt.Printf("Tree is balanced: %v\n", avl.IsBalanced())
-
-	traversal := avl.InorderTraversal()
-	fmt.Printf("Inorder traversal (first 20): %v\n", traversal[:20])
-
-	fmt.Printf("Search for 25: %v\n", avl.Search(25))
-	fmt.Printf("Search for 100: %v\n", avl.Search(100))
+	avl.Insert(25)
+	if sliceEqual(avl.InorderTraversal(), rangeSlice(1, 51)) == false {
+		fmt.Fprintln(os.Stderr, "duplicate insert changed the tree")
+		os.Exit(1)
+	}
 
 	for _, key := range []int{10, 20, 30} {
 		avl.Delete(key)
 	}
+	if !avl.IsBalanced() {
+		fmt.Fprintln(os.Stderr, "delete broke the balance invariant")
+		os.Exit(1)
+	}
+	remaining := avl.InorderTraversal()
+	wantRemaining := []int{}
+	for k := 1; k <= 50; k++ {
+		if k != 10 && k != 20 && k != 30 {
+			wantRemaining = append(wantRemaining, k)
+		}
+	}
+	if !sliceEqual(remaining, wantRemaining) {
+		fmt.Fprintln(os.Stderr, "remaining keys after delete mismatch")
+		os.Exit(1)
+	}
+	if avl.Search(10) || !avl.Search(11) {
+		fmt.Fprintln(os.Stderr, "search after delete mismatch")
+		os.Exit(1)
+	}
 
-	fmt.Printf("Tree is balanced after deletions: %v\n", avl.IsBalanced())
+	fuzz := NewAVLTree()
+	oracle := map[int]struct{}{}
+	for step := 0; step < 600; step++ {
+		k := rand.Intn(81)
+		if rand.Float64() < 0.6 {
+			fuzz.Insert(k)
+			oracle[k] = struct{}{}
+		} else if _, ok := oracle[k]; ok {
+			fuzz.Delete(k)
+			delete(oracle, k)
+		}
+		if !fuzz.IsBalanced() {
+			fmt.Fprintf(os.Stderr, "balance invariant broken at step %d\n", step)
+			os.Exit(1)
+		}
+	}
+	if sliceEqual(fuzz.InorderTraversal(), sortedKeys(oracle)) == false {
+		fmt.Fprintln(os.Stderr, "final tree diverged from set oracle")
+		os.Exit(1)
+	}
+	if fuzz.Root != nil && fuzz.Root.Height > 10 {
+		fmt.Fprintf(os.Stderr, "fuzz tree degenerated: height %d\n", fuzz.Root.Height)
+		os.Exit(1)
+	}
 
-	traversal = avl.InorderTraversal()
-	fmt.Printf("Inorder traversal after deletions (first 20): %v\n", traversal[:20])
+	fmt.Printf("avl_tree: 50 sequential inserts height %d (<=8) balanced, deletes rebalanced, 600-op set oracle agreed — PASS\n", avl.Root.Height)
+}
 
-	fmt.Printf("Search for 10 after deletion: %v\n", avl.Search(10))
+func sliceEqual(a, b []int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func rangeSlice(start, end int) []int {
+	res := make([]int, 0, end-start)
+	for i := start; i < end; i++ {
+		res = append(res, i)
+	}
+	return res
+}
+
+func sortedKeys(m map[int]struct{}) []int {
+	keys := make([]int, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	// simple insertion sort
+	for i := 1; i < len(keys); i++ {
+		j := i
+		for j > 0 && keys[j-1] > keys[j] {
+			keys[j-1], keys[j] = keys[j], keys[j-1]
+			j--
+		}
+	}
+	return keys
 }

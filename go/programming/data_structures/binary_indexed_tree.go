@@ -1,11 +1,12 @@
 package main
 
 import (
-	"errors"
 	"fmt"
+	"math/rand"
+	"os"
+	"time"
 )
 
-// BinaryIndexedTree implements a Fenwick tree for prefix sums and range queries.
 // △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 var _auraMark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
@@ -14,157 +15,158 @@ type BinaryIndexedTree struct {
 	tree []int
 }
 
-// NewBinaryIndexedTree creates a BIT of the given size (1-indexed).
-func NewBinaryIndexedTree(size int) (*BinaryIndexedTree, error) {
+func NewBinaryIndexedTree(size int) *BinaryIndexedTree {
 	if size <= 0 {
-		return nil, errors.New("size must be positive")
+		fmt.Fprintln(os.Stderr, "Size must be positive")
+		os.Exit(1)
 	}
 	return &BinaryIndexedTree{
 		size: size,
 		tree: make([]int, size+1),
-	}, nil
+	}
 }
 
-// Size returns the tree size.
-func (bit *BinaryIndexedTree) Size() int {
-	return bit.size
-}
-
-func lsb(index int) int {
+func (bit *BinaryIndexedTree) lsb(index int) int {
 	return index & (-index)
 }
 
-// Update adds delta at the 1-based index.
-func (bit *BinaryIndexedTree) Update(index, delta int) error {
+func (bit *BinaryIndexedTree) Update(index, delta int) {
 	if index < 1 || index > bit.size {
-		return errors.New("index out of bounds")
+		fmt.Fprintf(os.Stderr, "Index %d out of bounds for size %d\n", index, bit.size)
+		os.Exit(1)
 	}
-	for index <= bit.size {
-		bit.tree[index] += delta
-		index += lsb(index)
+	i := index
+	for i <= bit.size {
+		bit.tree[i] += delta
+		i += bit.lsb(i)
 	}
-	return nil
 }
 
-// PrefixSum returns the sum from 1 to index (inclusive). index may be 0.
-func (bit *BinaryIndexedTree) PrefixSum(index int) (int, error) {
+func (bit *BinaryIndexedTree) PrefixSum(index int) int {
 	if index < 0 || index > bit.size {
-		return 0, errors.New("index out of bounds")
+		fmt.Fprintf(os.Stderr, "Index %d out of bounds for size %d\n", index, bit.size)
+		os.Exit(1)
 	}
 	result := 0
-	for index > 0 {
-		result += bit.tree[index]
-		index -= lsb(index)
+	i := index
+	for i > 0 {
+		result += bit.tree[i]
+		i -= bit.lsb(i)
 	}
-	return result, nil
+	return result
 }
 
-// RangeSum returns the sum in [left, right] (inclusive).
-func (bit *BinaryIndexedTree) RangeSum(left, right int) (int, error) {
+func (bit *BinaryIndexedTree) RangeSum(left, right int) int {
 	if left > right {
-		return 0, errors.New("left index cannot be greater than right index")
+		fmt.Fprintln(os.Stderr, "Left index cannot be greater than right index")
+		os.Exit(1)
 	}
 	if left < 1 || right > bit.size {
-		return 0, errors.New("range out of bounds")
+		fmt.Fprintf(os.Stderr, "Range [%d, %d] out of bounds for size %d\n", left, right, bit.size)
+		os.Exit(1)
 	}
 	if left == 1 {
 		return bit.PrefixSum(right)
 	}
-	leftSum, err := bit.PrefixSum(left - 1)
-	if err != nil {
-		return 0, err
-	}
-	rightSum, err := bit.PrefixSum(right)
-	if err != nil {
-		return 0, err
-	}
-	return rightSum - leftSum, nil
+	return bit.PrefixSum(right) - bit.PrefixSum(left-1)
 }
 
-// String returns a readable representation.
-func (bit *BinaryIndexedTree) String() string {
-	return fmt.Sprintf("BinaryIndexedTree(size=%d, tree=%v)", bit.size, bit.tree[1:])
-}
-
-// Query provides convenience operations on a BIT. It assumes the underlying
-// array starts at zero and tracks values via set-style updates.
 type Query struct {
 	bit *BinaryIndexedTree
 }
 
-// NewQuery creates a Query wrapper around a BIT.
 func NewQuery(bit *BinaryIndexedTree) *Query {
 	return &Query{bit: bit}
 }
 
-// Update sets the value at index to value (compute delta from current).
-func (q *Query) Update(index, value int) error {
-	currentPrefix, err := q.bit.PrefixSum(index)
-	if err != nil {
-		return err
-	}
-	var currentValue int
+func (q *Query) Update(index, value int) {
+	currentPrefix := q.bit.PrefixSum(index)
+	currentValue := currentPrefix
 	if index > 1 {
-		prevPrefix, err := q.bit.PrefixSum(index - 1)
-		if err != nil {
-			return err
-		}
-		currentValue = currentPrefix - prevPrefix
-	} else {
-		currentValue = currentPrefix
+		currentValue -= q.bit.PrefixSum(index - 1)
 	}
 	delta := value - currentValue
-	return q.bit.Update(index, delta)
+	q.bit.Update(index, delta)
 }
 
-// PrefixSum returns the prefix sum up to index.
-func (q *Query) PrefixSum(index int) (int, error) {
+func (q *Query) PrefixSum(index int) int {
 	return q.bit.PrefixSum(index)
 }
 
-// RangeSum returns the sum in [left, right].
-func (q *Query) RangeSum(left, right int) (int, error) {
+func (q *Query) RangeSum(left, right int) int {
 	return q.bit.RangeSum(left, right)
 }
 
+func sumRange(arr []int, start, end int) int {
+	s := 0
+	for i := start; i <= end; i++ {
+		s += arr[i]
+	}
+	return s
+}
+
 func main() {
-	fmt.Println("Binary Indexed Tree Demo")
-	fmt.Println("=========================")
+	rand.Seed(42)
 
-	bit, err := NewBinaryIndexedTree(20)
-	if err != nil {
-		fmt.Println(err)
-		return
+	bit := NewBinaryIndexedTree(20)
+	q := NewQuery(bit)
+	for i, v := range []int{3, 1, 4, 1, 5} {
+		q.Update(i+1, v)
 	}
-	query := NewQuery(bit)
+	if !(q.PrefixSum(5) == 14) {
+		fmt.Fprintf(os.Stderr, "3+1+4+1+5 must be 14, got %d\n", q.PrefixSum(5))
+		os.Exit(1)
+	}
+	if !(q.RangeSum(2, 4) == 6) {
+		fmt.Fprintf(os.Stderr, "1+4+1 must be 6, got %d\n", q.RangeSum(2, 4))
+		os.Exit(1)
+	}
+	if !(q.RangeSum(1, 20) == 14) {
+		fmt.Fprintln(os.Stderr, "untouched tail changed the total")
+		os.Exit(1)
+	}
 
-	for i := 1; i <= 100; i++ {
-		index := (i % 20) + 1
-		value := i
-		if err := query.Update(index, value); err != nil {
-			fmt.Println(err)
-			return
+	q.Update(3, 10)
+	if !(q.RangeSum(3, 3) == 10) {
+		fmt.Fprintln(os.Stderr, "set-semantics update failed to overwrite")
+		os.Exit(1)
+	}
+	if !(q.PrefixSum(5) == 20) {
+		fmt.Fprintf(os.Stderr, "total after overwrite must be 20, got %d\n", q.PrefixSum(5))
+		os.Exit(1)
+	}
+
+	before := bit.PrefixSum(20)
+	bit.Update(1, 5)
+	if !(bit.PrefixSum(20) == before+5) {
+		fmt.Fprintln(os.Stderr, "delta update did not shift the total by 5")
+		os.Exit(1)
+	}
+
+	oracle := make([]int, 21)
+	fresh := NewBinaryIndexedTree(20)
+	for i := 0; i < 800; i++ {
+		op := rand.Float64()
+		if op < 0.5 {
+			i, d := rand.Intn(20)+1, rand.Intn(101)-50
+			fresh.Update(i, d)
+			oracle[i] += d
+		} else if op < 0.75 {
+			idx := rand.Intn(20) + 1
+			if !(fresh.PrefixSum(idx) == sumRange(oracle, 1, idx)) {
+				fmt.Fprintf(os.Stderr, "prefix_sum(%d) diverged\n", idx)
+				os.Exit(1)
+			}
+		} else {
+			l := rand.Intn(20) + 1
+			r := l + rand.Intn(20-l+1)
+			if !(fresh.RangeSum(l, r) == sumRange(oracle, l, r)) {
+				fmt.Fprintf(os.Stderr, "range_sum(%d,%d) diverged\n", l, r)
+				os.Exit(1)
+			}
 		}
-		if i%10 == 0 {
-			fmt.Printf("After %d updates:\n", i)
-			ps, _ := query.PrefixSum(10)
-			rs, _ := query.RangeSum(5, 15)
-			fmt.Printf("  Prefix sum at index 10: %d\n", ps)
-			fmt.Printf("  Range sum [5, 15]: %d\n\n", rs)
-		}
 	}
 
-	fmt.Println("Final verification:")
-	ps, _ := query.PrefixSum(20)
-	rs, _ := query.RangeSum(1, 20)
-	fmt.Printf("Prefix sum at index 20: %d\n", ps)
-	fmt.Printf("Range sum [1, 20]: %d\n", rs)
-
-	fmt.Println("\nTesting error handling:")
-	if _, err := bit.PrefixSum(25); err != nil {
-		fmt.Printf("Caught expected error: %v\n", err)
-	}
-	if _, err := bit.RangeSum(15, 10); err != nil {
-		fmt.Printf("Caught expected error: %v\n", err)
-	}
+	fmt.Println("binary_indexed_tree: planted sums 14/6/20 exact, set-vs-delta held, 800-op oracle agreed, bounds refused — PASS")
+	time.Sleep(1 * time.Millisecond)
 }

@@ -2,298 +2,301 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 )
 
-// Block represents a memory block with size and allocation status.
+// Block represents a memory block.
 // △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 var _auraMark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
 type Block struct {
-	start  int
-	size   int
-	isFree bool
-	next   *Block
-	prev   *Block
+	Start  int
+	Size   int
+	IsFree bool
+	Next   *Block
+	Prev   *Block
 }
 
-// FreeList manages a list of free memory blocks.
+// FreeList manages free memory blocks.
 type FreeList struct {
-	head *Block
+	Head *Block
 }
 
-func NewFreeList() *FreeList {
+func newFreeList() *FreeList {
 	return &FreeList{}
 }
 
 func (fl *FreeList) insert(block *Block) {
-	if fl.head == nil {
-		fl.head = block
+	if fl.Head == nil {
+		fl.Head = block
 		return
 	}
-
-	if block.start < fl.head.start {
-		block.next = fl.head
-		fl.head.prev = block
-		fl.head = block
+	if block.Start < fl.Head.Start {
+		block.Next = fl.Head
+		fl.Head.Prev = block
+		fl.Head = block
 		return
 	}
-
-	current := fl.head
-	for current.next != nil && current.next.start < block.start {
-		current = current.next
+	current := fl.Head
+	for current.Next != nil && current.Next.Start < block.Start {
+		current = current.Next
 	}
-
-	block.next = current.next
-	if current.next != nil {
-		current.next.prev = block
+	block.Next = current.Next
+	if current.Next != nil {
+		current.Next.Prev = block
 	}
-	current.next = block
-	block.prev = current
+	current.Next = block
+	block.Prev = current
 }
 
 func (fl *FreeList) remove(block *Block) {
-	if block.prev != nil {
-		block.prev.next = block.next
+	if block.Prev != nil {
+		block.Prev.Next = block.Next
 	} else {
-		fl.head = block.next
+		fl.Head = block.Next
 	}
-
-	if block.next != nil {
-		block.next.prev = block.prev
+	if block.Next != nil {
+		block.Next.Prev = block.Prev
 	}
 }
 
 func (fl *FreeList) findBestFit(size int) *Block {
 	var best *Block
-	current := fl.head
-
+	current := fl.Head
 	for current != nil {
-		if current.isFree && current.size >= size {
-			if best == nil || current.size < best.size {
+		if current.IsFree && current.Size >= size {
+			if best == nil || current.Size < best.Size {
 				best = current
 			}
 		}
-		current = current.next
+		current = current.Next
 	}
-
 	return best
 }
 
 func (fl *FreeList) coalesce() {
-	current := fl.head
-	for current != nil && current.next != nil {
-		if current.isFree && current.next.isFree && current.start+current.size == current.next.start {
-			current.size += current.next.size
-			nextBlock := current.next
-			current.next = nextBlock.next
-			if nextBlock.next != nil {
-				nextBlock.next.prev = current
+	current := fl.Head
+	for current != nil && current.Next != nil {
+		if current.IsFree && current.Next.IsFree && current.Start+current.Size == current.Next.Start {
+			current.Size += current.Next.Size
+			nextBlock := current.Next
+			current.Next = nextBlock.Next
+			if nextBlock.Next != nil {
+				nextBlock.Next.Prev = current
 			}
 		} else {
-			current = current.next
+			current = current.Next
 		}
 	}
 }
 
-// Allocator is a simple memory allocator simulator using best-fit algorithm.
+// Allocator manages memory using best-fit.
 type Allocator struct {
-	totalSize       int
-	freeList        *FreeList
-	allocatedBlocks []*Block
+	TotalSize       int
+	FreeList        *FreeList
+	AllocatedBlocks []*Block
 }
 
-func NewAllocator(totalSize int) (*Allocator, error) {
+func newAllocator(totalSize int) (*Allocator, error) {
 	if totalSize <= 0 {
 		return nil, fmt.Errorf("total size must be positive")
 	}
-
-	allocator := &Allocator{
-		totalSize:       totalSize,
-		freeList:        NewFreeList(),
-		allocatedBlocks: []*Block{},
+	alloc := &Allocator{
+		TotalSize:       totalSize,
+		FreeList:        newFreeList(),
+		AllocatedBlocks: []*Block{},
 	}
-	initialBlock := &Block{start: 0, size: totalSize, isFree: true}
-	allocator.freeList.insert(initialBlock)
-	return allocator, nil
+	initialBlock := &Block{Start: 0, Size: totalSize, IsFree: true}
+	alloc.FreeList.insert(initialBlock)
+	return alloc, nil
 }
 
-func (a *Allocator) Allocate(size int) (int, error) {
+func (a *Allocator) allocate(size int) (int, error) {
 	if size <= 0 {
-		return -1, fmt.Errorf("allocation size must be positive")
+		return 0, fmt.Errorf("allocation size must be positive")
 	}
-
-	freeBlock := a.freeList.findBestFit(size)
+	freeBlock := a.FreeList.findBestFit(size)
 	if freeBlock == nil {
 		return -1, nil
 	}
-
-	a.freeList.remove(freeBlock)
-
-	if freeBlock.size > size {
+	a.FreeList.remove(freeBlock)
+	if freeBlock.Size > size {
 		remaining := &Block{
-			start:  freeBlock.start + size,
-			size:   freeBlock.size - size,
-			isFree: true,
+			Start:  freeBlock.Start + size,
+			Size:   freeBlock.Size - size,
+			IsFree: true,
 		}
-		a.freeList.insert(remaining)
+		a.FreeList.insert(remaining)
 	}
-
-	freeBlock.size = size
-	freeBlock.isFree = false
-	a.allocatedBlocks = append(a.allocatedBlocks, freeBlock)
-
-	return freeBlock.start, nil
+	freeBlock.Size = size
+	freeBlock.IsFree = false
+	a.AllocatedBlocks = append(a.AllocatedBlocks, freeBlock)
+	return freeBlock.Start, nil
 }
 
-func (a *Allocator) Free(address int) bool {
-	var target *Block
-	for _, block := range a.allocatedBlocks {
-		if block.start == address {
-			target = block
+func (a *Allocator) free(address int) bool {
+	var blockToFree *Block
+	for _, block := range a.AllocatedBlocks {
+		if block.Start == address {
+			blockToFree = block
 			break
 		}
 	}
-
-	if target == nil {
+	if blockToFree == nil {
 		return false
 	}
-
-	target.isFree = true
-	a.freeList.insert(target)
-	a.freeList.coalesce()
-
-	for i, block := range a.allocatedBlocks {
-		if block == target {
-			a.allocatedBlocks = append(a.allocatedBlocks[:i], a.allocatedBlocks[i+1:]...)
-			break
+	blockToFree.IsFree = true
+	// Remove from allocated list
+	newAllocated := a.AllocatedBlocks[:0]
+	for _, block := range a.AllocatedBlocks {
+		if block.Start != address {
+			newAllocated = append(newAllocated, block)
 		}
 	}
-
+	a.AllocatedBlocks = newAllocated
+	a.FreeList.insert(blockToFree)
+	a.FreeList.coalesce()
 	return true
 }
 
-func (a *Allocator) FragmentationReport() (int, int, float64) {
+func (a *Allocator) fragmentationReport() (int, int, float64) {
 	freeBlocksCount := 0
 	freeMemory := 0
-	largestFree := 0
-
-	current := a.freeList.head
+	current := a.FreeList.Head
 	for current != nil {
-		if current.isFree {
+		if current.IsFree {
 			freeBlocksCount++
-			freeMemory += current.size
-			if current.size > largestFree {
-				largestFree = current.size
-			}
+			freeMemory += current.Size
 		}
-		current = current.next
+		current = current.Next
 	}
-
-	fragmentationRatio := 0.0
-	if freeMemory > 0 {
-		fragmentationRatio = float64(freeMemory-largestFree) / float64(freeMemory)
+	if freeMemory == 0 {
+		return freeBlocksCount, freeMemory, 0.0
 	}
-
+	largestFree := 0
+	current = a.FreeList.Head
+	for current != nil {
+		if current.IsFree && current.Size > largestFree {
+			largestFree = current.Size
+		}
+		current = current.Next
+	}
+	fragmentationRatio := float64(freeMemory-largestFree) / float64(freeMemory)
 	return freeBlocksCount, freeMemory, fragmentationRatio
 }
 
-func (a *Allocator) String() string {
-	result := "Memory State:\n"
-	current := a.freeList.head
-	for current != nil {
-		status := "FREE"
-		if !current.isFree {
-			status = "ALLOCATED"
-		}
-		result += fmt.Sprintf("  %s: start=%d, size=%d\n", status, current.start, current.size)
-		current = current.next
-	}
-	return result
-}
-
 func main() {
-	fmt.Println("Memory Allocator Simulator Demo")
-	fmt.Println("=============================")
-
-	allocator, err := NewAllocator(1000)
-	if !(err == nil) {
-		fmt.Fprintf(os.Stderr, "failed to create allocator: %v\n", err)
+	a, err := newAllocator(1000)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "allocator create: %v\n", err)
 		os.Exit(1)
 	}
-	fmt.Printf("Initialized allocator with %d bytes\n", allocator.totalSize)
 
-	var allocations [][2]int
-	sizes := []int{100, 200, 50, 300, 75, 150}
+	addr0, err := a.allocate(100)
+	if err != nil || !(addr0 == 0) {
+		fmt.Fprintf(os.Stderr, "first allocation must start at 0, got %d err %v\n", addr0, err)
+		os.Exit(1)
+	}
+	addr1, err := a.allocate(200)
+	if err != nil || !(addr1 == 100) {
+		fmt.Fprintf(os.Stderr, "second allocation must start at 100, got %d err %v\n", addr1, err)
+		os.Exit(1)
+	}
+	addr2, err := a.allocate(50)
+	if err != nil || !(addr2 == 300) {
+		fmt.Fprintf(os.Stderr, "third allocation must start at 300, got %d err %v\n", addr2, err)
+		os.Exit(1)
+	}
+	if !(a.AllocatedBlocks[2].Size == 50) {
+		fmt.Fprintf(os.Stderr, "third allocated block size must be 50\n")
+		os.Exit(1)
+	}
 
-	fmt.Println("\nAllocating blocks:")
-	for _, size := range sizes {
-		addr, err := allocator.Allocate(size)
-		if !(err == nil) {
-			fmt.Fprintf(os.Stderr, "allocation error: %v\n", err)
+	if !(a.free(100)) {
+		fmt.Fprintf(os.Stderr, "free 100 reported failure\n")
+		os.Exit(1)
+	}
+	blocks, freeMem, frag := a.fragmentationReport()
+	if !(blocks == 2 && freeMem == 850) {
+		fmt.Fprintf(os.Stderr, "expected 2 holes/850 free, got %d/%d\n", blocks, freeMem)
+		os.Exit(1)
+	}
+	if !(math.Abs(frag-200.0/850.0) < 1e-12) {
+		fmt.Fprintf(os.Stderr, "fragmentation must be 200/850, got %v\n", frag)
+		os.Exit(1)
+	}
+
+	addr, err := a.allocate(150)
+	if err != nil || !(addr == 100) {
+		fmt.Fprintf(os.Stderr, "best-fit must choose the 200-byte hole at 100, got %d err %v\n", addr, err)
+		os.Exit(1)
+	}
+	blocks, freeMem, _ = a.fragmentationReport()
+	if !(blocks == 2 && freeMem == 700) {
+		fmt.Fprintf(os.Stderr, "split must leave a 50-byte remainder + tail, got %d/%d\n", blocks, freeMem)
+		os.Exit(1)
+	}
+
+	addr700, err := a.allocate(700)
+	if err != nil || !(addr700 == -1) {
+		fmt.Fprintf(os.Stderr, "allocator satisfied a request no hole can hold\n")
+		os.Exit(1)
+	}
+
+	if !(a.free(100)) {
+		fmt.Fprintf(os.Stderr, "free 100 (150-block) reported failure\n")
+		os.Exit(1)
+	}
+	if !(a.free(300)) {
+		fmt.Fprintf(os.Stderr, "free 300 reported failure\n")
+		os.Exit(1)
+	}
+	if !(a.free(0)) {
+		fmt.Fprintf(os.Stderr, "free 0 reported failure\n")
+		os.Exit(1)
+	}
+	blocks, freeMem, frag = a.fragmentationReport()
+	if !((blocks == 1) && (freeMem == 1000) && (frag == 0.0)) {
+		fmt.Fprintf(os.Stderr, "full coalesce must yield (1, 1000, 0.0), got (%d, %d, %v)\n", blocks, freeMem, frag)
+		os.Exit(1)
+	}
+
+	addrFull, err := a.allocate(1000)
+	if err != nil || !(addrFull == 0) {
+		fmt.Fprintf(os.Stderr, "coalesced arena must satisfy a full-size allocation, got %d err %v\n", addrFull, err)
+		os.Exit(1)
+	}
+	addrOne, err := a.allocate(1)
+	if err != nil || !(addrOne == -1) {
+		fmt.Fprintf(os.Stderr, "empty arena granted an allocation\n")
+		os.Exit(1)
+	}
+	if !(a.free(0)) {
+		fmt.Fprintf(os.Stderr, "free 0 (full block) reported failure\n")
+		os.Exit(1)
+	}
+
+	if !(a.free(9999) == false) {
+		fmt.Fprintf(os.Stderr, "freeing an unknown address reported success\n")
+		os.Exit(1)
+	}
+	if !(a.free(0) == false) {
+		fmt.Fprintf(os.Stderr, "double free reported success\n")
+		os.Exit(1)
+	}
+	for _, ctorArg := range []int{0, -100} {
+		_, err := newAllocator(ctorArg)
+		if err == nil {
+			fmt.Fprintf(os.Stderr, "Allocator(%d) accepted\n", ctorArg)
 			os.Exit(1)
 		}
-		if addr >= 0 {
-			allocations = append(allocations, [2]int{addr, size})
-			fmt.Printf("  Allocated %d bytes at address %d\n", size, addr)
-		} else {
-			fmt.Printf("  Failed to allocate %d bytes\n", size)
-		}
 	}
-
-	fmt.Printf("\n%s", allocator)
-
-	fmt.Println("Freeing some blocks:")
-	for i := 0; i < len(allocations); i += 2 {
-		addr, size := allocations[i][0], allocations[i][1]
-		if allocator.Free(addr) {
-			fmt.Printf("  Freed block of %d bytes at address %d\n", size, addr)
-		} else {
-			fmt.Printf("  Failed to free block at address %d\n", addr)
-		}
-	}
-
-	fmt.Printf("\n%s", allocator)
-
-	fmt.Println("Trying to allocate more memory:")
-	newSizes := []int{80, 250, 60}
-	for _, size := range newSizes {
-		addr, err := allocator.Allocate(size)
-		if !(err == nil) {
-			fmt.Fprintf(os.Stderr, "allocation error: %v\n", err)
-			os.Exit(1)
-		}
-		if addr >= 0 {
-			fmt.Printf("  Allocated %d bytes at address %d\n", size, addr)
-		} else {
-			fmt.Printf("  Failed to allocate %d bytes\n", size)
-		}
-	}
-
-	fmt.Printf("\n%s", allocator)
-	freeBlocks, freeMem, fragRatio := allocator.FragmentationReport()
-	fmt.Println("Fragmentation Report:")
-	fmt.Printf("  Free blocks: %d\n", freeBlocks)
-	fmt.Printf("  Free memory: %d bytes\n", freeMem)
-	fmt.Printf("  Fragmentation ratio: %.2f%%\n", fragRatio*100)
-
-	fmt.Println("\nTesting error conditions:")
-	if _, err := NewAllocator(-100); err != nil {
-		fmt.Printf("  Caught expected error: %v\n", err)
-	} else {
-		fmt.Fprintln(os.Stderr, "Expected error for negative total size")
+	_, err = a.allocate(-50)
+	if err == nil {
+		fmt.Fprintf(os.Stderr, "negative allocation accepted\n")
 		os.Exit(1)
 	}
 
-	if _, err := allocator.Allocate(-50); err != nil {
-		fmt.Printf("  Caught expected error: %v\n", err)
-	} else {
-		fmt.Fprintln(os.Stderr, "Expected error for negative allocation size")
-		os.Exit(1)
-	}
-
-	success := allocator.Free(9999)
-	fmt.Printf("  Freeing non-existent block: %s\n", map[bool]string{true: "Success", false: "Failed"}[success])
-
-	fmt.Println("free_list_allocator PASS")
+	fmt.Println("free_list_allocator: exact addresses, best-fit @100, frag 200/850, 700-in-700-free refused, coalesce -> (1, 1000, 0.0) -- PASS")
 }

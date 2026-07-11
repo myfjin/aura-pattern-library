@@ -1,11 +1,14 @@
+// decision_tree: simple decision tree classifier with information gain and pruning.
 package main
 
 import (
 	"fmt"
 	"math"
 	"os"
+	"sort"
 )
 
+// Split represents a split in the decision tree.
 // △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 var _auraMark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
@@ -14,58 +17,57 @@ type Split struct {
 	Threshold    float64
 }
 
+// Node represents a node in the decision tree.
 type Node struct {
-	Samples    [][]float64
-	Labels     []int
-	Split      *Split
-	Left       *Node
-	Right      *Node
-	Prediction int
-	IsLeafNode bool
+	Samples       [][]float64
+	Labels        []int
+	Split         *Split
+	Left          *Node
+	Right         *Node
+	Prediction    int
+	HasPrediction bool
 }
 
+// IsLeaf reports whether the node has no split.
 func (n *Node) IsLeaf() bool {
-	return n.IsLeafNode
+	return n.Split == nil
 }
 
+// DecisionTree is a simple decision tree classifier.
 type DecisionTree struct {
 	MaxDepth        int
 	MinSamplesSplit int
 	Root            *Node
 }
 
+// NewDecisionTree creates a decision tree.
 func NewDecisionTree(maxDepth, minSamplesSplit int) *DecisionTree {
-	return &DecisionTree{
-		MaxDepth:        maxDepth,
-		MinSamplesSplit: minSamplesSplit,
-	}
+	return &DecisionTree{MaxDepth: maxDepth, MinSamplesSplit: minSamplesSplit}
 }
 
+// entropy computes the Shannon entropy of labels.
 func (dt *DecisionTree) entropy(labels []int) float64 {
 	if len(labels) == 0 {
 		return 0.0
 	}
 	counts := make(map[int]int)
-	for _, label := range labels {
-		counts[label]++
+	for _, l := range labels {
+		counts[l]++
 	}
 	total := float64(len(labels))
-	entropy := 0.0
-	for _, count := range counts {
-		p := float64(count) / total
-		entropy -= p * math.Log2(p)
+	e := 0.0
+	for _, c := range counts {
+		p := float64(c) / total
+		e -= p * math.Log2(p)
 	}
-	return entropy
+	return e
 }
 
-func (dt *DecisionTree) informationGain(samples [][]float64, labels []int, split Split) float64 {
+// informationGain computes the gain of a split.
+func (dt *DecisionTree) informationGain(samples [][]float64, labels []int, split *Split) float64 {
 	parentEntropy := dt.entropy(labels)
-
-	var leftSamples [][]float64
-	var leftLabels []int
-	var rightSamples [][]float64
-	var rightLabels []int
-
+	var leftSamples, rightSamples [][]float64
+	var leftLabels, rightLabels []int
 	for i, sample := range samples {
 		if sample[split.FeatureIndex] <= split.Threshold {
 			leftSamples = append(leftSamples, sample)
@@ -75,103 +77,64 @@ func (dt *DecisionTree) informationGain(samples [][]float64, labels []int, split
 			rightLabels = append(rightLabels, labels[i])
 		}
 	}
-
-	totalSamples := len(samples)
-	if totalSamples == 0 {
+	total := float64(len(samples))
+	if total == 0 {
 		return 0.0
 	}
-
-	leftWeight := float64(len(leftSamples)) / float64(totalSamples)
-	rightWeight := float64(len(rightSamples)) / float64(totalSamples)
-
-	weightedEntropy := leftWeight*dt.entropy(leftLabels) + rightWeight*dt.entropy(rightLabels)
-	return parentEntropy - weightedEntropy
+	leftWeight := float64(len(leftSamples)) / total
+	rightWeight := float64(len(rightSamples)) / total
+	return parentEntropy - (leftWeight*dt.entropy(leftLabels) + rightWeight*dt.entropy(rightLabels))
 }
 
+// findBestSplit finds the best threshold split for the data.
 func (dt *DecisionTree) findBestSplit(samples [][]float64, labels []int) *Split {
-	uniqueLabels := make(map[int]bool)
-	for _, label := range labels {
-		uniqueLabels[label] = true
-	}
-	if len(uniqueLabels) <= 1 {
+	if len(uniqueLabels(labels)) <= 1 {
 		return nil
 	}
-
 	bestGain := -1.0
 	var bestSplit *Split
-	nFeatures := 0
-	if len(samples) > 0 {
-		nFeatures = len(samples[0])
-	}
-
-	for featureIndex := 0; featureIndex < nFeatures; featureIndex++ {
-		valueSet := make(map[float64]bool)
-		for _, sample := range samples {
-			valueSet[sample[featureIndex]] = true
-		}
-		values := make([]float64, 0, len(valueSet))
-		for v := range valueSet {
-			values = append(values, v)
-		}
-		insertionSortFloats(values)
-
+	nFeatures := len(samples[0])
+	for feature := 0; feature < nFeatures; feature++ {
+		values := uniqueValues(samples, feature)
+		sort.Float64s(values)
 		for i := 0; i < len(values)-1; i++ {
-			threshold := (values[i] + values[i+1]) / 2.0
-			split := Split{FeatureIndex: featureIndex, Threshold: threshold}
+			threshold := (values[i] + values[i+1]) / 2
+			split := &Split{FeatureIndex: feature, Threshold: threshold}
 			gain := dt.informationGain(samples, labels, split)
 			if gain > bestGain {
 				bestGain = gain
-				bestSplit = &Split{FeatureIndex: featureIndex, Threshold: threshold}
+				bestSplit = split
 			}
 		}
 	}
-
 	return bestSplit
 }
 
-func insertionSortFloats(a []float64) {
-	for i := 1; i < len(a); i++ {
-		for j := i; j > 0 && a[j] < a[j-1]; j-- {
-			a[j], a[j-1] = a[j-1], a[j]
-		}
-	}
-}
-
+// buildTree recursively builds the tree.
 func (dt *DecisionTree) buildTree(samples [][]float64, labels []int, depth int) *Node {
 	node := &Node{Samples: samples, Labels: labels}
 
-	uniqueLabels := make(map[int]bool)
-	for _, label := range labels {
-		uniqueLabels[label] = true
-	}
-
-	if depth >= dt.MaxDepth || len(samples) < dt.MinSamplesSplit || len(uniqueLabels) <= 1 {
-		node.IsLeafNode = true
+	if depth >= dt.MaxDepth || len(samples) < dt.MinSamplesSplit || len(uniqueLabels(labels)) <= 1 {
 		if len(labels) > 0 {
-			node.Prediction = mostCommon(labels)
+			node.Prediction = majorityLabel(labels)
+			node.HasPrediction = true
 		}
 		return node
 	}
 
-	bestSplit := dt.findBestSplit(samples, labels)
-	if bestSplit == nil {
-		node.IsLeafNode = true
+	best := dt.findBestSplit(samples, labels)
+	if best == nil {
 		if len(labels) > 0 {
-			node.Prediction = mostCommon(labels)
+			node.Prediction = majorityLabel(labels)
+			node.HasPrediction = true
 		}
 		return node
 	}
 
-	node.Split = bestSplit
-	node.IsLeafNode = false
-
-	var leftSamples [][]float64
-	var leftLabels []int
-	var rightSamples [][]float64
-	var rightLabels []int
-
+	var leftSamples, rightSamples [][]float64
+	var leftLabels, rightLabels []int
 	for i, sample := range samples {
-		if sample[bestSplit.FeatureIndex] <= bestSplit.Threshold {
+		if sample[best.FeatureIndex] <= best.Threshold {
 			leftSamples = append(leftSamples, sample)
 			leftLabels = append(leftLabels, labels[i])
 		} else {
@@ -179,28 +142,13 @@ func (dt *DecisionTree) buildTree(samples [][]float64, labels []int, depth int) 
 			rightLabels = append(rightLabels, labels[i])
 		}
 	}
-
+	node.Split = best
 	node.Left = dt.buildTree(leftSamples, leftLabels, depth+1)
 	node.Right = dt.buildTree(rightSamples, rightLabels, depth+1)
 	return node
 }
 
-func mostCommon(labels []int) int {
-	counts := make(map[int]int)
-	for _, label := range labels {
-		counts[label]++
-	}
-	maxCount := -1
-	var result int
-	for label, count := range counts {
-		if count > maxCount {
-			maxCount = count
-			result = label
-		}
-	}
-	return result
-}
-
+// Fit trains the decision tree.
 func (dt *DecisionTree) Fit(samples [][]float64, labels []int) {
 	if len(samples) == 0 || len(labels) == 0 || len(samples) != len(labels) {
 		panic("Invalid training data")
@@ -208,8 +156,12 @@ func (dt *DecisionTree) Fit(samples [][]float64, labels []int) {
 	dt.Root = dt.buildTree(samples, labels, 0)
 }
 
+// predictSample predicts the label for one sample.
 func (dt *DecisionTree) predictSample(sample []float64, node *Node) int {
 	if node.IsLeaf() {
+		if !node.HasPrediction {
+			panic("Leaf node has no prediction")
+		}
 		return node.Prediction
 	}
 	if sample[node.Split.FeatureIndex] <= node.Split.Threshold {
@@ -218,45 +170,36 @@ func (dt *DecisionTree) predictSample(sample []float64, node *Node) int {
 	return dt.predictSample(sample, node.Right)
 }
 
+// Predict predicts labels for many samples.
 func (dt *DecisionTree) Predict(samples [][]float64) []int {
 	if dt.Root == nil {
 		panic("Model not trained yet")
 	}
-	predictions := make([]int, len(samples))
+	out := make([]int, len(samples))
 	for i, sample := range samples {
-		predictions[i] = dt.predictSample(sample, dt.Root)
+		out[i] = dt.predictSample(sample, dt.Root)
 	}
-	return predictions
+	return out
 }
 
-func (dt *DecisionTree) Prune(validationSamples [][]float64, validationLabels []int) {
-	if dt.Root == nil {
-		panic("Model not trained yet")
-	}
-	dt.Root = dt.pruneNode(dt.Root, validationSamples, validationLabels)
-}
-
-func (dt *DecisionTree) pruneNode(node *Node, validationSamples [][]float64, validationLabels []int) *Node {
+// pruneNode prunes a subtree using validation data.
+func (dt *DecisionTree) pruneNode(node *Node, valSamples [][]float64, valLabels []int) *Node {
 	if node.IsLeaf() {
 		return node
 	}
-
-	if len(validationSamples) == 0 {
+	if len(valSamples) == 0 {
 		return node
 	}
 
-	var leftSamples [][]float64
-	var leftLabels []int
-	var rightSamples [][]float64
-	var rightLabels []int
-
-	for i, sample := range validationSamples {
+	var leftSamples, rightSamples [][]float64
+	var leftLabels, rightLabels []int
+	for i, sample := range valSamples {
 		if sample[node.Split.FeatureIndex] <= node.Split.Threshold {
 			leftSamples = append(leftSamples, sample)
-			leftLabels = append(leftLabels, validationLabels[i])
+			leftLabels = append(leftLabels, valLabels[i])
 		} else {
 			rightSamples = append(rightSamples, sample)
-			rightLabels = append(rightLabels, validationLabels[i])
+			rightLabels = append(rightLabels, valLabels[i])
 		}
 	}
 
@@ -264,121 +207,201 @@ func (dt *DecisionTree) pruneNode(node *Node, validationSamples [][]float64, val
 	node.Right = dt.pruneNode(node.Right, rightSamples, rightLabels)
 
 	if node.Left.IsLeaf() && node.Right.IsLeaf() {
-		accuracyWithoutPruning := accuracy(dt.Predict(validationSamples), validationLabels)
+		accWithout := accuracy(dt.Predict(valSamples), valLabels)
 
-		originalSplit := node.Split
-		originalLeft := node.Left
-		originalRight := node.Right
+		origSplit := node.Split
+		origLeft := node.Left
+		origRight := node.Right
+		origPred := node.Prediction
+		origHas := node.HasPrediction
 
 		node.Split = nil
-		node.IsLeafNode = true
 		node.Left = nil
 		node.Right = nil
 		if len(node.Labels) > 0 {
-			node.Prediction = mostCommon(node.Labels)
+			node.Prediction = majorityLabel(node.Labels)
+			node.HasPrediction = true
 		}
-
-		predictions := make([]int, len(validationSamples))
-		for i := range predictions {
-			predictions[i] = node.Prediction
+		pred := make([]int, len(valSamples))
+		for i := range pred {
+			pred[i] = node.Prediction
 		}
-		accuracyWithPruning := accuracy(predictions, validationLabels)
+		accWith := accuracy(pred, valLabels)
 
-		if accuracyWithoutPruning > accuracyWithPruning {
-			node.Split = originalSplit
-			node.IsLeafNode = false
-			node.Left = originalLeft
-			node.Right = originalRight
-			node.Prediction = 0
+		if accWithout > accWith {
+			node.Split = origSplit
+			node.Left = origLeft
+			node.Right = origRight
+			node.Prediction = origPred
+			node.HasPrediction = origHas
 		}
 	}
-
 	return node
 }
 
-func accuracy(predictions, labels []int) float64 {
-	if len(labels) == 0 {
-		return 0.0
+// Prune prunes the tree using validation data.
+func (dt *DecisionTree) Prune(valSamples [][]float64, valLabels []int) {
+	if dt.Root == nil {
+		panic("Model not trained yet")
+	}
+	dt.Root = dt.pruneNode(dt.Root, valSamples, valLabels)
+}
+
+// helpers
+
+func uniqueLabels(labels []int) []int {
+	seen := make(map[int]struct{})
+	var out []int
+	for _, l := range labels {
+		if _, ok := seen[l]; !ok {
+			seen[l] = struct{}{}
+			out = append(out, l)
+		}
+	}
+	sort.Ints(out)
+	return out
+}
+
+func majorityLabel(labels []int) int {
+	counts := make(map[int]int)
+	for _, l := range labels {
+		counts[l]++
+	}
+	bestLabel := labels[0]
+	bestCount := -1
+	for label, count := range counts {
+		if count > bestCount || (count == bestCount && label < bestLabel) {
+			bestCount = count
+			bestLabel = label
+		}
+	}
+	return bestLabel
+}
+
+func uniqueValues(samples [][]float64, feature int) []float64 {
+	seen := make(map[float64]struct{})
+	var out []float64
+	for _, s := range samples {
+		v := s[feature]
+		if _, ok := seen[v]; !ok {
+			seen[v] = struct{}{}
+			out = append(out, v)
+		}
+	}
+	return out
+}
+
+func accuracy(pred, truth []int) float64 {
+	if len(truth) == 0 {
+		return 0
 	}
 	correct := 0
-	for i := range predictions {
-		if predictions[i] == labels[i] {
+	for i := range truth {
+		if pred[i] == truth[i] {
 			correct++
 		}
 	}
-	return float64(correct) / float64(len(labels))
-}
-
-func printTree(node *Node, indent int) {
-	if node == nil {
-		fmt.Println("None")
-		return
-	}
-	prefix := ""
-	for i := 0; i < indent; i++ {
-		prefix += "  "
-	}
-	if node.IsLeaf() {
-		fmt.Printf("%sLeaf: %d (%d samples)\n", prefix, node.Prediction, len(node.Samples))
-		return
-	}
-	fmt.Printf("%sSplit: feature[%d] <= %.2f (%d samples)\n", prefix, node.Split.FeatureIndex, node.Split.Threshold, len(node.Samples))
-	printTree(node.Left, indent+1)
-	printTree(node.Right, indent+1)
+	return float64(correct) / float64(len(truth))
 }
 
 func main() {
+	// Planted rule: label = 0 if weight < 57, 1 if 57 <= weight < 73, else 2.
 	samples := [][]float64{
 		{170, 65}, {175, 70}, {160, 55}, {180, 80}, {155, 50},
 		{165, 60}, {172, 75}, {158, 52}, {178, 78}, {162, 58},
 		{185, 90}, {150, 45}, {168, 68}, {176, 76}, {159, 54},
 	}
-
-	labels := []int{1, 1, 0, 2, 0, 0, 1, 0, 2, 0, 2, 0, 1, 2, 0}
+	labels := []int{1, 1, 0, 2, 0, 1, 2, 0, 2, 1, 2, 0, 1, 2, 0}
 
 	tree := NewDecisionTree(5, 2)
 	tree.Fit(samples, labels)
 
-	fmt.Println("Original Tree:")
-	printTree(tree.Root, 0)
-	fmt.Println()
-
-	testSamples := [][]float64{{165, 62}, {180, 85}, {155, 48}}
-	predictions := tree.Predict(testSamples)
-
-	fmt.Println("Predictions:")
-	for i, sample := range testSamples {
-		fmt.Printf("Sample %v -> Prediction: %d\n", sample, predictions[i])
-	}
-	fmt.Println()
-
-	validationSamples := [][]float64{
-		{167, 63}, {177, 77}, {157, 51}, {182, 82},
-	}
-	validationLabels := []int{1, 2, 0, 2}
-
-	tree.Prune(validationSamples, validationLabels)
-
-	fmt.Println("Pruned Tree:")
-	printTree(tree.Root, 0)
-	fmt.Println()
-
-	predictionsAfter := tree.Predict(testSamples)
-	fmt.Println("Predictions after pruning:")
-	for i, sample := range testSamples {
-		fmt.Printf("Sample %v -> Prediction: %d\n", sample, predictionsAfter[i])
-	}
-	fmt.Println()
-
-	emptyTree := NewDecisionTree(10, 2)
-	func() {
-		defer func() {
-			if r := recover(); r != nil {
-				fmt.Printf("Error handling works: Model not trained yet\n")
-			}
-		}()
-		emptyTree.Predict([][]float64{{1, 2}})
-		fmt.Fprintf(os.Stderr, "Expected panic for untrained model\n")
+	trainPreds := tree.Predict(samples)
+	trainAcc := accuracy(trainPreds, labels)
+	if !(trainAcc == 1.0) {
+		fmt.Fprintf(os.Stderr, "separable data must fit exactly, accuracy %v\n", trainAcc)
 		os.Exit(1)
-	}()
+	}
+
+	testSamples := [][]float64{{165, 62}, {180, 85}, {155, 48}, {163, 59}, {179, 74}}
+	truth := []int{1, 2, 0, 1, 2}
+	preds := tree.Predict(testSamples)
+	if !(preds[0] == truth[0] && preds[1] == truth[1] && preds[2] == truth[2] && preds[3] == truth[3] && preds[4] == truth[4]) {
+		fmt.Fprintf(os.Stderr, "planted rule not generalized: %v != %v\n", preds, truth)
+		os.Exit(1)
+	}
+	sum := 0
+	for _, p := range preds {
+		sum += p
+	}
+	if !(sum == 6) {
+		fmt.Fprintf(os.Stderr, "prediction classes 1+2+0+1+2 must sum to 6, got %d\n", sum)
+		os.Exit(1)
+	}
+
+	validationSamples := [][]float64{{167, 63}, {177, 77}, {157, 51}, {182, 82}}
+	validationLabels := []int{1, 2, 0, 2}
+	before := tree.Predict(validationSamples)
+	accBefore := accuracy(before, validationLabels)
+	tree.Prune(validationSamples, validationLabels)
+	after := tree.Predict(validationSamples)
+	accAfter := accuracy(after, validationLabels)
+	if !(accAfter >= accBefore) {
+		fmt.Fprintf(os.Stderr, "pruning reduced validation accuracy %v -> %v\n", accBefore, accAfter)
+		os.Exit(1)
+	}
+	if !(accAfter == 1.0) {
+		fmt.Fprintf(os.Stderr, "rule-consistent validation must stay perfect, got %v\n", accAfter)
+		os.Exit(1)
+	}
+
+	// Single-class data collapses to a leaf that always answers that class.
+	flat := NewDecisionTree(3, 2)
+	flat.Fit([][]float64{{1, 1}, {2, 2}, {3, 3}}, []int{7, 7, 7})
+	flatPreds := flat.Predict([][]float64{{9, 9}, {0, 0}})
+	if !(flatPreds[0] == 7 && flatPreds[1] == 7) {
+		fmt.Fprintf(os.Stderr, "constant labels not learned: %v\n", flatPreds)
+		os.Exit(1)
+	}
+	if !(len(flatPreds) == 2 && flat.Predict([][]float64{{9, 9}})[0] == 7) {
+		fmt.Fprintf(os.Stderr, "sample 9,9 must predict 7: %v\n", flat.Predict([][]float64{{9, 9}}))
+		os.Exit(1)
+	}
+
+	// Untrained refusal for Predict.
+	{
+		caught := false
+		func() {
+			defer func() {
+				if r := recover(); r != nil {
+					caught = true
+				}
+			}()
+			NewDecisionTree(10, 2).Predict([][]float64{{1, 2}})
+		}()
+		if !(caught == true) {
+			fmt.Fprintln(os.Stderr, "untrained tree predicted")
+			os.Exit(1)
+		}
+	}
+
+	// Untrained refusal for Prune.
+	{
+		caught := false
+		func() {
+			defer func() {
+				if r := recover(); r != nil {
+					caught = true
+				}
+			}()
+			NewDecisionTree(10, 2).Prune([][]float64{{1, 2}}, []int{0})
+		}()
+		if !(caught == true) {
+			fmt.Fprintln(os.Stderr, "untrained tree pruned")
+			os.Exit(1)
+		}
+	}
+
+	fmt.Println("decision_tree: separable rule fit 15/15, generalized 5/5 (sum 6), " +
+		"pruning kept validation at 1.0, constant leaf, refusals — PASS")
 }

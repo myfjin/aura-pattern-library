@@ -112,14 +112,22 @@ func (p *ArgParser) ParseArgs(args []string) (map[string]interface{}, error) {
 
 	result := make(map[string]interface{})
 
-	// Set defaults for options
+	// Set defaults for options. An unset store_true flag is OFF (false)
+	// and an unset store_false flag is ON (true).
 	for name, option := range p.Options {
+		result[name] = option.Default
 		if option.Action == "store_true" {
-			result[name] = false
+			if option.Default != nil {
+				result[name] = option.Default
+			} else {
+				result[name] = false
+			}
 		} else if option.Action == "store_false" {
-			result[name] = true
-		} else {
-			result[name] = option.Default
+			if option.Default != nil {
+				result[name] = option.Default
+			} else {
+				result[name] = true
+			}
 		}
 	}
 
@@ -136,12 +144,14 @@ func (p *ArgParser) ParseArgs(args []string) (map[string]interface{}, error) {
 		}
 	}
 
-	// Parse options
+	// Parse options, recording which argv indices each option consumed.
+	consumed := make(map[int]bool)
 	i := 0
 	for i < len(args) {
 		arg := args[i]
 
 		if strings.HasPrefix(arg, "-") {
+			consumed[i] = true
 			matched := false
 			for name, option := range p.Options {
 				if arg == option.ShortName || arg == option.LongName {
@@ -156,6 +166,7 @@ func (p *ArgParser) ParseArgs(args []string) (map[string]interface{}, error) {
 									return nil, fmt.Errorf("Option %s requires an argument", arg)
 								}
 								result[name] = args[i+1]
+								consumed[i+1] = true
 								i += 2
 							} else {
 								values := []string{}
@@ -164,6 +175,7 @@ func (p *ArgParser) ParseArgs(args []string) (map[string]interface{}, error) {
 										return nil, fmt.Errorf("Option %s requires %d arguments", arg, v)
 									}
 									values = append(values, args[i+1+j])
+									consumed[i+1+j] = true
 								}
 								if len(values) == 1 {
 									result[name] = values[0]
@@ -178,6 +190,7 @@ func (p *ArgParser) ParseArgs(args []string) (map[string]interface{}, error) {
 								j := i + 1
 								for j < len(args) && !strings.HasPrefix(args[j], "-") {
 									values = append(values, args[j])
+									consumed[j] = true
 									j++
 								}
 								if len(values) == 0 {
@@ -210,10 +223,10 @@ func (p *ArgParser) ParseArgs(args []string) (map[string]interface{}, error) {
 		}
 	}
 
-	// Parse positional arguments
+	// Positional arguments = tokens no option consumed.
 	positionalArgs := []string{}
-	for _, a := range args {
-		if !strings.HasPrefix(a, "-") {
+	for k, a := range args {
+		if !consumed[k] && !strings.HasPrefix(a, "-") {
 			positionalArgs = append(positionalArgs, a)
 		}
 	}
@@ -256,14 +269,12 @@ func (p *ArgParser) ParseArgs(args []string) (map[string]interface{}, error) {
 
 	// Check required options
 	for name, option := range p.Options {
-		if option.Required {
-			if result[name] == option.Default {
-				key := option.LongName
-				if key == "" {
-					key = option.ShortName
-				}
-				return nil, fmt.Errorf("Missing required option: %s", key)
+		if option.Required && result[name] == option.Default {
+			key := option.LongName
+			if key == "" {
+				key = option.ShortName
 			}
+			return nil, fmt.Errorf("Missing required option: %s", key)
 		}
 	}
 
@@ -380,6 +391,7 @@ func (p *ArgParser) PrintHelp() {
 			} else if option.Action == "store_true" || option.Action == "store_false" {
 				helpParts = append(helpParts, fmt.Sprintf("(%s)", option.Action))
 			}
+
 			if !option.Required {
 				helpParts = append(helpParts, "(optional)")
 			}
@@ -402,18 +414,105 @@ func main() {
 	parser.AddArgument("multiplier", "Value multiplier", nil, true, 1)
 	parser.AddArgument("optional_args", "Optional additional arguments", nil, false, "*")
 
+	// Self-test: exact parse results for flags/values/nargs/positionals,
+	// defaults applied, missing-required refused.
+
+	// Short flag + positionals; unset flag false; default applied.
+	r, err := parser.ParseArgs([]string{"-f", "json", "data.txt", "2"})
+	if err != nil {
+		panic(err)
+	}
+	if !(r["format"] == "json") {
+		panic("format")
+	}
+	if !(r["input_file"] == "data.txt") {
+		panic("input_file")
+	}
+	multiplier := r["multiplier"]
+	if m, ok := multiplier.([]string); ok {
+		if !(len(m) == 1 && m[0] == "2") {
+			panic(fmt.Sprintf("multiplier: %v", multiplier))
+		}
+	} else if !(multiplier == "2") {
+		panic(fmt.Sprintf("multiplier: %v", multiplier))
+	}
+	if !(r["verbose"] == false) {
+		panic("unset store_true flag must default false")
+	}
+	if !(r["output"] == "output.txt") {
+		panic("default not applied")
+	}
+
+	// Long option + store_true + trailing variadic positionals.
+	r, err = parser.ParseArgs([]string{"--format", "xml", "-v", "input.txt", "3", "extra1", "extra2"})
+	if err != nil {
+		panic(err)
+	}
+	if !(r["format"] == "xml") {
+		panic("format")
+	}
+	if !(r["verbose"] == true) {
+		panic("store_true flag not set by -v")
+	}
+	if !(r["input_file"] == "input.txt") {
+		panic("input_file")
+	}
+	optionalArgs := r["optional_args"].([]string)
+	if !(len(optionalArgs) == 2 && optionalArgs[0] == "extra1" && optionalArgs[1] == "extra2") {
+		panic(fmt.Sprintf("variadic tail wrong: %v", optionalArgs))
+	}
+
+	// nargs='*' option is greedy to the next dash, so positionals go first.
+	r, err = parser.ParseArgs([]string{"-f", "csv", "-o", "result.csv", "data.txt", "5", "-n", "1", "2", "3"})
+	if err != nil {
+		panic(err)
+	}
+	if !(r["format"] == "csv" && r["output"] == "result.csv") {
+		panic("format/output")
+	}
+	numbers := r["numbers"].([]string)
+	if !(len(numbers) == 3 && numbers[0] == "1" && numbers[1] == "2" && numbers[2] == "3") {
+		panic(fmt.Sprintf("nargs='*' option wrong: %v", numbers))
+	}
+	if !(r["input_file"] == "data.txt") {
+		panic("input_file")
+	}
+	if !(sumInts(numbers) == 6) {
+		panic("-n 1 2 3 must sum to 6")
+	}
+
+	// Missing REQUIRED option is refused, naming the option.
+	_, err = parser.ParseArgs([]string{"input.txt", "2"})
+	if err == nil {
+		panic("missing required --format accepted")
+	}
+	if !strings.Contains(strings.ToLower(err.Error()), "format") {
+		panic(fmt.Sprintf("error must mention 'format': %v", err))
+	}
+
+	// Missing required positional is refused.
+	_, err = parser.ParseArgs([]string{"-f", "json"})
+	if err == nil {
+		panic("missing positionals accepted")
+	}
+
+	// Unknown option is refused.
+	_, err = parser.ParseArgs([]string{"-f", "json", "--bogus", "x", "in.txt", "2"})
+	if err == nil {
+		panic("unknown option accepted")
+	}
+
+	fmt.Println("arg_parser: flags/defaults/nargs exact (-n sums 6), variadic tail " +
+		"['extra1','extra2'], required option+positional refused — PASS")
+
+	// Demo output for non-test invocations
 	testCases := [][]string{
 		{"-f", "json", "data.txt", "2"},
 		{"--format", "xml", "-v", "input.txt", "3", "extra1", "extra2"},
-		{"-f", "csv", "-o", "result.csv", "-n", "1", "2", "3", "data.txt", "5"},
-		{"-h"},
-		{"--help"},
+		{"-f", "csv", "-o", "result.csv", "data.txt", "5", "-n", "1", "2", "3"},
 	}
 
 	for i, testArgs := range testCases {
-		if contains(testArgs, "help") || contains(testArgs, "-h") {
-			continue
-		}
 		fmt.Printf("\n--- Test Case %d: %s ---\n", i+1, strings.Join(testArgs, " "))
 		result, err := parser.ParseArgs(testArgs)
 		if err != nil {
@@ -432,11 +531,12 @@ func main() {
 	}
 }
 
-func contains(slice []string, target string) bool {
-	for _, s := range slice {
-		if s == target {
-			return true
-		}
+func sumInts(strs []string) int {
+	sum := 0
+	for _, s := range strs {
+		var v int
+		fmt.Sscanf(s, "%d", &v)
+		sum += v
 	}
-	return false
+	return sum
 }

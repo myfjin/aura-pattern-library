@@ -9,12 +9,26 @@ import (
 	"time"
 )
 
-// randRead is a thin alias so the generateID body matches Go's crypto/rand.Read signature.
+// fakeNow is a deterministic clock for the self-test.
 // △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 var _auraMark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
-func randRead(b []byte) (int, error) {
-	return rand.Read(b)
+var fakeNow float64
+
+func now() float64 {
+	return fakeNow
+}
+
+func generateID() string {
+	b := make([]byte, 16)
+	_, err := rand.Read(b)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "failed to generate id: %v\n", err)
+		os.Exit(1)
+	}
+	b[6] = (b[6] & 0x0f) | 0x40
+	b[8] = (b[8] & 0x3f) | 0x80
+	return fmt.Sprintf("%08x-%04x-%04x-%04x-%012x", b[0:4], b[4:6], b[6:8], b[8:10], b[10:16])
 }
 
 // AlertSeverity represents alert severity levels.
@@ -50,40 +64,26 @@ type Alert struct {
 	RuleID          string
 }
 
-// NewAlert creates a new Alert with a unique ID and current timestamp.
-func NewAlert(title, description string, severity AlertSeverity, source string, tags []string, ruleID string) *Alert {
+func newAlert(title, description string, severity AlertSeverity, source string, tags []string, ruleID string, timestamp float64) *Alert {
 	tagSet := make(map[string]struct{})
 	for _, t := range tags {
 		tagSet[t] = struct{}{}
 	}
 	return &Alert{
-		ID:          generateID(),
-		Title:       title,
-		Description: description,
-		Severity:    severity,
-		Status:      FIRING,
-		Source:      source,
-		Tags:        tagSet,
-		Timestamp:   float64(time.Now().UnixNano()) / 1e9,
-		RuleID:      ruleID,
+		ID:              generateID(),
+		Title:           title,
+		Description:     description,
+		Severity:        severity,
+		Status:          FIRING,
+		Source:          source,
+		Tags:            tagSet,
+		Timestamp:       timestamp,
+		EscalationCount: 0,
+		RuleID:          ruleID,
 	}
 }
 
-func generateID() string {
-	// emulate uuid4 via crypto/rand for uniqueness
-	b := make([]byte, 16)
-	_, err := randRead(b)
-	if !(err == nil) {
-		fmt.Fprintf(os.Stderr, "failed to generate id: %v\n", err)
-		os.Exit(1)
-	}
-	b[6] = (b[6] & 0x0f) | 0x40
-	b[8] = (b[8] & 0x3f) | 0x80
-	return fmt.Sprintf("%08x-%04x-%04x-%04x-%012x", b[0:4], b[4:6], b[6:8], b[8:10], b[10:16])
-}
-
-// Fingerprint generates a fingerprint for deduplication based on key attributes.
-func (a *Alert) Fingerprint() string {
+func (a *Alert) fingerprint() string {
 	tags := make([]string, 0, len(a.Tags))
 	for t := range a.Tags {
 		tags = append(tags, t)
@@ -102,6 +102,21 @@ type Rule struct {
 	EscalationIntervalSeconds float64
 }
 
+func newRule(id, name string, dedupWindowSeconds float64, suppressionTags []string, maxEscalationCount int, escalationIntervalSeconds float64) *Rule {
+	tags := make(map[string]struct{})
+	for _, t := range suppressionTags {
+		tags[t] = struct{}{}
+	}
+	return &Rule{
+		ID:                        id,
+		Name:                      name,
+		DedupWindowSeconds:        dedupWindowSeconds,
+		SuppressionTags:           tags,
+		MaxEscalationCount:        maxEscalationCount,
+		EscalationIntervalSeconds: escalationIntervalSeconds,
+	}
+}
+
 // AlertManager manages alerts with deduplication, suppression, and escalation.
 type AlertManager struct {
 	rules            map[string]*Rule
@@ -110,8 +125,7 @@ type AlertManager struct {
 	suppressedAlerts map[string]struct{}
 }
 
-// NewAlertManager initializes an AlertManager.
-func NewAlertManager() *AlertManager {
+func newAlertManager() *AlertManager {
 	return &AlertManager{
 		rules:            make(map[string]*Rule),
 		activeAlerts:     make(map[string]*Alert),
@@ -120,20 +134,19 @@ func NewAlertManager() *AlertManager {
 	}
 }
 
-// AddRule adds a rule to the manager.
-func (m *AlertManager) AddRule(rule *Rule) {
+func (m *AlertManager) addRule(rule *Rule) {
 	if rule == nil {
-		fmt.Fprintf(os.Stderr, "Rule must be an instance of Rule\n")
+		fmt.Fprintln(os.Stderr, "Rule must be an instance of Rule class")
 		os.Exit(1)
 	}
 	m.rules[rule.ID] = rule
 }
 
-// ProcessAlert processes an incoming alert.
+// processAlert processes an incoming alert.
 // Returns true if alert was processed (not deduplicated), false if deduplicated.
-func (m *AlertManager) ProcessAlert(alert *Alert) bool {
+func (m *AlertManager) processAlert(alert *Alert) bool {
 	if alert == nil {
-		fmt.Fprintf(os.Stderr, "Alert must be an instance of Alert\n")
+		fmt.Fprintln(os.Stderr, "Alert must be an instance of Alert class")
 		os.Exit(1)
 	}
 
@@ -144,7 +157,7 @@ func (m *AlertManager) ProcessAlert(alert *Alert) bool {
 				alert.RuleID = id
 			}
 		} else {
-			fmt.Fprintf(os.Stderr, "Alert must have a rule_id or exactly one rule must exist\n")
+			fmt.Fprintln(os.Stderr, "Alert must have a rule_id or exactly one rule must exist")
 			os.Exit(1)
 		}
 	}
@@ -165,7 +178,7 @@ func (m *AlertManager) ProcessAlert(alert *Alert) bool {
 
 	// Check for deduplication
 	duplicateID := m.findDuplicate(alert, rule)
-	if !(duplicateID == "") {
+	if duplicateID != "" {
 		existingAlert, ok := m.activeAlerts[duplicateID]
 		if !ok {
 			fmt.Fprintf(os.Stderr, "duplicate alert %s not found in active alerts\n", duplicateID)
@@ -183,33 +196,32 @@ func (m *AlertManager) ProcessAlert(alert *Alert) bool {
 	}
 
 	m.activeAlerts[alert.ID] = alert
-	m.alertHistory[alert.Fingerprint()] = append(m.alertHistory[alert.Fingerprint()], alert)
+	m.alertHistory[alert.fingerprint()] = append(m.alertHistory[alert.fingerprint()], alert)
 	return true
 }
 
-// ResolveAlert resolves an active alert.
-func (m *AlertManager) ResolveAlert(alertID string) bool {
+func (m *AlertManager) resolveAlert(alertID string) bool {
 	alert, ok := m.activeAlerts[alertID]
 	if !ok {
 		return false
 	}
 	alert.Status = RESOLVED
-	alert.Timestamp = float64(time.Now().UnixNano()) / 1e9
+	alert.Timestamp = now()
 	delete(m.activeAlerts, alertID)
 	return true
 }
 
-// GetActiveAlerts returns all currently active alerts.
-func (m *AlertManager) GetActiveAlerts() []*Alert {
+func (m *AlertManager) getActiveAlerts() []*Alert {
 	alerts := make([]*Alert, 0, len(m.activeAlerts))
 	for _, alert := range m.activeAlerts {
-		alerts = append(alerts, alert)
+		if _, suppressed := m.suppressedAlerts[alert.ID]; !suppressed {
+			alerts = append(alerts, alert)
+		}
 	}
 	return alerts
 }
 
-// GetSuppressedAlerts returns all currently suppressed alerts.
-func (m *AlertManager) GetSuppressedAlerts() []*Alert {
+func (m *AlertManager) getSuppressedAlerts() []*Alert {
 	alerts := make([]*Alert, 0, len(m.suppressedAlerts))
 	for id := range m.suppressedAlerts {
 		if alert, ok := m.activeAlerts[id]; ok {
@@ -229,8 +241,8 @@ func (m *AlertManager) isSuppressed(alert *Alert, rule *Rule) bool {
 }
 
 func (m *AlertManager) findDuplicate(alert *Alert, rule *Rule) string {
-	fingerprint := alert.Fingerprint()
-	currentTime := float64(time.Now().UnixNano()) / 1e9
+	fingerprint := alert.fingerprint()
+	currentTime := now()
 
 	history := m.alertHistory[fingerprint]
 	for i := len(history) - 1; i >= 0; i-- {
@@ -250,8 +262,8 @@ func (m *AlertManager) shouldEscalate(alert *Alert, rule *Rule) bool {
 	if rule.MaxEscalationCount <= 0 {
 		return false
 	}
-	fingerprint := alert.Fingerprint()
-	currentTime := float64(time.Now().UnixNano()) / 1e9
+	fingerprint := alert.fingerprint()
+	currentTime := now()
 
 	recentCount := 0
 	history := m.alertHistory[fingerprint]
@@ -266,65 +278,87 @@ func (m *AlertManager) shouldEscalate(alert *Alert, rule *Rule) bool {
 	return recentCount >= rule.MaxEscalationCount
 }
 
-func main() {
-	manager := NewAlertManager()
-
-	rule := &Rule{
-		ID:                        "service_rule",
-		Name:                      "Service Alert Rule",
-		DedupWindowSeconds:        10.0,
-		SuppressionTags:           map[string]struct{}{"maintenance": {}},
-		MaxEscalationCount:        2,
-		EscalationIntervalSeconds: 30.0,
+func alertTitles(alerts []*Alert) []string {
+	out := make([]string, len(alerts))
+	for i, a := range alerts {
+		out[i] = a.Title
 	}
-	manager.AddRule(rule)
+	return out
+}
 
-	alert1 := NewAlert("High CPU Usage", "CPU usage exceeded 90%", HIGH, "server01", []string{"production", "cpu"}, "service_rule")
-	alert2 := NewAlert("High CPU Usage", "CPU usage still high", HIGH, "server01", []string{"production", "cpu"}, "service_rule")
-	alert3 := NewAlert("High Memory Usage", "Memory usage exceeded 95%", CRITICAL, "server01", []string{"production", "memory"}, "service_rule")
-	suppressedAlert := NewAlert("Disk Warning", "Disk usage at 85%", MEDIUM, "server02", []string{"maintenance", "disk"}, "service_rule")
-
-	fmt.Println("Processing alerts...")
-	result1 := manager.ProcessAlert(alert1)
-	fmt.Printf("Alert 1 processed: %v\n", result1)
-
-	time.Sleep(100 * time.Millisecond)
-
-	result2 := manager.ProcessAlert(alert2)
-	fmt.Printf("Alert 2 processed: %v\n", result2)
-
-	result3 := manager.ProcessAlert(alert3)
-	fmt.Printf("Alert 3 processed: %v\n", result3)
-
-	suppressedResult := manager.ProcessAlert(suppressedAlert)
-	fmt.Printf("Suppressed alert processed: %v\n", suppressedResult)
-
-	active := manager.GetActiveAlerts()
-	fmt.Printf("\nActive alerts: %d\n", len(active))
-	for _, alert := range active {
-		fmt.Printf("  - %s (%s)\n", alert.Title, alert.Status)
-	}
-
-	suppressed := manager.GetSuppressedAlerts()
-	fmt.Printf("\nSuppressed alerts: %d\n", len(suppressed))
-	for _, alert := range suppressed {
-		fmt.Printf("  - %s\n", alert.Title)
-	}
-
-	resolved := manager.ResolveAlert(alert1.ID)
-	fmt.Printf("\nAlert 1 resolved: %v\n", resolved)
-
-	activeAfterResolve := manager.GetActiveAlerts()
-	fmt.Printf("Active alerts after resolve: %d\n", len(activeAfterResolve))
-
-	fmt.Println("\nTesting escalation...")
-	for i := 0; i < 4; i++ {
-		escalationTest := NewAlert("Recurring Error", fmt.Sprintf("Error occurred %d times", i+1), MEDIUM, "serviceA", []string{"error"}, "service_rule")
-		processed := manager.ProcessAlert(escalationTest)
-		fmt.Printf("Escalation test %d processed: %v\n", i+1, processed)
-		if !processed && i > 0 {
-			fmt.Println("  Alert was deduplicated")
+func containsString(slice []string, s string) bool {
+	for _, v := range slice {
+		if v == s {
+			return true
 		}
-		time.Sleep(100 * time.Millisecond)
 	}
+	return false
+}
+
+func main() {
+	fakeNow = 50000.0
+
+	manager := newAlertManager()
+	manager.addRule(newRule("service_rule", "Service Alert Rule",
+		10.0,
+		[]string{"maintenance"},
+		2,
+		30.0))
+
+	mkAlert := func(title string, severity AlertSeverity, source string, tags []string, ts float64) *Alert {
+		return newAlert(title, title, severity, source, tags, "service_rule", ts)
+	}
+
+	assert := func(cond bool, msg string) {
+		if !cond {
+			fmt.Fprintf(os.Stderr, "assertion failed: %s\n", msg)
+			os.Exit(1)
+		}
+	}
+
+	// First alert accepted; identical fingerprint inside 10s deduped.
+	a1 := mkAlert("High CPU", HIGH, "server01", []string{"prod", "cpu"}, fakeNow)
+	assert(manager.processAlert(a1), "first alert rejected")
+	fakeNow += 1.0
+	dup := mkAlert("High CPU", HIGH, "server01", []string{"prod", "cpu"}, fakeNow)
+	assert(!manager.processAlert(dup), "duplicate inside window accepted")
+
+	// Different fingerprint is NOT deduped.
+	a3 := mkAlert("High Memory", CRITICAL, "server01", []string{"prod"}, fakeNow)
+	assert(manager.processAlert(a3), "distinct alert wrongly deduped")
+
+	// PAST the window the same fingerprint alerts again.
+	fakeNow += 11.0
+	again := mkAlert("High CPU", HIGH, "server01", []string{"prod", "cpu"}, fakeNow)
+	assert(manager.processAlert(again), "re-alert after the dedup window was swallowed")
+
+	// Suppression: maintenance-tagged alert is accepted but SUPPRESSED.
+	supp := mkAlert("Disk Warning", MEDIUM, "server02", []string{"maintenance", "disk"}, fakeNow)
+	assert(manager.processAlert(supp), "suppressed alert was not processed")
+	suppressed := alertTitles(manager.getSuppressedAlerts())
+	assert(len(suppressed) == 1 && suppressed[0] == "Disk Warning", fmt.Sprintf("suppressed set wrong: %v", suppressed))
+	activeTitles := alertTitles(manager.getActiveAlerts())
+	assert(!containsString(activeTitles, "Disk Warning"), "suppressed alert is active")
+
+	// Resolve removes from active, reports honestly.
+	nActiveBefore := len(manager.getActiveAlerts())
+	assert(nActiveBefore == 3, fmt.Sprintf("exactly 3 alerts must be active, got %d", nActiveBefore))
+	assert(manager.resolveAlert(a1.ID), "resolve a1 failed")
+	assert(!manager.resolveAlert(a1.ID), "double resolve reported success")
+	assert(!manager.resolveAlert("ghost-id"), "resolve ghost-id reported success")
+	assert(len(manager.getActiveAlerts()) == nActiveBefore-1, "resolve did not shrink the active set by exactly 1")
+
+	// Dedup applies per-fingerprint: 4 rapid repeats -> 1 accepted, 3 deduped.
+	accepted := 0
+	for i := 0; i < 4; i++ {
+		e := mkAlert("Recurring Error", MEDIUM, "serviceA", []string{"error"}, fakeNow)
+		if manager.processAlert(e) {
+			accepted++
+		}
+		fakeNow += 0.5
+	}
+	assert(accepted == 1, fmt.Sprintf("4 repeats in 2s must accept exactly 1, accepted %d", accepted))
+
+	fmt.Println("alert_manager: dedup in-window, re-alert at +11s, maintenance suppressed, resolve exact, 4 repeats -> 1 accepted — PASS")
+	time.Sleep(1 * time.Millisecond)
 }

@@ -12,8 +12,8 @@
     },
     {
       "path": "programming/architecture/cqrs_bus.go",
-      "sha256": "58afecfbaa5b50a03caea8ed4ed51073acf0ace6a5a2de387b93604192fa1351",
-      "bytes": 8019
+      "sha256": "c237ef7fac9041d804ba83ed1fdb0da11a38d2125ba486307ac8051af631e1a2",
+      "bytes": 9957
     },
     {
       "path": "programming/architecture/event_bus.go",
@@ -22,168 +22,168 @@
     },
     {
       "path": "programming/architecture/event_sourcing_store.go",
-      "sha256": "9e5d58b4b51940065cda898b67b4c5115c3e3e1c7148910c64c83ed87eb3a09c",
-      "bytes": 15693
+      "sha256": "fe191836e901b98c5686496fe12d0f7c635c1da375284bed0c09604ea0a537f2",
+      "bytes": 14493
     },
     {
       "path": "programming/async/async_task_queue.go",
-      "sha256": "be4872e53821d692dd47c37dc93d42a619af95dcc1064d43dcd92784ed940f9d",
-      "bytes": 13579
+      "sha256": "bb924a431168d41cb418b4e3eccfdf40f2b2471b705576d959d82c7596787996",
+      "bytes": 17336
     },
     {
       "path": "programming/async/cancellable_task_group.go",
-      "sha256": "6f76303742d62cfc012914499e64bb5b2889c0be16ba7042b2612c19002ee66a",
-      "bytes": 7993
+      "sha256": "3767dd866b67dff978ded7e547ccbf8a47cd1b7c51fe54401727159930afd7a5",
+      "bytes": 8518
     },
     {
       "path": "programming/data_structures/avl_tree.go",
-      "sha256": "7a39907b4db90e119122ab76754a92ba418955ffc5da24b73cc4d24735b7a2b9",
-      "bytes": 9832
+      "sha256": "bbaa783aaa3cd4730bc80407557a386e5204e6fd70dbdc68495c83b98c8ec97c",
+      "bytes": 12192
     },
     {
       "path": "programming/data_structures/binary_indexed_tree.go",
-      "sha256": "4ee9650f4d6680867d914080321c82cc7bc84ff576932ce3c370248705345bcf",
-      "bytes": 8096
+      "sha256": "9c99a9f23318b499c2be62a1da7c4b7343545736e777898f954cc137f26399bb",
+      "bytes": 7825
     },
     {
       "path": "programming/data_structures/bloom_filter.go",
-      "sha256": "4fe1178a8c3e85a0dd58891fca8c5dd201764eb2ee8091115dcabdc9b6f0531e",
-      "bytes": 9545
+      "sha256": "bd15ef84c05009e9dddf4ac0255d4b48c39d32053f3155c871fd36becb4d38de",
+      "bytes": 9490
     },
     {
       "path": "programming/data_structures/fenwick_tree.go",
-      "sha256": "ddd14858d2158bf156eb7c11bfd71e6786aea406e22abb435bde13f3fdc9328c",
-      "bytes": 9031
+      "sha256": "b6719f7dfcfdb22531f2202757c4099c7dd682fbb8736ec9859fc3d8a284543c",
+      "bytes": 7754
     },
     {
       "path": "programming/distributed/consistent_hash_ring.go",
-      "sha256": "6bf2c6722a857823b5693072e9c455d466550e3e2cb340f665aa6bba8dcfd10a",
-      "bytes": 9351
+      "sha256": "ec1d496dfd90daea1a8e60ae4ee1ae07d514176907bb8df9f14468128e7a3a63",
+      "bytes": 9958
     },
     {
       "path": "programming/distributed/crdt_sets.go",
-      "sha256": "e5e65d742107756ba641db5cc49f1239816487110df205ff06942a9d2b615d6f",
-      "bytes": 11261
+      "sha256": "766cdf35639030c3551be1807692d99228814a6f8219b3969a494e38bdfeb323",
+      "bytes": 13346
     },
     {
       "path": "programming/distributed/distributed_lock_manager.go",
-      "sha256": "da7f05e5718c4bbd7d1b09f789d08596f8ad6e0e5daddd0225d20b84fa2f9bd5",
-      "bytes": 8827
+      "sha256": "415c691d0f056ec7939c6c4d2340c7033d922f321d5ccabe6094ef39a3c7ab42",
+      "bytes": 12950
     },
     {
       "path": "programming/distributed/g_counter_crdt.go",
-      "sha256": "be282bc9090bc99016cd79aa2ce4481d902b53f50704fbcf11b4fcb2c69d3726",
-      "bytes": 7842
+      "sha256": "6e5f66ad532dbfc09e1be68da16dd7738f528223bbdd59337c925eb67e87a350",
+      "bytes": 12877
     },
     {
       "path": "programming/io/arg_parser.go",
-      "sha256": "7090a92dded9ab1713ddbbb96f6ad417a03f80820011f44bc668497d6d4c6d96",
-      "bytes": 15056
+      "sha256": "0ca618e9b2185729c3d1bae0955bd675a0671e0284f509bfc8a6379dc3616a32",
+      "bytes": 18277
     },
     {
       "path": "programming/io/chunked_reader.go",
-      "sha256": "6c41ccbe18cd1ce91d849b535562416a225f6f3e92d8c82b235aa4c0dc59d28e",
-      "bytes": 7692
+      "sha256": "fe58c8d46012737546adb26d4dd266d6eea662d75d4160d6528ad14a4ebbd186",
+      "bytes": 9167
     },
     {
       "path": "programming/io/csv_to_json.go",
-      "sha256": "d28ab617f50f84ec33811f556b7915f0de8c50eac31c9819aad53f8fa9d74f06",
-      "bytes": 9553
+      "sha256": "b99a5ea5cb2dda23bbd268b61147766e1a1dbaa216af35086b42fe798fa73439",
+      "bytes": 15891
     },
     {
       "path": "programming/io/csv_validator.go",
-      "sha256": "5565ea37d8e9fb7b3d4fcaeba6b90cb929ddb79de8fa5d45cbc86adaeba72470",
-      "bytes": 10152
+      "sha256": "f398173e1526f6f8f9c1424621c0a59871e3de0064cb2a46f3114278758f870e",
+      "bytes": 14859
     },
     {
       "path": "programming/io/diff_engine.go",
-      "sha256": "87e52c4301ce9da4f8360864a8988d6b2cada2ce530891284ab3160a398d22cc",
-      "bytes": 4216
+      "sha256": "c0ad0666b57c78cb60420d22a091de656361825f4e42bd9bf8df4ae14d4b1aa7",
+      "bytes": 13592
     },
     {
       "path": "programming/monitoring/alert_manager.go",
-      "sha256": "f8f7ab0c418b2569f3e21192036fd0dc1579c21b3774e8aa7dea23b46562b5f9",
-      "bytes": 13268
+      "sha256": "6f8133a05f42a7fea0123901ade7e64a9f2d9dadae7976ad037c432be22dada9",
+      "bytes": 14152
     },
     {
       "path": "programming/monitoring/event_logger.go",
-      "sha256": "bed2d194c3090a8f063f1a283ca7004a65f5b31f74ba2e34ace2b94d6fd1247d",
-      "bytes": 9765
+      "sha256": "bb13d582e617f410c2775c19deec6270e9f57ef4db2fc6cdd625d0ae51369016",
+      "bytes": 13061
     },
     {
       "path": "programming/networking/connection_pool.go",
-      "sha256": "5bf739f6d84a71eef6cefff2daf7154c026f7154bca33d84aef86c240f12c6db",
-      "bytes": 8928
+      "sha256": "c03acec5a24e91cfef608c43788ce31418942678e6d29101cf669ac72a93be7b",
+      "bytes": 11188
     },
     {
       "path": "programming/networking/connection_pool_health_checks.go",
-      "sha256": "12fe52b4ca1945d62d515ea0a115731fd1b84dd093a18dcfaa3e979d7da813ec",
-      "bytes": 12567
+      "sha256": "7a2029c642c530f91da31b7b671ca017b27799a57fe87a7b02557d2f6a1c1db0",
+      "bytes": 14707
     },
     {
       "path": "programming/networking/dns_cache.go",
-      "sha256": "9c0d9cdeed92ec0c5cbe9a177b73deb23769f4a67f7426954ea8941040be2528",
-      "bytes": 7248
+      "sha256": "13ec7869868cecfcb4bd1891228f2983f4786ef246e709127340bda35667a652",
+      "bytes": 10138
     },
     {
       "path": "programming/performance/batch_controller.go",
-      "sha256": "7b31f30c07c81f9024386697c28f8b44985540ca62050fe7abb630d5ec58cf22",
-      "bytes": 11541
+      "sha256": "dbfd28772500bec3fa72ba87cf950d1d3f9da9136717a75352c487236a6e49d0",
+      "bytes": 18857
     },
     {
       "path": "programming/performance/budget_allocator.go",
-      "sha256": "73077aaa2808b03138c03c6f08c2ebff87ec1e0a8454e408d2eb5bad40e3aa70",
-      "bytes": 9485
+      "sha256": "8a71dbad3a439d79f402927c3af0158e25ed10a80721392b0bd0a5567ad3be95",
+      "bytes": 12183
     },
     {
       "path": "programming/performance/free_list_allocator.go",
-      "sha256": "d295590efc516a72014056a597100378eaf82b256086910783664b6a4ae4b59d",
-      "bytes": 10704
+      "sha256": "936bbcb3d186b8029244c21cdefe51f0bd8b22ad8eb416bf446bbb3258186803",
+      "bytes": 11353
     },
     {
       "path": "programming/reasoning/astar_pathfinding.go",
-      "sha256": "e92704c3a8bb115f64f8f0b428643bc78f18cdd30947e9a1df9c89938ccdcafb",
-      "bytes": 10911
+      "sha256": "39a9ed2f715e416c1efef085bd7a56132ce132e6c753fb579de681b3f398005c",
+      "bytes": 14295
     },
     {
       "path": "programming/reasoning/bayesian_network.go",
-      "sha256": "aaa00745462c1429b8aea82401bd73947172aa00484229b1609f078e90047eb5",
-      "bytes": 16635
+      "sha256": "e9ba23dea78c8c365e468b1b8e6789952b59eebad4b2c6c63185ee42923988d9",
+      "bytes": 16249
     },
     {
       "path": "programming/reasoning/csp_solver.go",
-      "sha256": "8b5083f8841cf5c03221ce186ec436447f44c40f09879756d279249bf5e07c09",
-      "bytes": 10600
+      "sha256": "f841ba3207b2c1e2150b9316934eef58c67813db6eceea79c59be4a340003bb8",
+      "bytes": 18457
     },
     {
       "path": "programming/reasoning/decision_tree.go",
-      "sha256": "7dba02dac8f6beed95b513bda86d180db8b1b1a584b00abf0d5f2d7c20cbccb1",
-      "bytes": 13194
+      "sha256": "f0201ccd75cf09cbd489d17f3c4c03e8be69e887ab8525026a544e690087a5dd",
+      "bytes": 14780
     },
     {
       "path": "programming/reasoning/expression_evaluator.go",
-      "sha256": "1cd53084f01540e6f05414a64d5cef39fcb4ea8b61ae4caf333b776b285d918b",
-      "bytes": 14376
+      "sha256": "aedcf589c5f00e15c33e65e2fe971aa6c30429b408f7dccc6c9ab44bbcc39d9b",
+      "bytes": 19977
     },
     {
       "path": "programming/reasoning/sat_solver.go",
-      "sha256": "3768c91f5798de44f0db847339a1f4160475effc500107b0c1d1d4f63573a2fd",
-      "bytes": 14570
+      "sha256": "16e54109ccacda43dda9e29ed9d63fb0cf3c69e1eac7d561ad2df01eebc181b3",
+      "bytes": 14351
     },
     {
       "path": "programming/resilience/bulkhead_isolator.go",
-      "sha256": "6bb957caca05f4cc29abb84c2f9d5988092e4b9fe64c55ae5ea62ac21cfe287d",
-      "bytes": 11410
+      "sha256": "54e3b1784131cf32f62ac01181b68194a31d5ff24628dbfb932c6cf82b2cf619",
+      "bytes": 14906
     },
     {
       "path": "programming/resilience/circuit_breaker.go",
-      "sha256": "52912ab0cebbcf6e5753dabbc76c7bfa6b8a8baa44142d683dc885938d92cf7f",
-      "bytes": 8123
+      "sha256": "f0138ff4be5a8d14f04543d2638bf57f09d9df83d3022443e47f5b4b49ff7c16",
+      "bytes": 11185
     },
     {
       "path": "programming/resilience/dead_letter_queue.go",
-      "sha256": "2fd6719cadd01c85e11423babaca478e336b4feea115e6e65cdb0091360bac82",
-      "bytes": 11911
+      "sha256": "1f0d4760c2ffe40b4e9bb38f33ed66270c512bd27c968e85e49f0d974a517f49",
+      "bytes": 14487
     },
     {
       "path": "system-administration/sysadmin/advisory_lock_timeout.go",

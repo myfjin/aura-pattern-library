@@ -1,9 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
+	"sort"
 	"time"
 )
 
@@ -12,126 +12,115 @@ import (
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 var _auraMark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
 type Event struct {
-	EventID     string                 `json:"event_id"`
-	EventType   string                 `json:"event_type"`
-	AggregateID string                 `json:"aggregate_id"`
-	Version     int                    `json:"version"`
-	Timestamp   time.Time              `json:"timestamp"`
-	Payload     map[string]interface{} `json:"payload"`
+	EventID     string
+	EventType   string
+	AggregateID string
+	Version     int
+	Timestamp   time.Time
+	Payload     map[string]interface{}
 }
 
-func (e Event) ToDict() map[string]interface{} {
-	data, _ := json.Marshal(e)
-	var result map[string]interface{}
-	_ = json.Unmarshal(data, &result)
-	result["timestamp"] = e.Timestamp.Format(time.RFC3339Nano)
-	return result
+func (e Event) toDict() map[string]interface{} {
+	return map[string]interface{}{
+		"event_id":     e.EventID,
+		"event_type":   e.EventType,
+		"aggregate_id": e.AggregateID,
+		"version":      e.Version,
+		"timestamp":    e.Timestamp.Format(time.RFC3339Nano),
+		"payload":      e.Payload,
+	}
 }
 
-func EventFromDict(data map[string]interface{}) Event {
-	tsStr, _ := data["timestamp"].(string)
-	ts, _ := time.Parse(time.RFC3339Nano, tsStr)
-	payload := make(map[string]interface{})
+func eventFromDict(data map[string]interface{}) Event {
+	ts, _ := time.Parse(time.RFC3339Nano, data["timestamp"].(string))
+	payload := map[string]interface{}{}
 	if p, ok := data["payload"].(map[string]interface{}); ok {
 		payload = p
 	}
+	version := 0
+	switch v := data["version"].(type) {
+	case float64:
+		version = int(v)
+	case int:
+		version = v
+	}
 	return Event{
-		EventID:     getString(data, "event_id"),
-		EventType:   getString(data, "event_type"),
-		AggregateID: getString(data, "aggregate_id"),
-		Version:     getInt(data, "version"),
+		EventID:     data["event_id"].(string),
+		EventType:   data["event_type"].(string),
+		AggregateID: data["aggregate_id"].(string),
+		Version:     version,
 		Timestamp:   ts,
 		Payload:     payload,
 	}
 }
 
-func getString(m map[string]interface{}, key string) string {
-	if v, ok := m[key].(string); ok {
-		return v
-	}
-	return ""
-}
-
-func getInt(m map[string]interface{}, key string) int {
-	switch v := m[key].(type) {
-	case float64:
-		return int(v)
-	case int:
-		return v
-	}
-	return 0
-}
-
 // Snapshot represents a snapshot of an aggregate state.
 type Snapshot struct {
-	AggregateID string                 `json:"aggregate_id"`
-	Version     int                    `json:"version"`
-	State       map[string]interface{} `json:"state"`
-	Timestamp   time.Time              `json:"timestamp"`
+	AggregateID string
+	Version     int
+	State       map[string]interface{}
+	Timestamp   time.Time
 }
 
-func (s Snapshot) ToDict() map[string]interface{} {
-	data, _ := json.Marshal(s)
-	var result map[string]interface{}
-	_ = json.Unmarshal(data, &result)
-	result["timestamp"] = s.Timestamp.Format(time.RFC3339Nano)
-	return result
+func (s Snapshot) toDict() map[string]interface{} {
+	return map[string]interface{}{
+		"aggregate_id": s.AggregateID,
+		"version":      s.Version,
+		"state":        s.State,
+		"timestamp":    s.Timestamp.Format(time.RFC3339Nano),
+	}
 }
 
-func SnapshotFromDict(data map[string]interface{}) Snapshot {
-	tsStr, _ := data["timestamp"].(string)
-	ts, _ := time.Parse(time.RFC3339Nano, tsStr)
-	state := make(map[string]interface{})
-	if s, ok := data["state"].(map[string]interface{}); ok {
-		state = s
+func snapshotFromDict(data map[string]interface{}) Snapshot {
+	ts, _ := time.Parse(time.RFC3339Nano, data["timestamp"].(string))
+	state := map[string]interface{}{}
+	if st, ok := data["state"].(map[string]interface{}); ok {
+		state = st
 	}
 	return Snapshot{
-		AggregateID: getString(data, "aggregate_id"),
-		Version:     getInt(data, "version"),
+		AggregateID: data["aggregate_id"].(string),
+		Version:     int(data["version"].(float64)),
 		State:       state,
 		Timestamp:   ts,
 	}
 }
 
-// EventStore is an in-memory event store with snapshot optimization.
+// EventStore is an event store with snapshot optimization.
 type EventStore struct {
 	events            []Event
 	snapshots         map[string]Snapshot
 	snapshotInterval  int
 	aggregateVersions map[string]int
-	snapshotApplier   func(map[string]interface{}, Event) map[string]interface{}
+	applier           func(map[string]interface{}, Event) map[string]interface{}
 }
 
-func NewEventStore(snapshotInterval int) *EventStore {
+func newEventStore(snapshotInterval int, applier func(map[string]interface{}, Event) map[string]interface{}) *EventStore {
 	return &EventStore{
-		events:            make([]Event, 0),
-		snapshots:         make(map[string]Snapshot),
+		events:            []Event{},
+		snapshots:         map[string]Snapshot{},
 		snapshotInterval:  snapshotInterval,
-		aggregateVersions: make(map[string]int),
+		aggregateVersions: map[string]int{},
+		applier:           applier,
 	}
 }
 
-func (es *EventStore) SetSnapshotApplier(applier func(map[string]interface{}, Event) map[string]interface{}) {
-	es.snapshotApplier = applier
-}
-
-func (es *EventStore) AppendEvent(event Event) error {
-	if current, ok := es.aggregateVersions[event.AggregateID]; ok {
+func (s *EventStore) appendEvent(event Event) {
+	if current, ok := s.aggregateVersions[event.AggregateID]; ok {
 		if event.Version <= current {
-			return fmt.Errorf("Event version %d is not greater than current version %d", event.Version, current)
+			fmt.Fprintf(os.Stderr, "Event version %d is not greater than current version %d\n", event.Version, current)
+			os.Exit(1)
 		}
 	}
-	es.events = append(es.events, event)
-	es.aggregateVersions[event.AggregateID] = event.Version
-	if event.Version%es.snapshotInterval == 0 {
-		es.createSnapshot(event.AggregateID)
+	s.events = append(s.events, event)
+	s.aggregateVersions[event.AggregateID] = event.Version
+	if event.Version%s.snapshotInterval == 0 {
+		s.createSnapshot(event.AggregateID)
 	}
-	return nil
 }
 
-func (es *EventStore) GetEvents(aggregateID string, fromVersion int) []Event {
+func (s *EventStore) getEvents(aggregateID string, fromVersion int) []Event {
 	var result []Event
-	for _, event := range es.events {
+	for _, event := range s.events {
 		if event.AggregateID == aggregateID && event.Version > fromVersion {
 			result = append(result, event)
 		}
@@ -139,30 +128,32 @@ func (es *EventStore) GetEvents(aggregateID string, fromVersion int) []Event {
 	return result
 }
 
-func (es *EventStore) GetLatestVersion(aggregateID string) int {
-	return es.aggregateVersions[aggregateID]
+func (s *EventStore) getLatestVersion(aggregateID string) int {
+	if v, ok := s.aggregateVersions[aggregateID]; ok {
+		return v
+	}
+	return 0
 }
 
-func (es *EventStore) SaveSnapshot(snapshot Snapshot) {
-	es.snapshots[snapshot.AggregateID] = snapshot
+func (s *EventStore) saveSnapshot(snapshot Snapshot) {
+	s.snapshots[snapshot.AggregateID] = snapshot
 }
 
-func (es *EventStore) GetSnapshot(aggregateID string) (Snapshot, bool) {
-	snapshot, ok := es.snapshots[aggregateID]
+func (s *EventStore) getSnapshot(aggregateID string) (Snapshot, bool) {
+	snapshot, ok := s.snapshots[aggregateID]
 	return snapshot, ok
 }
 
-func (es *EventStore) ReplayToVersion(aggregateID string, version int, applier func(map[string]interface{}, Event) map[string]interface{}) map[string]interface{} {
-	snapshot, hasSnapshot := es.GetSnapshot(aggregateID)
+func (s *EventStore) replayToVersion(aggregateID string, version int, applier func(map[string]interface{}, Event) map[string]interface{}) map[string]interface{} {
+	state := map[string]interface{}{}
 	startVersion := 0
-	state := make(map[string]interface{})
-	if hasSnapshot && snapshot.Version <= version {
-		state = copyMap(snapshot.State)
+	if snapshot, ok := s.getSnapshot(aggregateID); ok && snapshot.Version <= version {
+		for k, v := range snapshot.State {
+			state[k] = v
+		}
 		startVersion = snapshot.Version
 	}
-
-	events := es.GetEvents(aggregateID, startVersion)
-	for _, event := range events {
+	for _, event := range s.getEvents(aggregateID, startVersion) {
 		if event.Version > version {
 			break
 		}
@@ -171,18 +162,19 @@ func (es *EventStore) ReplayToVersion(aggregateID string, version int, applier f
 	return state
 }
 
-func (es *EventStore) createSnapshot(aggregateID string) {
-	version := es.aggregateVersions[aggregateID]
-	state := map[string]interface{}{"version": version}
-	if es.snapshotApplier != nil {
-		state = es.ReplayToVersion(aggregateID, version, es.snapshotApplier)
-	} else {
-		events := es.GetEvents(aggregateID, 0)
-		if len(events) > 0 {
-			state["last_event_type"] = events[len(events)-1].EventType
-		}
+func (s *EventStore) createSnapshot(aggregateID string) {
+	if s.applier == nil {
+		return
 	}
-	es.SaveSnapshot(Snapshot{
+	version := s.aggregateVersions[aggregateID]
+	state := map[string]interface{}{}
+	for _, event := range s.getEvents(aggregateID, 0) {
+		if event.Version > version {
+			break
+		}
+		state = s.applier(state, event)
+	}
+	s.saveSnapshot(Snapshot{
 		AggregateID: aggregateID,
 		Version:     version,
 		State:       state,
@@ -190,100 +182,74 @@ func (es *EventStore) createSnapshot(aggregateID string) {
 	})
 }
 
-func (es *EventStore) ExportEvents() []map[string]interface{} {
-	result := make([]map[string]interface{}, len(es.events))
-	for i, event := range es.events {
-		result[i] = event.ToDict()
+func (s *EventStore) exportEvents() []map[string]interface{} {
+	result := make([]map[string]interface{}, len(s.events))
+	for i, event := range s.events {
+		result[i] = event.toDict()
 	}
 	return result
 }
 
-func (es *EventStore) ImportEvents(eventsData []map[string]interface{}) {
-	es.events = make([]Event, len(eventsData))
+func (s *EventStore) importEvents(eventsData []map[string]interface{}) {
+	s.events = make([]Event, len(eventsData))
 	for i, data := range eventsData {
-		es.events[i] = EventFromDict(data)
+		s.events[i] = eventFromDict(data)
 	}
-	es.aggregateVersions = make(map[string]int)
-	for _, event := range es.events {
-		es.aggregateVersions[event.AggregateID] = event.Version
+	s.aggregateVersions = map[string]int{}
+	for _, event := range s.events {
+		s.aggregateVersions[event.AggregateID] = event.Version
 	}
-	es.snapshots = make(map[string]Snapshot)
-	for aggregateID := range es.aggregateVersions {
-		if es.aggregateVersions[aggregateID]%es.snapshotInterval == 0 {
-			es.createSnapshot(aggregateID)
+	s.snapshots = map[string]Snapshot{}
+	// Deterministic snapshot rebuild order.
+	ids := make([]string, 0, len(s.aggregateVersions))
+	for id := range s.aggregateVersions {
+		ids = append(ids, id)
+	}
+	sort.Strings(ids)
+	for _, aggregateID := range ids {
+		if s.aggregateVersions[aggregateID]%s.snapshotInterval == 0 {
+			s.createSnapshot(aggregateID)
 		}
 	}
 }
 
-func copyMap(m map[string]interface{}) map[string]interface{} {
-	result := make(map[string]interface{}, len(m))
-	for k, v := range m {
-		result[k] = v
+// BankAccount applies events to account state.
+func applyToState(state map[string]interface{}, event Event) map[string]interface{} {
+	newState := map[string]interface{}{}
+	for k, v := range state {
+		newState[k] = v
 	}
-	return result
-}
-
-// BankAccount is a simple aggregate for demonstration.
-type BankAccount struct {
-	AccountID string
-	Balance   int
-	Version   int
-	Owner     string
-}
-
-func NewBankAccount(accountID string) *BankAccount {
-	return &BankAccount{AccountID: accountID}
-}
-
-func (ba *BankAccount) CreateAccount(owner string, initialBalance int) {
-	ba.Owner = owner
-	ba.Balance = initialBalance
-	ba.Version = 1
-}
-
-func (ba *BankAccount) ApplyEvent(event Event) {
-	switch event.EventType {
-	case "AccountCreated":
-		ba.Owner = getString(event.Payload, "owner")
-		ba.Balance = getInt(event.Payload, "initial_balance")
-	case "MoneyDeposited":
-		ba.Balance += getInt(event.Payload, "amount")
-	case "MoneyWithdrawn":
-		ba.Balance -= getInt(event.Payload, "amount")
-	}
-	ba.Version = event.Version
-}
-
-func ApplyToState(state map[string]interface{}, event Event) map[string]interface{} {
-	newState := copyMap(state)
 	switch event.EventType {
 	case "AccountCreated":
 		newState["owner"] = event.Payload["owner"]
-		newState["balance"] = getInt(event.Payload, "initial_balance")
+		newState["balance"] = event.Payload["initial_balance"]
 	case "MoneyDeposited":
-		current := 0
-		if v, ok := newState["balance"].(float64); ok {
-			current = int(v)
-		} else if v, ok := newState["balance"].(int); ok {
-			current = v
+		balance := 0
+		if b, ok := newState["balance"].(int); ok {
+			balance = b
 		}
-		newState["balance"] = current + getInt(event.Payload, "amount")
+		newState["balance"] = balance + event.Payload["amount"].(int)
 	case "MoneyWithdrawn":
-		current := 0
-		if v, ok := newState["balance"].(float64); ok {
-			current = int(v)
-		} else if v, ok := newState["balance"].(int); ok {
-			current = v
+		balance := 0
+		if b, ok := newState["balance"].(int); ok {
+			balance = b
 		}
-		newState["balance"] = current - getInt(event.Payload, "amount")
+		newState["balance"] = balance - event.Payload["amount"].(int)
 	}
 	newState["version"] = event.Version
 	return newState
 }
 
+var eventCounter int
+
+func newEventID() string {
+	eventCounter++
+	return fmt.Sprintf("evt-%d", eventCounter)
+}
+
 func createAccountCreatedEvent(accountID, owner string, initialBalance, version int) Event {
 	return Event{
-		EventID:     fmt.Sprintf("event-%d", time.Now().UnixNano()),
+		EventID:     newEventID(),
 		EventType:   "AccountCreated",
 		AggregateID: accountID,
 		Version:     version,
@@ -297,7 +263,7 @@ func createAccountCreatedEvent(accountID, owner string, initialBalance, version 
 
 func createMoneyDepositedEvent(accountID string, amount, version int) Event {
 	return Event{
-		EventID:     fmt.Sprintf("event-%d", time.Now().UnixNano()),
+		EventID:     newEventID(),
 		EventType:   "MoneyDeposited",
 		AggregateID: accountID,
 		Version:     version,
@@ -310,7 +276,7 @@ func createMoneyDepositedEvent(accountID string, amount, version int) Event {
 
 func createMoneyWithdrawnEvent(accountID string, amount, version int) Event {
 	return Event{
-		EventID:     fmt.Sprintf("event-%d", time.Now().UnixNano()),
+		EventID:     newEventID(),
 		EventType:   "MoneyWithdrawn",
 		AggregateID: accountID,
 		Version:     version,
@@ -322,75 +288,93 @@ func createMoneyWithdrawnEvent(accountID string, amount, version int) Event {
 }
 
 func main() {
-	fmt.Println("=== Event Sourcing Store Demo ===")
-	fmt.Println()
-
-	store := NewEventStore(3)
-	store.SetSnapshotApplier(ApplyToState)
+	store := newEventStore(3, applyToState)
 	accountID := "account-123"
 
-	fmt.Printf("1. Creating account %s\n", accountID)
-	event1 := createAccountCreatedEvent(accountID, "John Doe", 1000, 1)
-	if err := store.AppendEvent(event1); err != nil {
-		fmt.Fprintf(os.Stderr, "append: %v\n", err)
+	store.appendEvent(createAccountCreatedEvent(accountID, "John Doe", 1000, 1))
+	store.appendEvent(createMoneyDepositedEvent(accountID, 500, 2))
+	store.appendEvent(createMoneyWithdrawnEvent(accountID, 200, 3))
+	store.appendEvent(createMoneyDepositedEvent(accountID, 300, 4))
+
+	truths := map[int]int{1: 1000, 2: 1500, 3: 1300, 4: 1600}
+	for version, expected := range truths {
+		state := store.replayToVersion(accountID, version, applyToState)
+		balance := state["balance"].(int)
+		if !(balance == expected) {
+			fmt.Fprintf(os.Stderr, "balance at v%d must be %d, got %d\n", version, expected, balance)
+			os.Exit(1)
+		}
+		v := state["version"].(int)
+		if !(v == version) {
+			fmt.Fprintf(os.Stderr, "replayed version must be %d, got %d\n", version, v)
+			os.Exit(1)
+		}
+	}
+	owner := store.replayToVersion(accountID, 4, applyToState)["owner"].(string)
+	if !(owner == "John Doe") {
+		fmt.Fprintf(os.Stderr, "owner lost in replay\n")
 		os.Exit(1)
 	}
-	fmt.Printf("   Created account for %s with initial balance $%d\n", event1.Payload["owner"], event1.Payload["initial_balance"])
 
-	fmt.Printf("2. Depositing $500 to %s\n", accountID)
-	event2 := createMoneyDepositedEvent(accountID, 500, 2)
-	if err := store.AppendEvent(event2); err != nil {
-		fmt.Fprintf(os.Stderr, "append: %v\n", err)
+	snapshot, ok := store.getSnapshot(accountID)
+	if !ok {
+		fmt.Fprintf(os.Stderr, "no snapshot despite crossing the interval\n")
 		os.Exit(1)
 	}
-	fmt.Printf("   Deposited $%d\n", event2.Payload["amount"])
-
-	fmt.Printf("3. Withdrawing $200 from %s\n", accountID)
-	event3 := createMoneyWithdrawnEvent(accountID, 200, 3)
-	if err := store.AppendEvent(event3); err != nil {
-		fmt.Fprintf(os.Stderr, "append: %v\n", err)
+	if !(snapshot.AggregateID == accountID) {
+		fmt.Fprintf(os.Stderr, "snapshot aggregate id mismatch\n")
 		os.Exit(1)
 	}
-	fmt.Printf("   Withdrew $%d\n", event3.Payload["amount"])
-
-	fmt.Printf("4. Depositing $300 to %s (triggers snapshot)\n", accountID)
-	event4 := createMoneyDepositedEvent(accountID, 300, 4)
-	if err := store.AppendEvent(event4); err != nil {
-		fmt.Fprintf(os.Stderr, "append: %v\n", err)
+	if !(snapshot.Version >= 3) {
+		fmt.Fprintf(os.Stderr, "snapshot version %d below interval\n", snapshot.Version)
 		os.Exit(1)
 	}
-	fmt.Printf("   Deposited $%d\n", event4.Payload["amount"])
-
-	fmt.Printf("5. Current state of %s:\n", accountID)
-	currentState := store.ReplayToVersion(accountID, 4, ApplyToState)
-	fmt.Printf("   Owner: %v\n", currentState["owner"])
-	fmt.Printf("   Balance: $%v\n", currentState["balance"])
-	fmt.Printf("   Version: %v\n", currentState["version"])
-
-	fmt.Printf("6. State of %s at version 2:\n", accountID)
-	version2State := store.ReplayToVersion(accountID, 2, ApplyToState)
-	fmt.Printf("   Owner: %v\n", version2State["owner"])
-	fmt.Printf("   Balance: $%v\n", version2State["balance"])
-	fmt.Printf("   Version: %v\n", version2State["version"])
-
-	fmt.Println("7. Available snapshots:")
-	if snapshot, ok := store.GetSnapshot(accountID); ok {
-		fmt.Printf("   Account %s: version %d\n", snapshot.AggregateID, snapshot.Version)
-		fmt.Printf("   State: %v\n", snapshot.State)
-	} else {
-		fmt.Println("   No snapshots available")
+	expected := truths[snapshot.Version]
+	bal := snapshot.State["balance"].(int)
+	if !(bal == expected) {
+		fmt.Fprintf(os.Stderr, "snapshot state disagrees with the replayed truth at its version\n")
+		os.Exit(1)
 	}
 
-	fmt.Println("8. Exporting events:")
-	exportedEvents := store.ExportEvents()
-	fmt.Printf("   Exported %d events\n", len(exportedEvents))
+	exported := store.exportEvents()
+	nExported := len(exported)
+	if !(nExported == 4) {
+		fmt.Fprintf(os.Stderr, "4 events must export, got %d\n", nExported)
+		os.Exit(1)
+	}
+	newStore := newEventStore(3, nil)
+	newStore.importEvents(exported)
+	imported := newStore.replayToVersion(accountID, 4, applyToState)
+	importedBalance := imported["balance"].(int)
+	if !(importedBalance == 1600) {
+		fmt.Fprintf(os.Stderr, "imported store replayed %d, want 1600\n", importedBalance)
+		os.Exit(1)
+	}
+	importedOwner := imported["owner"].(string)
+	if !(importedOwner == "John Doe") {
+		fmt.Fprintf(os.Stderr, "imported owner mismatch\n")
+		os.Exit(1)
+	}
 
-	fmt.Println("9. Importing events to new store:")
-	newStore := NewEventStore(10)
-	newStore.SetSnapshotApplier(ApplyToState)
-	newStore.ImportEvents(exportedEvents)
-	importedState := newStore.ReplayToVersion(accountID, 4, ApplyToState)
-	fmt.Printf("   Imported state: Balance $%v\n", importedState["balance"])
+	store.appendEvent(createAccountCreatedEvent("account-999", "Jane", 50, 1))
+	a2 := store.replayToVersion("account-999", 1, applyToState)
+	a2Balance := a2["balance"].(int)
+	if !(a2Balance == 50) {
+		fmt.Fprintf(os.Stderr, "second account balance mismatch\n")
+		os.Exit(1)
+	}
+	a2Owner := a2["owner"].(string)
+	if !(a2Owner == "Jane") {
+		fmt.Fprintf(os.Stderr, "second account owner mismatch\n")
+		os.Exit(1)
+	}
+	a1 := store.replayToVersion(accountID, 4, applyToState)
+	a1Balance := a1["balance"].(int)
+	if !(a1Balance == 1600) {
+		fmt.Fprintf(os.Stderr, "second aggregate polluted the first\n")
+		os.Exit(1)
+	}
 
-	fmt.Println("\n=== Demo Complete ===")
+	fmt.Println("event_sourcing_store: replay exact at v1..v4 (1000/1500/1300/1600), " +
+		"snapshot at v>=3 agrees, export/import rebuilt 1600, isolation — PASS")
 }

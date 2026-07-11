@@ -2,14 +2,16 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"os"
+	"sort"
+	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
 
-// BatchRequest represents a single collapsed request.
+// BatchRequest represents a batched request with its identifier and arguments.
 // △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 var _auraMark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
@@ -46,22 +48,29 @@ func NewCollapser(
 	}
 }
 
+// requestKey generates a unique key for a request based on its arguments.
+// Kwargs are sorted by key name, matching the Python implementation.
 func requestKey(args []interface{}, kwargs map[string]interface{}) string {
 	parts := make([]string, 0, len(args)+len(kwargs))
 	for _, a := range args {
 		parts = append(parts, fmt.Sprintf("%v", a))
 	}
-	for k, v := range kwargs {
-		parts = append(parts, fmt.Sprintf("%s:%v", k, v))
+	keys := make([]string, 0, len(kwargs))
+	for k := range kwargs {
+		keys = append(keys, k)
 	}
-	return fmt.Sprintf("%v", parts)
+	sort.Strings(keys)
+	for _, k := range keys {
+		parts = append(parts, fmt.Sprintf("%s:%v", k, kwargs[k]))
+	}
+	return strings.Join(parts, "|")
 }
 
 // Submit sends a request to be collapsed and returns its result.
 func (c *Collapser) Submit(ctx context.Context, args []interface{}, kwargs map[string]interface{}) (interface{}, error) {
 	key := requestKey(args, kwargs)
 	req := &BatchRequest{
-		RequestID: fmt.Sprintf("%d", time.Now().UnixNano()),
+		RequestID: strconv.FormatInt(time.Now().UnixNano(), 10),
 		Args:      args,
 		Kwargs:    kwargs,
 		Result:    make(chan interface{}, 1),
@@ -111,96 +120,184 @@ func (c *Collapser) processBatches() {
 	}
 }
 
-// demoBackend simulates a backend call.
-func demoBackend(ctx context.Context, args []interface{}, kwargs map[string]interface{}) (interface{}, error) {
-	time.Sleep(100 * time.Millisecond)
-	userID := 0
-	if len(args) > 0 {
-		if v, ok := args[0].(int); ok {
-			userID = v
-		}
-	}
-	includeProfile := false
-	if v, ok := kwargs["include_profile"]; ok {
-		includeProfile = v.(bool)
-	}
-	return map[string]interface{}{
-		"user_id":          userID,
-		"name":             fmt.Sprintf("User %d", userID),
-		"email":            fmt.Sprintf("user%d@example.com", userID),
-		"profile_included": includeProfile,
-		"timestamp":        time.Now().UnixNano(),
-	}, nil
-}
-
 func main() {
-	fmt.Println("Request Collapser Demo")
-	fmt.Println("========================")
+	calls := 0
+	callArgs := []int{}
 
-	collapser := NewCollapser(demoBackend, 50, 10)
-
-	fmt.Println("Submitting 5 identical requests for user 123...")
-	ctx := context.Background()
-	start := time.Now()
-	tasks := make([]chan interface{}, 5)
-	for i := 0; i < 5; i++ {
-		ch := make(chan interface{}, 1)
-		tasks[i] = ch
-		go func(idx int) {
-			res, err := collapser.Submit(ctx, []interface{}{123}, map[string]interface{}{"include_profile": true})
-			if err != nil {
-				ch <- err
-				return
+	countingBackend := func(ctx context.Context, args []interface{}, kwargs map[string]interface{}) (interface{}, error) {
+		calls++
+		if len(args) > 0 {
+			if v, ok := args[0].(int); ok {
+				callArgs = append(callArgs, v)
 			}
-			ch <- res
+		}
+		time.Sleep(0)
+		return map[string]interface{}{
+			"user_id": args[0],
+			"call_no": calls,
+		}, nil
+	}
+
+	c := NewCollapser(countingBackend, 20, 10)
+
+	// Request-key derivation is exact and order-normalizes kwargs.
+	if got := requestKey([]interface{}{1}, map[string]interface{}{"b": 2, "a": 3}); got != "1|a:3|b:2" {
+		fmt.Fprintf(os.Stderr, "request key must sort kwargs for stable identity: got %q\n", got)
+		os.Exit(1)
+	}
+
+	// 5 identical concurrent requests = 1 backend call.
+	ctx := context.Background()
+	var wg sync.WaitGroup
+	results := make([]map[string]interface{}, 5)
+	errs := make([]error, 5)
+	for i := 0; i < 5; i++ {
+		wg.Add(1)
+		go func(idx int) {
+			defer wg.Done()
+			res, err := c.Submit(ctx, []interface{}{123}, map[string]interface{}{"include_profile": true})
+			errs[idx] = err
+			if err == nil {
+				results[idx] = res.(map[string]interface{})
+			}
 		}(i)
 	}
-
-	results := make([]map[string]interface{}, 5)
-	for i, ch := range tasks {
-		res := <-ch
-		if err, ok := res.(error); ok {
-			fmt.Fprintf(os.Stderr, "request %d failed: %v\n", i, err)
-			os.Exit(1)
-		}
-		results[i] = res.(map[string]interface{})
+	wg.Wait()
+	if calls != 1 {
+		fmt.Fprintf(os.Stderr, "5 identical requests caused %d backend calls, not 1\n", calls)
+		os.Exit(1)
 	}
-	elapsed := time.Since(start).Seconds()
-	fmt.Printf("Received %d results in %.2f seconds\n", len(results), elapsed)
-	for i, r := range results {
-		fmt.Printf("Result %d: User %v, Name: %v\n", i+1, r["user_id"], r["name"])
+	if !(calls == 1) {
+		fmt.Fprintf(os.Stderr, "5 identical requests caused %d backend calls, not 1\n", calls)
+		os.Exit(1)
 	}
-	allIdentical := true
+	first := results[0]
 	for _, r := range results[1:] {
-		if fmt.Sprintf("%v", r) != fmt.Sprintf("%v", results[0]) {
-			allIdentical = false
-			break
-		}
-	}
-	fmt.Printf("All results identical: %v\n", allIdentical)
-
-	fmt.Println("\nSubmitting different requests...")
-	differentTasks := []struct {
-		args   []interface{}
-		kwargs map[string]interface{}
-	}{
-		{[]interface{}{123}, map[string]interface{}{"include_profile": true}},
-		{[]interface{}{456}, map[string]interface{}{"include_profile": true}},
-		{[]interface{}{789}, map[string]interface{}{"include_profile": false}},
-	}
-	differentResults := make([]map[string]interface{}, len(differentTasks))
-	for i, dt := range differentTasks {
-		res, err := collapser.Submit(ctx, dt.args, dt.kwargs)
-		if !(err == nil) {
-			fmt.Fprintf(os.Stderr, "different request %d failed: %v\n", i, err)
+		if !(fmt.Sprintf("%v", r) == fmt.Sprintf("%v", first)) {
+			fmt.Fprintln(os.Stderr, "collapsed waiters got different results")
 			os.Exit(1)
 		}
-		differentResults[i] = res.(map[string]interface{})
 	}
-	fmt.Printf("Received %d different results:\n", len(differentResults))
-	for i, r := range differentResults {
-		fmt.Printf("Result %d: User %v, Profile: %v\n", i+1, r["user_id"], r["profile_included"])
+	if !(first["user_id"] == 123 && first["call_no"] == 1) {
+		fmt.Fprintf(os.Stderr, "unexpected result: %v\n", first)
+		os.Exit(1)
 	}
-}
+	if !(len(results) == 5) {
+		fmt.Fprintln(os.Stderr, "expected 5 results")
+		os.Exit(1)
+	}
 
-var _ = errors.New
+	// Distinct requests must NOT be collapsed: 3 keys → exactly 3 more calls.
+	r2 := make([]map[string]interface{}, 3)
+	var wg2 sync.WaitGroup
+	tasks := [][2]interface{}{
+		{123, true},
+		{456, true},
+		{789, false},
+	}
+	for i, t := range tasks {
+		wg2.Add(1)
+		go func(idx int, userID int, includeProfile bool) {
+			defer wg2.Done()
+			res, err := c.Submit(ctx, []interface{}{userID}, map[string]interface{}{"include_profile": includeProfile})
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "distinct request failed: %v\n", err)
+				os.Exit(1)
+			}
+			r2[idx] = res.(map[string]interface{})
+		}(i, t[0].(int), t[1].(bool))
+	}
+	wg2.Wait()
+	if calls != 4 {
+		fmt.Fprintf(os.Stderr, "3 distinct requests after 1 must total 4 calls, got %d\n", calls)
+		os.Exit(1)
+	}
+	if !(calls == 4) {
+		fmt.Fprintf(os.Stderr, "3 distinct requests after 1 must total 4 calls, got %d\n", calls)
+		os.Exit(1)
+	}
+	if r2[0]["user_id"] != 123 || r2[1]["user_id"] != 456 || r2[2]["user_id"] != 789 {
+		fmt.Fprintf(os.Stderr, "unexpected user_ids: %v\n", r2)
+		os.Exit(1)
+	}
+	want := []int{123, 456, 789}
+	if !(r2[0]["user_id"] == want[0] && r2[1]["user_id"] == want[1] && r2[2]["user_id"] == want[2]) {
+		fmt.Fprintf(os.Stderr, "unexpected user_ids: %v\n", r2)
+		os.Exit(1)
+	}
+	for i, w := range want {
+		if !(r2[i]["user_id"] == w) {
+			fmt.Fprintf(os.Stderr, "expected user_ids %v, got %v\n", want, r2)
+			os.Exit(1)
+		}
+	}
+
+	// Backend exception must reach every collapsed waiter.
+	failingBackend := func(ctx context.Context, args []interface{}, kwargs map[string]interface{}) (interface{}, error) {
+		return nil, fmt.Errorf("backend down")
+	}
+	f := NewCollapser(failingBackend, 20, 10)
+	failures := make([]error, 2)
+	var wg3 sync.WaitGroup
+	for i := 0; i < 2; i++ {
+		wg3.Add(1)
+		go func(idx int) {
+			defer wg3.Done()
+			_, err := f.Submit(ctx, []interface{}{7}, nil)
+			failures[idx] = err
+		}(i)
+	}
+	wg3.Wait()
+	if !(len(failures) == 2) {
+		fmt.Fprintf(os.Stderr, "expected 2 failures, got %d\n", len(failures))
+		os.Exit(1)
+	}
+	for _, e := range failures {
+		if !(e != nil && e.Error() == "backend down") {
+			fmt.Fprintf(os.Stderr, "collapsed waiters did not all receive the backend failure: %v\n", failures)
+			os.Exit(1)
+		}
+	}
+
+	// Sync backends still collapse.
+	syncCalls := 0
+	syncBackend := func(ctx context.Context, args []interface{}, kwargs map[string]interface{}) (interface{}, error) {
+		syncCalls++
+		return args[0].(int) * 10, nil
+	}
+	s := NewCollapser(syncBackend, 20, 10)
+	sr := make([]interface{}, 3)
+	var wg4 sync.WaitGroup
+	for i := 0; i < 3; i++ {
+		wg4.Add(1)
+		go func(idx int) {
+			defer wg4.Done()
+			res, err := s.Submit(ctx, []interface{}{4}, nil)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "sync backend failed: %v\n", err)
+				os.Exit(1)
+			}
+			sr[idx] = res
+		}(i)
+	}
+	wg4.Wait()
+	for _, v := range sr {
+		if !(v == 40) {
+			fmt.Fprintf(os.Stderr, "sync backend results wrong: %v\n", sr)
+			os.Exit(1)
+		}
+	}
+	expectedSync := []int{40, 40, 40}
+	for i, v := range sr {
+		if !(v == expectedSync[i]) {
+			fmt.Fprintf(os.Stderr, "sync backend results wrong: %v\n", sr)
+			os.Exit(1)
+		}
+	}
+	if syncCalls != 1 {
+		fmt.Fprintf(os.Stderr, "sync backend called %d times, not 1\n", syncCalls)
+		os.Exit(1)
+	}
+
+	fmt.Println("budget_allocator (request collapser): 5->1 collapsed, 3 distinct kept, failure fanned out to all waiters, sync path collapsed — PASS")
+}

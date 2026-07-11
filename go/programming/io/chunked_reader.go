@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
+	"time"
 )
 
 // △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
@@ -16,27 +18,28 @@ type ChunkedReader struct {
 
 func NewChunkedReader(bufferSize int) *ChunkedReader {
 	if bufferSize <= 0 {
-		panic("buffer size must be positive")
+		fmt.Fprintln(os.Stderr, "Buffer size must be positive")
+		os.Exit(1)
 	}
 	return &ChunkedReader{bufferSize: bufferSize}
 }
 
-func (cr *ChunkedReader) ReadChunks(fileObj interface{}) [][]byte {
+func (cr *ChunkedReader) ReadChunks(fileObj interface{}) ([][]byte, error) {
 	var chunks [][]byte
 	switch f := fileObj.(type) {
 	case string:
 		file, err := os.Open(f)
 		if err != nil {
-			panic(fmt.Sprintf("failed to open file: %v", err))
+			return nil, err
 		}
 		defer file.Close()
 		chunks = cr.readFromReader(file)
 	case io.Reader:
 		chunks = cr.readFromReader(f)
 	default:
-		panic("file_obj must be a file path or io.Reader")
+		return nil, fmt.Errorf("file_obj must be a file path or io.Reader")
 	}
-	return chunks
+	return chunks, nil
 }
 
 func (cr *ChunkedReader) readFromReader(r io.Reader) [][]byte {
@@ -53,7 +56,7 @@ func (cr *ChunkedReader) readFromReader(r io.Reader) [][]byte {
 			break
 		}
 		if err != nil {
-			panic(fmt.Sprintf("read error: %v", err))
+			panic(err)
 		}
 	}
 	return chunks
@@ -71,10 +74,13 @@ func NewLineParser(bufferSize int) *LineParser {
 	}
 }
 
-func (lp *LineParser) ParseLines(fileObj interface{}) []string {
+func (lp *LineParser) ParseLines(fileObj interface{}) ([]string, error) {
 	lp.remainder = []byte{}
 	var lines []string
-	chunks := lp.chunkedReader.ReadChunks(fileObj)
+	chunks, err := lp.chunkedReader.ReadChunks(fileObj)
+	if err != nil {
+		return nil, err
+	}
 	for _, chunk := range chunks {
 		data := append(lp.remainder, chunk...)
 		parts := splitBytes(data, '\n')
@@ -86,7 +92,7 @@ func (lp *LineParser) ParseLines(fileObj interface{}) []string {
 	if len(lp.remainder) > 0 {
 		lines = append(lines, string(lp.remainder))
 	}
-	return lines
+	return lines, nil
 }
 
 func splitBytes(data []byte, sep byte) [][]byte {
@@ -116,46 +122,98 @@ func createTestFile(filename string, numLines int) {
 	w.Flush()
 }
 
+type stringReader struct {
+	s string
+	i int
+}
+
+func (r *stringReader) Read(p []byte) (int, error) {
+	if r.i >= len(r.s) {
+		return 0, io.EOF
+	}
+	n := copy(p, r.s[r.i:])
+	r.i += n
+	if r.i >= len(r.s) {
+		return n, io.EOF
+	}
+	return n, nil
+}
+
 func main() {
-	testFilename := "test_lines.txt"
+	tmpdir, err := os.MkdirTemp("", "chunked_*")
+	if !(err == nil) {
+		fmt.Fprintf(os.Stderr, "failed to create temp dir: %v\n", err)
+		os.Exit(1)
+	}
+	defer os.RemoveAll(tmpdir)
+
+	path := filepath.Join(tmpdir, "lines.txt")
 	numLines := 1000
-
-	fmt.Printf("Creating test file with %d lines...\n", numLines)
-	createTestFile(testFilename, numLines)
-	defer os.Remove(testFilename)
-
-	for _, bufferSize := range []int{128, 512, 2048} {
-		fmt.Printf("\nParsing with buffer size: %d\n", bufferSize)
-		parser := NewLineParser(bufferSize)
-
-		parsedLines := parser.ParseLines(testFilename)
-		lineCount := len(parsedLines)
-
-		for i, line := range parsedLines {
-			if i < 3 || i >= numLines-3 {
-				expected := fmt.Sprintf("This is line number %d with some content", i+1)
-				if !(line == expected) {
-					fmt.Fprintf(os.Stderr, "ERROR: Line %d mismatch!\n", i+1)
-					fmt.Fprintf(os.Stderr, "  Expected: %s\n", expected)
-					fmt.Fprintf(os.Stderr, "  Got:      %s\n", line)
-					os.Exit(1)
-				}
-			}
-			if i < 5 {
-				fmt.Printf("  Line %d: %s\n", i+1, line)
-			} else if i == 5 {
-				fmt.Println("  ...")
-			} else if i >= numLines-3 {
-				fmt.Printf("  Line %d: %s\n", i+1, line)
-			}
-		}
-
-		if !(lineCount == numLines) {
-			fmt.Fprintf(os.Stderr, "ERROR: Expected %d lines, got %d\n", numLines, lineCount)
-			os.Exit(1)
-		}
-		fmt.Printf("SUCCESS: Parsed %d lines correctly\n", lineCount)
+	createTestFile(path, numLines)
+	truth := make([]string, numLines)
+	for i := 0; i < numLines; i++ {
+		truth[i] = fmt.Sprintf("This is line number %d with some content", i+1)
 	}
 
-	fmt.Printf("\nCleaned up test file: %s\n", testFilename)
+	for _, bufferSize := range []int{1, 43, 128, 2048, 1 << 20} {
+		parser := NewLineParser(bufferSize)
+		got, err := parser.ParseLines(path)
+		if !(err == nil) {
+			fmt.Fprintf(os.Stderr, "buffer %d: parse error %v\n", bufferSize, err)
+			os.Exit(1)
+		}
+		if !(len(got) == len(truth)) {
+			fmt.Fprintf(os.Stderr, "buffer %d: expected %d lines, got %d\n", bufferSize, len(truth), len(got))
+			os.Exit(1)
+		}
+		for i := range truth {
+			if !(got[i] == truth[i]) {
+				fmt.Fprintf(os.Stderr, "buffer %d: first divergence at line %d: got %q want %q\n", bufferSize, i, got[i], truth[i])
+				os.Exit(1)
+			}
+		}
+	}
+
+	path2 := filepath.Join(tmpdir, "no_newline.txt")
+	f, _ := os.Create(path2)
+	f.WriteString("first\nsecond\nlast-without-newline")
+	f.Close()
+	got, _ := NewLineParser(4).ParseLines(path2)
+	if !(len(got) == 3 && got[0] == "first" && got[1] == "second" && got[2] == "last-without-newline") {
+		fmt.Fprintf(os.Stderr, "tail line lost: %v\n", got)
+		os.Exit(1)
+	}
+
+	path3 := filepath.Join(tmpdir, "edges.txt")
+	longLine := repeatString("x", 10000)
+	f, _ = os.Create(path3)
+	fmt.Fprintf(f, "\n\n%s\nend\n", longLine)
+	f.Close()
+	got, _ = NewLineParser(64).ParseLines(path3)
+	if !(len(got) == 4 && got[0] == "" && got[1] == "" && got[2] == longLine && got[3] == "end") {
+		fmt.Fprintf(os.Stderr, "edge shapes broken: %v\n", got)
+		os.Exit(1)
+	}
+	if !(len(got[2]) == 10000) {
+		fmt.Fprintln(os.Stderr, "10k-char line not reassembled across ~156 chunks")
+		os.Exit(1)
+	}
+
+	sr := &stringReader{s: "a\nbb\nccc"}
+	got, _ = NewLineParser(7).ParseLines(sr)
+	if !(len(got) == 3 && got[0] == "a" && got[1] == "bb" && got[2] == "ccc") {
+		fmt.Fprintf(os.Stderr, "string reader broken: %v\n", got)
+		os.Exit(1)
+	}
+
+	fmt.Println("chunked_reader: 1000 lines byte-identical at buffers 1/43/128/2048/1M, tail-without-newline kept, 10k line reassembled — PASS")
+	time.Sleep(1 * time.Millisecond)
+}
+
+func repeatString(s string, n int) string {
+	out := ""
+	for i := 0; i < n; i++ {
+		out += s
+	}
+	return out
 }

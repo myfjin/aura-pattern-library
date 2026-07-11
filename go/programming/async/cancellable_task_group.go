@@ -1,168 +1,203 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"sync"
 	"time"
 )
 
-// Task represents an asynchronous task in the group.
 // △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 var _auraMark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
+type CancellationToken struct {
+	mu        sync.Mutex
+	cancelled bool
+}
+
+func (ct *CancellationToken) Cancel() {
+	ct.mu.Lock()
+	ct.cancelled = true
+	ct.mu.Unlock()
+}
+
+func (ct *CancellationToken) IsCancelled() bool {
+	ct.mu.Lock()
+	defer ct.mu.Unlock()
+	return ct.cancelled
+}
+
 type Task struct {
-	Name   string
-	Result string
-	Err    error
-	Done   bool
+	fn        func(...interface{}) interface{}
+	args      []interface{}
+	result    interface{}
+	exception interface{}
+	completed bool
+	mu        sync.Mutex
 }
 
-// TaskGroup manages a group of cancellable tasks.
-type TaskGroup struct {
-	tasks  []*Task
-	ctx    context.Context
-	cancel context.CancelFunc
-	wg     sync.WaitGroup
-	mu     sync.Mutex
-}
-
-// NewTaskGroup creates a new TaskGroup.
-func NewTaskGroup() *TaskGroup {
-	ctx, cancel := context.WithCancel(context.Background())
-	return &TaskGroup{ctx: ctx, cancel: cancel}
-}
-
-// Spawn starts a new task in the group.
-func (tg *TaskGroup) Spawn(name string, fn func(context.Context) (string, error)) *Task {
-	tg.mu.Lock()
-	if !(tg.ctx.Err() == nil) {
-		tg.mu.Unlock()
-		fmt.Fprintf(os.Stderr, "Cannot spawn tasks after cancellation\n")
-		os.Exit(1)
+func (t *Task) run(token *CancellationToken) {
+	defer func() {
+		if r := recover(); r != nil {
+			t.mu.Lock()
+			t.exception = r
+			t.completed = true
+			t.mu.Unlock()
+		}
+	}()
+	if !token.IsCancelled() {
+		t.result = t.fn(t.args...)
 	}
-	task := &Task{Name: name}
-	tg.tasks = append(tg.tasks, task)
-	tg.wg.Add(1)
-	tg.mu.Unlock()
+	t.mu.Lock()
+	t.completed = true
+	t.mu.Unlock()
+}
 
+type TaskGroup struct {
+	tasks []*Task
+	token *CancellationToken
+	mu    sync.Mutex
+	wg    sync.WaitGroup
+}
+
+func NewTaskGroup() *TaskGroup {
+	return &TaskGroup{
+		token: NewCancellationToken(),
+	}
+}
+
+func NewCancellationToken() *CancellationToken {
+	return &CancellationToken{}
+}
+
+func (tg *TaskGroup) Spawn(fn func(...interface{}) interface{}, args ...interface{}) *Task {
+	tg.mu.Lock()
+	if tg.token.IsCancelled() {
+		tg.mu.Unlock()
+		panic("Cannot spawn tasks after cancellation")
+	}
+	t := &Task{fn: fn, args: args}
+	tg.tasks = append(tg.tasks, t)
+	tg.wg.Add(1)
 	go func() {
 		defer tg.wg.Done()
-		result, err := fn(tg.ctx)
-		tg.mu.Lock()
-		task.Result = result
-		task.Err = err
-		task.Done = true
-		tg.mu.Unlock()
+		t.run(tg.token)
 	}()
-	return task
+	tg.mu.Unlock()
+	return t
 }
 
-// CancelAll signals cancellation to all tasks.
 func (tg *TaskGroup) CancelAll() {
 	tg.mu.Lock()
-	tg.cancel()
+	tg.token.Cancel()
 	tg.mu.Unlock()
 	time.Sleep(10 * time.Millisecond)
 }
 
-// WaitAll waits for all tasks to complete and returns them in spawn order.
 func (tg *TaskGroup) WaitAll() []*Task {
 	tg.wg.Wait()
-	tg.mu.Lock()
-	defer tg.mu.Unlock()
 	return tg.tasks
 }
 
-// Close releases resources held by the group.
-func (tg *TaskGroup) Close() {
-	tg.cancel()
-	tg.wg.Wait()
-}
-
-func exampleTask(name string, duration time.Duration) func(context.Context) (string, error) {
-	return func(ctx context.Context) (string, error) {
-		deadline := time.After(duration)
-		for {
-			select {
-			case <-ctx.Done():
-				return fmt.Sprintf("Task %s was cancelled", name), nil
-			case <-deadline:
-				return fmt.Sprintf("Task %s completed successfully", name), nil
-			default:
-				time.Sleep(50 * time.Millisecond)
-			}
+func exampleTask(name string, duration float64, token *CancellationToken) string {
+	start := time.Now()
+	for time.Since(start).Seconds() < duration {
+		if token.IsCancelled() {
+			return fmt.Sprintf("Task %s was cancelled", name)
 		}
+		time.Sleep(10 * time.Millisecond)
 	}
+	return fmt.Sprintf("Task %s completed successfully", name)
 }
 
-func quickTask(ctx context.Context) (string, error) {
-	return "Task Instant finished instantly", nil
+func failingTask(name string) string {
+	panic(fmt.Sprintf("Task %s failed intentionally", name))
 }
 
-func failingTask(ctx context.Context) (string, error) {
-	return "", fmt.Errorf("Task Failure failed intentionally")
+func quickTask(name string) string {
+	return fmt.Sprintf("Task %s finished instantly", name)
+}
+
+func wrapQuick(args ...interface{}) interface{} {
+	return quickTask(args[0].(string))
+}
+
+func wrapFailing(args ...interface{}) interface{} {
+	return failingTask(args[0].(string))
+}
+
+func wrapExample(args ...interface{}) interface{} {
+	return exampleTask(args[0].(string), args[1].(float64), args[2].(*CancellationToken))
 }
 
 func main() {
-	fmt.Println("Starting TaskGroup demo...")
-
+	// Clean group
 	tg := NewTaskGroup()
-
-	task1 := tg.Spawn("Quick", exampleTask("Quick", 500*time.Millisecond))
-	task2 := tg.Spawn("Slow", exampleTask("Slow", 2*time.Second))
-	task3 := tg.Spawn("Instant", quickTask)
-	task4 := tg.Spawn("Failure", failingTask)
-	_ = task1
-	_ = task2
-	_ = task3
-	_ = task4
-
-	tg.mu.Lock()
-	spawned := len(tg.tasks)
-	tg.mu.Unlock()
-	fmt.Printf("Spawned %d tasks\n", spawned)
-
-	time.Sleep(800 * time.Millisecond)
-	fmt.Println("Cancelling all tasks...")
-	tg.CancelAll()
-
+	tQuick := tg.Spawn(wrapQuick, "A")
+	tFail := tg.Spawn(wrapFailing, "B")
+	tShort := tg.Spawn(wrapExample, "C", 0.2, tg.token)
 	results := tg.WaitAll()
-	for i, task := range results {
-		if task.Err != nil {
-			fmt.Printf("Task %d: Exception - %v\n", i+1, task.Err)
-		} else {
-			fmt.Printf("Task %d: %s\n", i+1, task.Result)
+	if !(len(results) == 3) {
+		fmt.Fprintf(os.Stderr, "expected 3 tasks, got %d\n", len(results))
+		os.Exit(1)
+	}
+	if !(tQuick.result == "Task A finished instantly" && tQuick.completed && tQuick.exception == nil) {
+		fmt.Fprintln(os.Stderr, "quick task wrong")
+		os.Exit(1)
+	}
+	if !(tFail.exception != nil && tFail.result == nil) {
+		fmt.Fprintln(os.Stderr, "failing task's exception not captured")
+		os.Exit(1)
+	}
+	if !(tShort.result == "Task C completed successfully") {
+		fmt.Fprintln(os.Stderr, "short task wrong")
+		os.Exit(1)
+	}
+	nDone := 0
+	for _, t := range results {
+		if t.completed {
+			nDone++
 		}
 	}
-
-	// Recovery checks: verify the cancellation behavior matches the oracle.
-	if !(spawned == 4) {
-		fmt.Fprintf(os.Stderr, "Expected 4 tasks, got %d\n", spawned)
-		os.Exit(1)
-	}
-	if !(results[0].Done && results[0].Err == nil) {
-		fmt.Fprintf(os.Stderr, "Quick task should complete successfully\n")
-		os.Exit(1)
-	}
-	if !(results[1].Done && results[1].Err == nil) {
-		fmt.Fprintf(os.Stderr, "Slow task should finish (cancelled)\n")
-		os.Exit(1)
-	}
-	if !(!results[1].Done || results[1].Result == "Task Slow was cancelled") {
-		fmt.Fprintf(os.Stderr, "Slow task should report cancellation\n")
-		os.Exit(1)
-	}
-	if !(results[2].Done && results[2].Err == nil && results[2].Result == "Task Instant finished instantly") {
-		fmt.Fprintf(os.Stderr, "Instant task should finish instantly\n")
-		os.Exit(1)
-	}
-	if !(!(results[3].Done && results[3].Err == nil)) {
-		fmt.Fprintf(os.Stderr, "Failure task should report an error\n")
+	if !(nDone == 3) {
+		fmt.Fprintf(os.Stderr, "all 3 must complete, got %d\n", nDone)
 		os.Exit(1)
 	}
 
-	tg.Close()
-	fmt.Println("Demo completed.")
+	// Cancellation
+	start := time.Now()
+	tg2 := NewTaskGroup()
+	longTask := tg2.Spawn(wrapExample, "Long", 10.0, tg2.token)
+	time.Sleep(300 * time.Millisecond)
+	tg2.CancelAll()
+	if !tg2.token.IsCancelled() {
+		fmt.Fprintln(os.Stderr, "token should be cancelled")
+		os.Exit(1)
+	}
+	tg2.WaitAll()
+	if !(longTask.result == "Task Long was cancelled") {
+		fmt.Fprintf(os.Stderr, "long task did not observe cancellation: %v\n", longTask.result)
+		os.Exit(1)
+	}
+	elapsed := time.Since(start).Seconds()
+	if !(elapsed < 5.0) {
+		fmt.Fprintf(os.Stderr, "cancellation did not cut the 10s task (%.1fs)\n", elapsed)
+		os.Exit(1)
+	}
+
+	// spawn refused after cancel
+	tg3 := NewTaskGroup()
+	tg3.CancelAll()
+	func() {
+		defer func() {
+			if r := recover(); r == nil {
+				fmt.Fprintln(os.Stderr, "spawn accepted after cancel_all")
+				os.Exit(1)
+			}
+		}()
+		tg3.Spawn(wrapQuick, "late")
+	}()
+
+	fmt.Println("cancellable_task_group: 3/3 completed (exception captured in-slot), 10s task cancelled in <5s, post-cancel spawn refused — PASS")
+	time.Sleep(1 * time.Millisecond)
 }

@@ -1,17 +1,21 @@
-// csv_to_json: CSV to JSON converter with type inference, nested key support, and streaming.
 package main
 
 import (
+	"bufio"
+	"bytes"
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
+	"time"
 )
 
+// ColumnMapper maps CSV column names to nested JSON key paths.
 // △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 var _auraMark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
@@ -19,39 +23,57 @@ type ColumnMapper struct {
 	mapping map[string][]string
 }
 
-func newColumnMapper() *ColumnMapper {
+func NewColumnMapper() *ColumnMapper {
 	return &ColumnMapper{mapping: make(map[string][]string)}
 }
 
-func (m *ColumnMapper) addMapping(csvColumn, jsonPath string) {
+func (m *ColumnMapper) AddMapping(csvColumn, jsonPath string) {
 	m.mapping[csvColumn] = strings.Split(jsonPath, ".")
 }
 
-func (m *ColumnMapper) getPath(csvColumn string) []string {
+func (m *ColumnMapper) GetPath(csvColumn string) []string {
 	if path, ok := m.mapping[csvColumn]; ok {
 		return path
 	}
 	return nil
 }
 
+func (m *ColumnMapper) GetMappings() map[string]string {
+	out := make(map[string]string, len(m.mapping))
+	for k, v := range m.mapping {
+		out[k] = strings.Join(v, ".")
+	}
+	return out
+}
+
+// inferAndConvert infers and converts a string value to the appropriate JSON-friendly Go type.
 func inferAndConvert(value string) interface{} {
-	if value == "" || strings.ToLower(value) == "null" || strings.ToLower(value) == "none" {
+	// Empty values, null, none -> nil
+	if value == "" || strings.EqualFold(value, "null") || strings.EqualFold(value, "none") {
 		return nil
 	}
-	if strings.ToLower(value) == "true" {
+
+	// Booleans
+	if strings.EqualFold(value, "true") {
 		return true
 	}
-	if strings.ToLower(value) == "false" {
+	if strings.EqualFold(value, "false") {
 		return false
 	}
-	if !strings.Contains(value, ".") && !strings.Contains(strings.ToLower(value), "e") {
-		if i, err := strconv.Atoi(value); err == nil {
-			return i
+
+	// Integers (no decimal point and no exponent)
+	if !strings.Contains(value, ".") && !strings.ContainsAny(strings.ToLower(value), "e") {
+		if n, err := strconv.ParseInt(value, 10, 64); err == nil {
+			return n
 		}
 	}
+
+	// Floats
 	if f, err := strconv.ParseFloat(value, 64); err == nil {
 		return f
 	}
+
+	// Return as string
 	return value
 }
 
@@ -61,87 +83,226 @@ func setNestedValue(obj map[string]interface{}, path []string, value interface{}
 		if _, ok := current[key]; !ok {
 			current[key] = make(map[string]interface{})
 		}
-		current = current[key].(map[string]interface{})
+		next, ok := current[key].(map[string]interface{})
+		if !ok {
+			// Should not happen with valid usage; create a new map and overwrite.
+			next = make(map[string]interface{})
+			current[key] = next
+		}
+		current = next
 	}
-	current[path[len(path)-1]] = value
+	if len(path) > 0 {
+		current[path[len(path)-1]] = value
+	}
 }
 
-func processRow(mapper *ColumnMapper, row map[string]string) map[string]interface{} {
+func processRow(headers []string, row []string, mapper *ColumnMapper) map[string]interface{} {
 	result := make(map[string]interface{})
-	for column, value := range row {
-		path := mapper.getPath(column)
-		if path == nil {
-			path = []string{column}
+	for i, columnName := range headers {
+		var value string
+		if i < len(row) {
+			value = row[i]
 		}
-		setNestedValue(result, path, inferAndConvert(value))
+		path := mapper.GetPath(columnName)
+		if path == nil {
+			path = []string{columnName}
+		}
+		converted := inferAndConvert(value)
+		setNestedValue(result, path, converted)
 	}
 	return result
 }
 
-type CSVtoJSON struct {
-	mapper *ColumnMapper
+func readCSVString(content string) ([][]string, error) {
+	content = strings.TrimRight(content, "\n")
+	if content == "" {
+		return nil, nil
+	}
+	r := csv.NewReader(strings.NewReader(content))
+	return r.ReadAll()
 }
 
-func newCSVtoJSON(mapper *ColumnMapper) *CSVtoJSON {
-	return &CSVtoJSON{mapper: mapper}
-}
-
-func (c *CSVtoJSON) convertString(csvContent string) string {
-	reader := csv.NewReader(strings.NewReader(csvContent))
-	records, err := reader.ReadAll()
+func convertString(csvContent string, mapper *ColumnMapper) ([]map[string]interface{}, error) {
+	records, err := readCSVString(csvContent)
 	if err != nil {
-		return "[]"
+		return nil, err
 	}
 	if len(records) == 0 {
-		return "[]"
+		return []map[string]interface{}{}, nil
 	}
-	data := processAllRecords(c.mapper, records)
-	b, _ := json.MarshalIndent(data, "", "  ")
-	return string(b)
+	headers := records[0]
+	converter := NewCSVtoJSON(mapper)
+	var data []map[string]interface{}
+	for _, row := range records[1:] {
+		data = append(data, converter.ProcessRow(headers, row))
+	}
+	return data, nil
 }
 
-func (c *CSVtoJSON) streamConvert(input io.Reader) []map[string]interface{} {
-	reader := csv.NewReader(input)
-	header, err := reader.Read()
-	if err != nil {
-		return nil
+// CSVtoJSON converts CSV data to JSON.
+type CSVtoJSON struct {
+	columnMapper *ColumnMapper
+}
+
+func NewCSVtoJSON(mapper *ColumnMapper) *CSVtoJSON {
+	if mapper == nil {
+		mapper = NewColumnMapper()
 	}
-	var results []map[string]interface{}
+	return &CSVtoJSON{columnMapper: mapper}
+}
+
+func (c *CSVtoJSON) ProcessRow(headers []string, row []string) map[string]interface{} {
+	return processRow(headers, row, c.columnMapper)
+}
+
+func (c *CSVtoJSON) ConvertFile(inputPath, outputPath string, streaming bool) error {
+	if _, err := os.Stat(inputPath); os.IsNotExist(err) {
+		return fmt.Errorf("input file not found: %s", inputPath)
+	}
+	if streaming {
+		return c.convertStreaming(inputPath, outputPath)
+	}
+	return c.convertInMemory(inputPath, outputPath)
+}
+
+func (c *CSVtoJSON) convertInMemory(inputPath, outputPath string) error {
+	records, err := readCSVFile(inputPath)
+	if err != nil {
+		return err
+	}
+	if len(records) == 0 {
+		return writeJSON(outputPath, []map[string]interface{}{})
+	}
+	headers := records[0]
+	var data []map[string]interface{}
+	for _, row := range records[1:] {
+		data = append(data, c.ProcessRow(headers, row))
+	}
+	return writeJSON(outputPath, data)
+}
+
+func (c *CSVtoJSON) convertStreaming(inputPath, outputPath string) error {
+	in, err := os.Open(inputPath)
+	if err != nil {
+		return err
+	}
+	defer in.Close()
+
+	out, err := os.Create(outputPath)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	bw := bufio.NewWriter(out)
+	defer bw.Flush()
+
+	if _, err := bw.WriteString("[\n"); err != nil {
+		return err
+	}
+
+	reader := csv.NewReader(in)
+	headers, err := reader.Read()
+	if err == io.EOF {
+		_, err = bw.WriteString("\n]")
+		return err
+	}
+	if err != nil {
+		return err
+	}
+
+	enc := json.NewEncoder(bw)
+	first := true
 	for {
-		record, err := reader.Read()
+		row, err := reader.Read()
 		if err == io.EOF {
 			break
 		}
 		if err != nil {
-			continue
+			return err
 		}
-		row := make(map[string]string)
-		for i, h := range header {
-			if i < len(record) {
-				row[h] = record[i]
+		if !first {
+			if _, err := bw.WriteString(",\n"); err != nil {
+				return err
 			}
+		} else {
+			first = false
 		}
-		results = append(results, processRow(c.mapper, row))
+		processed := c.ProcessRow(headers, row)
+		// Use minimal separators for compact inline JSON.
+		enc.SetIndent("", "")
+		enc.SetEscapeHTML(false)
+		if err := enc.Encode(processed); err != nil {
+			return err
+		}
 	}
-	return results
+
+	if _, err := bw.WriteString("\n]"); err != nil {
+		return err
+	}
+	return nil
 }
 
-func processAllRecords(mapper *ColumnMapper, records [][]string) []map[string]interface{} {
-	if len(records) == 0 {
-		return nil
+func readCSVFile(path string) ([][]string, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
 	}
-	header := records[0]
+	defer f.Close()
+	r := csv.NewReader(f)
+	return r.ReadAll()
+}
+
+func writeJSON(path string, data interface{}) error {
+	out, err := json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(path, out, 0644)
+}
+
+func streamConvert(input io.Reader, mapper *ColumnMapper) ([]map[string]interface{}, error) {
+	reader := csv.NewReader(input)
+	headers, err := reader.Read()
+	if err == io.EOF {
+		return []map[string]interface{}{}, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	converter := NewCSVtoJSON(mapper)
 	var results []map[string]interface{}
-	for _, record := range records[1:] {
-		row := make(map[string]string)
-		for i, h := range header {
-			if i < len(record) {
-				row[h] = record[i]
-			}
+	for {
+		row, err := reader.Read()
+		if err == io.EOF {
+			break
 		}
-		results = append(results, processRow(mapper, row))
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, converter.ProcessRow(headers, row))
 	}
-	return results
+	return results, nil
+}
+
+func failf(format string, args ...interface{}) {
+	fmt.Fprintf(os.Stderr, format+"\n", args...)
+	os.Exit(1)
+}
+
+func jsonEqual(a, b interface{}) bool {
+	aj, _ := json.Marshal(a)
+	bj, _ := json.Marshal(b)
+	return bytes.Equal(aj, bj)
+}
+
+func sortedJSONKeys(m map[string]interface{}) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
 }
 
 func main() {
@@ -150,78 +311,153 @@ John Doe,30,New York,USA,75000.50,true,Engineering,500000
 Jane Smith,25,London,UK,65000,false,Marketing,250000
 Bob Johnson,45,Sydney,Australia,85000.75,true,Sales,300000`
 
-	mapper := newColumnMapper()
-	mapper.addMapping("department.name", "department.name")
-	mapper.addMapping("department.budget", "department.budget")
-	mapper.addMapping("is_employed", "employment.status")
+	mapper := NewColumnMapper()
+	mapper.AddMapping("department.name", "department.name")
+	mapper.AddMapping("department.budget", "department.budget")
+	mapper.AddMapping("is_employed", "employment.status")
+	converter := NewCSVtoJSON(mapper)
 
-	converter := newCSVtoJSON(mapper)
-
-	fmt.Println("Demo 1: String conversion")
-	jsonResult := converter.convertString(sampleCSV)
-	if len(jsonResult) > 200 {
-		fmt.Println(jsonResult[:200] + "...")
-	} else {
-		fmt.Println(jsonResult)
+	// String conversion: types inferred, nesting built, values exact.
+	rows, err := convertString(sampleCSV, mapper)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "convertString error: %v\n", err)
+		os.Exit(1)
 	}
-	fmt.Println()
-
-	fmt.Println("Demo 2: Stream conversion")
-	csvIO := strings.NewReader(sampleCSV)
-	streamResults := converter.streamConvert(csvIO)
-	fmt.Printf("Processed %d records:\n", len(streamResults))
-	for i, record := range streamResults {
-		fmt.Printf("  Record %d: %v\n", i+1, record)
-		if i >= 2 {
-			break
-		}
+	if !(len(rows) == 3) {
+		fmt.Fprintf(os.Stderr, "expected 3 rows, got %d\n", len(rows))
+		os.Exit(1)
 	}
-	fmt.Println()
+	john := rows[0]
+	if !(john["name"] == "John Doe") {
+		fmt.Fprintf(os.Stderr, "name mismatch: got %v\n", john["name"])
+		os.Exit(1)
+	}
+	age, ok := john["age"].(int64)
+	if !ok || !(age == 30) {
+		fmt.Fprintf(os.Stderr, "int not inferred for age: got %v\n", john["age"])
+		os.Exit(1)
+	}
+	salary, ok := john["salary"].(float64)
+	if !ok || !(salary == 75000.50) {
+		fmt.Fprintf(os.Stderr, "float not inferred for salary: got %v\n", john["salary"])
+		os.Exit(1)
+	}
 
-	fmt.Println("Demo 3: File conversion")
-	tmpdir, err := os.MkdirTemp("", "csv_to_json_*")
-	if !(err == nil) {
+	employment, ok := john["employment"].(map[string]interface{})
+	if !ok {
+		fmt.Fprintf(os.Stderr, "mapped bool not nested: employment missing\n")
+		os.Exit(1)
+	}
+	if !(employment["status"] == true) {
+		fmt.Fprintf(os.Stderr, "mapped bool not converted: got %v\n", employment["status"])
+		os.Exit(1)
+	}
+
+	dept, ok := john["department"].(map[string]interface{})
+	if !ok || !jsonEqual(dept, map[string]interface{}{"name": "Engineering", "budget": int64(500000)}) {
+		fmt.Fprintf(os.Stderr, "nested mapping wrong: %v\n", john["department"])
+		os.Exit(1)
+	}
+
+	if !(rows[1]["employment"].(map[string]interface{})["status"] == false) {
+		fmt.Fprintf(os.Stderr, "second row employment status mismatch\n")
+		os.Exit(1)
+	}
+
+	// Individual ages preserved from oracle assert message "ages 30+25+45 must sum to 100".
+	if !(rows[1]["age"].(int64) == 25) {
+		fmt.Fprintf(os.Stderr, "second row age should be 25, got %v\n", rows[1]["age"])
+		os.Exit(1)
+	}
+	if !(rows[2]["age"].(int64) == 45) {
+		fmt.Fprintf(os.Stderr, "third row age should be 45, got %v\n", rows[2]["age"])
+		os.Exit(1)
+	}
+
+	ageSum := int64(0)
+	for _, r := range rows {
+		ageSum += r["age"].(int64)
+	}
+	if !(ageSum == 100) {
+		fmt.Fprintf(os.Stderr, "ages 30+25+45 must sum to 100, got %d\n", ageSum)
+		os.Exit(1)
+	}
+
+	budgetSum := int64(0)
+	for _, r := range rows {
+		budgetSum += r["department"].(map[string]interface{})["budget"].(int64)
+	}
+	if !(budgetSum == 1050000) {
+		fmt.Fprintf(os.Stderr, "department budget sum mismatch: got %d\n", budgetSum)
+		os.Exit(1)
+	}
+
+	// Stream conversion agrees with string conversion.
+	streamed, err := streamConvert(strings.NewReader(sampleCSV), mapper)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "streamConvert error: %v\n", err)
+		os.Exit(1)
+	}
+	if !jsonEqual(streamed, rows) {
+		fmt.Fprintf(os.Stderr, "stream_convert diverged from convert_string\n")
+		os.Exit(1)
+	}
+
+	// File conversion, BOTH modes, must produce the same data.
+	tmpdir, err := os.MkdirTemp("", "csv2json_")
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed to create temp dir: %v\n", err)
 		os.Exit(1)
 	}
 	defer os.RemoveAll(tmpdir)
 
-	demoCSV := filepath.Join(tmpdir, "demo.csv")
-	demoJSON := filepath.Join(tmpdir, "demo.json")
-
-	if err := os.WriteFile(demoCSV, []byte(sampleCSV), 0o644); err != nil {
-		fmt.Fprintf(os.Stderr, "failed to write demo csv: %v\n", err)
+	csvPath := filepath.Join(tmpdir, "in.csv")
+	if err := os.WriteFile(csvPath, []byte(sampleCSV), 0644); err != nil {
+		fmt.Fprintf(os.Stderr, "failed to write csv: %v\n", err)
 		os.Exit(1)
 	}
 
-	input, err := os.Open(demoCSV)
-	if !(err == nil) {
-		fmt.Fprintf(os.Stderr, "failed to open demo csv: %v\n", err)
-		os.Exit(1)
-	}
-	data := converter.streamConvert(input)
-	input.Close()
-
-	out, err := json.MarshalIndent(data, "", "  ")
-	if !(err == nil) {
-		fmt.Fprintf(os.Stderr, "failed to marshal json: %v\n", err)
-		os.Exit(1)
-	}
-	if err := os.WriteFile(demoJSON, out, 0o644); err != nil {
-		fmt.Fprintf(os.Stderr, "failed to write demo json: %v\n", err)
-		os.Exit(1)
-	}
-
-	fileResult, err := os.ReadFile(demoJSON)
-	if !(err == nil) {
-		fmt.Fprintf(os.Stderr, "failed to read demo json: %v\n", err)
-		os.Exit(1)
-	}
-	if len(fileResult) > 200 {
-		fmt.Println(string(fileResult[:200]) + "...")
-	} else {
-		fmt.Println(string(fileResult))
+	for _, streaming := range []bool{false, true} {
+		outPath := filepath.Join(tmpdir, fmt.Sprintf("out_%v.json", streaming))
+		if err := converter.ConvertFile(csvPath, outPath, streaming); err != nil {
+			fmt.Fprintf(os.Stderr, "convert_file streaming=%v error: %v\n", streaming, err)
+			os.Exit(1)
+		}
+		outBytes, err := os.ReadFile(outPath)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "failed to read output: %v\n", err)
+			os.Exit(1)
+		}
+		var fileRows []map[string]interface{}
+		if err := json.Unmarshal(outBytes, &fileRows); err != nil {
+			fmt.Fprintf(os.Stderr, "failed to unmarshal output: %v\n", err)
+			os.Exit(1)
+		}
+		if !jsonEqual(fileRows, rows) {
+			fmt.Fprintf(os.Stderr, "file conversion (streaming=%v) diverged\n", streaming)
+			os.Exit(1)
+		}
 	}
 
-	fmt.Println("\nAll demos completed successfully!")
+	// Unmapped converter keeps flat keys (dots stay literal).
+	flat, err := convertString("a.b,c\n1,x\n", NewCSVtoJSON(nil).columnMapper)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "flat conversion error: %v\n", err)
+		os.Exit(1)
+	}
+	expectedFlat := []map[string]interface{}{{"a.b": int64(1), "c": "x"}}
+	if !jsonEqual(flat, expectedFlat) {
+		fmt.Fprintf(os.Stderr, "unmapped conversion wrong: %v\n", flat)
+		os.Exit(1)
+	}
+
+	// Missing input file is refused.
+	err = converter.ConvertFile(filepath.Join(tmpdir, "ghost.csv"), filepath.Join(tmpdir, "o.json"), false)
+	if err == nil {
+		fmt.Fprintf(os.Stderr, "missing input accepted\n")
+		os.Exit(1)
+	}
+
+	fmt.Println("csv_to_json: types inferred (30/75000.5/true), nesting exact, string==stream==file(x2 modes), ages sum 100 — PASS")
+	time.Sleep(1 * time.Millisecond)
 }

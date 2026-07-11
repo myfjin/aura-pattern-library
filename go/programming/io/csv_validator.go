@@ -3,66 +3,86 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
-	"io"
 	"os"
 	"strconv"
 	"strings"
 )
 
+// DataType represents supported data types for validation.
 // △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 var _auraMark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
-type DataType string
+type DataType int
 
 const (
-	StringType  DataType = "string"
-	IntegerType DataType = "integer"
-	FloatType   DataType = "float"
-	BooleanType DataType = "boolean"
+	TypeString DataType = iota
+	TypeInteger
+	TypeFloat
+	TypeBoolean
 )
 
-type ValidatorFunc func(any) bool
+func (dt DataType) String() string {
+	switch dt {
+	case TypeString:
+		return "string"
+	case TypeInteger:
+		return "integer"
+	case TypeFloat:
+		return "float"
+	case TypeBoolean:
+		return "boolean"
+	}
+	return ""
+}
 
+// ValidatorFunc is a custom validation function.
+type ValidatorFunc func(interface{}) bool
+
+// FieldSchema defines a single CSV field.
 type FieldSchema struct {
 	Name       string
 	DataType   DataType
 	Required   bool
-	Default    any
+	Default    interface{}
 	Validators []ValidatorFunc
 }
 
+// ValidationError represents a single validation error.
 type ValidationError struct {
 	RowIndex     int
 	FieldName    string
-	Value        any
+	Value        interface{}
 	ErrorMessage string
 }
 
+// CSVValidator validates CSV rows against a schema.
 type CSVValidator struct {
-	Schema   []FieldSchema
-	FieldMap map[string]FieldSchema
+	Schema   []*FieldSchema
+	FieldMap map[string]*FieldSchema
 }
 
-func NewCSVValidator(schema []FieldSchema) *CSVValidator {
-	fieldMap := make(map[string]FieldSchema)
-	for _, field := range schema {
-		fieldMap[field.Name] = field
+// NewCSVValidator creates a new CSVValidator.
+func NewCSVValidator(schema []*FieldSchema) *CSVValidator {
+	fieldMap := make(map[string]*FieldSchema)
+	for _, f := range schema {
+		fieldMap[f.Name] = f
 	}
 	return &CSVValidator{Schema: schema, FieldMap: fieldMap}
 }
 
+// ValidateRow validates a single row.
 func (v *CSVValidator) ValidateRow(row map[string]string, rowIndex int) []ValidationError {
 	var errors []ValidationError
 
 	for _, field := range v.Schema {
 		value, present := row[field.Name]
 
-		if field.Required && !present {
+		if field.Required && (!present || value == "" || value == "<nil>") {
 			errors = append(errors, ValidationError{
 				RowIndex:     rowIndex,
 				FieldName:    field.Name,
-				Value:        nil,
-				ErrorMessage: fmt.Sprintf("Required field '%s' is missing", field.Name),
+				Value:        value,
+				ErrorMessage: fmt.Sprintf("Required field '%s' is missing or empty", field.Name),
 			})
 			continue
 		}
@@ -70,30 +90,23 @@ func (v *CSVValidator) ValidateRow(row map[string]string, rowIndex int) []Valida
 		if !present {
 			if field.Default != nil {
 				row[field.Name] = fmt.Sprintf("%v", field.Default)
-				value = row[field.Name]
 			} else {
-				continue
+				row[field.Name] = ""
 			}
+			continue
 		}
 
-		if value != "" {
-			if msg := validateType(value, field.DataType); msg != "" {
-				errors = append(errors, ValidationError{
-					RowIndex:     rowIndex,
-					FieldName:    field.Name,
-					Value:        value,
-					ErrorMessage: fmt.Sprintf("Invalid %s: %s", field.DataType, msg),
-				})
-			} else {
-				for _, validator := range field.Validators {
-					if !validator(value) {
-						errors = append(errors, ValidationError{
-							RowIndex:     rowIndex,
-							FieldName:    field.Name,
-							Value:        value,
-							ErrorMessage: fmt.Sprintf("Custom validation failed for '%s'", field.Name),
-						})
-					}
+		if value != "" && value != "<nil>" {
+			v.validateType(value, field, rowIndex, &errors)
+
+			for _, validator := range field.Validators {
+				if !validator(value) {
+					errors = append(errors, ValidationError{
+						RowIndex:     rowIndex,
+						FieldName:    field.Name,
+						Value:        value,
+						ErrorMessage: fmt.Sprintf("Custom validation failed for '%s'", field.Name),
+					})
 				}
 			}
 		}
@@ -102,124 +115,132 @@ func (v *CSVValidator) ValidateRow(row map[string]string, rowIndex int) []Valida
 	return errors
 }
 
-func validateType(value string, dataType DataType) string {
-	switch dataType {
-	case StringType:
-		return ""
-	case IntegerType:
+func (v *CSVValidator) validateType(value string, field *FieldSchema, rowIndex int, errors *[]ValidationError) {
+	switch field.DataType {
+	case TypeString:
+		return
+	case TypeInteger:
 		if _, err := strconv.Atoi(value); err != nil {
-			return err.Error()
+			*errors = append(*errors, ValidationError{
+				RowIndex:     rowIndex,
+				FieldName:    field.Name,
+				Value:        value,
+				ErrorMessage: fmt.Sprintf("Invalid %s: %v", field.DataType.String(), err),
+			})
 		}
-	case FloatType:
+	case TypeFloat:
 		if _, err := strconv.ParseFloat(value, 64); err != nil {
-			return err.Error()
+			*errors = append(*errors, ValidationError{
+				RowIndex:     rowIndex,
+				FieldName:    field.Name,
+				Value:        value,
+				ErrorMessage: fmt.Sprintf("Invalid %s: %v", field.DataType.String(), err),
+			})
 		}
-	case BooleanType:
+	case TypeBoolean:
 		lower := strings.ToLower(value)
 		if lower != "true" && lower != "false" && lower != "1" && lower != "0" {
-			return "Invalid boolean value"
+			*errors = append(*errors, ValidationError{
+				RowIndex:     rowIndex,
+				FieldName:    field.Name,
+				Value:        value,
+				ErrorMessage: "Invalid boolean value",
+			})
 		}
 	}
-	return ""
 }
 
+// RowTransformer transforms CSV rows according to a schema.
 type RowTransformer struct {
-	Schema []FieldSchema
+	Schema   []*FieldSchema
+	FieldMap map[string]*FieldSchema
 }
 
-func NewRowTransformer(schema []FieldSchema) *RowTransformer {
-	return &RowTransformer{Schema: schema}
+// NewRowTransformer creates a new RowTransformer.
+func NewRowTransformer(schema []*FieldSchema) *RowTransformer {
+	fieldMap := make(map[string]*FieldSchema)
+	for _, f := range schema {
+		fieldMap[f.Name] = f
+	}
+	return &RowTransformer{Schema: schema, FieldMap: fieldMap}
 }
 
-func (t *RowTransformer) TransformRow(row map[string]string) map[string]any {
-	transformed := make(map[string]any)
+// TransformRow transforms a row by applying type coercion.
+func (t *RowTransformer) TransformRow(row map[string]string) map[string]interface{} {
+	transformed := make(map[string]interface{})
 
 	for _, field := range t.Schema {
 		value, present := row[field.Name]
-		if !present {
+		if !present || value == "" || value == "<nil>" {
 			if field.Default != nil {
-				value = fmt.Sprintf("%v", field.Default)
+				transformed[field.Name] = field.Default
 			} else {
 				transformed[field.Name] = nil
-				continue
 			}
-		}
-
-		if value == "" {
-			transformed[field.Name] = value
 			continue
 		}
 
 		switch field.DataType {
-		case StringType:
+		case TypeString:
 			transformed[field.Name] = value
-		case IntegerType:
+		case TypeInteger:
 			if n, err := strconv.Atoi(value); err == nil {
 				transformed[field.Name] = n
 			} else {
 				transformed[field.Name] = value
 			}
-		case FloatType:
+		case TypeFloat:
 			if f, err := strconv.ParseFloat(value, 64); err == nil {
 				transformed[field.Name] = f
 			} else {
 				transformed[field.Name] = value
 			}
-		case BooleanType:
+		case TypeBoolean:
 			lower := strings.ToLower(value)
-			if lower == "true" || lower == "1" {
-				transformed[field.Name] = true
-			} else if lower == "false" || lower == "0" {
-				transformed[field.Name] = false
-			} else {
-				transformed[field.Name] = value
-			}
+			transformed[field.Name] = lower == "true" || lower == "1"
 		}
 	}
 
 	return transformed
 }
 
-func ValidateAndTransformCSV(csvData string, schema []FieldSchema, delimiter rune) (map[string]any, error) {
+// ValidateAndTransformCSV validates and transforms CSV data.
+func ValidateAndTransformCSV(csvData string, schema []*FieldSchema, delimiter rune) (map[string]interface{}, error) {
 	validator := NewCSVValidator(schema)
 	transformer := NewRowTransformer(schema)
 
-	var rows []map[string]any
-	var errors []ValidationError
-
 	reader := csv.NewReader(strings.NewReader(csvData))
+	reader.TrimLeadingSpace = true
 	reader.Comma = delimiter
 
-	headers, err := reader.Read()
-	if err == io.EOF {
-		return map[string]any{"rows": rows, "errors": errors}, nil
-	}
+	records, err := reader.ReadAll()
 	if err != nil {
 		return nil, err
 	}
+	if len(records) == 0 {
+		return map[string]interface{}{"rows": []map[string]interface{}{}, "errors": []ValidationError{}}, nil
+	}
 
-	for rowIndex := 1; ; rowIndex++ {
-		record, err := reader.Read()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			return nil, err
-		}
+	headers := records[0]
+	var rows []map[string]interface{}
+	var errors []ValidationError
 
+	for rowIndex, record := range records[1:] {
 		row := make(map[string]string)
 		for i, header := range headers {
 			if i < len(record) {
 				row[header] = record[i]
+			} else {
+				row[header] = ""
 			}
 		}
 
-		rowErrors := validator.ValidateRow(row, rowIndex)
+		rowErrors := validator.ValidateRow(row, rowIndex+1)
 		errors = append(errors, rowErrors...)
 
 		hasCritical := false
 		for _, err := range rowErrors {
-			if field, ok := validator.FieldMap[err.FieldName]; ok && field.Required {
+			if f, ok := validator.FieldMap[err.FieldName]; ok && f.Required {
 				hasCritical = true
 				break
 			}
@@ -230,40 +251,148 @@ func ValidateAndTransformCSV(csvData string, schema []FieldSchema, delimiter run
 		}
 	}
 
-	return map[string]any{"rows": rows, "errors": errors}, nil
+	return map[string]interface{}{"rows": rows, "errors": errors}, nil
+}
+
+func findRow(rows []map[string]interface{}, name string) map[string]interface{} {
+	for _, row := range rows {
+		if row["name"] == name {
+			return row
+		}
+	}
+	return nil
 }
 
 func main() {
-	schema := []FieldSchema{
-		{Name: "id", DataType: IntegerType, Required: true},
-		{Name: "name", DataType: StringType, Required: true},
-		{Name: "age", DataType: IntegerType, Required: false, Default: 0},
-		{Name: "salary", DataType: FloatType, Required: true},
-		{Name: "active", DataType: BooleanType, Required: false, Default: true},
+	schema := []*FieldSchema{
+		{Name: "id", DataType: TypeInteger, Required: true},
+		{Name: "name", DataType: TypeString, Required: true},
+		{Name: "age", DataType: TypeInteger, Required: false, Default: 0},
+		{Name: "salary", DataType: TypeFloat, Required: true},
+		{Name: "active", DataType: TypeBoolean, Required: false, Default: true},
 	}
 
-	csvData := `id,name,age,salary,active
-1,John Doe,30,50000.50,true
-2,Jane Smith,,60000.75,1
-3,Bob Johnson,45,invalid_salary,false
-4,Alice Brown,28,55000.0,invalid_bool
-5,Charlie Wilson,35,70000.25,TRUE`
+	csvData := "id,name,age,salary,active\n" +
+		"1,John Doe,30,50000.50,true\n" +
+		"2,Jane Smith,,60000.75,1\n" +
+		"3,Bob Johnson,45,invalid_salary,false\n" +
+		"4,Alice Brown,28,55000.0,invalid_bool\n" +
+		"5,Charlie Wilson,35,70000.25,TRUE\n"
 
 	result, err := ValidateAndTransformCSV(csvData, schema, ',')
-	if !(err == nil) {
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
 
-	fmt.Println("Transformed Rows:")
-	rows := result["rows"].([]map[string]any)
-	for i, row := range rows {
-		fmt.Printf("  Row %d: %v\n", i+1, row)
+	rows := result["rows"].([]map[string]interface{})
+	errors := result["errors"].([]ValidationError)
+
+	john := findRow(rows, "John Doe")
+	if john == nil {
+		fmt.Fprintln(os.Stderr, "John Doe row missing")
+		os.Exit(1)
+	}
+	if !(john["id"] == 1 && john["age"] == 30 && john["salary"] == 50000.50 && john["active"] == true) {
+		fmt.Fprintf(os.Stderr, "john field mismatch: id=%v age=%v salary=%v active=%v\n", john["id"], john["age"], john["salary"], john["active"])
+		os.Exit(1)
 	}
 
-	fmt.Println("\nValidation Errors:")
-	errors := result["errors"].([]ValidationError)
-	for _, err := range errors {
-		fmt.Printf("  Row %d, Field '%s': %s\n", err.RowIndex, err.FieldName, err.ErrorMessage)
+	jane := findRow(rows, "Jane Smith")
+	if jane == nil {
+		fmt.Fprintln(os.Stderr, "Jane Smith row missing")
+		os.Exit(1)
 	}
+	if !(jane["active"] == true) {
+		fmt.Fprintf(os.Stderr, "jane active '1' must coerce to true: %v\n", jane["active"])
+		os.Exit(1)
+	}
+
+	charlie := findRow(rows, "Charlie Wilson")
+	if charlie == nil {
+		fmt.Fprintln(os.Stderr, "Charlie Wilson row missing")
+		os.Exit(1)
+	}
+	if !(charlie["active"] == true && charlie["salary"] == 70000.25) {
+		fmt.Fprintf(os.Stderr, "charlie field mismatch: active=%v salary=%v\n", charlie["active"], charlie["salary"])
+		os.Exit(1)
+	}
+
+	var salaryErrors []ValidationError
+	var boolErrors []ValidationError
+	var ageErrors []ValidationError
+	for _, e := range errors {
+		if e.FieldName == "salary" {
+			salaryErrors = append(salaryErrors, e)
+		}
+		if e.FieldName == "active" {
+			boolErrors = append(boolErrors, e)
+		}
+		if e.FieldName == "age" {
+			ageErrors = append(ageErrors, e)
+		}
+	}
+	if !(len(salaryErrors) == 1 && salaryErrors[0].RowIndex == 3) {
+		fmt.Fprintf(os.Stderr, "invalid_salary must error on row 3: %+v\n", errors)
+		os.Exit(1)
+	}
+	if !(len(boolErrors) == 1 && boolErrors[0].RowIndex == 4) {
+		fmt.Fprintf(os.Stderr, "invalid_bool must error on row 4: %+v\n", errors)
+		os.Exit(1)
+	}
+	if !(len(ageErrors) == 0) {
+		fmt.Fprintf(os.Stderr, "optional empty field flagged as an error: %+v\n", ageErrors)
+		os.Exit(1)
+	}
+
+	strictSchema := []*FieldSchema{schema[0], schema[1], schema[3]}
+	strict, err := ValidateAndTransformCSV("id,name,salary\n,NoId,100.0\n7,Ok,1.5\n", strictSchema, ',')
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "strict parse error: %v\n", err)
+		os.Exit(1)
+	}
+	strictErrors := strict["errors"].([]ValidationError)
+	strictRows := strict["rows"].([]map[string]interface{})
+
+	foundID := false
+	for _, e := range strictErrors {
+		if e.FieldName == "id" && e.RowIndex == 1 {
+			foundID = true
+		}
+	}
+	if !foundID {
+		fmt.Fprintf(os.Stderr, "missing required id not flagged: %+v\n", strictErrors)
+		os.Exit(1)
+	}
+	kept := make([]string, 0, len(strictRows))
+	for _, r := range strictRows {
+		kept = append(kept, r["name"].(string))
+	}
+	if !(len(kept) == 1 && kept[0] == "Ok") {
+		fmt.Fprintf(os.Stderr, "row with missing required field must be excluded: %v\n", kept)
+		os.Exit(1)
+	}
+	if !(strictRows[0]["salary"] == 1.5) {
+		fmt.Fprintf(os.Stderr, "strict ok salary mismatch: %v\n", strictRows[0]["salary"])
+		os.Exit(1)
+	}
+
+	semiSchema := []*FieldSchema{schema[0], schema[1], schema[3]}
+	semi, err := ValidateAndTransformCSV("id;name;salary\n9;Semi;2.5\n", semiSchema, ';')
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "semi parse error: %v\n", err)
+		os.Exit(1)
+	}
+	semiRows := semi["rows"].([]map[string]interface{})
+	semiErrors := semi["errors"].([]ValidationError)
+	if !(len(semiRows) == 1 && semiRows[0]["id"] == 9 && semiRows[0]["name"] == "Semi" && semiRows[0]["salary"] == 2.5) {
+		fmt.Fprintf(os.Stderr, "semi row mismatch: %+v\n", semiRows)
+		os.Exit(1)
+	}
+	if !(len(semiErrors) == 0) {
+		fmt.Fprintf(os.Stderr, "semi errors mismatch: %+v\n", semiErrors)
+		os.Exit(1)
+	}
+
+	fmt.Println("csv_validator: coercions exact (1/30/50000.5/True), errors pinned to rows 3+4, required-miss excluded, ';' delimiter OK — PASS")
 }

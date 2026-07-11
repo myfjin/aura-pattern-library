@@ -41,8 +41,8 @@
       "signature": "authentic + unaltered"
     },
     "go/programming": {
-      "files": 35,
-      "gate_ok": 35,
+      "files": 34,
+      "gate_ok": 34,
       "gate_fail": 0,
       "signature": "authentic + unaltered"
     },

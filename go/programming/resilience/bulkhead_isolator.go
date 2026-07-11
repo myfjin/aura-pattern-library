@@ -43,6 +43,7 @@ func (p *SemaphorePool) AvailablePermits() int {
 }
 
 // Acquire tries to take a permit with an optional timeout.
+// A zero or negative timeout means try once without blocking.
 func (p *SemaphorePool) Acquire(timeout time.Duration) bool {
 	if timeout <= 0 {
 		select {
@@ -100,6 +101,11 @@ func NewBulkhead(name string, maxConcurrent int) (*Bulkhead, error) {
 	}, nil
 }
 
+// Name returns the bulkhead identifier.
+func (b *Bulkhead) Name() string {
+	return b.name
+}
+
 // MaxConcurrent returns the maximum concurrent operations allowed.
 func (b *Bulkhead) MaxConcurrent() int {
 	return b.semaphorePool.Permits()
@@ -125,6 +131,8 @@ func (b *Bulkhead) RejectedRequests() int {
 }
 
 // Execute runs a function within the bulkhead isolation.
+// If acquisition fails and a fallback is provided, it runs the fallback.
+// Otherwise it returns a timeout error.
 func (b *Bulkhead) Execute(
 	fn func() (interface{}, error),
 	timeout time.Duration,
@@ -141,7 +149,7 @@ func (b *Bulkhead) Execute(
 		if fallback != nil {
 			return fallback()
 		}
-		return nil, errors.New("bulkhead timeout acquiring permit")
+		return nil, fmt.Errorf("bulkhead %s timeout acquiring permit", b.name)
 	}
 
 	defer b.semaphorePool.Release()
@@ -210,102 +218,174 @@ func (e *IsolatedExecutor) BulkheadStats() map[string]map[string]int {
 	return stats
 }
 
-func demoWorkerTask(taskID int, duration time.Duration) (interface{}, error) {
-	time.Sleep(duration)
-	return fmt.Sprintf("Task %d completed", taskID), nil
+// futureResult carries the outcome of a submitted task.
+type futureResult struct {
+	value interface{}
+	err   error
 }
 
-func demoFallback() (interface{}, error) {
-	return "FALLBACK_EXECUTED", nil
+// Submit runs a task asynchronously inside the named bulkhead and returns a channel
+// that yields exactly one result. The returned channel is buffered so the goroutine
+// does not block after the receiver stops reading, and it is closed after the result
+// is delivered.
+func (e *IsolatedExecutor) Submit(
+	bulkheadName string,
+	fn func() (interface{}, error),
+	timeout time.Duration,
+	fallback func() (interface{}, error),
+) <-chan futureResult {
+	ch := make(chan futureResult, 1)
+	go func() {
+		bulkhead := e.GetBulkhead(bulkheadName)
+		if bulkhead == nil {
+			ch <- futureResult{nil, fmt.Errorf("bulkhead '%s' not found", bulkheadName)}
+			close(ch)
+			return
+		}
+		value, err := bulkhead.Execute(fn, timeout, fallback)
+		ch <- futureResult{value, err}
+		close(ch)
+	}()
+	return ch
+}
+
+// readFutureResult blocks until the future channel delivers a result.
+func readFutureResult(ch <-chan futureResult, timeout time.Duration) (interface{}, error) {
+	select {
+	case res := <-ch:
+		return res.value, res.err
+	case <-time.After(timeout):
+		return nil, errors.New("future result timeout")
+	}
+}
+
+func tracked(kind string, duration time.Duration, meter map[string]int, meterLock *sync.Mutex) func() (interface{}, error) {
+	return func() (interface{}, error) {
+		meterLock.Lock()
+		meter[kind]++
+		if meter[kind] > meter[kind+"_max"] {
+			meter[kind+"_max"] = meter[kind]
+		}
+		meterLock.Unlock()
+		time.Sleep(duration)
+		meterLock.Lock()
+		meter[kind]--
+		meterLock.Unlock()
+		return kind + "-done", nil
+	}
+}
+
+func holderFunc(hold chan struct{}) func() (interface{}, error) {
+	return func() (interface{}, error) {
+		select {
+		case <-hold:
+			return "held", nil
+		case <-time.After(3 * time.Second):
+			return "held", nil
+		}
+	}
+}
+
+func assert(cond bool, format string, args ...interface{}) {
+	if !cond {
+		fmt.Fprintf(os.Stderr, format+"\n", args...)
+		os.Exit(1)
+	}
 }
 
 func main() {
-	fmt.Println("Bulkhead Pattern Isolator Demo")
-	fmt.Println("===============================")
-
 	executor := NewIsolatedExecutor()
-	apiBulkhead, err := executor.CreateBulkhead("api", 3)
-	if !(err == nil) {
-		fmt.Fprintf(os.Stderr, "create api bulkhead: %v\n", err)
+	api, err := executor.CreateBulkhead("api", 3)
+	assert(err == nil, "create api bulkhead: %v", err)
+	_, err = executor.CreateBulkhead("database", 2)
+	assert(err == nil, "create database bulkhead: %v", err)
+
+	meter := map[string]int{"api": 0, "api_max": 0, "db": 0, "db_max": 0}
+	var meterLock sync.Mutex
+
+	// Oracle uses a 5.0s timeout for task acquisition and future result waits.
+	resultTimeout := 5 * time.Second
+	if !(resultTimeout >= 5*time.Second) {
+		fmt.Fprintf(os.Stderr, "result timeout must be at least 5s\n")
 		os.Exit(1)
 	}
-	dbBulkhead, err := executor.CreateBulkhead("database", 2)
-	if !(err == nil) {
-		fmt.Fprintf(os.Stderr, "create db bulkhead: %v\n", err)
-		os.Exit(1)
+
+	// 6 api tasks (cap 3) + 4 db tasks (cap 2). Generous 5s timeout so all run eventually;
+	// the CEILING is what we assert.
+	var apiFutures []<-chan futureResult
+	var dbFutures []<-chan futureResult
+	for i := 0; i < 6; i++ {
+		apiFutures = append(apiFutures, executor.Submit("api", tracked("api", 100*time.Millisecond, meter, &meterLock), resultTimeout, nil))
 	}
-
-	fmt.Printf("Created bulkhead 'api' with max concurrent: %d\n", apiBulkhead.MaxConcurrent())
-	fmt.Printf("Created bulkhead 'database' with max concurrent: %d\n", dbBulkhead.MaxConcurrent())
-	fmt.Println()
-
-	fmt.Println("Submitting 5 tasks to API bulkhead (capacity 3)...")
-	var apiWg sync.WaitGroup
-	for i := 0; i < 5; i++ {
-		apiWg.Add(1)
-		go func(id int) {
-			defer apiWg.Done()
-			_, _ = apiBulkhead.Execute(
-				func() (interface{}, error) { return demoWorkerTask(id, 200*time.Millisecond) },
-				0,
-				demoFallback,
-			)
-		}(i)
-	}
-
-	fmt.Println("Submitting 4 tasks to database bulkhead (capacity 2)...")
-	var dbWg sync.WaitGroup
 	for i := 0; i < 4; i++ {
-		dbWg.Add(1)
-		go func(id int) {
-			defer dbWg.Done()
-			_, _ = dbBulkhead.Execute(
-				func() (interface{}, error) { return demoWorkerTask(id+100, 300*time.Millisecond) },
-				0,
-				demoFallback,
-			)
-		}(i)
+		dbFutures = append(dbFutures, executor.Submit("database", tracked("db", 100*time.Millisecond, meter, &meterLock), resultTimeout, nil))
 	}
 
-	apiWg.Wait()
-	dbWg.Wait()
-
-	fmt.Println("\nFinal Statistics:")
-	fmt.Println("-----------------")
-	for name, bulkheadStats := range executor.BulkheadStats() {
-		fmt.Printf("Bulkhead '%s':\n", name)
-		for statName, value := range bulkheadStats {
-			fmt.Printf("  %s: %d\n", statName, value)
-		}
-		fmt.Println()
+	results := make([]string, 0, 10)
+	for _, f := range apiFutures {
+		v, err := readFutureResult(f, resultTimeout)
+		assert(err == nil, "api task error: %v", err)
+		results = append(results, v.(string))
+	}
+	for _, f := range dbFutures {
+		v, err := readFutureResult(f, resultTimeout)
+		assert(err == nil, "db task error: %v", err)
+		results = append(results, v.(string))
 	}
 
-	fmt.Println("Testing timeout behavior...")
-	// Fill the API bulkhead with long tasks.
-	var blockWg sync.WaitGroup
+	assert(count(results, "api-done") == 6, "all api tasks must complete: %v", results)
+	assert(count(results, "db-done") == 4, "all db tasks must complete: %v", results)
+	assert(meter["api_max"] <= 3, "api bulkhead (cap 3) reached %d concurrent", meter["api_max"])
+	assert(meter["db_max"] <= 2, "db bulkhead (cap 2) reached %d concurrent — ISOLATION BROKEN", meter["db_max"])
+	assert(meter["api_max"] >= 2, "api tasks never actually overlapped (test too weak)")
+
+	stats := executor.BulkheadStats()
+	assert(stats["api"]["total_requests"] == 6, "api stats: %v", stats["api"])
+	assert(stats["database"]["total_requests"] == 4, "db stats: %v", stats["database"])
+	assert(stats["api"]["rejected_requests"] == 0, "api rejected: %v", stats["api"])
+
+	// SATURATION: hold all 3 api permits, then a 50ms-timeout call must take the fallback.
+	hold := make(chan struct{})
+	holders := make([]<-chan futureResult, 3)
 	for i := 0; i < 3; i++ {
-		blockWg.Add(1)
-		go func(id int) {
-			defer blockWg.Done()
-			_, _ = apiBulkhead.Execute(
-				func() (interface{}, error) { return demoWorkerTask(id, 5*time.Second) },
-				0,
-				nil,
-			)
-		}(i)
+		holders[i] = executor.Submit("api", holderFunc(hold), 5*time.Second, nil)
 	}
-	time.Sleep(50 * time.Millisecond)
-	res, err := apiBulkhead.Execute(
-		func() (interface{}, error) { return demoWorkerTask(999, 100*time.Millisecond) },
-		100*time.Millisecond,
-		demoFallback,
-	)
-	if err != nil {
-		fmt.Printf("Timeout error as expected: %v\n", err)
-	} else {
-		fmt.Printf("Timeout test result: %v\n", res)
-	}
-	blockWg.Wait()
+	time.Sleep(200 * time.Millisecond) // let the holders occupy the permits
 
-	fmt.Println("\nDemo completed successfully!")
+	result, err := api.Execute(
+		func() (interface{}, error) { return "should not run", nil },
+		50*time.Millisecond,
+		func() (interface{}, error) { return "FALLBACK", nil },
+	)
+	assert(err == nil, "saturated execute should not error: %v", err)
+	assert(result == "FALLBACK", "saturated bulkhead must fall back, got %q", result)
+	assert(executor.BulkheadStats()["api"]["rejected_requests"] == 1, "rejection not counted")
+
+	close(hold)
+	for i, h := range holders {
+		v, err := readFutureResult(h, 5*time.Second)
+		assert(err == nil, "holder %d error: %v", i, err)
+		assert(v == "held", "holder %d result: %v", i, v)
+	}
+
+	// Unknown bulkhead refused; duplicate creation refused.
+	ch := executor.Submit("ghost", func() (interface{}, error) { return nil, nil }, 0, nil)
+	_, err = readFutureResult(ch, 1*time.Second)
+	assert(err != nil, "unknown bulkhead accepted")
+
+	_, err = executor.CreateBulkhead("api", 3)
+	assert(err != nil, "duplicate bulkhead accepted")
+
+	fmt.Printf("bulkhead_isolator: ceilings held (api %d<=3, db %d<=2), 10/10 completed, saturation -> fallback + rejection counted -- PASS\n",
+		meter["api_max"], meter["db_max"])
+}
+
+func count(slice []string, target string) int {
+	c := 0
+	for _, s := range slice {
+		if s == target {
+			c++
+		}
+	}
+	return c
 }

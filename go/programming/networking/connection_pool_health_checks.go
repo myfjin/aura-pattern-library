@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"sort"
+	"os"
 	"sync"
 	"time"
 )
 
+// Connection abstracts a database-style connection.
 // △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 var _auraMark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
@@ -15,8 +16,11 @@ type Connection interface {
 	IsValid() bool
 	Close()
 	GetID() int
+	GetLastUsed() time.Time
+	SetActive(bool)
 }
 
+// MockDatabaseConnection is a concrete connection for self-testing.
 type MockDatabaseConnection struct {
 	connectionID int
 	createdAt    time.Time
@@ -57,6 +61,15 @@ func (m *MockDatabaseConnection) GetID() int {
 	return m.connectionID
 }
 
+func (m *MockDatabaseConnection) GetLastUsed() time.Time {
+	return m.lastUsed
+}
+
+func (m *MockDatabaseConnection) SetActive(active bool) {
+	m.isActive = active
+}
+
+// PooledConnection wraps a connection with borrowing metadata.
 type PooledConnection struct {
 	connection *MockDatabaseConnection
 	borrowedAt *time.Time
@@ -73,7 +86,6 @@ func NewPooledConnection(connection *MockDatabaseConnection) *PooledConnection {
 func (p *PooledConnection) Borrow() {
 	now := time.Now()
 	p.borrowedAt = &now
-	p.borrowedBy = int(getGID())
 }
 
 func (p *PooledConnection) Release() {
@@ -89,12 +101,7 @@ func (p *PooledConnection) GetConnection() *MockDatabaseConnection {
 	return p.connection
 }
 
-// getGID returns a goroutine identifier placeholder. In real Go we use runtime, but for
-// deterministic demo purposes we just return a token.
-func getGID() uint64 {
-	return 0
-}
-
+// ConnectionPool manages a pool of connections with background health checks.
 type ConnectionPool struct {
 	maxConnections      int
 	validationQuery     string
@@ -111,7 +118,8 @@ type ConnectionPool struct {
 
 func NewConnectionPool(maxConnections int, validationQuery string, connectionFactory func() *MockDatabaseConnection, healthCheckInterval, maxIdleTime time.Duration) *ConnectionPool {
 	if maxConnections <= 0 {
-		panic("max_connections must be positive")
+		fmt.Fprintln(os.Stderr, "max_connections must be positive")
+		os.Exit(1)
 	}
 	if connectionFactory == nil {
 		connectionFactory = defaultConnectionFactory
@@ -136,7 +144,7 @@ func defaultConnectionFactory() *MockDatabaseConnection {
 }
 
 func (p *ConnectionPool) initializePool() {
-	for i := 0; i < min(5, p.maxConnections); i++ {
+	for i := 0; i < minInt(5, p.maxConnections); i++ {
 		p.createAndAddConnection()
 	}
 }
@@ -152,28 +160,15 @@ func (p *ConnectionPool) createAndAddConnection() {
 }
 
 func (p *ConnectionPool) BorrowConnection(timeout time.Duration) *PooledConnection {
-	p.mu.Lock()
-	if p.closed {
-		p.mu.Unlock()
-		panic("Connection pool is closed")
-	}
-
-	var pooled *PooledConnection
-	if len(p.available) > 0 {
-		pooled = p.available[0]
-		p.available = p.available[1:]
-	} else if p.totalCount() < p.maxConnections {
-		p.connectionCounter++
-		connection := p.connectionFactory()
-		connection.connectionID = p.connectionCounter
-		pooled = NewPooledConnection(connection)
-	}
-	p.mu.Unlock()
-
-	if pooled == nil {
-		// Wait for a connection to be returned with timeout
-		time.Sleep(timeout)
+	deadline := time.Now().Add(timeout)
+	for {
 		p.mu.Lock()
+		if p.closed {
+			p.mu.Unlock()
+			panic("Connection pool is closed")
+		}
+
+		var pooled *PooledConnection
 		if len(p.available) > 0 {
 			pooled = p.available[0]
 			p.available = p.available[1:]
@@ -184,20 +179,24 @@ func (p *ConnectionPool) BorrowConnection(timeout time.Duration) *PooledConnecti
 			pooled = NewPooledConnection(connection)
 		}
 		p.mu.Unlock()
-	}
 
-	if pooled != nil && !pooled.GetConnection().IsValid() {
-		pooled.GetConnection().Close()
-		return p.BorrowConnection(timeout)
-	}
+		if pooled != nil {
+			if !pooled.GetConnection().IsValid() {
+				pooled.GetConnection().Close()
+				continue
+			}
+			pooled.Borrow()
+			p.mu.Lock()
+			p.active[pooled] = true
+			p.mu.Unlock()
+			return pooled
+		}
 
-	if pooled != nil {
-		pooled.Borrow()
-		p.mu.Lock()
-		p.active[pooled] = true
-		p.mu.Unlock()
+		if time.Now().After(deadline) {
+			panic("timed out waiting for connection")
+		}
+		time.Sleep(5 * time.Millisecond)
 	}
-	return pooled
 }
 
 func (p *ConnectionPool) totalCount() int {
@@ -208,7 +207,6 @@ func (p *ConnectionPool) ReturnConnection(pooled *PooledConnection) {
 	if pooled == nil {
 		return
 	}
-	pooled.GetConnection().Execute(p.validationQuery)
 	pooled.Release()
 	p.mu.Lock()
 	delete(p.active, pooled)
@@ -219,12 +217,11 @@ func (p *ConnectionPool) ReturnConnection(pooled *PooledConnection) {
 	}
 	if len(p.available) < p.maxConnections {
 		p.available = append(p.available, pooled)
-	} else {
 		p.mu.Unlock()
-		pooled.GetConnection().Close()
 		return
 	}
 	p.mu.Unlock()
+	pooled.GetConnection().Close()
 }
 
 func (p *ConnectionPool) healthCheckWorker() {
@@ -256,14 +253,20 @@ func (p *ConnectionPool) performHealthCheck() {
 	}
 	p.available = healthy
 
-	// Replenish to minimum of 5 or maxConnections
-	for len(p.available) < min(5, p.maxConnections) && p.totalCount() < p.maxConnections {
+	for len(p.available) < minInt(5, p.maxConnections) && p.totalCount() < p.maxConnections {
 		p.connectionCounter++
 		connection := p.connectionFactory()
 		connection.connectionID = p.connectionCounter
 		pooled := NewPooledConnection(connection)
 		p.available = append(p.available, pooled)
 	}
+}
+
+func (p *ConnectionPool) GetConnection(timeout time.Duration, fn func(Connection)) {
+	pooled := p.BorrowConnection(timeout)
+	conn := pooled.GetConnection()
+	defer p.ReturnConnection(pooled)
+	fn(conn)
 }
 
 func (p *ConnectionPool) GetPoolStats() map[string]interface{} {
@@ -292,79 +295,151 @@ func (p *ConnectionPool) Close() {
 	p.mu.Unlock()
 }
 
-func min(a, b int) int {
+func minInt(a, b int) int {
 	if a < b {
 		return a
 	}
 	return b
 }
 
-type workResult struct {
-	workerID int
-	iter     int
-	msg      string
-}
-
 func main() {
-	fmt.Println("=== Connection Pool Demo ===")
-	fmt.Println("")
+	pool := NewConnectionPool(5, "SELECT 1", nil, 3600*time.Second, 300*time.Second)
 
-	pool := NewConnectionPool(
-		5,
-		"SELECT 1",
-		nil,
-		5*time.Second,
-		300*time.Second,
-	)
+	// Borrow/return bookkeeping is exact.
+	c1 := pool.BorrowConnection(2 * time.Second)
+	c2 := pool.BorrowConnection(2 * time.Second)
+	stats := pool.GetPoolStats()
+	if !(stats["active_connections"] == 2) {
+		fmt.Fprintf(os.Stderr, "2 borrows -> active %v\n", stats["active_connections"])
+		os.Exit(1)
+	}
+	if !(stats["max_connections"] == 5) {
+		fmt.Fprintf(os.Stderr, "max_connections mismatch: %v\n", stats["max_connections"])
+		os.Exit(1)
+	}
+	pool.ReturnConnection(c1)
+	pool.ReturnConnection(c2)
+	if !(pool.GetPoolStats()["active_connections"] == 0) {
+		fmt.Fprintln(os.Stderr, "returns not accounted")
+		os.Exit(1)
+	}
 
-	results := make(chan workResult, 100)
+	// Context manager auto-returns even on exceptions.
+	pool.GetConnection(2*time.Second, func(conn Connection) {
+		if !conn.IsValid() {
+			fmt.Fprintln(os.Stderr, "connection not valid")
+			os.Exit(1)
+		}
+		result := conn.Execute("SELECT 1")
+		if !(result != "") {
+			fmt.Fprintln(os.Stderr, "execute returned empty")
+			os.Exit(1)
+		}
+		if !(pool.GetPoolStats()["active_connections"] == 1) {
+			fmt.Fprintf(os.Stderr, "active during CM: %v\n", pool.GetPoolStats()["active_connections"])
+			os.Exit(1)
+		}
+	})
+	if !(pool.GetPoolStats()["active_connections"] == 0) {
+		fmt.Fprintln(os.Stderr, "context manager leaked")
+		os.Exit(1)
+	}
+
+	leaked := false
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				leaked = r == "boom"
+			}
+		}()
+		pool.GetConnection(2*time.Second, func(conn Connection) {
+			panic("boom")
+		})
+	}()
+	if !leaked {
+		fmt.Fprintln(os.Stderr, "expected panic from CM body")
+		os.Exit(1)
+	}
+	if !(pool.GetPoolStats()["active_connections"] == 0) {
+		fmt.Fprintln(os.Stderr, "connection leaked when the body raised")
+		os.Exit(1)
+	}
+
+	// Contention test: 8 threads x 5 checkouts against 5 connections.
+	errors := make([]string, 0)
+	done := 0
+	var lock sync.Mutex
+	var wg sync.WaitGroup
 
 	worker := func(workerID int) {
-		for i := 0; i < 3; i++ {
-			pooled := pool.BorrowConnection(5 * time.Second)
-			if pooled == nil {
-				results <- workResult{workerID: workerID, iter: i, msg: fmt.Sprintf("Worker %d encountered error: no connection available", workerID)}
-				continue
-			}
-			conn := pooled.GetConnection()
-			msg := fmt.Sprintf("Worker %d using connection %d", workerID, conn.GetID())
-			result := conn.Execute(fmt.Sprintf("SELECT * FROM table_%d", i))
-			results <- workResult{workerID: workerID, iter: i, msg: msg}
-			results <- workResult{workerID: workerID, iter: i, msg: fmt.Sprintf("Worker %d got result: %s", workerID, result)}
-			time.Sleep(100 * time.Millisecond)
-			pool.ReturnConnection(pooled)
+		defer wg.Done()
+		for i := 0; i < 5; i++ {
+			func() {
+				defer func() {
+					if r := recover(); r != nil {
+						lock.Lock()
+						errors = append(errors, fmt.Sprintf("w%d/%d: %v", workerID, i, r))
+						lock.Unlock()
+					}
+				}()
+				pool.GetConnection(10*time.Second, func(conn Connection) {
+					conn.Execute(fmt.Sprintf("SELECT %d", workerID))
+				})
+				lock.Lock()
+				done++
+				lock.Unlock()
+			}()
 		}
 	}
 
 	for i := 0; i < 8; i++ {
-		worker(i)
+		wg.Add(1)
+		go worker(i)
 	}
+	wg.Wait()
 
-	stats := pool.GetPoolStats()
-	fmt.Printf("\nPool stats: %v\n", stats)
-
-	close(results)
-
-	var collected []workResult
-	for r := range results {
-		collected = append(collected, r)
-	}
-
-	sort.Slice(collected, func(i, j int) bool {
-		if collected[i].workerID != collected[j].workerID {
-			return collected[i].workerID < collected[j].workerID
+	if !(len(errors) == 0) {
+		sample := errors
+		if len(sample) > 3 {
+			sample = sample[:3]
 		}
-		return collected[i].iter < collected[j].iter
-	})
-
-	for _, r := range collected {
-		fmt.Println(r.msg)
+		fmt.Fprintf(os.Stderr, "checkouts failed under contention: %v\n", sample)
+		os.Exit(1)
+	}
+	if !(done == 40) {
+		fmt.Fprintf(os.Stderr, "8x5 checkouts must complete 40, got %d\n", done)
+		os.Exit(1)
+	}
+	final := pool.GetPoolStats()
+	if !(final["active_connections"] == 0) {
+		fmt.Fprintf(os.Stderr, "%v connections leaked after the storm\n", final["active_connections"])
+		os.Exit(1)
+	}
+	if !(final["available_connections"].(int) <= 5) {
+		fmt.Fprintln(os.Stderr, "pool grew past max_connections")
+		os.Exit(1)
 	}
 
-	finalStats := pool.GetPoolStats()
-	fmt.Printf("\nFinal pool stats: %v\n", finalStats)
-
+	// close(): pool refuses further borrows.
 	pool.Close()
-	fmt.Println("")
-	fmt.Println("Pool closed successfully")
+	if !(pool.GetPoolStats()["is_closed"] == true) {
+		fmt.Fprintln(os.Stderr, "pool not marked closed")
+		os.Exit(1)
+	}
+	recovered := false
+	func() {
+		defer func() {
+			if r := recover(); r != nil {
+				recovered = true
+			}
+		}()
+		pool.BorrowConnection(500 * time.Millisecond)
+	}()
+	if !recovered {
+		fmt.Fprintln(os.Stderr, "closed pool lent a connection")
+		os.Exit(1)
+	}
+
+	fmt.Println("connection_pool_health_checks: bookkeeping exact, CM auto-return (incl. on raise), 40/40 contended checkouts no leaks, closed refuses — PASS")
+	time.Sleep(1 * time.Millisecond)
 }

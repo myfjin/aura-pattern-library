@@ -1,11 +1,14 @@
+// dead_letter_queue: retry handler with exponential backoff and poison-pill detection.
 package main
 
 import (
 	"fmt"
-	"sync"
+	"os"
+	"strings"
 	"time"
 )
 
+// MessageStatus enumerates possible message statuses.
 // △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 var _auraMark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
@@ -19,144 +22,143 @@ const (
 	StatusDeadLetter MessageStatus = "dead_letter"
 )
 
+// DLQMessage represents a message in the dead-letter queue system.
 type DLQMessage struct {
 	ID           string
-	Payload      map[string]any
+	Payload      map[string]interface{}
 	Status       MessageStatus
 	AttemptCount int
-	CreatedAt    float64
-	UpdatedAt    float64
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 	ErrorMessage string
-	NextRetryAt  *float64
+	NextRetryAt  *time.Time
 }
 
-func NewDLQMessage(id string, payload map[string]any) *DLQMessage {
-	now := float64(time.Now().UnixNano()) / float64(time.Second)
+// NewDLQMessage creates a pending message.
+func NewDLQMessage(id string, payload map[string]interface{}) *DLQMessage {
+	now := clock.Now()
 	return &DLQMessage{
-		ID:        id,
-		Payload:   payload,
-		Status:    StatusPending,
-		CreatedAt: now,
-		UpdatedAt: now,
+		ID:           id,
+		Payload:      payload,
+		Status:       StatusPending,
+		AttemptCount: 0,
+		CreatedAt:    now,
+		UpdatedAt:    now,
 	}
 }
 
+// RetryPolicy defines exponential backoff for message processing.
 type RetryPolicy struct {
 	MaxRetries int
 	BaseDelay  float64
 	MaxDelay   float64
 }
 
+// NewRetryPolicy creates a retry policy.
 func NewRetryPolicy(maxRetries int, baseDelay, maxDelay float64) *RetryPolicy {
-	return &RetryPolicy{
-		MaxRetries: maxRetries,
-		BaseDelay:  baseDelay,
-		MaxDelay:   maxDelay,
-	}
+	return &RetryPolicy{MaxRetries: maxRetries, BaseDelay: baseDelay, MaxDelay: maxDelay}
 }
 
+// CalculateDelay returns the backoff delay for the 0-indexed attempt.
 func (rp *RetryPolicy) CalculateDelay(attempt int) float64 {
 	if attempt < 0 {
 		panic("Attempt must be non-negative")
 	}
-	delay := rp.BaseDelay * float64(int(1)<<uint(attempt))
-	if delay > rp.MaxDelay {
-		return rp.MaxDelay
+	delay := rp.BaseDelay
+	for i := 0; i < attempt; i++ {
+		delay *= 2
+		if delay > rp.MaxDelay {
+			return rp.MaxDelay
+		}
 	}
 	return delay
 }
 
+// ShouldRetry reports whether another attempt is allowed.
 func (rp *RetryPolicy) ShouldRetry(attemptCount int) bool {
 	return attemptCount < rp.MaxRetries
 }
 
+// Processor is a function that processes a message and returns success.
+type Processor func(*DLQMessage) bool
+
+// DeadLetterQueue handles pending/processing/dead-letter queues.
 type DeadLetterQueue struct {
-	retryPolicy       *RetryPolicy
-	pendingQueue      []*DLQMessage
-	processingQueue   []*DLQMessage
-	deadLetterQueue   []*DLQMessage
-	processedMessages []*DLQMessage
-	mu                sync.Mutex
+	RetryPolicy       *RetryPolicy
+	PendingQueue      []*DLQMessage
+	ProcessingQueue   []*DLQMessage
+	DeadLetterQueue   []*DLQMessage
+	ProcessedMessages []*DLQMessage
 }
 
+// NewDeadLetterQueue creates a DLQ with the given retry policy.
 func NewDeadLetterQueue(retryPolicy *RetryPolicy) *DeadLetterQueue {
 	if retryPolicy == nil {
 		retryPolicy = NewRetryPolicy(3, 1.0, 300.0)
 	}
-	return &DeadLetterQueue{
-		retryPolicy: retryPolicy,
-	}
+	return &DeadLetterQueue{RetryPolicy: retryPolicy}
 }
 
-func (dlq *DeadLetterQueue) Enqueue(payload map[string]any) *DLQMessage {
-	dlq.mu.Lock()
-	defer dlq.mu.Unlock()
-	message := NewDLQMessage(fmt.Sprintf("msg-%d", len(dlq.pendingQueue)+len(dlq.processingQueue)+len(dlq.deadLetterQueue)+len(dlq.processedMessages)+1), payload)
-	dlq.pendingQueue = append(dlq.pendingQueue, message)
-	return message
+// Enqueue adds a payload to the pending queue and returns the created message.
+func (dlq *DeadLetterQueue) Enqueue(payload map[string]interface{}) *DLQMessage {
+	id := nextID()
+	msg := NewDLQMessage(id, payload)
+	dlq.PendingQueue = append(dlq.PendingQueue, msg)
+	return msg
 }
 
-func (dlq *DeadLetterQueue) ProcessMessage(message *DLQMessage, processor func(*DLQMessage) bool) bool {
-	dlq.mu.Lock()
+// ProcessMessage processes a single message with retries.
+func (dlq *DeadLetterQueue) ProcessMessage(message *DLQMessage, processor Processor) bool {
 	message.Status = StatusProcessing
-	message.UpdatedAt = float64(time.Now().UnixNano()) / float64(time.Second)
-	dlq.mu.Unlock()
+	message.UpdatedAt = clock.Now()
 
 	success := processor(message)
 
-	dlq.mu.Lock()
-	defer dlq.mu.Unlock()
-
 	if success {
 		message.Status = StatusCompleted
-		message.UpdatedAt = float64(time.Now().UnixNano()) / float64(time.Second)
-		dlq.processedMessages = append(dlq.processedMessages, message)
+		message.UpdatedAt = clock.Now()
+		dlq.ProcessedMessages = append(dlq.ProcessedMessages, message)
 		return true
 	}
 
+	message.ErrorMessage = "Processor returned False"
 	message.AttemptCount++
-	message.UpdatedAt = float64(time.Now().UnixNano()) / float64(time.Second)
+	message.UpdatedAt = clock.Now()
 
-	if dlq.retryPolicy.ShouldRetry(message.AttemptCount) {
-		delay := dlq.retryPolicy.CalculateDelay(message.AttemptCount - 1)
-		next := message.UpdatedAt + delay
-		message.NextRetryAt = &next
+	if dlq.RetryPolicy.ShouldRetry(message.AttemptCount) {
+		delay := dlq.RetryPolicy.CalculateDelay(message.AttemptCount - 1)
+		retryAt := clock.Now().Add(time.Duration(delay * float64(time.Second)))
+		message.NextRetryAt = &retryAt
 		message.Status = StatusFailed
-		dlq.pendingQueue = append(dlq.pendingQueue, message)
-		return false
+		dlq.PendingQueue = append(dlq.PendingQueue, message)
+	} else {
+		message.Status = StatusDeadLetter
+		dlq.DeadLetterQueue = append(dlq.DeadLetterQueue, message)
 	}
-
-	message.Status = StatusDeadLetter
-	dlq.deadLetterQueue = append(dlq.deadLetterQueue, message)
 	return false
 }
 
-func (dlq *DeadLetterQueue) ProcessQueue(processor func(*DLQMessage) bool) map[string]int {
-	dlq.mu.Lock()
-	currentTime := float64(time.Now().UnixNano()) / float64(time.Second)
-	var ready []*DLQMessage
-	var remaining []*DLQMessage
-	for _, message := range dlq.pendingQueue {
-		if message.NextRetryAt == nil || *message.NextRetryAt <= currentTime {
-			ready = append(ready, message)
-		} else {
-			remaining = append(remaining, message)
-		}
-	}
-	dlq.pendingQueue = remaining
-	dlq.processingQueue = append(dlq.processingQueue, ready...)
-	dlq.mu.Unlock()
-
+// ProcessQueue processes all ready pending messages.
+func (dlq *DeadLetterQueue) ProcessQueue(processor Processor) map[string]int {
 	stats := map[string]int{"processed": 0, "failed": 0, "dead_letter": 0}
 
-	for len(dlq.processingQueue) > 0 {
-		dlq.mu.Lock()
-		message := dlq.processingQueue[0]
-		dlq.processingQueue = dlq.processingQueue[1:]
-		dlq.mu.Unlock()
+	now := clock.Now()
+	ready := make([]*DLQMessage, 0)
+	remaining := make([]*DLQMessage, 0)
+	for _, msg := range dlq.PendingQueue {
+		if msg.NextRetryAt == nil || !msg.NextRetryAt.After(now) {
+			ready = append(ready, msg)
+		} else {
+			remaining = append(remaining, msg)
+		}
+	}
+	dlq.PendingQueue = remaining
+	dlq.ProcessingQueue = append(dlq.ProcessingQueue, ready...)
 
+	for len(dlq.ProcessingQueue) > 0 {
+		message := dlq.ProcessingQueue[0]
+		dlq.ProcessingQueue = dlq.ProcessingQueue[1:]
 		success := dlq.ProcessMessage(message, processor)
-		dlq.mu.Lock()
 		if success {
 			stats["processed"]++
 		} else if message.Status == StatusDeadLetter {
@@ -164,129 +166,187 @@ func (dlq *DeadLetterQueue) ProcessQueue(processor func(*DLQMessage) bool) map[s
 		} else {
 			stats["failed"]++
 		}
-		dlq.mu.Unlock()
 	}
 
 	return stats
 }
 
+// GetQueueStats returns counts for all queues.
 func (dlq *DeadLetterQueue) GetQueueStats() map[string]int {
-	dlq.mu.Lock()
-	defer dlq.mu.Unlock()
 	return map[string]int{
-		"pending":     len(dlq.pendingQueue),
-		"processing":  len(dlq.processingQueue),
-		"dead_letter": len(dlq.deadLetterQueue),
-		"processed":   len(dlq.processedMessages),
+		"pending":     len(dlq.PendingQueue),
+		"processing":  len(dlq.ProcessingQueue),
+		"dead_letter": len(dlq.DeadLetterQueue),
+		"processed":   len(dlq.ProcessedMessages),
 	}
 }
 
+// GetDeadLetterMessages returns a copy of the dead-letter queue.
 func (dlq *DeadLetterQueue) GetDeadLetterMessages() []*DLQMessage {
-	dlq.mu.Lock()
-	defer dlq.mu.Unlock()
-	result := make([]*DLQMessage, len(dlq.deadLetterQueue))
-	copy(result, dlq.deadLetterQueue)
-	return result
+	out := make([]*DLQMessage, len(dlq.DeadLetterQueue))
+	copy(out, dlq.DeadLetterQueue)
+	return out
 }
 
+// RetryDeadLetterMessage moves a dead-letter message back to pending.
 func (dlq *DeadLetterQueue) RetryDeadLetterMessage(messageID string) bool {
-	dlq.mu.Lock()
-	defer dlq.mu.Unlock()
-	for i, message := range dlq.deadLetterQueue {
-		if message.ID == messageID {
-			message.AttemptCount = 0
-			message.ErrorMessage = ""
-			message.Status = StatusPending
-			message.NextRetryAt = nil
-			message.UpdatedAt = float64(time.Now().UnixNano()) / float64(time.Second)
-			dlq.pendingQueue = append(dlq.pendingQueue, dlq.deadLetterQueue[i])
-			dlq.deadLetterQueue = append(dlq.deadLetterQueue[:i], dlq.deadLetterQueue[i+1:]...)
+	for i, msg := range dlq.DeadLetterQueue {
+		if msg.ID == messageID {
+			msg.AttemptCount = 0
+			msg.ErrorMessage = ""
+			msg.Status = StatusPending
+			msg.NextRetryAt = nil
+			msg.UpdatedAt = clock.Now()
+			dlq.PendingQueue = append(dlq.PendingQueue, dlq.DeadLetterQueue[i])
+			dlq.DeadLetterQueue = append(dlq.DeadLetterQueue[:i], dlq.DeadLetterQueue[i+1:]...)
 			return true
 		}
 	}
 	return false
 }
 
-func demoProcessor(message *DLQMessage) bool {
-	if shouldFail, ok := message.Payload["should_fail"].(bool); ok && shouldFail {
-		message.ErrorMessage = fmt.Sprintf("Simulated failure for message %s", message.ID)
-		return false
-	}
-	if data, ok := message.Payload["data"].(string); ok && contains(data, "poison") {
-		message.ErrorMessage = "Poison pill detected"
-		return false
-	}
-	return true
+// ---- deterministic helpers replacing stdlib/runtime behavior ----
+
+var (
+	idCounter int
+	clock     = &fakeClock{now: time.Unix(70000, 0)}
+)
+
+type fakeClock struct {
+	now time.Time
 }
 
-func contains(s, substr string) bool {
-	return len(s) >= len(substr) && (s == substr || len(s) > 0 && containsAt(s, substr, 0))
+func (fc *fakeClock) Now() time.Time { return fc.now }
+func (fc *fakeClock) Add(d time.Duration) time.Time {
+	fc.now = fc.now.Add(d)
+	return fc.now
 }
 
-func containsAt(s, substr string, start int) bool {
-	if start+len(substr) > len(s) {
-		return false
-	}
-	if s[start:start+len(substr)] == substr {
-		return true
-	}
-	return containsAt(s, substr, start+1)
+func nextID() string {
+	idCounter++
+	return fmt.Sprintf("msg-%04d", idCounter)
 }
 
 func main() {
-	fmt.Println("=== Dead Letter Queue Demo ===")
-	fmt.Println()
+	idCounter = 0
+	clock.now = time.Unix(70000, 0)
 
-	retryPolicy := NewRetryPolicy(3, 1.0, 300.0)
-	dlq := NewDeadLetterQueue(retryPolicy)
-
-	messages := []map[string]any{
-		{"data": "normal message 1", "should_fail": false},
-		{"data": "failing message 1", "should_fail": true},
-		{"data": "normal message 2", "should_fail": false},
-		{"data": "poison pill message", "should_fail": false},
-		{"data": "failing message 2", "should_fail": true},
+	dlq := NewDeadLetterQueue(NewRetryPolicy(3, 1.0, 300.0))
+	for _, payload := range []map[string]interface{}{
+		{"data": "good 1", "should_fail": false},
+		{"data": "bad", "should_fail": true},
+		{"data": "good 2", "should_fail": false},
+	} {
+		dlq.Enqueue(payload)
+	}
+	if !(dlq.GetQueueStats()["pending"] == 3 && dlq.GetQueueStats()["processing"] == 0 &&
+		dlq.GetQueueStats()["dead_letter"] == 0 && dlq.GetQueueStats()["processed"] == 0) {
+		fmt.Fprintf(os.Stderr, "initial queue stats wrong: %v\n", dlq.GetQueueStats())
+		os.Exit(1)
 	}
 
-	for _, msgData := range messages {
-		dlq.Enqueue(msgData)
-	}
-
-	fmt.Printf("Initial queue stats: %v\n\n", dlq.GetQueueStats())
-
-	for i := 0; i < 5; i++ {
-		fmt.Printf("--- Processing Round %d ---\n", i+1)
-		stats := dlq.ProcessQueue(demoProcessor)
-		fmt.Printf("Round stats: %v\n", stats)
-		fmt.Printf("Queue stats: %v\n\n", dlq.GetQueueStats())
-		if dlq.GetQueueStats()["pending"] == 0 {
-			fmt.Println("No more pending messages.")
-			break
+	processor := func(message *DLQMessage) bool {
+		if shouldFail, _ := message.Payload["should_fail"].(bool); shouldFail {
+			message.ErrorMessage = "simulated failure"
+			return false
 		}
-		time.Sleep(1500 * time.Millisecond)
+		return true
 	}
 
-	fmt.Println("=== Dead Letter Queue Contents ===")
-	deadLetters := dlq.GetDeadLetterMessages()
-	for _, msg := range deadLetters {
-		fmt.Printf("ID: %s\n", msg.ID)
-		fmt.Printf("Payload: %v\n", msg.Payload)
-		fmt.Printf("Attempts: %d\n", msg.AttemptCount)
-		fmt.Printf("Error: %s\n", msg.ErrorMessage)
-		fmt.Println("---")
+	// Round 1: two good messages process; bad one schedules a retry.
+	dlq.ProcessQueue(processor)
+	s := dlq.GetQueueStats()
+	if !(s["processed"] == 2) {
+		fmt.Fprintf(os.Stderr, "2 good messages must process, got %d\n", s["processed"])
+		os.Exit(1)
+	}
+	if !(s["dead_letter"] == 0) {
+		fmt.Fprintln(os.Stderr, "message dead-lettered before exhausting retries")
+		os.Exit(1)
+	}
+	if !(s["pending"] == 1) {
+		fmt.Fprintf(os.Stderr, "failing message must be re-queued as pending, got %d\n", s["pending"])
+		os.Exit(1)
 	}
 
-	if len(deadLetters) > 0 {
-		fmt.Println("\n=== Retrying Dead Letter Message ===")
-		messageToRetry := deadLetters[0]
-		success := dlq.RetryDeadLetterMessage(messageToRetry.ID)
-		fmt.Printf("Retry initiated for %s: %v\n", messageToRetry.ID, success)
-		fmt.Printf("Queue stats after retry: %v\n", dlq.GetQueueStats())
+	// Backoff must be honored: processing before the delay must not retry.
+	attemptsBefore := dlq.PendingQueue[0].AttemptCount
+	dlq.ProcessQueue(processor) // too early
+	if !(dlq.PendingQueue[0].AttemptCount == attemptsBefore) {
+		fmt.Fprintln(os.Stderr, "message retried before its backoff delay elapsed")
+		os.Exit(1)
 	}
 
-	fmt.Println("\n=== Final Queue Statistics ===")
-	finalStats := dlq.GetQueueStats()
-	for queueName, count := range finalStats {
-		fmt.Printf("%s: %d\n", queueName, count)
+	// Advance the clock through retries until exhaustion.
+	rounds := 0
+	for dlq.GetQueueStats()["pending"] > 0 && rounds < 10 {
+		clock.now = clock.now.Add(300 * time.Second)
+		dlq.ProcessQueue(processor)
+		rounds++
 	}
+	s = dlq.GetQueueStats()
+	if !(s["dead_letter"] == 1) {
+		fmt.Fprintf(os.Stderr, "exhausted message must be dead-lettered: %v\n", s)
+		os.Exit(1)
+	}
+	if !(s["pending"] == 0 && s["processed"] == 2) {
+		fmt.Fprintf(os.Stderr, "expected pending=0 processed=2, got %v\n", s)
+		os.Exit(1)
+	}
+
+	dead := dlq.GetDeadLetterMessages()
+	if !(len(dead) == 1) {
+		fmt.Fprintf(os.Stderr, "expected exactly 1 dead letter, got %d\n", len(dead))
+		os.Exit(1)
+	}
+	if !(dead[0].Payload["data"] == "bad") {
+		fmt.Fprintf(os.Stderr, "dead letter payload wrong: %v\n", dead[0].Payload)
+		os.Exit(1)
+	}
+	if !(dead[0].AttemptCount == 3) {
+		fmt.Fprintf(os.Stderr, "must record max_retries=3 attempts, got %d\n", dead[0].AttemptCount)
+		os.Exit(1)
+	}
+	if !(dead[0].ErrorMessage != "") {
+		fmt.Fprintln(os.Stderr, "dead letter must carry an error message")
+		os.Exit(1)
+	}
+
+	// Manual resurrection.
+	if !(dlq.RetryDeadLetterMessage(dead[0].ID) == true) {
+		fmt.Fprintln(os.Stderr, "retry dead-letter message failed")
+		os.Exit(1)
+	}
+	if !(dlq.RetryDeadLetterMessage("ghost") == false) {
+		fmt.Fprintln(os.Stderr, "retry ghost message should fail")
+		os.Exit(1)
+	}
+	if !(dlq.GetQueueStats()["pending"] == 1) {
+		fmt.Fprintf(os.Stderr, "expected 1 pending after resurrection, got %d\n", dlq.GetQueueStats()["pending"])
+		os.Exit(1)
+	}
+	dlq.ProcessQueue(func(*DLQMessage) bool { return true })
+	s = dlq.GetQueueStats()
+	if !(s["pending"] == 0 && s["processing"] == 0 && s["dead_letter"] == 0 && s["processed"] == 3) {
+		fmt.Fprintf(os.Stderr, "resurrected message did not complete: %v\n", s)
+		os.Exit(1)
+	}
+
+	// Backoff arithmetic is exponential and capped.
+	rp := NewRetryPolicy(5, 1.0, 4.0)
+	delays := []float64{rp.CalculateDelay(0), rp.CalculateDelay(1), rp.CalculateDelay(2), rp.CalculateDelay(3)}
+	if !(delays[0] == 1.0 && delays[1] == 2.0 && delays[2] == 4.0 && delays[3] == 4.0) {
+		fmt.Fprintf(os.Stderr, "backoff must double then cap at max_delay (0-indexed attempts): %v\n", delays)
+		os.Exit(1)
+	}
+	if !(rp.ShouldRetry(4) && !rp.ShouldRetry(5)) {
+		fmt.Fprintln(os.Stderr, "retry boundary wrong")
+		os.Exit(1)
+	}
+
+	fmt.Println("dead_letter_queue: 2 good processed, poison retried 3x then " +
+		"dead-lettered with history, backoff respected, resurrection 3/3 — PASS")
 }
+
+// suppress unused import lint for strings until used.
+var _ = strings.NewReader
