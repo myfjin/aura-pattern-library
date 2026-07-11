@@ -39,6 +39,18 @@
       "gate_ok": 369,
       "gate_fail": 0,
       "signature": "authentic + unaltered"
+    },
+    "go/programming": {
+      "files": 35,
+      "gate_ok": 35,
+      "gate_fail": 0,
+      "signature": "authentic + unaltered"
+    },
+    "go/system-administration": {
+      "files": 58,
+      "gate_ok": 58,
+      "gate_fail": 0,
+      "signature": "authentic + unaltered"
     }
   },
   "cpp": {
