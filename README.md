@@ -14,19 +14,27 @@ tracing channels, and a cryptographic signature.
 | Language / sphere | Patterns | Gate | Signature |
 |---|---|---|---|
 | `python/programming` | 99 | run-gated | Ed25519 signed |
-| `python/data-science` | 370 | run-gated | Ed25519 signed |
+| `python/data-science` | 377 | run-gated | Ed25519 signed |
+| `python/system-administration` | 200 | run-gated | Ed25519 signed |
 | `r/` | 60 | run-gated | Ed25519 signed |
-| `cpp/`, `go/` | 0 (empty-ready) | — | twins ingest on approval |
+| `cpp/` | 370 | g++ **and** clang, `-std=c++17 -pedantic` | Ed25519 signed |
+| `rust/` | 200 | `rustc -O -D warnings` | Ed25519 signed |
+| `go/` | 93 | `go build` + run + 3× determinism | Ed25519 signed |
 
-**529 shippable patterns · 527 unique IDs.** Four data-science patterns are held in
-`_quarantine/` (assert-linter REJECTs) and are **not** shipped.
+**934 unique patterns · 1,399 verified files across five languages · 463 patterns in
+two or more languages.** Language twins are strictly downstream of their Python/R source:
+each carries the source's proven claims (same assert, same tolerance) and is coupling-pinned
+to the source's hash. Four data-science patterns are held in `_quarantine/` (assert-linter
+REJECTs) and are **not** shipped.
 
 ## Layout
 
 ```
-python/{programming,data-science}/<category>/<pattern>.py
+python/{programming,data-science,system-administration}/<category>/<pattern>.py
 r/<category>/<pattern>.R
-cpp/  go/                      # language twins (ingested only when final-approved)
+cpp/data-science/<category>/<pattern>.cpp      # language twins, final-approved only
+rust/<category>/<pattern>.rs
+go/<shelf>/<category>/<pattern>.go
 _quarantine/                   # excluded, with reason + date
 CATALOG.md                     # ID-keyed master: pattern ID -> languages + category
 MANIFEST.json                  # machine-readable index
@@ -34,7 +42,7 @@ library_verify.py              # the library's CI (run it)
 SYNC.md                        # how the snapshot re-pulls from its sources
 ```
 
-The **basename is the canonical pattern ID**: a future `cpp/data-science/hyperloglog_distinct.cpp`
+The **basename is the canonical pattern ID**: `cpp/data-science/streaming_and_sketches/hyperloglog_distinct.cpp`
 shares the ID of `python/data-science/streaming_and_sketches/hyperloglog_distinct.py`.
 
 ## Attribution, not prevention (the honest boundary)
