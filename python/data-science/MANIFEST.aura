@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-10",
+  "created": "2026-07-11",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -316,6 +316,21 @@
       "bytes": 7923
     },
     {
+      "path": "composed_tools/community_local_authority.py",
+      "sha256": "d3a3fd01da424fe8044efcb49c0c2bd7810e5a76e6402f7081111c1a4775b5ad",
+      "bytes": 9430
+    },
+    {
+      "path": "composed_tools/cross_domain_query_expansion.py",
+      "sha256": "86c0a9f41f6930e891c78f438ad2905e482f26f691127ce328e6e6e523e8688d",
+      "bytes": 9821
+    },
+    {
+      "path": "composed_tools/cross_domain_search_engine.py",
+      "sha256": "ad23dd8ef2fddbdb99161903088a2209614e75c654556008ae53bab5663b34f5",
+      "bytes": 10065
+    },
+    {
       "path": "composed_tools/dedup_pipeline.py",
       "sha256": "ab449273dec62dcf0d33a0c5c1543f9b960f7e34d5441c84b661ca409a78d6f0",
       "bytes": 9041
@@ -324,6 +339,16 @@
       "path": "composed_tools/dtw_shape_drift_monitor.py",
       "sha256": "15002845d989bdea8dea329a04b6136ae5d6c0d775fbcd41b1d7b5ef12f67fd0",
       "bytes": 8234
+    },
+    {
+      "path": "composed_tools/forest_size_by_variance.py",
+      "sha256": "3ce3c9d6eb3deb5113e0a92dea6b2141ddde514ac4fe11e872b7d634301944f4",
+      "bytes": 10293
+    },
+    {
+      "path": "composed_tools/interleaving_significance.py",
+      "sha256": "a1f9a170257e78487d92222dd961913e981094a15d54a183c96373e5e3ff75cd",
+      "bytes": 9871
     },
     {
       "path": "composed_tools/kde_seeded_gmm.py",
@@ -354,6 +379,16 @@
       "path": "composed_tools/rare_event_option_pricing.py",
       "sha256": "65742966bc8b75919c8e4b4459348144a0f498c25ef12f59fe871358c0d87dd4",
       "bytes": 7494
+    },
+    {
+      "path": "composed_tools/rolling_ols_update.py",
+      "sha256": "e4cde7253ff627462d12dc2d5876b7f95ba5b85a22fa2b481ba14e2fe10c1585",
+      "bytes": 9037
+    },
+    {
+      "path": "composed_tools/topic_aware_recommender.py",
+      "sha256": "612b07a2861b0206fc7d09dd88ed92325c83a1aa7d27eedbf69c0eb7653478ad",
+      "bytes": 13795
     },
     {
       "path": "composed_tools/walk_forward_early_stopping.py",

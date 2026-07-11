@@ -79,6 +79,7 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `cluster_randomized_icc` | python·cpp | Experiments II |
 | `cohort_retention_analysis` | python·cpp | Applied DS Practice |
 | `cointegration_engle_granger_lite` | python·cpp | Econometrics & Finance |
+| `community_local_authority` | python | Composed Tools (bridge-born) |
 | `competing_risks_naive_bias` | python·cpp | Survival & Reliability |
 | `concept_drift_ensemble` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `conformal_prediction_intervals` | python·cpp | Model Understanding & Tuning |
@@ -104,6 +105,8 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `cramers_v_effect` | r | Nonparametric & Categorical |
 | `crdt_sets` | python·go | Distributed |
 | `cross_correlation_lag` | python·cpp | Signal Processing & Sequences |
+| `cross_domain_query_expansion` | python | Composed Tools (bridge-born) |
+| `cross_domain_search_engine` | python | Composed Tools (bridge-born) |
 | `cross_validation_leakage` | python·cpp | Applied DS Practice |
 | `crp_table_growth` | python·cpp | Bayesian III — Modeling & Selection |
 | `csp_solver` | python·go | Reasoning |
@@ -176,6 +179,7 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `fisher_exact_2x2` | r | Nonparametric & Categorical |
 | `fixed_effects_within` | python·cpp | Econometrics & Finance |
 | `fixed_point_iteration` | python·cpp | Numerical Methods |
+| `forest_size_by_variance` | python | Composed Tools (bridge-born) |
 | `free_list_allocator` | python·go | Performance |
 | `frontdoor_criterion_lite` | python·cpp | Causal Inference II |
 | `frugal_streaming_median` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
@@ -231,6 +235,7 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `ini_parser` | python | Io |
 | `instrumental_2sls` | python·cpp | Econometrics & Finance |
 | `instrumental_variable_lite` | python·cpp | Causal Inference & Experimentation |
+| `interleaving_significance` | python | Composed Tools (bridge-born) |
 | `interrupted_time_series` | python·cpp | Causal Inference & Experimentation |
 | `interval_tree` | python | Data Structures |
 | `intra_list_diversity` | python·cpp | Recommenders II — kept survivors (wave 19 REJECTED as a fake-fest; these 5 verified; rest re-harvest) |
@@ -427,6 +432,7 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `robust_streaming_mad` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
 | `roc_auc_from_scratch` | python·cpp | Statistics & Testing |
 | `rolling_join_asof` | python·cpp | Data Wrangling From Scratch |
+| `rolling_ols_update` | python | Composed Tools (bridge-born) |
 | `rolling_origin_cv` | r | Time Series — Trend, Spectral & Smoothing |
 | `rolling_stats` | r | Data Wrangling & Feature Engineering |
 | `rolling_zscore_anomaly` | python·cpp | Time Series |
@@ -494,6 +500,7 @@ _Generated 2026-07-09. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `timer_stack` | python | Monitoring |
 | `tiny_autoencoder` | python·cpp | Neural Networks From Scratch |
 | `token_bucket` | python | Performance |
+| `topic_aware_recommender` | python | Composed Tools (bridge-born) |
 | `tornado_sensitivity` | python·cpp | Simulation & Decision Science |
 | `trace_collector` | python | Monitoring |
 | `trace_sampler` | python | Monitoring |
