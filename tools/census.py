@@ -313,6 +313,10 @@ def twin_ledger_check():
             out[lang] = {"error": "ledger missing"}
             continue
         rows = [json.loads(l) for l in lp.read_text().splitlines() if l.strip()]
+        # Append-only ledger: a re-converted id has an old (drifted) row + a new row.
+        # Dedupe to the LAST row per id (latest stamp wins) before the drift loop,
+        # else the superseded old row would flag COUPLING forever.
+        rows = list({r["id"]: r for r in rows}.values())
         twin_ids = {p.stem for p in (ROOT / tree).rglob(f"*{ext}")}
         ledger_ids = {r["id"] for r in rows}
         drift, missing = [], []

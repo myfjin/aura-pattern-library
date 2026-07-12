@@ -27,8 +27,8 @@
    "rust-systems": 200
   },
   "per_sphere_patterns": {
-   "data-science": 377,
    "system-administration": 200,
+   "data-science": 377,
    "rust-systems": 200,
    "programming": 99,
    "r-statistics": 60
@@ -393,15 +393,15 @@
   },
   "stem_collisions_across_spheres": {
    "dead_letter_queue": 2,
+   "count_min_sketch": 2,
    "circuit_breaker": 3,
    "token_bucket": 2,
-   "count_min_sketch": 2,
-   "merkle_tree": 2,
-   "consistent_hash_ring": 2,
    "bloom_filter": 2,
+   "exponential_backoff": 2,
+   "consistent_hash_ring": 2,
+   "merkle_tree": 2,
    "lru_cache": 2,
-   "skip_list": 2,
-   "exponential_backoff": 2
+   "skip_list": 2
   },
   "free_tier_patterns": 99,
   "free_tier_ids": [
@@ -526,9 +526,7 @@
     "twins_without_ledger_row": [],
     "ledger_rows_without_twin": [],
     "source_missing": [],
-    "source_hash_drift": [
-     "peeking_alpha_inflation"
-    ]
+    "source_hash_drift": []
    },
    "go": {
     "twins_on_disk": 92,
@@ -601,15 +599,7 @@
    "checked_files": 1399,
    "skipped_languages": [],
    "valid_files": 1399,
-   "failures": [
-    {
-     "id": "peeking_alpha_inflation",
-     "sphere": "data-science",
-     "lang": "cpp",
-     "layer_failed": "COUPLING",
-     "reason": "source_sha256 drift \u2014 source fixed after twin approval (INGEST-CONTRACT B3); twin invalidated until re-approved"
-    }
-   ],
+   "failures": [],
    "l3_stdout_notes": [
     {
      "id": "inverted_index_search",
@@ -623,11 +613,6 @@
     },
     {
      "id": "event_bus",
-     "sphere": "programming",
-     "lang": "go"
-    },
-    {
-     "id": "sat_solver",
      "sphere": "programming",
      "lang": "go"
     }
@@ -19839,7 +19824,7 @@
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
