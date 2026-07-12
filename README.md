@@ -21,8 +21,10 @@ tracing channels, and a cryptographic signature.
 | `rust/` | 200 | `rustc -O -D warnings` | Ed25519 signed |
 | `go/` | 93 | `go build` + run + 3× determinism | Ed25519 signed |
 
-**934 unique patterns · 1,399 verified files across five languages · 463 patterns in
-two or more languages.** Language twins are strictly downstream of their Python/R source:
+**934 patterns · 1,399 verified files across five languages · 463 patterns in
+two or more languages.** (923 unique IDs — 11 catalog rows share a stem across
+spheres, e.g. `circuit_breaker` lives in programming, sysadmin *and* rust-systems;
+by the census law a stem in two spheres is two patterns.) Language twins are strictly downstream of their Python/R source:
 each carries the source's proven claims (same assert, same tolerance) and is coupling-pinned
 to the source's hash. Four data-science patterns are held in `_quarantine/` (assert-linter
 REJECTs) and are **not** shipped.

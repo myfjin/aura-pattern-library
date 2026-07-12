@@ -124,15 +124,19 @@ def main() -> int:
             if p.stem not in source_ids:
                 fails.append(f"{p.relative_to(ROOT)}: twin with no python/r source ID")
 
-    # (c) catalog ID parity
+    # (c) catalog ID parity — parity is over UNIQUE ids; the headline count is
+    # ROWS (934): a stem living in two spheres is two patterns (census law),
+    # so rows > unique ids. Print both so the numbers can't be misread.
     catalog = (ROOT / "CATALOG.md").read_text(encoding="utf-8")
-    listed = set(re.findall(r"^\| `([^`]+)` \|", catalog, re.M))
+    rows = re.findall(r"^\| `([^`]+)` \|", catalog, re.M)
+    listed = set(rows)
     if listed and listed != disk_ids:
         miss = listed - disk_ids
         extra = disk_ids - listed
         if miss: fails.append(f"catalog lists {len(miss)} ID(s) not on disk")
         if extra: fails.append(f"disk has {len(extra)} ID(s) not in catalog")
-    print(f"[catalog               ] IDs: {len(disk_ids)} on disk, {len(listed)} listed"
+    print(f"[catalog               ] {len(rows)} pattern rows — unique IDs:"
+          f" {len(disk_ids)} on disk, {len(listed)} listed"
           f" — {'OK' if listed == disk_ids else 'MISMATCH'}")
 
     print("-" * 60)

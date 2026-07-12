@@ -1,5 +1,5 @@
 # AURA Pattern Library — Master Catalog (ID-keyed)
-_Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (master 0). Key `a051daad9b472464…`. Run `library_verify.py`._
+_Generated 2026-07-11. **934 patterns** (923 unique IDs — a stem in two spheres is two patterns). Mark: **AURA Pattern Library** © **Reality Optimizer** (master 0). Key `a051daad9b472464…`. Run `library_verify.py`._
 
 | pattern ID | languages | category |
 |---|---|---|
