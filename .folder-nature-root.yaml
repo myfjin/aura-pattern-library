@@ -1,0 +1,7 @@
+# Root declaration — makes `folder-nature verify --root` a single-verdict gate.
+# require_nature: EVERY folder must carry a .folder-nature, or the verdict is RED.
+orchestrator: true
+expect_dirs: [python, r, cpp, rust, go]
+require_nature: true
+require_mark: true
+require_watermark: true

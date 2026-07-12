@@ -1,0 +1,16 @@
+schema_version: '1.0'
+identity:
+  name: persistence
+  being: collector
+  purpose: Persistence — 3 patterns
+director: false
+tags:
+- python
+- programming
+- persistence
+- verified
+memory:
+  created: '2026-07-12'
+  last_significant_change: '2026-07-12'
+  notable_events:
+  - '2026-07-12: semantic identity layer added (REQ-tag-library-folders)'

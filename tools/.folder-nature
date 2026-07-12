@@ -1,0 +1,13 @@
+schema_version: '1.0'
+identity:
+  name: tools
+  being: collector
+  purpose: Library maintenance tooling (census) — not patterns
+director: false
+tags:
+- tools
+- verified
+memory:
+  created: '2026-07-12'
+  notable_events:
+  - '2026-07-12: semantic identity layer added (REQ-tag-library-folders)'

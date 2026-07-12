@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-11",
+  "created": "2026-07-12",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -9,6 +9,16 @@
       "path": ".folder-mark.yaml",
       "sha256": "db1c188ea0e884826594be4dc45f1d5c85451b82e4b488c0ced305bb226de2a4",
       "bytes": 89
+    },
+    {
+      "path": ".folder-nature",
+      "sha256": "2086e6fb2cdaec28e4d7ce4fb9d1ca6d94cb1face3a82d06d20fbae434114289",
+      "bytes": 346
+    },
+    {
+      "path": "architecture/.folder-nature",
+      "sha256": "db65139608cc33e7904aa74b7b708a830670ef4323bc3e7104d6336fd827adf3",
+      "bytes": 346
     },
     {
       "path": "architecture/cqrs_bus.py",
@@ -46,6 +56,11 @@
       "bytes": 12037
     },
     {
+      "path": "async/.folder-nature",
+      "sha256": "9b85626ea585a73a7aab39a4da2039a9fdd8e0ec841f27a5d7f2ad7cf85b23e7",
+      "bytes": 325
+    },
+    {
       "path": "async/async_task_queue.py",
       "sha256": "f125830c12d89aa3b781fcce8d62e097ce8ee9a19ee61374bafc9e245458252b",
       "bytes": 18421
@@ -69,6 +84,11 @@
       "path": "async/reactive_signals.py",
       "sha256": "a3e7219c79f7ee7988292f546e5797b2ae4c798cc678e7d0fefb09185937e6f1",
       "bytes": 13252
+    },
+    {
+      "path": "data_structures/.folder-nature",
+      "sha256": "3830681e236eed9c1936a6ffc823f371e4f0b2328de0526c527626a0027df21b",
+      "bytes": 356
     },
     {
       "path": "data_structures/avl_tree.py",
@@ -161,6 +181,11 @@
       "bytes": 12442
     },
     {
+      "path": "distributed/.folder-nature",
+      "sha256": "dfac8283861783517b7910c5dc92fbc15a232b2cece65654db72ab77884935f8",
+      "bytes": 343
+    },
+    {
       "path": "distributed/consistent_hash_ring.py",
       "sha256": "557d696ff44d576861468db80db221d0cbbed0237ae4e096e52af61b90a280db",
       "bytes": 12430
@@ -206,6 +231,11 @@
       "bytes": 14491
     },
     {
+      "path": "io/.folder-nature",
+      "sha256": "7725070420a2fdffa585a8ff718884a594eda736a168b718a7b7185c660777fe",
+      "bytes": 316
+    },
+    {
       "path": "io/arg_parser.py",
       "sha256": "c6864e389cfce47d6a0a40014c27868774ea6b52ced0d5bff298be993785e1e0",
       "bytes": 20982
@@ -244,6 +274,11 @@
       "path": "io/template_engine.py",
       "sha256": "214138d4d314de6276f6875a6d1e78b0bbe80652a37232e0b9546701264b4c26",
       "bytes": 12941
+    },
+    {
+      "path": "monitoring/.folder-nature",
+      "sha256": "bff8e929cf0300058e18ea29232fbf5fd22c727cddac7973d2a374719fd69bcb",
+      "bytes": 341
     },
     {
       "path": "monitoring/alert_manager.py",
@@ -306,6 +341,11 @@
       "bytes": 14711
     },
     {
+      "path": "networking/.folder-nature",
+      "sha256": "e2139b3778dde8cfbe5b5ddc6e41ddca95c099f2d862cd0db4f20d31a5e47f39",
+      "bytes": 340
+    },
+    {
       "path": "networking/connection_pool.py",
       "sha256": "113d91878fe58fef6206c25895e1de55574011d381df387dc7e6dfbab01b740e",
       "bytes": 13523
@@ -349,6 +389,11 @@
       "path": "networking/url_router.py",
       "sha256": "ea47ed0b700e84ae5065530471bfe41bded77c058b4b996228aa998902b44780",
       "bytes": 10476
+    },
+    {
+      "path": "performance/.folder-nature",
+      "sha256": "68bada77c5ba4ccec94dbf164f48130faa86ecc8b12f1befcf9303207eddcd89",
+      "bytes": 344
     },
     {
       "path": "performance/batch_controller.py",
@@ -406,6 +451,11 @@
       "bytes": 13167
     },
     {
+      "path": "persistence/.folder-nature",
+      "sha256": "78ccbab6d2a474640f686fb207c062dd0261e3303c9679f33749361028f4cee0",
+      "bytes": 343
+    },
+    {
       "path": "persistence/lsm_tree.py",
       "sha256": "5f1fdd70240e4d5cfd598f1a4f02fd1b4ca44b67c2f29092f5c35edb55dfa527",
       "bytes": 17683
@@ -419,6 +469,11 @@
       "path": "persistence/write_ahead_log.py",
       "sha256": "079a678b6c5fde2f3f35f1d7e4695c5035c1250bd4b6083de3192a5e776a0431",
       "bytes": 15434
+    },
+    {
+      "path": "reasoning/.folder-nature",
+      "sha256": "519cfbad2308d66ca93de91131cea41c5854433c877967ac3aea61c2141b69b8",
+      "bytes": 337
     },
     {
       "path": "reasoning/astar_pathfinding.py",
@@ -466,6 +521,11 @@
       "bytes": 15914
     },
     {
+      "path": "resilience/.folder-nature",
+      "sha256": "6376a79984e2197f755524017fc5fd82342e4e1872ea035e3627d66344b833ec",
+      "bytes": 340
+    },
+    {
       "path": "resilience/bulkhead_isolator.py",
       "sha256": "866bb995d366c3792dee06a66e8b49e9af9d492e352a303af63ff2eae97ba734",
       "bytes": 16378
@@ -486,6 +546,11 @@
       "bytes": 12134
     },
     {
+      "path": "security/.folder-nature",
+      "sha256": "7a2e994757d42821e3974dcd570f2777707b37584784024711c9dabd52afbb82",
+      "bytes": 334
+    },
+    {
       "path": "security/capability_access.py",
       "sha256": "d424caed20b4ca5d92eaf953b70068e931b2ca4548731c61cb9bac437e1e3cbd",
       "bytes": 16873
@@ -499,6 +564,11 @@
       "path": "security/secure_envelope.py",
       "sha256": "cdcb08e7c7a98b9323e1e3e0fca4ab1191d8de62fb197893ae8886bf6746032b",
       "bytes": 14943
+    },
+    {
+      "path": "vision/.folder-nature",
+      "sha256": "383865aacd488fa837c8894e2344a9c8db386eef6b2ec1e5d252e53799e1452c",
+      "bytes": 328
     },
     {
       "path": "vision/image_stats.py",

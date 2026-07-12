@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-11",
+  "created": "2026-07-12",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -9,6 +9,16 @@
       "path": ".folder-mark.yaml",
       "sha256": "db1c188ea0e884826594be4dc45f1d5c85451b82e4b488c0ced305bb226de2a4",
       "bytes": 89
+    },
+    {
+      "path": ".folder-nature",
+      "sha256": "7a825456023a8622872ea1ef5c16ea2d71efe607310937f7dcd3d2778a2bdae0",
+      "bytes": 350
+    },
+    {
+      "path": "applied_ds_practice/.folder-nature",
+      "sha256": "6f99620e3565f5e96e29c920008821f32998431663a6782e8b43619697fed4d1",
+      "bytes": 369
     },
     {
       "path": "applied_ds_practice/cohort_retention_analysis.py",
@@ -61,6 +71,11 @@
       "bytes": 7685
     },
     {
+      "path": "bayesian_iii_approximate_inference/.folder-nature",
+      "sha256": "e3357e02032aec6a8efb6033a88032c9e8c410bb9f22676f6d5db3b7c5833497",
+      "bytes": 414
+    },
+    {
       "path": "bayesian_iii_approximate_inference/abc_rejection_sampler.py",
       "sha256": "6e4f06f1241a4865948a1928040187acb172a4a0a75dd8a66fc377dbd80f4e57",
       "bytes": 6542
@@ -109,6 +124,11 @@
       "path": "bayesian_iii_approximate_inference/sbc_rank_uniformity.py",
       "sha256": "a9291ab014d7022423bf437f6e5bbfed97142d30e82eb6989a113583fbb315b6",
       "bytes": 6842
+    },
+    {
+      "path": "bayesian_iii_modeling_and_selection/.folder-nature",
+      "sha256": "3d0ee803b39c30e631430beb674d06f5c3cc4617b8d85d8b67cf63c1c6c115fe",
+      "bytes": 414
     },
     {
       "path": "bayesian_iii_modeling_and_selection/bayesian_changepoint_offline.py",
@@ -161,6 +181,11 @@
       "bytes": 6510
     },
     {
+      "path": "causal_inference_and_experimentation/.folder-nature",
+      "sha256": "e2bd885d221a8d53ba4190d0ce6f2dc14468ce51a277ba3df3acc258179a8313",
+      "bytes": 412
+    },
+    {
       "path": "causal_inference_and_experimentation/ab_test_srm_check.py",
       "sha256": "f25448efc24c3264616da085d0dce44e1d9a094efbbab6240a54272271e805d5",
       "bytes": 7042
@@ -209,6 +234,11 @@
       "path": "causal_inference_and_experimentation/synthetic_control_lite.py",
       "sha256": "78f71a35fe5ab4847f6a373a56c7bf5d9ee0122770afe85e49cbe6aaad11cca2",
       "bytes": 7765
+    },
+    {
+      "path": "causal_inference_ii/.folder-nature",
+      "sha256": "6262fc85ad9e22e32fe2e8bc1c0e5fad6bb103bdbf2bcc768bc3a39b7f4a7c15",
+      "bytes": 369
     },
     {
       "path": "causal_inference_ii/backdoor_vs_collider_adjustment.py",
@@ -261,6 +291,11 @@
       "bytes": 7155
     },
     {
+      "path": "clustering_graph_and_anomaly/.folder-nature",
+      "sha256": "fb82f8d0f364da2393ce2a2ed95a4da79f6c60a680304531f2be9ffea324ff4b",
+      "bytes": 395
+    },
+    {
       "path": "clustering_graph_and_anomaly/betweenness_centrality.py",
       "sha256": "43f668fb5acdeca52a3bda14d22ebf1b8caa8f73d3685f3ef0d063215400cb1c",
       "bytes": 7555
@@ -309,6 +344,11 @@
       "path": "clustering_graph_and_anomaly/silhouette_score.py",
       "sha256": "1d660a290bff713019a5f0644a0a887e339d04f6ab810dcfb1cc36511693f5fd",
       "bytes": 7744
+    },
+    {
+      "path": "composed_tools/.folder-nature",
+      "sha256": "83b0e198e4800cab1747c03f74d996e96d02afecca00400716351265ec8ebc6c",
+      "bytes": 354
     },
     {
       "path": "composed_tools/broker_term_extraction.py",
@@ -396,6 +436,11 @@
       "bytes": 8594
     },
     {
+      "path": "core_ml/.folder-nature",
+      "sha256": "49613713e1eaa30d0fd30e59d89d064838f0160a22197d8ce8d9b4fef2785024",
+      "bytes": 333
+    },
+    {
       "path": "core_ml/decision_tree_id3.py",
       "sha256": "4e2d16f0d9766fdab3c7c04430628da97e994068017dbef8663277e5c0f6d986",
       "bytes": 9724
@@ -444,6 +489,11 @@
       "path": "core_ml/ridge_regression_normal_eq.py",
       "sha256": "d93d8ede8a412ff3d4f958cbaeec1a61366c29c41fea0b50497fb6624d9d1bfd",
       "bytes": 8812
+    },
+    {
+      "path": "data_wrangling_from_scratch/.folder-nature",
+      "sha256": "925e1da632346e994623c683e3d1e53ea5ede7593cbee2e283e3ca3a7828e9d1",
+      "bytes": 393
     },
     {
       "path": "data_wrangling_from_scratch/csv_type_inference.py",
@@ -496,6 +546,11 @@
       "bytes": 7000
     },
     {
+      "path": "econometrics_and_finance/.folder-nature",
+      "sha256": "0ded12a35b4578f0140638715b6b5586d3e178b9b1990d1ea6faf5cdf5b8353c",
+      "bytes": 382
+    },
+    {
       "path": "econometrics_and_finance/black_scholes_monte_carlo.py",
       "sha256": "b6ea5be8bc20c35eca18ab058e1a963ec375345421da28c22c6fb423527a193c",
       "bytes": 6007
@@ -544,6 +599,11 @@
       "path": "econometrics_and_finance/value_averaging_vs_dca.py",
       "sha256": "f8ae451e05c606d4cf2f246f6ea5849a6539b43629705e6891103a3b8c871f87",
       "bytes": 5986
+    },
+    {
+      "path": "ensembles_and_robust_methods/.folder-nature",
+      "sha256": "622c2a1181dd511e8e989367e521a8692caeb2c7e65497056afe948c40ea2940",
+      "bytes": 394
     },
     {
       "path": "ensembles_and_robust_methods/adaboost.py",
@@ -596,6 +656,11 @@
       "bytes": 9093
     },
     {
+      "path": "experiments_ii/.folder-nature",
+      "sha256": "5db2acde3ee46f4cff0f79255c09ff4dad5289dce7ae585b4dccd26df38c2144",
+      "bytes": 354
+    },
+    {
       "path": "experiments_ii/cluster_randomized_icc.py",
       "sha256": "a1e073ed2468a543761159b42ed33d25ee0538e3bd2a8075464ad070b42a7d34",
       "bytes": 7076
@@ -644,6 +709,11 @@
       "path": "experiments_ii/switchback_experiment_lite.py",
       "sha256": "5a2989af59cedad4e1b7c1c896f358de80533a3a18acdd3245d2d54f165f4de3",
       "bytes": 6487
+    },
+    {
+      "path": "fairness_privacy_and_robustness/.folder-nature",
+      "sha256": "637551392f07014870bd87ab4534396f23fd05d2a679c575a37894e29bb044f9",
+      "bytes": 403
     },
     {
       "path": "fairness_privacy_and_robustness/adversarial_perturbation_lite.py",
@@ -696,6 +766,11 @@
       "bytes": 5885
     },
     {
+      "path": "geospatial_and_spatial/.folder-nature",
+      "sha256": "e16101d0ef4f279fa93a425d8f7345f851402106c6438529e629736228e8b3e7",
+      "bytes": 376
+    },
+    {
       "path": "geospatial_and_spatial/convex_hull_graham.py",
       "sha256": "ecfcc01416b8f77651a98b902d543729539cbfec55b007675e713fa647e75be2",
       "bytes": 6870
@@ -744,6 +819,11 @@
       "path": "geospatial_and_spatial/spatial_radius_join.py",
       "sha256": "98b6c3b39ee8d8631934297eb859e62a994f92dc7a2e28b58a7b6b33bc126f02",
       "bytes": 7402
+    },
+    {
+      "path": "information_theory_and_probability/.folder-nature",
+      "sha256": "acddb7f1b9a7b05f06416226be57e949c09c7db44db46ed35d3b450117f51511",
+      "bytes": 408
     },
     {
       "path": "information_theory_and_probability/bayes_diagnostic_test.py",
@@ -796,6 +876,11 @@
       "bytes": 10710
     },
     {
+      "path": "linear_algebra/.folder-nature",
+      "sha256": "1152b5bb633284fee94f9bd28d1f35969aa9bdd1247e83935ecabb7243943e4f",
+      "bytes": 354
+    },
+    {
       "path": "linear_algebra/conjugate_gradient.py",
       "sha256": "fe835ea1da0b2dbcc97f07ca7d6417aaf0ed516261849d5dd20873c2836bc542",
       "bytes": 6090
@@ -844,6 +929,11 @@
       "path": "linear_algebra/woodbury_rank1_update.py",
       "sha256": "bf16e4074168b6f772e0d3952e67285d5897734f597237243c2cedb8a8e9d5de",
       "bytes": 8635
+    },
+    {
+      "path": "model_diagnostics/.folder-nature",
+      "sha256": "333c02a5c5f1bdf15bbfb8dd9105b1328c7f25e210f499a791339e203610e9f5",
+      "bytes": 363
     },
     {
       "path": "model_diagnostics/bias_variance_decomposition.py",
@@ -896,6 +986,11 @@
       "bytes": 7107
     },
     {
+      "path": "model_understanding_and_tuning/.folder-nature",
+      "sha256": "bf5ed66f970352be6c4cc7840cb825e81011289bd2da61f6bf321c6e86c9be04",
+      "bytes": 400
+    },
+    {
       "path": "model_understanding_and_tuning/class_weight_imbalance.py",
       "sha256": "7489a97682f90621cfa3800389f52749732b83a55fc62845f01a024609d20675",
       "bytes": 8472
@@ -944,6 +1039,11 @@
       "path": "model_understanding_and_tuning/threshold_tuning_cost.py",
       "sha256": "18af46f21a5b63ba75788c2be4707e9fadc029abdfb5a13ab3ee12a07e879a96",
       "bytes": 7361
+    },
+    {
+      "path": "neural_networks_from_scratch/.folder-nature",
+      "sha256": "2fa78e4ab55d42831a51db5ccaf41793e5655d6af0735532c5ebd28a362fe6b3",
+      "bytes": 396
     },
     {
       "path": "neural_networks_from_scratch/conv1d_feature_detector.py",
@@ -996,6 +1096,11 @@
       "bytes": 9129
     },
     {
+      "path": "numerical_methods/.folder-nature",
+      "sha256": "5e99b93ab2077422a9230d453150cfda46a75b0a5df872348cfffedf28e2614b",
+      "bytes": 363
+    },
+    {
       "path": "numerical_methods/adaptive_simpson.py",
       "sha256": "26541860c413fbb8256f889a0799a3cfbb122daf7486bc5d23407e3d028bbe92",
       "bytes": 6061
@@ -1044,6 +1149,11 @@
       "path": "numerical_methods/secant_method.py",
       "sha256": "95c5afd9ead3706c0eaf0523da939bd0a41f565f9515d71d1a7afd19d1755533",
       "bytes": 5338
+    },
+    {
+      "path": "optimization_and_distances/.folder-nature",
+      "sha256": "093c2d0d769f62a3ac8433776b01315cad00c927871f47a81d3b720ef12a30db",
+      "bytes": 388
     },
     {
       "path": "optimization_and_distances/distance_metrics_toolkit.py",
@@ -1096,6 +1206,11 @@
       "bytes": 7426
     },
     {
+      "path": "preprocessing_and_eda/.folder-nature",
+      "sha256": "35d3b42dc5803ee9e4d592d64a8b83b0574f4a7b8ee9743525c06ba2767673cd",
+      "bytes": 373
+    },
+    {
       "path": "preprocessing_and_eda/covariance_matrix.py",
       "sha256": "3ed53bb8faca41d075603939a9a25961720eaafb26e00799c66d97a92077576d",
       "bytes": 7100
@@ -1144,6 +1259,11 @@
       "path": "preprocessing_and_eda/winsorize_clip_outliers.py",
       "sha256": "d661343841f29913107267f018059c97632ed3d4e403abfc7ddce0c000d2e9c5",
       "bytes": 7670
+    },
+    {
+      "path": "probabilistic_modeling/.folder-nature",
+      "sha256": "0aa13c2e022ca61cc8914d5a4740d122613bdbbf0a776082e3dc576d76a966d9",
+      "bytes": 378
     },
     {
       "path": "probabilistic_modeling/bayesian_linear_regression.py",
@@ -1196,6 +1316,11 @@
       "bytes": 8052
     },
     {
+      "path": "probability_iii/.folder-nature",
+      "sha256": "479fd87656c8c3a2576daabf8f9d8acf5c09741d5dd2598659cc5216e4c3e06c",
+      "bytes": 357
+    },
+    {
       "path": "probability_iii/banach_matchbox_or_gambler_ruin.py",
       "sha256": "8a718eb6a684ef5b83318e35d868b7b45c8243a5488ee68184968a29906b5cc8",
       "bytes": 6425
@@ -1244,6 +1369,11 @@
       "path": "probability_iii/stirling_approximation_error.py",
       "sha256": "65bf2de31ebd6807ed7b582eea5f924753a93a1926a44206895dc0fa1a31e99b",
       "bytes": 5314
+    },
+    {
+      "path": "rankings_and_information_retrieval/.folder-nature",
+      "sha256": "c63c040833d3a06fb76bb3cd2e84e9e091ca0203cd674cecb27a8f01d8a9ca8a",
+      "bytes": 408
     },
     {
       "path": "rankings_and_information_retrieval/ab_interleaving.py",
@@ -1296,6 +1426,11 @@
       "bytes": 6792
     },
     {
+      "path": "recommenders_and_graph_sampling/.folder-nature",
+      "sha256": "7c532538ddfd90edbd54b9b036d8f7211ba3c6e9f5a1c162707321a63c6d8d02",
+      "bytes": 402
+    },
+    {
       "path": "recommenders_and_graph_sampling/apriori_frequent_itemsets.py",
       "sha256": "50e9815121f71f13aa8437fe941423b77346bf9d910c327b1513845230b9a208",
       "bytes": 8521
@@ -1346,6 +1481,11 @@
       "bytes": 7035
     },
     {
+      "path": "recommenders_ii_kept_survivors/.folder-nature",
+      "sha256": "bea4736c6da3ef1de7b13dcf3e709e654ece2af7c47404c3d20371e39a577802",
+      "bytes": 405
+    },
+    {
       "path": "recommenders_ii_kept_survivors/catalog_coverage_diversity.py",
       "sha256": "5f782f6fd0efce6ae9e408ad5d94815baa96a47d79f95a952617b3188c23049b",
       "bytes": 4435
@@ -1364,6 +1504,11 @@
       "path": "recommenders_ii_kept_survivors/novelty_serendipity.py",
       "sha256": "fb04459869dcf9508c0a384669041d0fe47347c771bbefe7528e9736f76547e7",
       "bytes": 4580
+    },
+    {
+      "path": "signal_processing_and_sequences/.folder-nature",
+      "sha256": "c76f28dfb305ab2d08b28f76ba93518d8ecd687fcf9bbb8d4f4c90f5eea1297c",
+      "bytes": 402
     },
     {
       "path": "signal_processing_and_sequences/autocovariance_spectrum.py",
@@ -1416,6 +1561,11 @@
       "bytes": 9293
     },
     {
+      "path": "simulation_and_decision_science/.folder-nature",
+      "sha256": "ce196174fc06cc540255c5e7b48772eeb89ea769dd475ebde59a99cb1bd73d8c",
+      "bytes": 401
+    },
+    {
       "path": "simulation_and_decision_science/discrete_event_simulation.py",
       "sha256": "7216f79e7b8a6f95a923490ad08938e86675a8728738640364461e02558b28ba",
       "bytes": 6636
@@ -1459,6 +1609,11 @@
       "path": "simulation_and_decision_science/tornado_sensitivity.py",
       "sha256": "e5f6b412d17350680b3f252cdabde90149c3ef67b6eb5041f07004f1f0594ef4",
       "bytes": 6221
+    },
+    {
+      "path": "statistical_modeling/.folder-nature",
+      "sha256": "64e54332f660626333c555d087ed752b3af67c5c85f124c8e29e98d761dd4fab",
+      "bytes": 372
     },
     {
       "path": "statistical_modeling/em_two_coins.py",
@@ -1511,6 +1666,11 @@
       "bytes": 7247
     },
     {
+      "path": "statistics_and_testing/.folder-nature",
+      "sha256": "f86d43754108f99611eb5645c93602992b1803a4401e0c5ec98357ebc1af3749",
+      "bytes": 375
+    },
+    {
       "path": "statistics_and_testing/ab_test_proportions.py",
       "sha256": "b245a807259091de4ced72bdc6289aba7a0f3cdf0355b451d43b2bef715c7206",
       "bytes": 6937
@@ -1554,6 +1714,11 @@
       "path": "statistics_and_testing/train_test_split_kfold.py",
       "sha256": "9c602a85aec49663d08b0a858e0c93c8ce407a3e31ea552900b08dfb18536496",
       "bytes": 8374
+    },
+    {
+      "path": "streaming_and_sketches/.folder-nature",
+      "sha256": "889a2165c6297144a29580491e0666e1e44bcb6eb27de12a3b5b5725f637be08",
+      "bytes": 376
     },
     {
       "path": "streaming_and_sketches/count_min_sketch.py",
@@ -1604,6 +1769,11 @@
       "path": "streaming_and_sketches/weighted_reservoir_sampling.py",
       "sha256": "8b827ae1df874ee5ee74f038c798da871c189f49d73435e4c36663e9844d7d6e",
       "bytes": 7536
+    },
+    {
+      "path": "streaming_iii/.folder-nature",
+      "sha256": "a91941604de8a5982f3d26bb815cd8d2346e28a8616684636d7ce395acdf61a9",
+      "bytes": 351
     },
     {
       "path": "streaming_iii/adwin_drift_detector.py",
@@ -1706,6 +1876,11 @@
       "bytes": 5654
     },
     {
+      "path": "survival_and_reliability/.folder-nature",
+      "sha256": "63360076e06fd95cc424e95099eda6d7929a30a677100a700ee0a52305c0e9a3",
+      "bytes": 382
+    },
+    {
       "path": "survival_and_reliability/accelerated_failure_time_lite.py",
       "sha256": "c81347ec487433d12985fa9d92d6b504aff9c5e0eb877237074f0bba702f71cd",
       "bytes": 5644
@@ -1754,6 +1929,11 @@
       "path": "survival_and_reliability/weibull_mle.py",
       "sha256": "57421556e14321b7a5baf5d61b443269eacada487df89b5c3c7bde500419ec5a",
       "bytes": 6556
+    },
+    {
+      "path": "text_nlp/.folder-nature",
+      "sha256": "e01c8e9b1703047274f021b44dee5fb9200e9b995ab5a35a4c7b9f5211889910",
+      "bytes": 338
     },
     {
       "path": "text_nlp/bag_of_words.py",
@@ -1806,6 +1986,11 @@
       "bytes": 9813
     },
     {
+      "path": "text_nlp_ii/.folder-nature",
+      "sha256": "cfae5c501fbe5803af8bf0757e91f3afac27e9a4d3859b445fe7f23e9eaf1535",
+      "bytes": 346
+    },
+    {
       "path": "text_nlp_ii/char_ngram_language_id.py",
       "sha256": "3a4264b1855173ad2265cf3e30ac49a17f4820df66e31baedc6374ea68fd859b",
       "bytes": 5911
@@ -1844,6 +2029,11 @@
       "path": "text_nlp_ii/zipf_law_fit.py",
       "sha256": "ad79f6d661d2ac3be2ff30235a896e77db30e427b3b8a2b143cc52f5de3ba4bc",
       "bytes": 5687
+    },
+    {
+      "path": "time_series/.folder-nature",
+      "sha256": "28277577d7460ad8c86a0a3fe144955d46f043754c70e19d1a3956528368ab47",
+      "bytes": 345
     },
     {
       "path": "time_series/autocorrelation_function.py",

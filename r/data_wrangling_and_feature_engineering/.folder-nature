@@ -1,0 +1,15 @@
+schema_version: '1.0'
+identity:
+  name: data_wrangling_and_feature_engineering
+  being: collector
+  purpose: Data Wrangling & Feature Engineering — 8 patterns
+director: false
+tags:
+- r
+- data-wrangling-and-feature-eng
+- verified
+memory:
+  created: '2026-07-12'
+  last_significant_change: '2026-07-12'
+  notable_events:
+  - '2026-07-12: semantic identity layer added (REQ-tag-library-folders)'

@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-10",
+  "created": "2026-07-12",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -9,6 +9,16 @@
       "path": ".folder-mark.yaml",
       "sha256": "0b22bcb530918dfbdd7104b90db88cac148ac3d69c9bd5fbe3463e55bca60eb0",
       "bytes": 74
+    },
+    {
+      "path": ".folder-nature",
+      "sha256": "0be268c3253420067e6f6402ad210171957e808c3ac18d4b97024dbdb6b96203",
+      "bytes": 377
+    },
+    {
+      "path": "access-control-audit/.folder-nature",
+      "sha256": "d0dacfb8ca0f90168e340e8e89427ff4def8b07bff08f4d213a13af5c15a7950",
+      "bytes": 381
     },
     {
       "path": "access-control-audit/append_only_audit.py",
@@ -61,6 +71,11 @@
       "bytes": 8147
     },
     {
+      "path": "backup-disaster-recovery/.folder-nature",
+      "sha256": "fa8f89f0c31dddc46e67e6aafbc6b9b3e72dd42ad2d82bdb2950b5b1142fafdc",
+      "bytes": 393
+    },
+    {
       "path": "backup-disaster-recovery/backup_catalog.py",
       "sha256": "d1838a722d82e8c7699db04ddac04d4934d10bd0bcaa3cf547fb58bb8140d9a4",
       "bytes": 9666
@@ -109,6 +124,11 @@
       "path": "backup-disaster-recovery/snapshot_chain.py",
       "sha256": "5f4a358aa260d6ed2013f1a253bf2758a9c77cfe40484ce4ed68de104a723269",
       "bytes": 9987
+    },
+    {
+      "path": "concurrency-locking/.folder-nature",
+      "sha256": "ae5562432e63417a84fefbbdb6a74841b32053411c80665b74d261699fc23590",
+      "bytes": 378
     },
     {
       "path": "concurrency-locking/advisory_lock_timeout.py",
@@ -161,6 +181,11 @@
       "bytes": 8995
     },
     {
+      "path": "config-management/.folder-nature",
+      "sha256": "bc9c8d2d2adc0ad9a45139b73ae5966432d7cc7f85a74d59b16da9222fdd6abb",
+      "bytes": 372
+    },
+    {
       "path": "config-management/config_diff.py",
       "sha256": "1c29bafdfb6418279331a154e4cb138de3fc5f7a97df64ee27dfe0169d5c41a5",
       "bytes": 6778
@@ -209,6 +234,11 @@
       "path": "config-management/secret_separation.py",
       "sha256": "11b113393bc2295b1f2aef11f6c1a0f58bb67f7ebde0158cef242a0278a9d350",
       "bytes": 7704
+    },
+    {
+      "path": "data-pipeline-ops/.folder-nature",
+      "sha256": "1e252560fc9cf60859ad7e650e7761e0e39561148693816fc41d676adb48a5d1",
+      "bytes": 372
     },
     {
       "path": "data-pipeline-ops/backfill_range.py",
@@ -261,6 +291,11 @@
       "bytes": 8699
     },
     {
+      "path": "deployment-rollback/.folder-nature",
+      "sha256": "7fe92c22cd6a06468c711798ded6a55c22163501a3cf689c724fee10a614b649",
+      "bytes": 378
+    },
+    {
       "path": "deployment-rollback/atomic_symlink_swap.py",
       "sha256": "45de7082c636d08d9c9541b4f92c068c32a5868923fe2cd365458d6ef32a9c36",
       "bytes": 11205
@@ -309,6 +344,11 @@
       "path": "deployment-rollback/version_pin_verify.py",
       "sha256": "7dbde05dce2ab6617773101692f927dfea9364822c3e52ffd966342a2d6a7a69",
       "bytes": 8440
+    },
+    {
+      "path": "filesystem-integrity/.folder-nature",
+      "sha256": "9c714cb2350f753b457b032dda812d98abcc667d5c3a33bd4064e9bd61bbf0c9",
+      "bytes": 381
     },
     {
       "path": "filesystem-integrity/atomic_snapshot.py",
@@ -361,6 +401,11 @@
       "bytes": 8185
     },
     {
+      "path": "log-management/.folder-nature",
+      "sha256": "4ff2e06eb927900d0c8fc8a042bc3dc844c2f9e38d4f6024e6ebbec0eeb6fce9",
+      "bytes": 363
+    },
+    {
       "path": "log-management/crash_log_capture.py",
       "sha256": "5cfd03de1203a51eee09ffa5d5d41d8427bb8e7749f1d25d49c8aadf8f2aba7d",
       "bytes": 7221
@@ -409,6 +454,11 @@
       "path": "log-management/tail_follow.py",
       "sha256": "653a077554fbc6856f896e68c1285d63545d6faaab021a334de05eee141c6994",
       "bytes": 6250
+    },
+    {
+      "path": "mesh-distributed/.folder-nature",
+      "sha256": "20202e3213d9d6c8d54d524d364e53ae87c839d0951ae041df3c2dbd38440364",
+      "bytes": 369
     },
     {
       "path": "mesh-distributed/consistent_hashing.py",
@@ -461,6 +511,11 @@
       "bytes": 7123
     },
     {
+      "path": "monitoring-metrics/.folder-nature",
+      "sha256": "975f0f45c68d4f7bcd27c17471489031b095719ce02846bd6ae13ffde41bdb57",
+      "bytes": 375
+    },
+    {
       "path": "monitoring-metrics/counter_gauge_histogram.py",
       "sha256": "9e8ea180840fa85e4f25d3d26b0973c534fc879d421e2990fbe16959eae002ee",
       "bytes": 9068
@@ -509,6 +564,11 @@
       "path": "monitoring-metrics/zscore_anomaly.py",
       "sha256": "f49ff21ac647f2d6e8a0a0ada34bd252f8d44a9467369628b6f0c32c72a073d8",
       "bytes": 8312
+    },
+    {
+      "path": "network-health/.folder-nature",
+      "sha256": "6757ccdad7bd84d15b090a0a31d1bf62cf175b113eecac1d295d6a3bdfb50204",
+      "bytes": 363
     },
     {
       "path": "network-health/dns_resolve_check.py",
@@ -561,6 +621,11 @@
       "bytes": 5749
     },
     {
+      "path": "packaging-environment/.folder-nature",
+      "sha256": "8ec3cb9940b5f5ad6e4e7d4cd917b8c645a6d6221fc1953183129251a6f990c1",
+      "bytes": 384
+    },
+    {
       "path": "packaging-environment/binary_presence_check.py",
       "sha256": "7d54bae8a534978a64f9d0b6798b68a094b6b95de0209a0cd90952ca1af18ba4",
       "bytes": 6222
@@ -609,6 +674,11 @@
       "path": "packaging-environment/version_constraint_solve.py",
       "sha256": "4d5319f358911e20517e20d8e5230a378d9d33f3b641bb10afe836168405f155",
       "bytes": 7594
+    },
+    {
+      "path": "process-supervision/.folder-nature",
+      "sha256": "0320710a297b0dcf5f38b4cebe92611af8430344cce65994118d5597790475fe",
+      "bytes": 378
     },
     {
       "path": "process-supervision/crash_loop_detector.py",
@@ -661,6 +731,11 @@
       "bytes": 5974
     },
     {
+      "path": "resource-guards/.folder-nature",
+      "sha256": "217e232f465357373a5a0ce89a02645712e51f1cbb0906a1689a7d8c8a481165",
+      "bytes": 366
+    },
+    {
       "path": "resource-guards/backpressure_queue.py",
       "sha256": "f0924adb83814ecf1244643bfb09a72c73a3ba67cdba3328187f3dc1f5034c77",
       "bytes": 6125
@@ -709,6 +784,11 @@
       "path": "resource-guards/token_bucket_limiter.py",
       "sha256": "6b3fc2db58564fa7b35568447782e7677f374c972c115316fe2a914466842273",
       "bytes": 6022
+    },
+    {
+      "path": "scheduling-jobs/.folder-nature",
+      "sha256": "f2205ec227ba7264449d9186e16270ac1252034880181fea86482831cca0e003",
+      "bytes": 366
     },
     {
       "path": "scheduling-jobs/cron_expr_next_fire.py",
@@ -761,6 +841,11 @@
       "bytes": 8008
     },
     {
+      "path": "secrets-credentials/.folder-nature",
+      "sha256": "687d2a43b05a3d7fea823545d951aebf8828d3aace8eb0aed9f021c83794c43b",
+      "bytes": 378
+    },
+    {
       "path": "secrets-credentials/enforce_600_perms.py",
       "sha256": "be824f9fca658b3f2b2278cbc1407870f1817c32763000ca69216be9e3bba7f5",
       "bytes": 5984
@@ -809,6 +894,11 @@
       "path": "secrets-credentials/ttl_cache.py",
       "sha256": "f18e6b6c7b731a9a77be1f13aa11807229bded692201c5af426087c970362b36",
       "bytes": 7373
+    },
+    {
+      "path": "state-db-durability/.folder-nature",
+      "sha256": "1b60665d71da3d67983bb9aee8478fa55a152dd3ce6110436505e5f7b314ca3f",
+      "bytes": 378
     },
     {
       "path": "state-db-durability/backup_rotation.py",
@@ -861,6 +951,11 @@
       "bytes": 7277
     },
     {
+      "path": "system-introspection/.folder-nature",
+      "sha256": "4ef59d30120c4dffcc8894a9b8adaff0bc1d03e3dc14d0cb74b32d50fa551e80",
+      "bytes": 381
+    },
+    {
       "path": "system-introspection/load_avg_read.py",
       "sha256": "1a9845f53a3be9ed20cc43f062bb16db051c565e17bc8e1f951c2acf46b59569",
       "bytes": 7104
@@ -911,6 +1006,11 @@
       "bytes": 6874
     },
     {
+      "path": "text-stream-ops/.folder-nature",
+      "sha256": "511bddd858f8d1f3e96685e2d4e9169b50c5765aefa759379f6da338dd52c7b8",
+      "bytes": 366
+    },
+    {
       "path": "text-stream-ops/ansi_strip.py",
       "sha256": "4b39c1a98fd1dfe628ff7fecdd1ff32f004cf4074e99901fe170d5313dad0523",
       "bytes": 7863
@@ -959,6 +1059,11 @@
       "path": "text-stream-ops/throughput_meter.py",
       "sha256": "eb00aa3439f1b74037b77c1ef30d8cacd6667385298a77358cd7a26a923b823c",
       "bytes": 8540
+    },
+    {
+      "path": "time-clock-correctness/.folder-nature",
+      "sha256": "73ddad740428898560a658deed5770f5d5303fe5de34ff3b8778b73db5c529a0",
+      "bytes": 387
     },
     {
       "path": "time-clock-correctness/clock_skew_detect.py",
