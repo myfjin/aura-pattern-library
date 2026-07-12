@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-11",
+  "created": "2026-07-12",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -1311,22 +1311,22 @@
       "bytes": 6449
     },
     {
-      "path": "data-science/recommenders_ii_kept_survivors_wave_19_rejected_as_a_fake_fest_these_5_verified_rest_re_harvest/catalog_coverage_diversity.cpp",
+      "path": "data-science/recommenders_ii_kept_survivors/catalog_coverage_diversity.cpp",
       "sha256": "11fcafb23e9ce55d5fb85689725313b6886539791fdc0e3761ef3e606f9744b0",
       "bytes": 4822
     },
     {
-      "path": "data-science/recommenders_ii_kept_survivors_wave_19_rejected_as_a_fake_fest_these_5_verified_rest_re_harvest/content_tfidf_rec.cpp",
+      "path": "data-science/recommenders_ii_kept_survivors/content_tfidf_rec.cpp",
       "sha256": "48957834142356c0588f91ebd4271ef31e5a06250a0d09947e8e2f17f0e6b1f0",
       "bytes": 5931
     },
     {
-      "path": "data-science/recommenders_ii_kept_survivors_wave_19_rejected_as_a_fake_fest_these_5_verified_rest_re_harvest/intra_list_diversity.cpp",
+      "path": "data-science/recommenders_ii_kept_survivors/intra_list_diversity.cpp",
       "sha256": "3ea5fd8df6a575e6728fce7a95e06bc872b230b93321f0e670c08b2ba9bd6dfe",
       "bytes": 5332
     },
     {
-      "path": "data-science/recommenders_ii_kept_survivors_wave_19_rejected_as_a_fake_fest_these_5_verified_rest_re_harvest/novelty_serendipity.cpp",
+      "path": "data-science/recommenders_ii_kept_survivors/novelty_serendipity.cpp",
       "sha256": "508b09f820fe1c46938ddd5169d57e2eef31b05700178fa01af1c25edb4f9878",
       "bytes": 4896
     },
@@ -1521,102 +1521,102 @@
       "bytes": 8644
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/adwin_drift_detector.cpp",
+      "path": "data-science/streaming_iii/adwin_drift_detector.cpp",
       "sha256": "bcf804a66fcbeeb0876dd7590b5e9272ee5f39913c2d1ea4210ff2491041eab6",
       "bytes": 6728
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/bloom_filter_fpr.cpp",
+      "path": "data-science/streaming_iii/bloom_filter_fpr.cpp",
       "sha256": "0a088e2cce06f62a95a891d2b408647ab3a195f1b32ce07d6308ea9c0137b8bd",
       "bytes": 7463
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/concept_drift_ensemble.cpp",
+      "path": "data-science/streaming_iii/concept_drift_ensemble.cpp",
       "sha256": "a252d3f001791648955b8b60bdad74ac7f65f6a3e98e77026a5cd5c5071d287f",
       "bytes": 7484
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/ddm_error_drift.cpp",
+      "path": "data-science/streaming_iii/ddm_error_drift.cpp",
       "sha256": "ac174d2d047d87927e59248bde63b2de3b8af1c7a0444b9ed6ddff65553470af",
       "bytes": 5881
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/exponential_histogram_count.cpp",
+      "path": "data-science/streaming_iii/exponential_histogram_count.cpp",
       "sha256": "77056bde6a4890d93a1a71a6a67279ffbdcd5904568fe7d880503193edcab5cb",
       "bytes": 26870
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/frugal_streaming_median.cpp",
+      "path": "data-science/streaming_iii/frugal_streaming_median.cpp",
       "sha256": "4a76a35ed12efede8fc11021732c2bc38313f1f639b2c31543238af4adf23977",
       "bytes": 954197
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/gk_quantile_summary.cpp",
+      "path": "data-science/streaming_iii/gk_quantile_summary.cpp",
       "sha256": "d602aa095562ce7d41d89515479b7493e1fb58b549d954e0a055b88a547165ed",
       "bytes": 6211
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/hoeffding_tree_lite.cpp",
+      "path": "data-science/streaming_iii/hoeffding_tree_lite.cpp",
       "sha256": "9e6a3efc7d641baf82cfc4546dbb9b0f17dbcc4111df2478d0aa3a6964a11d85",
       "bytes": 10822
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/hyperloglog_distinct.cpp",
+      "path": "data-science/streaming_iii/hyperloglog_distinct.cpp",
       "sha256": "12705008a9a7f56b32bcf5b63a200c0af0a0291aaa40b2dd246ae99369bc9ce1",
       "bytes": 6325
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/kswin_drift.cpp",
+      "path": "data-science/streaming_iii/kswin_drift.cpp",
       "sha256": "4b23cfcae03fce4edf5940fbbb426e94a50a37a04c3db217f5ecb889532cde0f",
       "bytes": 18489
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/lossy_counting_frequent.cpp",
+      "path": "data-science/streaming_iii/lossy_counting_frequent.cpp",
       "sha256": "e4f989378b5f349eea4dfd6c042380ac53a341a1c70d22cf5b8d592795b4115c",
       "bytes": 7004
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/misra_gries_heavy_hitters.cpp",
+      "path": "data-science/streaming_iii/misra_gries_heavy_hitters.cpp",
       "sha256": "428f660dd82de90eccfa1c673153278c16d5693155bc9c758ec0fa1fa2358dcb",
       "bytes": 6200
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/online_bagging_poisson.cpp",
+      "path": "data-science/streaming_iii/online_bagging_poisson.cpp",
       "sha256": "cdcd67f9dd00ecfdc23e0319517b4a27b69978484a8190ddbda9fa5f10c85ef2",
       "bytes": 132954
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/robust_streaming_mad.cpp",
+      "path": "data-science/streaming_iii/robust_streaming_mad.cpp",
       "sha256": "86649bd7ada95b3414a07c75b7586be3b8323b83d8f054a37bc4de7285a931cf",
       "bytes": 6562
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/sliding_window_quantile.cpp",
+      "path": "data-science/streaming_iii/sliding_window_quantile.cpp",
       "sha256": "9800468acbf351a474526510f02d2b4914a136d4d21cac9fec815544c79fb616",
       "bytes": 6123
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/sliding_window_regression.cpp",
+      "path": "data-science/streaming_iii/sliding_window_regression.cpp",
       "sha256": "531c6acfecbd9ff6351ed528f13fc08428d15185355f6e90efa68c3e878f015c",
       "bytes": 6513
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/tdigest_lite.cpp",
+      "path": "data-science/streaming_iii/tdigest_lite.cpp",
       "sha256": "399b90e86b560c207fe6f66062ee1e9d42087f94abb5caff86e03fe1e2201f34",
       "bytes": 7811
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/weighted_reservoir_ares.cpp",
+      "path": "data-science/streaming_iii/weighted_reservoir_ares.cpp",
       "sha256": "1f7bb2644222707e42c974cd6a6bbd73d366b83558976a20e06a001d6ec912ba",
       "bytes": 6563
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/welford_decayed_moments.cpp",
+      "path": "data-science/streaming_iii/welford_decayed_moments.cpp",
       "sha256": "cde4c203d982c943149a88aaf0d5c8471942402386bd71536733bfd4328f158e",
       "bytes": 5943
     },
     {
-      "path": "data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/windowed_distinct_count.cpp",
+      "path": "data-science/streaming_iii/windowed_distinct_count.cpp",
       "sha256": "996003599a1feeb383be7e9d4f98adb53fa8b1a35454e56aee3f6eff67af8bb2",
       "bytes": 5493
     },
