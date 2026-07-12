@@ -592,8 +592,8 @@
     },
     {
       "path": "data-science/experiments_ii/peeking_alpha_inflation.cpp",
-      "sha256": "45d81a84dc90b6f6f5c4c29b43a65ec2ee182b73fb3bc81e41e9006a9a2dca2a",
-      "bytes": 6946
+      "sha256": "5b6ac1d2aa32d3e8bc828591f30bcb2f6c06637c58a7731c6c0bb725e9b0d930",
+      "bytes": 10978
     },
     {
       "path": "data-science/experiments_ii/post_stratification_variance.cpp",
