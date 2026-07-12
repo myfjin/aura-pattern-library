@@ -29,8 +29,8 @@
   "per_sphere_patterns": {
    "data-science": 377,
    "system-administration": 200,
-   "programming": 99,
    "rust-systems": 200,
+   "programming": 99,
    "r-statistics": 60
   },
   "per_category": {
@@ -392,16 +392,16 @@
    "rust": 200
   },
   "stem_collisions_across_spheres": {
-   "exponential_backoff": 2,
-   "count_min_sketch": 2,
-   "circuit_breaker": 3,
-   "lru_cache": 2,
-   "consistent_hash_ring": 2,
-   "merkle_tree": 2,
-   "skip_list": 2,
-   "token_bucket": 2,
    "dead_letter_queue": 2,
-   "bloom_filter": 2
+   "circuit_breaker": 3,
+   "token_bucket": 2,
+   "count_min_sketch": 2,
+   "merkle_tree": 2,
+   "consistent_hash_ring": 2,
+   "bloom_filter": 2,
+   "lru_cache": 2,
+   "skip_list": 2,
+   "exponential_backoff": 2
   },
   "free_tier_patterns": 99,
   "free_tier_ids": [
@@ -600,15 +600,8 @@
   "validity": {
    "checked_files": 1399,
    "skipped_languages": [],
-   "valid_files": 1398,
+   "valid_files": 1399,
    "failures": [
-    {
-     "id": "advisory_lock_timeout",
-     "sphere": "system-administration",
-     "lang": "python",
-     "layer_failed": "L1",
-     "reason": "exit codes [1, 1, 0]"
-    },
     {
      "id": "peeking_alpha_inflation",
      "sphere": "data-science",
@@ -634,9 +627,9 @@
      "lang": "go"
     },
     {
-     "id": "work_stealing_deque",
-     "sphere": "rust-systems",
-     "lang": "rust"
+     "id": "sat_solver",
+     "sphere": "programming",
+     "lang": "go"
     }
    ],
    "l2_warn_files": 362,
@@ -9267,11 +9260,11 @@
     "directional",
     "unknown"
    ],
-   "l1": false,
-   "l3": false,
+   "l1": true,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "exit codes [1, 1, 0]"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -19846,7 +19839,7 @@
    ],
    "l1": true,
    "l3": true,
-   "l3_note": false,
+   "l3_note": true,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -21830,7 +21823,7 @@
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },

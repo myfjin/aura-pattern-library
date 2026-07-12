@@ -63,6 +63,19 @@ TOOLCHAINS = ["python3", "g++", "clang++", "go", "rustc", "Rscript"]
 COMPOSED_MARKERS = ("Composed Tools (bridge-born)", "Composed Systems (bridge)")
 CROSS_SPHERE_MARKER = "Cross-Sphere Twins (bridge)"
 
+# Lock/timing patterns assert on sub-second hold/wait windows (multiprocessing
+# holder/waiter with 0.05–0.5s stagger); under --jobs contention the scheduler
+# can starve those windows, so they flake in the pool yet pass standalone
+# (census-flake law, proven 2026-07-12: failed as L3 then L1 across runs, 2/2
+# standalone). Each uses its own mkdtemp, so it is starvation, not lock-path
+# collision. They run in a single-worker lane AFTER the parallel pool drains.
+SERIAL_LANE_DIR = "/concurrency-locking/"
+SERIAL_LANE_RX = re.compile(r"flock|advisory_lock")
+
+
+def needs_serial_lane(rec):
+    return SERIAL_LANE_DIR in rec["path"] or bool(SERIAL_LANE_RX.search(rec["id"]))
+
 
 def scan_disk():
     """Every source file in a shippable tree -> {sphere, lang, id, path, twin}."""
@@ -378,14 +391,22 @@ def main():
                 skipped_langs.add(f["lang"])
             else:
                 gate_files.append(f)
+        serial_files = [f for f in gate_files if needs_serial_lane(f)]
+        pool_files = [f for f in gate_files if not needs_serial_lane(f)]
         done = 0
         with cf.ThreadPoolExecutor(max_workers=args.jobs) as ex:
-            futs = {ex.submit(gate_file, f, args.runs): f for f in gate_files}
+            futs = {ex.submit(gate_file, f, args.runs): f for f in pool_files}
             for fut in cf.as_completed(futs):
                 futs[fut].update(fut.result())
                 done += 1
                 if done % 100 == 0:
                     print(f"  gated {done}/{len(gate_files)}", flush=True)
+        if serial_files:
+            print(f"  serial lane: {len(serial_files)} timing-sensitive lock "
+                  f"pattern(s), one at a time", flush=True)
+        for f in serial_files:
+            f.update(gate_file(f, args.runs))
+            done += 1
 
     fails = [f for f in files if f.get("l1") is False or f.get("l3") is False
              or f["l2"] == "REJECT"]
