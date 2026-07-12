@@ -13,7 +13,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `adaboost` | python·cpp | Ensembles & Robust Methods |
 | `adaptive_simpson` | python·cpp | Numerical Methods |
 | `adversarial_perturbation_lite` | python·cpp | Fairness, Privacy & Robustness |
-| `adwin_drift_detector` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `adwin_drift_detector` | python·cpp | Streaming III |
 | `alert_manager` | python·go | Monitoring |
 | `anova_tukey` | r | Hypothesis Testing — Parametric |
 | `apriori_frequent_itemsets` | python·cpp | Recommenders & Graph Sampling |
@@ -50,7 +50,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `bisection_newton_hybrid` | python·cpp | Numerical Methods |
 | `black_scholes_monte_carlo` | python·cpp | Econometrics & Finance |
 | `bloom_filter` | python·go | Data Structures |
-| `bloom_filter_fpr` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `bloom_filter_fpr` | python·cpp | Streaming III |
 | `bm25_ranking` | python·cpp | Rankings & Information Retrieval |
 | `bootstrap_ci` | r | Distributions & Resampling |
 | `bootstrap_confidence_interval` | python·cpp | Statistics & Testing |
@@ -67,7 +67,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `caliper_matching` | python·cpp | Causal Inference II |
 | `cancellable_task_group` | python·go | Async |
 | `capability_access` | python | Security |
-| `catalog_coverage_diversity` | python·cpp | Recommenders II — kept survivors (wave 19 REJECTED as a fake-fest; these 5 verified; rest re-harvest) |
+| `catalog_coverage_diversity` | python·cpp | Recommenders II — kept survivors |
 | `ccf_lag_detection` | r | Time Series — Models & Autocorrelation |
 | `censoring_bias_demo` | python·cpp | Survival & Reliability |
 | `char_ngram_language_id` | python·cpp | Text / NLP II |
@@ -81,7 +81,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `cointegration_engle_granger_lite` | python·cpp | Econometrics & Finance |
 | `community_local_authority` | python | Composed Tools (bridge-born) |
 | `competing_risks_naive_bias` | python·cpp | Survival & Reliability |
-| `concept_drift_ensemble` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `concept_drift_ensemble` | python·cpp | Streaming III |
 | `conformal_prediction_intervals` | python·cpp | Model Understanding & Tuning |
 | `confusion_matrix_metrics` | python·cpp | Statistics & Testing |
 | `conjugate_gradient` | python·cpp | Linear Algebra |
@@ -89,7 +89,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `connection_pool` | python·go | Networking |
 | `connection_pool_health_checks` | python·go | Networking |
 | `consistent_hash_ring` | python·go | Distributed |
-| `content_tfidf_rec` | python·cpp | Recommenders II — kept survivors (wave 19 REJECTED as a fake-fest; these 5 verified; rest re-harvest) |
+| `content_tfidf_rec` | python·cpp | Recommenders II — kept survivors |
 | `conv1d_feature_detector` | python·cpp | Neural Networks From Scratch |
 | `convex_hull_graham` | python·cpp | Geospatial & Spatial |
 | `convolution_filtering` | python·cpp | Signal Processing & Sequences |
@@ -120,7 +120,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `data_profiling_summary` | python·cpp | Preprocessing & EDA |
 | `date_features` | r | Data Wrangling & Feature Engineering |
 | `dbscan_clustering` | python·cpp | Clustering, Graph & Anomaly |
-| `ddm_error_drift` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `ddm_error_drift` | python·cpp | Streaming III |
 | `dead_letter_queue` | python·go | Resilience |
 | `decision_tree` | python·go | Reasoning |
 | `decision_tree_id3` | python·cpp | Core ML |
@@ -166,7 +166,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `event_sourcing_store` | python·go | Architecture |
 | `evidence_ranks_true_model` | python·cpp | Bayesian III — Modeling & Selection |
 | `ewma_streaming_metrics` | python·cpp | Applied DS Practice |
-| `exponential_histogram_count` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `exponential_histogram_count` | python·cpp | Streaming III |
 | `exponential_reliability_mtbf` | python·cpp | Survival & Reliability |
 | `exponential_smoothing` | python·cpp | Time Series |
 | `expression_evaluator` | python·go | Reasoning |
@@ -182,7 +182,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `forest_size_by_variance` | python | Composed Tools (bridge-born) |
 | `free_list_allocator` | python·go | Performance |
 | `frontdoor_criterion_lite` | python·cpp | Causal Inference II |
-| `frugal_streaming_median` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `frugal_streaming_median` | python·cpp | Streaming III |
 | `funnel_conversion_analysis` | python·cpp | Applied DS Practice |
 | `g_counter_crdt` | python·go | Distributed |
 | `gamma_poisson_conjugate` | python·cpp | Probabilistic Modeling (Bayes II) |
@@ -195,7 +195,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `genetic_algorithm` | python·cpp | Optimization & Distances |
 | `geohash_encode_decode` | python·cpp | Geospatial & Spatial |
 | `gibbs_sampling_bivariate` | python·cpp | Statistical Modeling |
-| `gk_quantile_summary` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `gk_quantile_summary` | python·cpp | Streaming III |
 | `gossip_protocol` | python | Distributed |
 | `gp_regression_marginal_likelihood` | python·cpp | Bayesian III — Modeling & Selection |
 | `gradient_boosting_stumps` | python·cpp | Ensembles & Robust Methods |
@@ -219,7 +219,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `histogram_builder` | python·cpp | Preprocessing & EDA |
 | `hmm_baum_welch` | python·cpp | Probabilistic Modeling (Bayes II) |
 | `hmm_forward_backward` | python·cpp | Information Theory & Probability |
-| `hoeffding_tree_lite` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `hoeffding_tree_lite` | python·cpp | Streaming III |
 | `holt_winters_lite` | r | Time Series — Models & Autocorrelation |
 | `hosmer_lemeshow_lite` | r | Regression & GLM |
 | `hotp_totp` | python | Security |
@@ -228,7 +228,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `http_router` | python | Networking |
 | `huber_robust_regression` | python·cpp | Ensembles & Robust Methods |
 | `hyperloglog` | python | Performance |
-| `hyperloglog_distinct` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `hyperloglog_distinct` | python·cpp | Streaming III |
 | `image_stats` | python | Vision |
 | `importance_sampling` | python·cpp | Statistical Modeling |
 | `inclusion_exclusion_derangements` | python·cpp | Probability III |
@@ -238,7 +238,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `interleaving_significance` | python | Composed Tools (bridge-born) |
 | `interrupted_time_series` | python·cpp | Causal Inference & Experimentation |
 | `interval_tree` | python | Data Structures |
-| `intra_list_diversity` | python·cpp | Recommenders II — kept survivors (wave 19 REJECTED as a fake-fest; these 5 verified; rest re-harvest) |
+| `intra_list_diversity` | python·cpp | Recommenders II — kept survivors |
 | `inverse_cdf_sampling` | r | Sampling & Simulation |
 | `inverse_transform_sampling` | python·cpp | Information Theory & Probability |
 | `inverted_index_search` | python·cpp | Rankings & Information Retrieval |
@@ -265,7 +265,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `knn_kdtree_accelerated` | python·cpp | Composed Tools (bridge-born) |
 | `kruskal_wallis` | r | Nonparametric & Categorical |
 | `ks_one_sample` | r | Hypothesis Testing — Parametric |
-| `kswin_drift` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `kswin_drift` | python·cpp | Streaming III |
 | `label_noise_robust_loss` | python·cpp | Fairness, Privacy & Robustness |
 | `label_propagation_communities` | python·cpp | Clustering, Graph & Anomaly |
 | `laplace_approximation_posterior` | python·cpp | Bayesian III — Approximate Inference |
@@ -288,7 +288,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `logistic_regression_irls` | r | Regression & GLM |
 | `logit_marginal_effects` | python·cpp | Econometrics & Finance |
 | `long_wide_reshape` | r | Data Wrangling & Feature Engineering |
-| `lossy_counting_frequent` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `lossy_counting_frequent` | python·cpp | Streaming III |
 | `lru_cache` | python | Performance |
 | `lsm_tree` | python | Persistence |
 | `lu_decomposition_pivoting` | python·cpp | Linear Algebra |
@@ -311,7 +311,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `minhash_dedup` | python·cpp | Text / NLP |
 | `minimax_game_search` | python | Reasoning |
 | `minimum_detectable_effect` | python·cpp | Experiments II |
-| `misra_gries_heavy_hitters` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `misra_gries_heavy_hitters` | python·cpp | Streaming III |
 | `missing_pattern_matrix` | r | Data Wrangling & Feature Engineering |
 | `missing_value_imputation` | python·cpp | Preprocessing & EDA |
 | `mlp_backprop` | python·cpp | Neural Networks From Scratch |
@@ -338,13 +338,13 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `ngram_language_model` | python·cpp | Text / NLP |
 | `nonlinear_dependence_mi` | python·cpp | Information Theory & Probability |
 | `novelty_effect_decay` | python·cpp | Experiments II |
-| `novelty_serendipity` | python·cpp | Recommenders II — kept survivors (wave 19 REJECTED as a fake-fest; these 5 verified; rest re-harvest) |
+| `novelty_serendipity` | python·cpp | Recommenders II — kept survivors |
 | `numerical_gradient_check` | python·cpp | Neural Networks From Scratch |
 | `object_pool_allocator` | python | Performance |
 | `ols_robust_se_white` | python·cpp | Econometrics & Finance |
 | `one_hot_encoding` | python·cpp | Preprocessing & EDA |
 | `one_way_anova` | r | Hypothesis Testing — Parametric |
-| `online_bagging_poisson` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `online_bagging_poisson` | python·cpp | Streaming III |
 | `online_covariance` | python·cpp | Streaming & Sketches |
 | `online_sgd_classifier` | python·cpp | Streaming & Sketches |
 | `order_statistics` | r | Sampling & Simulation |
@@ -429,7 +429,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `ridge_regression` | r | Regression & GLM |
 | `ridge_regression_normal_eq` | python·cpp | Core ML |
 | `rk4_ode_solver` | python·cpp | Numerical Methods |
-| `robust_streaming_mad` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `robust_streaming_mad` | python·cpp | Streaming III |
 | `roc_auc_from_scratch` | python·cpp | Statistics & Testing |
 | `rolling_join_asof` | python·cpp | Data Wrangling From Scratch |
 | `rolling_ols_update` | python | Composed Tools (bridge-born) |
@@ -463,8 +463,8 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `sir_epidemic_model` | python·cpp | Simulation & Decision Science |
 | `skip_list` | python | Data Structures |
 | `sliding_window_extrema` | python·cpp | Streaming & Sketches |
-| `sliding_window_quantile` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
-| `sliding_window_regression` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `sliding_window_quantile` | python·cpp | Streaming III |
+| `sliding_window_regression` | python·cpp | Streaming III |
 | `sma_wma_filter` | r | Time Series — Trend, Spectral & Smoothing |
 | `softmax_regression` | python·cpp | Neural Networks From Scratch |
 | `sort_multi_key` | python·cpp | Data Wrangling From Scratch |
@@ -486,7 +486,7 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `synthetic_control_lite` | python·cpp | Causal Inference & Experimentation |
 | `table_margins` | r | Nonparametric & Categorical |
 | `target_encoding_smoothing` | python·cpp | Applied DS Practice |
-| `tdigest_lite` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `tdigest_lite` | python·cpp | Streaming III |
 | `template_engine` | python | Io |
 | `textrank_lite` | python·cpp | Text / NLP II |
 | `tf_idf_bm25_comparison` | python·cpp | Text / NLP II |
@@ -521,16 +521,16 @@ _Generated 2026-07-11. Mark: **AURA Pattern Library** © **Reality Optimizer** (
 | `walk_forward_validation` | python·cpp | Time Series |
 | `weibull_mle` | python·cpp | Survival & Reliability |
 | `weight_initialization_comparison` | python·cpp | Neural Networks From Scratch |
-| `weighted_reservoir_ares` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `weighted_reservoir_ares` | python·cpp | Streaming III |
 | `weighted_reservoir_sampling` | python·cpp | Streaming & Sketches |
 | `weighted_survey_mean` | r | Multivariate & Applied Modeling |
 | `welch_t_test` | r | Hypothesis Testing — Parametric |
-| `welford_decayed_moments` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `welford_decayed_moments` | python·cpp | Streaming III |
 | `welford_online_stats` | python·cpp | Applied DS Practice |
 | `wilcoxon_rank_sum` | r | Nonparametric & Categorical |
 | `window_functions` | python·cpp | Data Wrangling From Scratch |
 | `window_sampler` | python | Monitoring |
-| `windowed_distinct_count` | python·cpp | Streaming III (20) — wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation) |
+| `windowed_distinct_count` | python·cpp | Streaming III |
 | `winsorize_clip_outliers` | python·cpp | Preprocessing & EDA |
 | `woodbury_rank1_update` | python·cpp | Linear Algebra |
 | `word2vec_skipgram` | python·cpp | Neural Networks From Scratch |

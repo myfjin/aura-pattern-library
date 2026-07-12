@@ -27,11 +27,11 @@
    "rust-systems": 200
   },
   "per_sphere_patterns": {
-   "r-statistics": 60,
    "data-science": 377,
    "system-administration": 200,
+   "programming": 99,
    "rust-systems": 200,
-   "programming": 99
+   "r-statistics": 60
   },
   "per_category": {
    "data-science": {
@@ -43,7 +43,7 @@
     "Ensembles & Robust Methods": 10,
     "Numerical Methods": 10,
     "Fairness, Privacy & Robustness": 10,
-    "Streaming III (20) \u2014 wave 20 (Streaming/Sketches/Drift; 8 fakes rebuilt from scratch on validation)": 20,
+    "Streaming III": 20,
     "Recommenders & Graph Sampling": 10,
     "Time Series": 10,
     "Signal Processing & Sequences": 10,
@@ -57,7 +57,7 @@
     "Model Diagnostics": 10,
     "Econometrics & Finance": 10,
     "Composed Tools (bridge-born)": 17,
-    "Recommenders II \u2014 kept survivors (wave 19 REJECTED as a fake-fest; these 5 verified; rest re-harvest)": 4,
+    "Recommenders II \u2014 kept survivors": 4,
     "Text / NLP II": 8,
     "Model Understanding & Tuning": 10,
     "Experiments II": 10,
@@ -392,16 +392,16 @@
    "rust": 200
   },
   "stem_collisions_across_spheres": {
-   "bloom_filter": 2,
+   "exponential_backoff": 2,
    "count_min_sketch": 2,
+   "circuit_breaker": 3,
+   "lru_cache": 2,
+   "consistent_hash_ring": 2,
+   "merkle_tree": 2,
    "skip_list": 2,
    "token_bucket": 2,
-   "circuit_breaker": 3,
    "dead_letter_queue": 2,
-   "merkle_tree": 2,
-   "consistent_hash_ring": 2,
-   "lru_cache": 2,
-   "exponential_backoff": 2
+   "bloom_filter": 2
   },
   "free_tier_patterns": 99,
   "free_tier_ids": [
@@ -600,21 +600,14 @@
   "validity": {
    "checked_files": 1399,
    "skipped_languages": [],
-   "valid_files": 1397,
+   "valid_files": 1398,
    "failures": [
     {
      "id": "advisory_lock_timeout",
      "sphere": "system-administration",
      "lang": "python",
-     "layer_failed": "L3",
-     "reason": "exit codes [0, 1, 0]"
-    },
-    {
-     "id": "flock_singleton",
-     "sphere": "system-administration",
-     "lang": "python",
-     "layer_failed": "L3",
-     "reason": "exit codes [0, 1, 0]"
+     "layer_failed": "L1",
+     "reason": "exit codes [1, 1, 0]"
     },
     {
      "id": "peeking_alpha_inflation",
@@ -631,19 +624,19 @@
      "lang": "python"
     },
     {
-     "id": "reader_writer_lock",
-     "sphere": "system-administration",
-     "lang": "python"
-    },
-    {
      "id": "hot_copy",
      "sphere": "system-administration",
      "lang": "python"
     },
     {
-     "id": "sat_solver",
+     "id": "event_bus",
      "sphere": "programming",
      "lang": "go"
+    },
+    {
+     "id": "work_stealing_deque",
+     "sphere": "rust-systems",
+     "lang": "rust"
     }
    ],
    "l2_warn_files": 362,
@@ -9274,11 +9267,11 @@
     "directional",
     "unknown"
    ],
-   "l1": true,
+   "l1": false,
    "l3": false,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "exit codes [0, 1, 0]"
+   "detail": "exit codes [1, 1, 0]"
   },
   {
    "sphere": "system-administration",
@@ -9359,10 +9352,10 @@
     "unknown"
    ],
    "l1": true,
-   "l3": false,
+   "l3": true,
    "l3_note": false,
    "clangxx_ok": null,
-   "detail": "exit codes [0, 1, 0]"
+   "detail": ""
   },
   {
    "sphere": "system-administration",
@@ -9411,7 +9404,7 @@
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -17589,7 +17582,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "catalog_coverage_diversity",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/recommenders_ii_kept_survivors_wave_19_rejected_as_a_fake_fest_these_5_verified_rest_re_harvest/catalog_coverage_diversity.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/recommenders_ii_kept_survivors/catalog_coverage_diversity.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -17605,7 +17598,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "content_tfidf_rec",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/recommenders_ii_kept_survivors_wave_19_rejected_as_a_fake_fest_these_5_verified_rest_re_harvest/content_tfidf_rec.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/recommenders_ii_kept_survivors/content_tfidf_rec.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -17621,7 +17614,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "intra_list_diversity",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/recommenders_ii_kept_survivors_wave_19_rejected_as_a_fake_fest_these_5_verified_rest_re_harvest/intra_list_diversity.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/recommenders_ii_kept_survivors/intra_list_diversity.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -17637,7 +17630,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "novelty_serendipity",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/recommenders_ii_kept_survivors_wave_19_rejected_as_a_fake_fest_these_5_verified_rest_re_harvest/novelty_serendipity.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/recommenders_ii_kept_survivors/novelty_serendipity.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18261,7 +18254,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "adwin_drift_detector",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/adwin_drift_detector.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/adwin_drift_detector.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18277,7 +18270,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "bloom_filter_fpr",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/bloom_filter_fpr.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/bloom_filter_fpr.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18293,7 +18286,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "concept_drift_ensemble",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/concept_drift_ensemble.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/concept_drift_ensemble.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18309,7 +18302,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "ddm_error_drift",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/ddm_error_drift.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/ddm_error_drift.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18325,7 +18318,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "exponential_histogram_count",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/exponential_histogram_count.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/exponential_histogram_count.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18341,7 +18334,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "frugal_streaming_median",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/frugal_streaming_median.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/frugal_streaming_median.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18357,7 +18350,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "gk_quantile_summary",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/gk_quantile_summary.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/gk_quantile_summary.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18373,7 +18366,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "hoeffding_tree_lite",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/hoeffding_tree_lite.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/hoeffding_tree_lite.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18389,7 +18382,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "hyperloglog_distinct",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/hyperloglog_distinct.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/hyperloglog_distinct.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18405,7 +18398,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "kswin_drift",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/kswin_drift.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/kswin_drift.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18421,7 +18414,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "lossy_counting_frequent",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/lossy_counting_frequent.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/lossy_counting_frequent.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18437,7 +18430,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "misra_gries_heavy_hitters",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/misra_gries_heavy_hitters.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/misra_gries_heavy_hitters.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18453,7 +18446,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "online_bagging_poisson",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/online_bagging_poisson.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/online_bagging_poisson.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18469,7 +18462,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "robust_streaming_mad",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/robust_streaming_mad.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/robust_streaming_mad.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18485,7 +18478,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "sliding_window_quantile",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/sliding_window_quantile.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/sliding_window_quantile.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18501,7 +18494,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "sliding_window_regression",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/sliding_window_regression.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/sliding_window_regression.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18517,7 +18510,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "tdigest_lite",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/tdigest_lite.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/tdigest_lite.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18533,7 +18526,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "weighted_reservoir_ares",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/weighted_reservoir_ares.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/weighted_reservoir_ares.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18549,7 +18542,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "welford_decayed_moments",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/welford_decayed_moments.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/welford_decayed_moments.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -18565,7 +18558,7 @@
    "sphere": "data-science",
    "lang": "cpp",
    "id": "windowed_distinct_count",
-   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii_20_wave_20_streaming_sketches_drift_8_fakes_rebuilt_from_scratch_on_validation/windowed_distinct_count.cpp",
+   "path": "/Users/s_dio/aura-pattern-library/cpp/data-science/streaming_iii/windowed_distinct_count.cpp",
    "twin": true,
    "l2": "PASS",
    "l2_detail": [
@@ -19373,7 +19366,7 @@
    ],
    "l1": true,
    "l3": true,
-   "l3_note": false,
+   "l3_note": true,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -19853,7 +19846,7 @@
    ],
    "l1": true,
    "l3": true,
-   "l3_note": true,
+   "l3_note": false,
    "clangxx_ok": null,
    "detail": ""
   },
@@ -21837,7 +21830,7 @@
    ],
    "l1": true,
    "l3": true,
-   "l3_note": false,
+   "l3_note": true,
    "clangxx_ok": null,
    "detail": ""
   },

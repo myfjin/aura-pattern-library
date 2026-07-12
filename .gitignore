@@ -10,3 +10,6 @@ __pycache__/
 *.key
 *.seed
 .DS_Store
+
+# run artifacts of demo patterns
+demo_logs/
