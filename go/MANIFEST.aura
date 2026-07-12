@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-11",
+  "created": "2026-07-12",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -9,6 +9,21 @@
       "path": ".folder-mark.yaml",
       "sha256": "db1c188ea0e884826594be4dc45f1d5c85451b82e4b488c0ced305bb226de2a4",
       "bytes": 89
+    },
+    {
+      "path": ".folder-nature",
+      "sha256": "6f91a3d4dd6bd055c7e2ecfcebe4cbd2bba86ff0009d3d899069ec59b7384832",
+      "bytes": 309
+    },
+    {
+      "path": "programming/.folder-nature",
+      "sha256": "40e9c1c4131d6c748e8211de2dd4576dafaedab8b7498f5d1ea73d6ca94f9ba6",
+      "bytes": 342
+    },
+    {
+      "path": "programming/architecture/.folder-nature",
+      "sha256": "28c9385f33e34b80a5109b0bcaaff18177c82f07008c6201b9aa0b972ebb45dc",
+      "bytes": 342
     },
     {
       "path": "programming/architecture/cqrs_bus.go",
@@ -26,6 +41,11 @@
       "bytes": 14493
     },
     {
+      "path": "programming/async/.folder-nature",
+      "sha256": "c581a6267e719f82c49d25f0ff33c42373e7474b972b7296f47723c3c9e4b309",
+      "bytes": 321
+    },
+    {
       "path": "programming/async/async_task_queue.go",
       "sha256": "bb924a431168d41cb418b4e3eccfdf40f2b2471b705576d959d82c7596787996",
       "bytes": 17336
@@ -34,6 +54,11 @@
       "path": "programming/async/cancellable_task_group.go",
       "sha256": "3767dd866b67dff978ded7e547ccbf8a47cd1b7c51fe54401727159930afd7a5",
       "bytes": 8518
+    },
+    {
+      "path": "programming/data_structures/.folder-nature",
+      "sha256": "14b4955fe05aead67ed598045b5d9ee5d03b79c717c361731a8ea77b4323a766",
+      "bytes": 351
     },
     {
       "path": "programming/data_structures/avl_tree.go",
@@ -56,6 +81,11 @@
       "bytes": 7754
     },
     {
+      "path": "programming/distributed/.folder-nature",
+      "sha256": "143b07f75a0c41b62fd2e6a557aeaba9798d1e102c19238becd57295202fe368",
+      "bytes": 339
+    },
+    {
       "path": "programming/distributed/consistent_hash_ring.go",
       "sha256": "ec1d496dfd90daea1a8e60ae4ee1ae07d514176907bb8df9f14468128e7a3a63",
       "bytes": 9958
@@ -74,6 +104,11 @@
       "path": "programming/distributed/g_counter_crdt.go",
       "sha256": "6e5f66ad532dbfc09e1be68da16dd7738f528223bbdd59337c925eb67e87a350",
       "bytes": 12877
+    },
+    {
+      "path": "programming/io/.folder-nature",
+      "sha256": "582079bc5011c600fb018b5ce92b5a7ed9b4ccdc5db606da352effc9a557891c",
+      "bytes": 312
     },
     {
       "path": "programming/io/arg_parser.go",
@@ -101,6 +136,11 @@
       "bytes": 13592
     },
     {
+      "path": "programming/monitoring/.folder-nature",
+      "sha256": "617f6c5291c49787b5e167c64c48f79aa346cdea7199131ce9f1a3a2d8199ff4",
+      "bytes": 336
+    },
+    {
       "path": "programming/monitoring/alert_manager.go",
       "sha256": "6f8133a05f42a7fea0123901ade7e64a9f2d9dadae7976ad037c432be22dada9",
       "bytes": 14152
@@ -109,6 +149,11 @@
       "path": "programming/monitoring/event_logger.go",
       "sha256": "bb13d582e617f410c2775c19deec6270e9f57ef4db2fc6cdd625d0ae51369016",
       "bytes": 13061
+    },
+    {
+      "path": "programming/networking/.folder-nature",
+      "sha256": "f87aeb0e6187df7345ae5f7a3fb796a3a0320d04b078850b771596e6153ab217",
+      "bytes": 336
     },
     {
       "path": "programming/networking/connection_pool.go",
@@ -126,6 +171,11 @@
       "bytes": 10138
     },
     {
+      "path": "programming/performance/.folder-nature",
+      "sha256": "0cab1c63787d4914026b4228a8212ca09c7ab08f66796c415b8adcd6cc4b0a53",
+      "bytes": 339
+    },
+    {
       "path": "programming/performance/batch_controller.go",
       "sha256": "dbfd28772500bec3fa72ba87cf950d1d3f9da9136717a75352c487236a6e49d0",
       "bytes": 18857
@@ -139,6 +189,11 @@
       "path": "programming/performance/free_list_allocator.go",
       "sha256": "936bbcb3d186b8029244c21cdefe51f0bd8b22ad8eb416bf446bbb3258186803",
       "bytes": 11353
+    },
+    {
+      "path": "programming/reasoning/.folder-nature",
+      "sha256": "6e6601a88223ccdfede9193a1eae9f06d5b7fd2236f6e3f5bf98010ba95297a5",
+      "bytes": 333
     },
     {
       "path": "programming/reasoning/astar_pathfinding.go",
@@ -171,6 +226,11 @@
       "bytes": 14351
     },
     {
+      "path": "programming/resilience/.folder-nature",
+      "sha256": "19b1101855624b7732247e8e9010e5355375f7690d7b2c454628b136e79b0713",
+      "bytes": 336
+    },
+    {
       "path": "programming/resilience/bulkhead_isolator.go",
       "sha256": "54e3b1784131cf32f62ac01181b68194a31d5ff24628dbfb932c6cf82b2cf619",
       "bytes": 14906
@@ -184,6 +244,16 @@
       "path": "programming/resilience/dead_letter_queue.go",
       "sha256": "1f0d4760c2ffe40b4e9bb38f33ed66270c512bd27c968e85e49f0d974a517f49",
       "bytes": 14487
+    },
+    {
+      "path": "system-administration/.folder-nature",
+      "sha256": "905a8983c78a911d6bbcb16473eb8515150a1cd5b6986c474e759072675fb4cc",
+      "bytes": 371
+    },
+    {
+      "path": "system-administration/sysadmin/.folder-nature",
+      "sha256": "9ad7312842fb79f648dc04e389919c6698230e795b40dc553dee94f637a5c0e5",
+      "bytes": 341
     },
     {
       "path": "system-administration/sysadmin/advisory_lock_timeout.go",

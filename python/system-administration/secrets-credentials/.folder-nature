@@ -1,0 +1,16 @@
+schema_version: '1.0'
+identity:
+  name: secrets-credentials
+  being: collector
+  purpose: Secrets Credentials — 10 patterns
+director: false
+tags:
+- python
+- system-administration
+- secrets-credentials
+- verified
+memory:
+  created: '2026-07-12'
+  last_significant_change: '2026-07-12'
+  notable_events:
+  - '2026-07-12: semantic identity layer added (REQ-tag-library-folders)'

@@ -1,0 +1,21 @@
+schema_version: '1.0'
+identity:
+  name: aura-pattern-library
+  being: director
+  purpose: AURA Pattern Library — verified, attributed, multi-language reference patterns;
+    every file run-gated, watermarked, Ed25519-signed. © Reality Optimizer.
+director: true
+tags:
+- aura
+- patterns
+- verified
+- signed
+- multi-language
+rules:
+- Every file is run-gated, watermarked, and Ed25519-signed
+- Nothing ships that fails the honesty gate
+memory:
+  created: '2026-07-12'
+  last_significant_change: '2026-07-12'
+  notable_events:
+  - '2026-07-12: semantic identity layer added (REQ-tag-library-folders)'

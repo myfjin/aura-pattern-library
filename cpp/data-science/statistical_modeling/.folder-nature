@@ -1,0 +1,16 @@
+schema_version: '1.0'
+identity:
+  name: statistical_modeling
+  being: collector
+  purpose: Statistical Modeling — 10 patterns
+director: false
+tags:
+- cpp
+- data-science
+- statistical-modeling
+- verified
+memory:
+  created: '2026-07-12'
+  last_significant_change: '2026-07-12'
+  notable_events:
+  - '2026-07-12: semantic identity layer added (REQ-tag-library-folders)'

@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-09",
+  "created": "2026-07-12",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -9,6 +9,16 @@
       "path": ".folder-mark.yaml",
       "sha256": "db1c188ea0e884826594be4dc45f1d5c85451b82e4b488c0ced305bb226de2a4",
       "bytes": 89
+    },
+    {
+      "path": ".folder-nature",
+      "sha256": "97a2f584784162f0debd59d8e90ba64487ad079401e1480f15a073f0bb619736",
+      "bytes": 306
+    },
+    {
+      "path": "data_wrangling_and_feature_engineering/.folder-nature",
+      "sha256": "3b3195a9869d735310ef5da25e33ff1744b641b120db4051d302d801990cf386",
+      "bytes": 395
     },
     {
       "path": "data_wrangling_and_feature_engineering/date_features.R",
@@ -51,6 +61,11 @@
       "bytes": 5073
     },
     {
+      "path": "distributions_and_resampling/.folder-nature",
+      "sha256": "5e6bf5530dde8ecc73c0f0420c79387287640f0b34be89d4aa839b2cc8205153",
+      "bytes": 373
+    },
+    {
       "path": "distributions_and_resampling/bootstrap_ci.R",
       "sha256": "97b3a3c5ac358b6d833bccb154127a08f128da5587c1b8183c161cc92d07d0ee",
       "bytes": 4801
@@ -74,6 +89,11 @@
       "path": "distributions_and_resampling/quantile_type7.R",
       "sha256": "61d16e218fb1efb5f21acdb06bcd1f098a86dfc9e04067b5133f254aad6b099a",
       "bytes": 5178
+    },
+    {
+      "path": "hypothesis_testing_parametric/.folder-nature",
+      "sha256": "a170a4990598212fc02ab6f8b48f702eb4b19ff6f1a9bb0b94a146edb4633ba8",
+      "bytes": 382
     },
     {
       "path": "hypothesis_testing_parametric/ab_power_analysis.R",
@@ -111,6 +131,11 @@
       "bytes": 4854
     },
     {
+      "path": "multivariate_and_applied_modeling/.folder-nature",
+      "sha256": "f254d790d1395a995d4f68ef1d8ac0c22306a97873970868db79b6327a4e445f",
+      "bytes": 385
+    },
+    {
       "path": "multivariate_and_applied_modeling/km_survival_lite.R",
       "sha256": "1e3780665d5f5a931a63519bc4be9b737b43615de521ade70dcbe6413574b299",
       "bytes": 7121
@@ -134,6 +159,11 @@
       "path": "multivariate_and_applied_modeling/weighted_survey_mean.R",
       "sha256": "4f99ef90a62b1d8ec01e0590b07df29cecb6a7a55b96d21d800db63265626600",
       "bytes": 7790
+    },
+    {
+      "path": "nonparametric_and_categorical/.folder-nature",
+      "sha256": "60de56015f0519818fc3ca2c129a4fe94671014097dd091244352f737fed0b93",
+      "bytes": 376
     },
     {
       "path": "nonparametric_and_categorical/chi_square_independence.R",
@@ -164,6 +194,11 @@
       "path": "nonparametric_and_categorical/wilcoxon_rank_sum.R",
       "sha256": "476b462545fa1fd5b498d7d456b8ef2a7fbfb12fa2229fb43651724c75c133c7",
       "bytes": 5614
+    },
+    {
+      "path": "regression_and_glm/.folder-nature",
+      "sha256": "3926ac122c66a50d36604dc8d068ea1a70e0d38589652bb9c78b4461cdf6282a",
+      "bytes": 343
     },
     {
       "path": "regression_and_glm/bootstrap_regression.R",
@@ -206,6 +241,11 @@
       "bytes": 5408
     },
     {
+      "path": "sampling_and_simulation/.folder-nature",
+      "sha256": "2487901215b33246460b5ba2bee3af417c2421bf9c19cd7545c4f2b734876d39",
+      "bytes": 358
+    },
+    {
       "path": "sampling_and_simulation/box_muller.R",
       "sha256": "addd9e8da5eda0bf3f28832405944aefae0cabc3ac64982c150dc181bae9b502",
       "bytes": 5072
@@ -246,6 +286,11 @@
       "bytes": 5678
     },
     {
+      "path": "time_series_models_and_autocorrelation/.folder-nature",
+      "sha256": "d1f1de64ba4e0c728b03a0abd6f76925a7aad71fde21e53ec7d0e86dbccec9f6",
+      "bytes": 399
+    },
+    {
       "path": "time_series_models_and_autocorrelation/acf_pacf_from_scratch.R",
       "sha256": "1531e1e64caf02a5c49ff197754494f2c23ca63cba2d1d4785114ec4f48d090a",
       "bytes": 5833
@@ -279,6 +324,11 @@
       "path": "time_series_models_and_autocorrelation/seasonal_decompose.R",
       "sha256": "eea392d4a405b3cf3da2f30ab10b75afe6361c25b8b950d024598fea57487998",
       "bytes": 6763
+    },
+    {
+      "path": "time_series_trend_spectral_and_smoothing/.folder-nature",
+      "sha256": "0d60cc2536d3a7f7fbffe5d8ebfc58f27efaeb8105519db29eda09a268cb6b7b",
+      "bytes": 404
     },
     {
       "path": "time_series_trend_spectral_and_smoothing/diff_seasonality_test.R",

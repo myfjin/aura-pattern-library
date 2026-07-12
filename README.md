@@ -39,8 +39,14 @@ _quarantine/                   # excluded, with reason + date
 CATALOG.md                     # ID-keyed master: pattern ID -> languages + category
 MANIFEST.json                  # machine-readable index
 library_verify.py              # the library's CI (run it)
+tag_folders.py                 # semantic identity: a .folder-nature in every folder
 SYNC.md                        # how the snapshot re-pulls from its sources
 ```
+
+Every folder also carries a `.folder-nature` — machine-readable semantic identity
+(being / purpose / tags) — enforced tree-wide by `.folder-nature-root.yaml`
+(`require_nature: true`), so the full folder-nature stack is live here:
+**identity + mark + signature**.
 
 The **basename is the canonical pattern ID**: `cpp/data-science/streaming_and_sketches/hyperloglog_distinct.cpp`
 shares the ID of `python/data-science/streaming_and_sketches/hyperloglog_distinct.py`.
@@ -60,6 +66,7 @@ Marks and signatures are produced by [folder-nature](https://github.com/myfjin/f
 ```bash
 python3 library_verify.py            # signatures + watermarks + catalog parity
 python3 library_verify.py --gate     # also compile/run every file (slow)
+folder-nature verify . --root --pubkey aura-signing.pub   # one-verdict tree self-check
 ```
 
 ## Tiers & licensing

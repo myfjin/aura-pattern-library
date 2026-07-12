@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-11",
+  "created": "2026-07-12",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -9,6 +9,16 @@
       "path": ".folder-mark.yaml",
       "sha256": "0b22bcb530918dfbdd7104b90db88cac148ac3d69c9bd5fbe3463e55bca60eb0",
       "bytes": 74
+    },
+    {
+      "path": ".folder-nature",
+      "sha256": "745f2958178f3096a4f56bea6f9c62641ff1a682c5ba5d7ba3e678d1cb072205",
+      "bytes": 317
+    },
+    {
+      "path": "composed-systems/.folder-nature",
+      "sha256": "710e13c22789ed22aa3a4515ab679a33c1cf070b2e1a7f17db88874b878acaf1",
+      "bytes": 343
     },
     {
       "path": "composed-systems/authenticated_message_channel.rs",
@@ -181,6 +191,11 @@
       "bytes": 6062
     },
     {
+      "path": "concurrency-resilience/.folder-nature",
+      "sha256": "b516728f5feb3573e37bb2911c7b5282cf8f716a51e9df23319201d1cda7304d",
+      "bytes": 361
+    },
+    {
       "path": "concurrency-resilience/atomic_counter_sharded.rs",
       "sha256": "224be6ff0f25c9987668d0e3ba84087b1d8296e83818c6f9eff12a7f6559402f",
       "bytes": 6477
@@ -331,6 +346,11 @@
       "bytes": 6759
     },
     {
+      "path": "cross-sphere-twins/.folder-nature",
+      "sha256": "eac2e7f4dfce3feae49505048c3ca00766693b659e887f0df42ddc9ef4488c40",
+      "bytes": 349
+    },
+    {
       "path": "cross-sphere-twins/count_min_sketch.rs",
       "sha256": "372c83e8d53329797aa42bbb3dba30ccbc91219ce57fd86982a6fdccaf084178",
       "bytes": 6652
@@ -379,6 +399,11 @@
       "path": "cross-sphere-twins/skip_list.rs",
       "sha256": "8dba597bd925a4ec9ad21ce352a8ae68541785121ea64453ad1d5f1eb1ae2e38",
       "bytes": 9331
+    },
+    {
+      "path": "filesystem-process/.folder-nature",
+      "sha256": "8e5eb88d154a03bd5daa0699c40c44c64115eca3f012c34c2803de0d62a58e5a",
+      "bytes": 349
     },
     {
       "path": "filesystem-process/atomic_write_rename.rs",
@@ -431,6 +456,11 @@
       "bytes": 7547
     },
     {
+      "path": "metrics-scheduling/.folder-nature",
+      "sha256": "cd7bb5733a52df6196a691586956bc249c0649bbc5df816f8472966956bdc435",
+      "bytes": 349
+    },
+    {
       "path": "metrics-scheduling/consistent_hash_ring.rs",
       "sha256": "867c0c915080e96bdf382ab8321351136511d29a360e0d57d7fa86515603c6b1",
       "bytes": 9499
@@ -479,6 +509,11 @@
       "path": "metrics-scheduling/topo_job_order.rs",
       "sha256": "9e3fd914ebe659df7dcf4aee21e2afc8d50e9b52f2a9ddb219ef63e4dbbe4e9f",
       "bytes": 8895
+    },
+    {
+      "path": "networking-resilience/.folder-nature",
+      "sha256": "302ee0fb9104fd4a031612b53a84d845983f0981cd2016b4cc48365aa5506a02",
+      "bytes": 358
     },
     {
       "path": "networking-resilience/backpressure_bounded_queue.rs",
@@ -579,6 +614,11 @@
       "path": "networking-resilience/weighted_round_robin_lb.rs",
       "sha256": "3289230f193e12663ae32a84ba10566c09aa95a496d8e70711fe59e589ca720a",
       "bytes": 6071
+    },
+    {
+      "path": "parsing-protocols/.folder-nature",
+      "sha256": "6328da98a5d243188490a4cf077880ffbcc27fbd4cec45991fe6e76b0dfe1710",
+      "bytes": 346
     },
     {
       "path": "parsing-protocols/ansi_escape_stripper.rs",
@@ -711,6 +751,11 @@
       "bytes": 7099
     },
     {
+      "path": "security-crypto/.folder-nature",
+      "sha256": "6d28244b2fbf791b9f65f7cf8bcf58520dd8440d6d680b505a941d8b8ee88c3b",
+      "bytes": 340
+    },
+    {
       "path": "security-crypto/base32_codec.rs",
       "sha256": "67b3021ad9f07c275a129ee2a48bca3c2c9c69bb99f923a7007b80ff3e739a45",
       "bytes": 8146
@@ -811,6 +856,11 @@
       "bytes": 8393
     },
     {
+      "path": "storage-persistence/.folder-nature",
+      "sha256": "c529d553fba87524d9b2d37a15aae064fffe353287f3d3d2272ef2b27f8ea9e1",
+      "bytes": 352
+    },
+    {
       "path": "storage-persistence/arc_adaptive_cache.rs",
       "sha256": "6fdeffe459769e01bea6525fc0cab01893872ef183c82cb4b714ebab53d3f173",
       "bytes": 9785
@@ -909,6 +959,11 @@
       "path": "storage-persistence/wal_group_commit.rs",
       "sha256": "f27a820403b1392c7f889edf285bdcd806e2cb0024ca8da313501cd36ce5dad1",
       "bytes": 7141
+    },
+    {
+      "path": "systems-math-encoding/.folder-nature",
+      "sha256": "19f8a7ef8daddc770663d9d522d7cb78b6fab69fb12fb63d7e9c9eda77abe0ea",
+      "bytes": 358
     },
     {
       "path": "systems-math-encoding/adler32.rs",

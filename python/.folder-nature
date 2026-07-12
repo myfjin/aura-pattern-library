@@ -1,0 +1,14 @@
+schema_version: '1.0'
+identity:
+  name: python
+  being: collector
+  purpose: Python — 676 patterns / 3 subfolders
+director: false
+tags:
+- python
+- verified
+memory:
+  created: '2026-07-12'
+  last_significant_change: '2026-07-12'
+  notable_events:
+  - '2026-07-12: semantic identity layer added (REQ-tag-library-folders)'
