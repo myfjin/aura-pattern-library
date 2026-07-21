@@ -11,6 +11,7 @@ static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQR
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <tuple>
 
 double gk_quantile_summary(const std::vector<double>& stream, double epsilon, double q) {
     int n = static_cast<int>(stream.size());

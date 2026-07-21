@@ -15,6 +15,7 @@ static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQR
 #include <iostream>
 #include <algorithm>
 #include <utility>
+#include <stdexcept>
 
 std::pair<std::vector<double>, std::vector<int>> generate_well_calibrated_data(int n, std::mt19937& rng) {
     /* Generate synthetic data where predicted probabilities match true frequencies. */
@@ -64,12 +65,24 @@ struct CalibrationResult {
     std::vector<double> observed_freqs;
 };
 
+// Guard scores/labels: equal length and binary labels. The shipped version read labels[i]
+// with i bounded by scores.size() (OOB UB on mismatch) and accepted garbage labels (7,-3) as
+// "observed frequency" — nonsense with full confidence. Snapshot at calibration_curve.BROKEN.cpp.
+static void _validate_cal(const std::vector<double>& scores, const std::vector<int>& labels) {
+    if (scores.size() != labels.size())
+        throw std::invalid_argument("AURA-E007: scores and labels must have equal length");
+    for (int y : labels)
+        if (y != 0 && y != 1)
+            throw std::invalid_argument("AURA-E003: labels must be binary {0,1}");
+}
+
 CalibrationResult calibration_curve(
     const std::vector<double>& scores,
     const std::vector<int>& labels,
     int n_bins = 5
 ) {
     /* Compute calibration curve: bin scores, compute observed and predicted frequencies. */
+    _validate_cal(scores, labels);
     CalibrationResult result;
 
     for (int i = 0; i < n_bins; ++i) {
@@ -102,6 +115,7 @@ CalibrationResult calibration_curve(
 
 double brier_score(const std::vector<double>& scores, const std::vector<int>& labels) {
     /* Brier score: MSE between predicted probabilities and actual labels. */
+    _validate_cal(scores, labels);
     double sum = 0.0;
     for (size_t i = 0; i < scores.size(); ++i) {
         double diff = scores[i] - labels[i];

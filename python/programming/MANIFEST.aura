@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-12",
+  "created": "2026-07-18",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -82,8 +82,8 @@
     },
     {
       "path": "async/reactive_signals.py",
-      "sha256": "a3e7219c79f7ee7988292f546e5797b2ae4c798cc678e7d0fefb09185937e6f1",
-      "bytes": 13252
+      "sha256": "8679b67d6eeb9a362a8ef8e86454b8d3163a790efc2e3d0406d9552e9a9832e3",
+      "bytes": 13935
     },
     {
       "path": "data_structures/.folder-nature",
@@ -97,13 +97,13 @@
     },
     {
       "path": "data_structures/binary_indexed_tree.py",
-      "sha256": "863ad74a5247955b5287d76f544720fc51c6a565f31980eebb230dba2fee2861",
-      "bytes": 11567
+      "sha256": "c7e1240a9616770882c8726f27f7374c789f969ff94b4fb25e5dd8e5300c2f3e",
+      "bytes": 12125
     },
     {
       "path": "data_structures/bloom_filter.py",
-      "sha256": "caffc973638842199e5b19e307a61bbe80c33ff051aeb0a68f57578ce33e1aea",
-      "bytes": 12855
+      "sha256": "a44f983e27379ea0e0c0a078a03e8e2655d03216195bdb62994290e86f4ca70f",
+      "bytes": 13452
     },
     {
       "path": "data_structures/fenwick_tree.py",
@@ -112,8 +112,8 @@
     },
     {
       "path": "data_structures/interval_tree.py",
-      "sha256": "bb3cb08cec5cd154cab61a2d7d2f2c8a7cd6e675d4c9a29b1d7e47bb0f15919c",
-      "bytes": 14003
+      "sha256": "68e1248e44002d70e84c05636f307d22e311675f58cd573339f104307928dd5e",
+      "bytes": 14561
     },
     {
       "path": "data_structures/kd_tree.py",
@@ -127,13 +127,13 @@
     },
     {
       "path": "data_structures/ordered_map.py",
-      "sha256": "0a6bce063810f277b0705dff7a8509f1bbd6b16e5668b2dcbe28d8bc48783d45",
-      "bytes": 15007
+      "sha256": "031ab9a03d1dfaf7f847d14e42cf85cca1a99fb8b718745f47f15c6e6f99c1f0",
+      "bytes": 15563
     },
     {
       "path": "data_structures/persistent_deque.py",
-      "sha256": "4a702604b5110640a9b449b59906e1d1adc49c0a5c03f95b1916632e3919d07e",
-      "bytes": 12817
+      "sha256": "e8d084512a05e77bda94d95f4bfdf8e597fca795e24e731de4cffeb4adc95c4f",
+      "bytes": 13379
     },
     {
       "path": "data_structures/priority_task_scheduler.py",
@@ -142,33 +142,33 @@
     },
     {
       "path": "data_structures/radix_tree.py",
-      "sha256": "4792887976d07f39d7586ae80317868dfabb78d409c49eba6d3d64d57dd3b9a6",
-      "bytes": 16659
+      "sha256": "ff873d9fa9dcad9a0f14a39c38d4e62ae8f1df445c4989ed1baa1124213fbc24",
+      "bytes": 17203
     },
     {
       "path": "data_structures/red_black_tree.py",
-      "sha256": "4442395f76e266d5a0d4dd7607a280b759ab044ddb62b039128667a33fc2b9df",
-      "bytes": 16156
+      "sha256": "25775d666e9162aeaf42183c9892fa3f32e29d17da6d3e164792305acd8da71d",
+      "bytes": 16640
     },
     {
       "path": "data_structures/segment_tree.py",
-      "sha256": "f2dd0fdefde6963f6d85353e8435cbba58eb0ed833369db5fa4ba2e721e37c17",
-      "bytes": 11789
+      "sha256": "22b3c21170d5256f0c8849d81d37c2b1910f6bf682c3bcc8174d6aee41233bab",
+      "bytes": 12290
     },
     {
       "path": "data_structures/skip_list.py",
-      "sha256": "e6d57c2673363218dedc969b0e83f7cea584877215d0920148c37ed97b9a2bb1",
-      "bytes": 11054
+      "sha256": "730b33a5d7112ac32ac8d28b53ff53015e5ce204e6ccaa10d6cc39c2dffbff96",
+      "bytes": 11545
     },
     {
       "path": "data_structures/suffix_array.py",
-      "sha256": "b76e82c2790ee6bc780d0ae4981a515545d3f48345051db4247a175db36726c0",
-      "bytes": 16006
+      "sha256": "4da0c1a4567158ce71d4a540f4958235198a7f55414a999058eb2913a4427640",
+      "bytes": 16532
     },
     {
       "path": "data_structures/treap.py",
-      "sha256": "b6b87e0a1c1ce7537a7da56ea9539effc35f555f0a80a0cfd2c61782301b0272",
-      "bytes": 11636
+      "sha256": "27f447525e73f430f0a3e8e46344abe8ecdc221850cc70d5ea5589570fdafcb2",
+      "bytes": 12154
     },
     {
       "path": "data_structures/trie.py",
@@ -177,8 +177,8 @@
     },
     {
       "path": "data_structures/union_find.py",
-      "sha256": "745553210f1a91edd32685bddbe8b9b718e7dbc28e29800e7dbe9ef9e36779e2",
-      "bytes": 12442
+      "sha256": "66486f0ae4151876e9aa85f7298e26d289b518d35d5be63ae5413e66fbca97f7",
+      "bytes": 12965
     },
     {
       "path": "distributed/.folder-nature",
@@ -197,8 +197,8 @@
     },
     {
       "path": "distributed/distributed_lock_manager.py",
-      "sha256": "f382ebf33cbb48b62052801b3dbf1899fc1ba40663593cd16102e6dfe1e4fe33",
-      "bytes": 15208
+      "sha256": "535441067aa7d8b7b1f3971a1dabcada575f506b725db51748ea602ab490e759",
+      "bytes": 15789
     },
     {
       "path": "distributed/g_counter_crdt.py",
@@ -222,8 +222,8 @@
     },
     {
       "path": "distributed/service_registry.py",
-      "sha256": "d9e4c7c966e962effa7e102fa890c028f695359232de0c98591bbb4114ebcc46",
-      "bytes": 11020
+      "sha256": "c042d345f254a9d43d60c9aadf4ae0c21a545ff89d4027bfc2ada233a68e8549",
+      "bytes": 11597
     },
     {
       "path": "distributed/vector_clock.py",
@@ -237,8 +237,8 @@
     },
     {
       "path": "io/arg_parser.py",
-      "sha256": "c6864e389cfce47d6a0a40014c27868774ea6b52ced0d5bff298be993785e1e0",
-      "bytes": 20982
+      "sha256": "9f9e766f1a39517e3bd4fbf8f1ddde7dd631eadc76e821a1e9506443bed75c48",
+      "bytes": 21655
     },
     {
       "path": "io/chunked_reader.py",
@@ -272,8 +272,8 @@
     },
     {
       "path": "io/template_engine.py",
-      "sha256": "214138d4d314de6276f6875a6d1e78b0bbe80652a37232e0b9546701264b4c26",
-      "bytes": 12941
+      "sha256": "36e47b46873765233d4038fffe5c55983271608ddb4028292bc39bcde8aebd4e",
+      "bytes": 13614
     },
     {
       "path": "monitoring/.folder-nature",
@@ -282,8 +282,8 @@
     },
     {
       "path": "monitoring/alert_manager.py",
-      "sha256": "d68df5e2757d312006e86a169dab47c99280fe1a7ea43b7e7d9ea104ac33512d",
-      "bytes": 15026
+      "sha256": "251deabbf7e1741e848606d58b797239b84024f137089849c7cc5f194673da45",
+      "bytes": 15635
     },
     {
       "path": "monitoring/event_logger.py",
@@ -292,8 +292,8 @@
     },
     {
       "path": "monitoring/log_pattern_matcher.py",
-      "sha256": "935bbc1768c42f5dec62e072f89f8e4b19efbfdacfa60bd4822faef9bc32c961",
-      "bytes": 10406
+      "sha256": "f09ddd85947e4d5905ef1b0d6b49758363854828643af052f2479dc339bc2d25",
+      "bytes": 11049
     },
     {
       "path": "monitoring/metric_aggregation_engine.py",
@@ -307,8 +307,8 @@
     },
     {
       "path": "monitoring/metrics_formatter.py",
-      "sha256": "042a66bcb632b82c197421264b3059776231a1ac52b01ea0bdb16d7df7f86067",
-      "bytes": 11597
+      "sha256": "b7a0a9dc3d5ddbb5826034209ff91ec8fb0fbfbf1bd8e7a552098a47d8f940a9",
+      "bytes": 12289
     },
     {
       "path": "monitoring/time_series_db.py",
@@ -317,13 +317,13 @@
     },
     {
       "path": "monitoring/timer_stack.py",
-      "sha256": "b9d461d7d733d2fa0e4cb9131a1dda39eceb6d0c4eebba7b51888d2954de8643",
-      "bytes": 12210
+      "sha256": "59f159537bbdfbabeddcc8cbc55097f44a32bf966879d1ccf839287fc5e58038",
+      "bytes": 12889
     },
     {
       "path": "monitoring/trace_collector.py",
-      "sha256": "6462ff3bed046eff6282368e0e572e439874051ebf8067ae66cc720d004e4993",
-      "bytes": 12014
+      "sha256": "eae0fa9e8e0b6d60f7afd01e324f4b3b4b924bad9c225fa9e1464e7614808b05",
+      "bytes": 12717
     },
     {
       "path": "monitoring/trace_sampler.py",
@@ -357,8 +357,8 @@
     },
     {
       "path": "networking/dns_cache.py",
-      "sha256": "b731a8de95ffc0a3402af4c2f416eb7d873a6b5883d633cc61bb67f299a02b5c",
-      "bytes": 11474
+      "sha256": "617e5b632804e05259e2ebbf82d4e6f94278dda359c0678f46aaf05ebbcbc43c",
+      "bytes": 12137
     },
     {
       "path": "networking/http_retry_client.py",
@@ -372,13 +372,13 @@
     },
     {
       "path": "networking/packet_parser.py",
-      "sha256": "1593083c759ba821f603462d4fc6114c28d2fa1442c48bdb001f5eaa153a910e",
-      "bytes": 15145
+      "sha256": "608e0eb763f99e2590155272c8322d18b84112e363c1913957e9c451837178cc",
+      "bytes": 15755
     },
     {
       "path": "networking/rate_limiter.py",
-      "sha256": "eb2df48ac2b2a067170616119519ddff93507f6cecec3d102f58baaadcc03b8c",
-      "bytes": 11187
+      "sha256": "d2d71bec27b42f5da85984a149405c41e1356f0394471712d391f1741b385aec",
+      "bytes": 11843
     },
     {
       "path": "networking/rtt_estimator.py",
@@ -387,8 +387,8 @@
     },
     {
       "path": "networking/url_router.py",
-      "sha256": "ea47ed0b700e84ae5065530471bfe41bded77c058b4b996228aa998902b44780",
-      "bytes": 10476
+      "sha256": "624fb606a48c63ca0630b30bd6dd52817a3fd89fdbf0e87578975d1e682b4862",
+      "bytes": 11089
     },
     {
       "path": "performance/.folder-nature",
@@ -407,8 +407,8 @@
     },
     {
       "path": "performance/free_list_allocator.py",
-      "sha256": "d8cf2ba7ade394947cf2c7893b2b867ca765d726f5c97246d9ec4276ade2e6c1",
-      "bytes": 13853
+      "sha256": "b7c56c43940f3c8fae8d6556a552ab12fc0cb57117aff9f416786b0e04f0a739",
+      "bytes": 14478
     },
     {
       "path": "performance/hyperloglog.py",
@@ -422,13 +422,13 @@
     },
     {
       "path": "performance/lru_cache.py",
-      "sha256": "796c402bb445648af2aaaa08f9a764e049adf06010de7a96945cdb659f72ebb2",
-      "bytes": 12040
+      "sha256": "3f20b9fd1c0924b487ece93c260211254bd553b0c93c842d2d8cad55b2801064",
+      "bytes": 12651
     },
     {
       "path": "performance/object_pool_allocator.py",
-      "sha256": "32d41d6f2b524609cbfe188668dd9df98679086ad4f400455a74117bc616296a",
-      "bytes": 16603
+      "sha256": "138f580407050fc6b0926b2a5f03e7188d79ccc9170b43b2d715dbd0598847a8",
+      "bytes": 17241
     },
     {
       "path": "performance/resource_budget_allocator.py",
@@ -437,13 +437,13 @@
     },
     {
       "path": "performance/rw_lock.py",
-      "sha256": "017a0ec8da04cf5cfa2ae055261c8c1e505409caaca2282fcbb98cd51bff0039",
-      "bytes": 13092
+      "sha256": "fbae71ecba4b69ca428b9363caf7fbf28a5e7c11419575682e553e0b816974f6",
+      "bytes": 13721
     },
     {
       "path": "performance/token_bucket.py",
-      "sha256": "4d4c7a38ad044d86a71cb94a152e94beb63e9347ab3830eaa25bf71f69266cee",
-      "bytes": 10699
+      "sha256": "01519171eceb11ad361408ac9b9cf1964abe1c34bc05dffb1acab40058caea50",
+      "bytes": 11378
     },
     {
       "path": "performance/work_stealing_queue.py",
@@ -517,8 +517,8 @@
     },
     {
       "path": "reasoning/sat_solver.py",
-      "sha256": "a3b2d898ea94aec07d7e1f52b8df1ad3c3e8608c1ed59c3152c710f4910e159c",
-      "bytes": 15914
+      "sha256": "86a3f357fc54acb050022ee67a9dcb23366c5269383e2187d66de39fbfe92c04",
+      "bytes": 16508
     },
     {
       "path": "resilience/.folder-nature",
@@ -532,8 +532,8 @@
     },
     {
       "path": "resilience/circuit_breaker.py",
-      "sha256": "50444506a89fb67544552e1062850c082c899724db4a44de249c08b015856709",
-      "bytes": 13593
+      "sha256": "98cc1a3892eb0e1353bb8ff100344be3124926cbfb4600dd20afb10b7b0f473a",
+      "bytes": 14264
     },
     {
       "path": "resilience/dead_letter_queue.py",
@@ -542,8 +542,8 @@
     },
     {
       "path": "resilience/timeout_guard.py",
-      "sha256": "d5b53a1d6bc77eb2bfb6def20a05cbbd31331909a3315ab8423a09fe76321d2a",
-      "bytes": 12134
+      "sha256": "745e8d7edd08a31f91dda24e0e9f3d0b6094ab3442e1f7a319083b3ba048f213",
+      "bytes": 12819
     },
     {
       "path": "security/.folder-nature",

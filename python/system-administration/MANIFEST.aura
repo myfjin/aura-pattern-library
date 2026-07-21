@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-12",
+  "created": "2026-07-21",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -687,8 +687,8 @@
     },
     {
       "path": "process-supervision/graceful_shutdown_sigterm.py",
-      "sha256": "3964b91b661e7cdfebbcff164edd393d5d395e26ea62b969342ff17ba226d394",
-      "bytes": 5674
+      "sha256": "f81b97b5f9698ae8ec41451b853bfc0e58f6279faacaf92763d1f41103b02b6e",
+      "bytes": 7721
     },
     {
       "path": "process-supervision/heartbeat_liveness.py",
@@ -782,8 +782,8 @@
     },
     {
       "path": "resource-guards/token_bucket_limiter.py",
-      "sha256": "6b3fc2db58564fa7b35568447782e7677f374c972c115316fe2a914466842273",
-      "bytes": 6022
+      "sha256": "3d09db7f3431338b58951fce4ba808680b51a9b1c270d2665cb5d1d689d0d909",
+      "bytes": 6876
     },
     {
       "path": "scheduling-jobs/.folder-nature",
@@ -892,8 +892,8 @@
     },
     {
       "path": "secrets-credentials/ttl_cache.py",
-      "sha256": "f18e6b6c7b731a9a77be1f13aa11807229bded692201c5af426087c970362b36",
-      "bytes": 7373
+      "sha256": "5af2246e4b4513116491ec8808d3029eb7ff4c88e203ebe856564c6d5f4a2bbb",
+      "bytes": 8074
     },
     {
       "path": "state-db-durability/.folder-nature",
@@ -907,8 +907,8 @@
     },
     {
       "path": "state-db-durability/corruption_repair.py",
-      "sha256": "4b703d5f683a0845d9b2c6ed2074b984226f526692f273bf79ba9635857b7351",
-      "bytes": 7862
+      "sha256": "b8391377ab2226a47f9951f2e14859891c86102a49db074aceaeb30349b3f442",
+      "bytes": 9157
     },
     {
       "path": "state-db-durability/crash_consistent_snapshot.py",
@@ -917,8 +917,8 @@
     },
     {
       "path": "state-db-durability/hot_copy.py",
-      "sha256": "39c3660c6911b29acda713e5a6368582d11d91c68f06d2a1bd59ad4590a95ba6",
-      "bytes": 7251
+      "sha256": "260ee3d48f4ca99fb347f5a2e174e587e7427e19e2ee05332bb5006b8253b1eb",
+      "bytes": 8843
     },
     {
       "path": "state-db-durability/integrity_check.py",
@@ -932,8 +932,8 @@
     },
     {
       "path": "state-db-durability/migration_with_rollback.py",
-      "sha256": "5c48410af71e8758a16857052997be8ef10ea77a4dbee13b5398dc9a5a12e63c",
-      "bytes": 7344
+      "sha256": "8d5160e6f865169113b0ab15aabd935a2b3a052005254685392ff0d274f41431",
+      "bytes": 9432
     },
     {
       "path": "state-db-durability/point_in_time_restore.py",
@@ -942,8 +942,8 @@
     },
     {
       "path": "state-db-durability/transaction_rollback.py",
-      "sha256": "b228a701504f406e3f35448d9e57e8bd1ecdd5414e8923fdcd81a6ba3b57fe9b",
-      "bytes": 7344
+      "sha256": "dc00296c92b2d7539ccf2540191b07832340b84c5cab847c888dd2f19af870a6",
+      "bytes": 8040
     },
     {
       "path": "state-db-durability/wal_checkpoint.py",
@@ -1067,13 +1067,13 @@
     },
     {
       "path": "time-clock-correctness/clock_skew_detect.py",
-      "sha256": "b85f39a1e9a5b576bbf73ed19fbc35d5622110cd5804cccc299f612b6d29a1c5",
-      "bytes": 6460
+      "sha256": "390b3621c3398e934c5b007a452b171b76cd1010f5725b59ac1902216698b7f9",
+      "bytes": 6952
     },
     {
       "path": "time-clock-correctness/deadline_ttl.py",
-      "sha256": "c6f8608b9e93321e29cdbdd62c7e0e729652e2f2445d114220c0278cbbf86c42",
-      "bytes": 6881
+      "sha256": "e5fac3f13075c73d3b8b3f2c2728bd91cc39cedeaf600b1f465f0a7e8cfd76af",
+      "bytes": 7414
     },
     {
       "path": "time-clock-correctness/drift_compensation.py",
@@ -1092,8 +1092,8 @@
     },
     {
       "path": "time-clock-correctness/ntp_offset_check.py",
-      "sha256": "1bffc9845fd7be50e634bdfdf1762f0412bbf44908ec8760e469e5bae9e719de",
-      "bytes": 6155
+      "sha256": "bdb60a084647e97531bee24a0daf3d6e91bf34146724fc20aaa0b8a48313aa1b",
+      "bytes": 6691
     },
     {
       "path": "time-clock-correctness/sliding_rate_window.py",

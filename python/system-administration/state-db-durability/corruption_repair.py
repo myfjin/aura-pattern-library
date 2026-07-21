@@ -1,108 +1,169 @@
 """
-corruption_repair: detect and repair DB corruption (or mark unrecoverable).
-Failure simulated: truncate the DB file mid-write to corrupt it.
-Recovery asserted: the corruption is detected by integrity checks or query failures, and repair
-attempts either fix it or confirm unrecoverability. Undetected corruption is rejected.
+corruption_repair: detect and repair SQLite DB corruption (or mark unrecoverable).
+
+The disaster test creates a valid database, backs it up, truncates the live DB
+mid-write to corrupt it, then attempts detection + repair. If direct repair
+fails it falls back to the backup. The test asserts that corruption was detected,
+that the final DB is consistent, and that no data was lost.
 """
 # △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 # ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
+
 import os
+import shutil
+import sqlite3
 import sys
 import tempfile
-import sqlite3
-import shutil
 from pathlib import Path
 
-if __name__ == "__main__":
+
+def create_good_database(db_path: str) -> None:
+    """Create a valid SQLite database with a table, an index, and sample rows.
+
+    Args:
+        db_path: Path for the new database file.
+
+    Guarantees:
+        - The database opens and accepts writes.
+        - Table `t` contains exactly 3 rows after this call.
+    """
+    conn = sqlite3.connect(db_path)
+    try:
+        conn.execute("CREATE TABLE t (id INTEGER PRIMARY KEY, val TEXT)")
+        conn.execute("CREATE INDEX idx_val ON t(val)")
+        conn.execute("INSERT INTO t (val) VALUES ('a'), ('b'), ('c')")
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def backup_database(source: str, backup: str) -> None:
+    """Copy `source` to `backup` for later restore."""
+    shutil.copy(source, backup)
+
+
+def corrupt_by_truncation(db_path: str, factor: float = 0.5) -> None:
+    """Truncate a database file to corrupt it.
+
+    Args:
+        db_path: Path to the database file.
+        factor:  Fraction of the file to keep (default 0.5).
+
+    Failure scenario:
+        Truncating mid-data guarantees that SQLite integrity checks will fail.
+    """
+    original_size = os.path.getsize(db_path)
+    with open(db_path, 'r+b') as f:
+        f.truncate(max(100, int(original_size * factor)))
+
+
+def detect_corruption(db_path: str) -> bool:
+    """Return True if the DB fails PRAGMA integrity_check or cannot open.
+
+    Args:
+        db_path: Path to the database file.
+
+    Returns:
+        True if corruption is detected, False if integrity_check returns "ok".
+    """
+    try:
+        conn = sqlite3.connect(db_path)
+        try:
+            result = conn.execute("PRAGMA integrity_check").fetchone()[0]
+        finally:
+            conn.close()
+        return result != "ok"
+    except Exception:
+        return True
+
+
+def attempt_repair(db_path: str) -> bool:
+    """Try to repair a corrupt DB with REINDEX + VACUUM.
+
+    Args:
+        db_path: Path to the database file.
+
+    Returns:
+        True if repair commands succeeded, False otherwise.
+
+    Note:
+        This does not guarantee the repaired DB is valid; call
+        assert_repair_consistency to verify.
+    """
+    try:
+        conn = sqlite3.connect(db_path)
+        try:
+            conn.execute("PRAGMA writable_schema=ON")
+            conn.execute("REINDEX")
+            conn.execute("PRAGMA writable_schema=OFF")
+            conn.execute("VACUUM")
+            conn.commit()
+        finally:
+            conn.close()
+        return True
+    except Exception:
+        return False
+
+
+def restore_from_backup(backup: str, target: str) -> bool:
+    """Copy backup over target. Return True on success."""
+    try:
+        shutil.copy(backup, target)
+        return True
+    except Exception:
+        return False
+
+
+def assert_repair_consistency(db_path: str, expected_rows: int = 3) -> None:
+    """Assert the DB passes integrity_check and contains the expected row count.
+
+    Args:
+        db_path:       Path to the repaired/restored database.
+        expected_rows: The number of rows table `t` should contain.
+
+    Raises:
+        AssertionError: if integrity check fails or row count is wrong.
+
+    Failure scenario:
+        A repair that silently loses rows or leaves torn pages is caught here.
+    """
+    conn = sqlite3.connect(db_path)
+    try:
+        result = conn.execute("PRAGMA integrity_check").fetchone()[0]
+        rows = conn.execute("SELECT COUNT(*) FROM t").fetchone()[0]
+        assert result == "ok", f"repair did not fix corruption: {result}"
+        assert rows == expected_rows, f"repair lost data: {rows} rows instead of {expected_rows}"
+    finally:
+        conn.close()
+
+
+def main() -> None:
+    """Self-test: corrupt DB by truncation, detect it, repair or restore."""
     tmpdir = tempfile.mkdtemp()
     db_path = os.path.join(tmpdir, "test.db")
     backup_path = os.path.join(tmpdir, "test.db.backup")
 
-    # Create a valid DB with data and index.
-    conn = sqlite3.connect(db_path)
-    conn.execute("CREATE TABLE t (id INTEGER PRIMARY KEY, val TEXT)")
-    conn.execute("CREATE INDEX idx_val ON t(val)")
-    conn.execute("INSERT INTO t (val) VALUES ('a'), ('b'), ('c')")
-    conn.commit()
-    conn.close()
-
-    # Backup the good DB.
-    shutil.copy(db_path, backup_path)
-    original_size = os.path.getsize(db_path)
-
-    # SCENARIO 1: Corrupt by truncating the DB file.
-    # Truncate to half size — this guarantees corruption (mid-data area).
-    with open(db_path, 'r+b') as f:
-        f.truncate(max(100, original_size // 2))
-
-    # RECOVERY ATTEMPT 1: try to detect corruption.
-    corruption_detected = False
     try:
-        conn = sqlite3.connect(db_path)
-        result = conn.execute("PRAGMA integrity_check").fetchone()[0]
-        conn.close()
-        if result != "ok":
-            corruption_detected = True
-    except Exception as e:
-        corruption_detected = True
+        create_good_database(db_path)
+        backup_database(db_path, backup_path)
+        corrupt_by_truncation(db_path)
 
-    # RECOVERY assert 1: truncation induces corruption that is detected.
-    assert corruption_detected, "truncation-induced corruption was not detected"
+        corruption_detected = detect_corruption(db_path)
+        assert corruption_detected, "truncation-induced corruption was not detected"
 
-    # RECOVERY ATTEMPT 2: try to repair via REINDEX or VACUUM.
-    repair_ok = False
-    try:
-        conn = sqlite3.connect(db_path)
-        conn.execute("PRAGMA writable_schema=ON")
-        conn.execute("REINDEX")
-        conn.execute("PRAGMA writable_schema=OFF")
-        conn.execute("VACUUM")
-        conn.close()
-        repair_ok = True
-    except Exception as e:
-        repair_ok = False
+        repair_ok = attempt_repair(db_path)
+        if not repair_ok:
+            repair_ok = restore_from_backup(backup_path, db_path)
 
-    # If REINDEX failed, restore from backup.
-    if not repair_ok:
-        try:
-            shutil.copy(backup_path, db_path)
-            repair_ok = True
-        except:
-            pass
+        assert repair_ok, "repair and restore both failed"
+        assert_repair_consistency(db_path, expected_rows=3)
 
-    # RECOVERY assert 2: if repair succeeds, DB is now consistent.
-    if repair_ok:
-        try:
-            conn = sqlite3.connect(db_path)
-            result = conn.execute("PRAGMA integrity_check").fetchone()[0]
-            rows = conn.execute("SELECT COUNT(*) FROM t").fetchone()[0]
-            conn.close()
-            assert result == "ok", f"repair did not fix corruption"
-            assert rows == 3, f"repair lost data: {rows} rows instead of 3"
-        except Exception as e:
-            # If still broken after repair attempt, that's handled below
-            pass
+        print(f"corruption_repair: detected truncation-induced corruption, final DB consistent")
+        print("corruption_repair PASS")
+    finally:
+        shutil.rmtree(tmpdir, ignore_errors=True)
 
-    # RECOVERY assert 3: corruption was actively handled (not silently ignored).
-    # Either repair succeeded or we explicitly confirmed unrecoverability.
-    assert corruption_detected, "no attempt to handle corruption"
 
-    # SCENARIO 2: Verify repair decision was correct by testing another open.
-    try:
-        conn = sqlite3.connect(db_path)
-        conn.execute("PRAGMA integrity_check")
-        conn.close()
-        final_ok = True
-    except:
-        final_ok = False
-
-    # RECOVERY assert 4: final state is either fixed or explicitly unrecoverable.
-    # (A valid outcome is either repair worked or we tried and failed clearly.)
-    assert corruption_detected and (repair_ok or not final_ok), \
-        f"corruption handling was incomplete"
-
-    shutil.rmtree(tmpdir)
-    print(f"corruption_repair: detected truncation-induced corruption (repair={repair_ok})")
-    print("corruption_repair PASS")
-    sys.exit(0)
+if __name__ == "__main__":
+    main()

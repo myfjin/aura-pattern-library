@@ -7,24 +7,37 @@ assert only ~20 ops granted, rest delayed/denied.
 _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
 import time
 
-def token_bucket_limiter(tokens_per_sec=10):
+def token_bucket_limiter(tokens_per_sec=10, burst_cap=None):
     """Rate limiter using token bucket algorithm.
     Returns: context with allow_op(), tokens_granted, denied_count.
+
+    burst_cap is the bucket DEPTH — the maximum tokens that can accumulate (defaults to
+    tokens_per_sec, a one-second bucket). Without it, tokens grew unbounded during idle and
+    a long-idle bucket granted an unlimited instant burst (the limiter stopped limiting);
+    snapshot preserved as token_bucket_limiter.BROKEN.py.
     """
+    if not (isinstance(tokens_per_sec, (int, float)) and tokens_per_sec > 0):
+        raise ValueError(f"tokens_per_sec must be > 0, got {tokens_per_sec}")
+    if burst_cap is None:
+        burst_cap = tokens_per_sec
+    if not (isinstance(burst_cap, (int, float)) and burst_cap > 0):
+        raise ValueError(f"burst_cap must be > 0, got {burst_cap}")
+
     class TokenBucket:
-        def __init__(self, rate):
+        def __init__(self, rate, cap):
             self.rate = rate  # tokens per second
+            self.cap = cap    # bucket depth (max accumulation)
             self.tokens = 0  # Start with no tokens
             self.last_refill = time.time()
             self.granted = 0
             self.denied = 0
 
         def allow_op(self):
-            """Check if operation allowed; refill tokens based on elapsed time."""
+            """Check if operation allowed; refill tokens based on elapsed time, CAPPED at depth."""
             now = time.time()
             elapsed = now - self.last_refill
-            # Refill tokens proportional to elapsed time
-            self.tokens += elapsed * self.rate
+            # Refill proportional to elapsed time, but never above the bucket depth.
+            self.tokens = min(self.tokens + elapsed * self.rate, self.cap)
             self.last_refill = now
 
             if self.tokens >= 1:
@@ -35,7 +48,7 @@ def token_bucket_limiter(tokens_per_sec=10):
                 self.denied += 1
                 return False
 
-    return TokenBucket(tokens_per_sec)
+    return TokenBucket(tokens_per_sec, burst_cap)
 
 if __name__ == '__main__':
     import random

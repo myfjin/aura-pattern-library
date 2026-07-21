@@ -5,6 +5,13 @@
 const _AURA_MARK: &str = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO";
 use std::collections::HashMap;
 
+// Sliding-window port-scan detector: per source IP it keeps recent (port, timestamp)
+// events, drops those older than window_seconds, and flags the source once the number
+// of DISTINCT destination ports within the window reaches threshold. Use to spot a host
+// probing many ports in a short span. Guarantees: repeated hits on the same port don't
+// inflate the count (distinct-port set), sources are tracked independently, and events
+// aging out of the window lower the count again — asserts cover threshold, window
+// expiry, per-source isolation, and a planted flag sequence.
 struct PortScanDetector {
     threshold: usize,
     window_seconds: u64,

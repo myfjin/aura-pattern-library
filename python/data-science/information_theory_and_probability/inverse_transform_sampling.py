@@ -17,9 +17,16 @@ from typing import List, Callable
 
 
 def exponential_inverse_cdf(u: float, rate: float) -> float:
-    """Inverse CDF of Exponential(rate). F^{-1}(u) = -log(1-u) / rate."""
+    """Inverse CDF of Exponential(rate). F^{-1}(u) = -log(1-u) / rate.
+
+    rate must be > 0 (an exponential rate); the guard mirrors the exemplary u-guard.
+    The previously-shipped version guarded u but NOT rate, silently returning negative
+    waiting-times on rate<0 — snapshot preserved as inverse_transform_sampling.BROKEN.py.
+    """
     if u <= 0 or u >= 1:
         raise ValueError(f"u must be in (0, 1), got {u}")
+    if not (rate > 0):
+        raise ValueError(f"rate must be > 0, got {rate}")
     return -math.log(1 - u) / rate
 
 

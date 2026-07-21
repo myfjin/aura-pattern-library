@@ -5,6 +5,12 @@
 const _AURA_MARK: &str = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO";
 use std::collections::VecDeque;
 
+// WAL group commit. Multiple transactions append records to the log, then one fsync
+// advances a synced_lsn watermark to the highest batched LSN, persisting the whole
+// group at once. Use it to amortize fsync cost across many concurrent transactions.
+// Guarantees an all-or-nothing batch boundary: recovery replays only records with
+// lsn <= synced_lsn, so a crash before the fsync recovers none of the group and a
+// crash after it recovers all N — no transaction in a batch is durable by halves.
 fn main() {
     // WAL group commit: batch N transactions into one fsync.
     // Crash before fsync → none recovered.

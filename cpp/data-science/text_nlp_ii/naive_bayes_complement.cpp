@@ -18,6 +18,7 @@ static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQR
 #include <cmath>
 #include <cassert>
 #include <iostream>
+#include <tuple>
 
 using Doc = std::vector<std::string>;
 
@@ -101,16 +102,21 @@ int main() {
     std::vector<int> train_labels(90, 0);
     train_labels.insert(train_labels.end(), 10, 1);
 
-    auto [nb_ll, nb_lp, nb_vocab] = naive_bayes_fit(train_docs, train_labels);
-    auto [cnb_w, cnb_vocab] = complement_nb_fit(train_docs, train_labels);
+    // Keep the fit results as named tuples: C++17 forbids capturing structured bindings in a
+    // lambda (clang++ -pedantic rejects; g++ accepted it as an extension). std::get in the
+    // lambda avoids the capture entirely.
+    auto nb_model = naive_bayes_fit(train_docs, train_labels);
+    auto cnb_model = complement_nb_fit(train_docs, train_labels);
 
     std::vector<std::pair<Doc, int>> test = {
         {Doc{"good", "nice"}, 0}, {Doc{"bad", "awful"}, 1},
         {Doc{"good", "bad"}, 1}, {Doc{"good", "bad"}, 0}
     };
     // Actually oracle uses a lambda minority_recall over specific test set; replicate.
-    auto nb_pred = [&](const Doc& d) { return naive_bayes_predict(d, nb_ll, nb_lp, nb_vocab); };
-    auto cnb_pred = [&](const Doc& d) { return complement_nb_predict(d, cnb_w, cnb_vocab); };
+    auto nb_pred = [&](const Doc& d) {
+        return naive_bayes_predict(d, std::get<0>(nb_model), std::get<1>(nb_model), std::get<2>(nb_model)); };
+    auto cnb_pred = [&](const Doc& d) {
+        return complement_nb_predict(d, std::get<0>(cnb_model), std::get<1>(cnb_model)); };
 
     assert(nb_pred(Doc{"good", "bad"}) == 0);
     assert(cnb_pred(Doc{"good", "bad"}) == 1);

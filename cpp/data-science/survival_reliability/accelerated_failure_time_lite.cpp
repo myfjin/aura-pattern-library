@@ -15,6 +15,7 @@ static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQR
 #include <numeric>
 #include <cassert>
 #include <iomanip>
+#include <tuple>
 
 using namespace std;
 

@@ -82,8 +82,8 @@
     },
     {
       "path": "bayesian_iii_approximate_inference/bayes_factor_normal_means.py",
-      "sha256": "a5686ea9d199e5a0ae7217cb830579687c4e102e646245c3d1f0b5c6c3c33e11",
-      "bytes": 5831
+      "sha256": "74185bb55c47f5f8a38a4968d36bac75f0c6780baba650b12db448ca9a260116",
+      "bytes": 6884
     },
     {
       "path": "bayesian_iii_approximate_inference/elbo_monotone_vi.py",
@@ -642,8 +642,8 @@
     },
     {
       "path": "ensembles_and_robust_methods/stacking_ensemble.py",
-      "sha256": "fc87f8b170ff9826eebb2b2f474ca1e9b7ec73476b25c29f1d6126e23c650fc7",
-      "bytes": 10064
+      "sha256": "7058e1a1e18bd80c92aa4b90741f7b5c0f8993e222a430098f779d20b80ca84e",
+      "bytes": 11046
     },
     {
       "path": "ensembles_and_robust_methods/theil_sen_estimator.py",
@@ -852,8 +852,8 @@
     },
     {
       "path": "information_theory_and_probability/inverse_transform_sampling.py",
-      "sha256": "f812465a85a80ac70409b0706deb67a1290345612648890c0f8d4f132f7a4129",
-      "bytes": 9353
+      "sha256": "78497fcbec2ca11ed0a10a6ebfba96ad095cd7c6cea07f5c2406387e0d24dd99",
+      "bytes": 9704
     },
     {
       "path": "information_theory_and_probability/kl_divergence_cross_entropy.py",
@@ -1437,8 +1437,8 @@
     },
     {
       "path": "recommenders_and_graph_sampling/bayesian_ab_beta.py",
-      "sha256": "c5be3fe27a202ca187407e177c31bf0a7c87d4c8fc726847ec42db097fce3e76",
-      "bytes": 6859
+      "sha256": "e43aee0b2213a8b9eb6d76c2ec03e5463b4deae0d6bffa533daea96678e20ca7",
+      "bytes": 8498
     },
     {
       "path": "recommenders_and_graph_sampling/iqr_outlier_detection.py",

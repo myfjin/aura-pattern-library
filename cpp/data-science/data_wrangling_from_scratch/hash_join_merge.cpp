@@ -3,6 +3,11 @@
 static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO";
 /*
  * Hash Join: Inner and Left Join.
+ * Builds a hash index on the right table's join key, then probes it with each
+ * left row: inner join emits only matches, left join also keeps unmatched left
+ * rows (has_salary = false). Use to merge two tables in O(n+m) instead of the
+ * O(n*m) nested loop. Oracle: the hash inner join equals the nested-loop join
+ * row-for-row, and the left join preserves the one unmatched left row.
  */
 
 #include <vector>

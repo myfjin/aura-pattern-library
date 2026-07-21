@@ -15,11 +15,17 @@ static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQR
 #include <iostream>
 #include <algorithm>
 #include <random>
+#include <stdexcept>
 
 std::pair<double, double> log_rank_test(const std::vector<double>& times_g1,
                                       const std::vector<int>& events_g1,
                                       const std::vector<double>& times_g2,
                                       const std::vector<int>& events_g2) {
+    // times and events must align per group; a mismatch indexed events[i] out of bounds
+    // (OOB UB, garbage z with no defined error — the twin's FLAG hole). Snapshot at
+    // log_rank_test.BROKEN.cpp.
+    if (times_g1.size() != events_g1.size() || times_g2.size() != events_g2.size())
+        throw std::invalid_argument("AURA-E007: times and events must have equal length per group");
     std::vector<double> all_times = times_g1;
     all_times.insert(all_times.end(), times_g2.begin(), times_g2.end());
     std::sort(all_times.begin(), all_times.end());

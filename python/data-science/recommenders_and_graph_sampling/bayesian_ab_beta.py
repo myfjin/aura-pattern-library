@@ -16,6 +16,34 @@ import math
 from typing import Tuple
 
 
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+
+def _validate_ab(sa, ta, sb, tb, pa, pb, n):
+    """Guard the A/B test: successes>trials made a Beta shape parameter NEGATIVE, which
+    betavariate silently accepts -> a confident prob_b_better on IMPOSSIBLE data (the
+    shipped fake-robust defect). Reject impossible/degenerate counts up front."""
+    v = []
+    for name, s, t in (("A", sa, ta), ("B", sb, tb)):
+        if not (isinstance(s, int) and isinstance(t, int)):
+            v.append(f"AURA-E-B1: successes_{name}/trials_{name} must be ints")
+        else:
+            if t < 0 or s < 0:
+                v.append(f"AURA-E003: counts for {name} must be >= 0 (got s={s}, t={t})")
+            if s > t:
+                v.append(f"AURA-E004: successes_{name}={s} cannot exceed trials_{name}={t}")
+    if not (isinstance(pa, (int, float)) and pa > 0 and isinstance(pb, (int, float)) and pb > 0):
+        v.append(f"AURA-E-B5: prior_alpha/prior_beta must be > 0 (got {pa}, {pb})")
+    if not (isinstance(n, int) and n > 0):
+        v.append(f"AURA-E009: num_samples must be a positive int (got {n})")
+    if v:
+        raise AuraInputError(v)
+
+
 def bayesian_ab_test(
     successes_a: int,
     trials_a: int,
@@ -28,7 +56,10 @@ def bayesian_ab_test(
     """
     Bayesian A/B test via posterior sampling.
     Returns (prob_b_better, mean_a, mean_b).
+    (Guards impossible data — successes>trials, negative counts — which the shipped
+    version silently accepted; snapshot at bayesian_ab_beta.BROKEN.py.)
     """
+    _validate_ab(successes_a, trials_a, successes_b, trials_b, prior_alpha, prior_beta, num_samples)
     # Posteriors: Beta(alpha, beta)
     alpha_a = prior_alpha + successes_a
     beta_a = prior_beta + (trials_a - successes_a)

@@ -15,6 +15,7 @@ static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQR
 #include <cassert>
 #include <iostream>
 #include <algorithm>
+#include <tuple>
 
 std::tuple<std::vector<int>, double, double, double> iqr_outliers(const std::vector<double>& data) {
     int n = static_cast<int>(data.size());

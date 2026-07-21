@@ -9,26 +9,45 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import Tuple
 
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+
+def _validate_bf_inputs(data, prior_var_h1):
+    v = []
+    if not isinstance(data, (list, tuple)):
+        v.append(f"AURA-E-B1: data must be a sequence, got {type(data).__name__}")
+    elif len(data) == 0:
+        v.append("AURA-E-B8: data must be non-empty")
+    elif not all(isinstance(y, (int, float)) and math.isfinite(y) for y in data):
+        v.append("AURA-E008: data must contain only finite numbers (NaN/Inf rejected)")
+    if not isinstance(prior_var_h1, (int, float)) or not math.isfinite(prior_var_h1):
+        v.append(f"AURA-E-B1: prior_var_h1 must be a finite number, got {prior_var_h1!r}")
+    elif prior_var_h1 <= 0:
+        v.append(f"AURA-E-B5: prior_var_h1 must be > 0, got {prior_var_h1}")
+    if v:
+        raise AuraInputError(v)
+
+
 def bayes_factor_normal(data, prior_var_h1=1.0) -> float:
     """Compute Bayes factor for H1: θ ~ N(0, prior_var_h1) vs H0: θ=0.
 
-    Assumes data ~ N(θ, 1.0). Uses conjugate priors and closed-form marginal likelihoods.
+    Assumes data ~ N(θ, 1.0). Conjugate closed form: with S = Σy and n = len(data),
+      log BF = -½·log(1 + n·τ²) + ½·τ²·S² / (1 + n·τ²)   where τ² = prior_var_h1.
+    (The evidence term carries the full τ²·S²/denom factor — the missing n·τ² factor was
+    the shipped wrong-math bug that sign-flipped conclusions; snapshot preserved as the
+    validator regression fixture bayes_factor_normal_means.BROKEN.py.)
     """
+    _validate_bf_inputs(data, prior_var_h1)
     n = len(data)
-    y_mean = sum(data) / n if n > 0 else 0.0
-    y_sum_sq = sum(y**2 for y in data)
+    S = sum(data)
+    denom = 1.0 + n * prior_var_h1
 
-    # Marginal likelihood under H1: integrated over θ.
-    # p(data|H1) ∝ (1 + n*prior_var_h1)^(-1/2) * exp(-y_mean²*n / (2*(1+n*prior_var_h1)))
-    denom_h1 = 1.0 + n * prior_var_h1
-    log_marg_h1 = -0.5 * math.log(denom_h1) - 0.5 * (y_sum_sq - y_mean**2 * n / denom_h1)
-
-    # Marginal likelihood under H0: θ=0 fixed.
-    # p(data|H0) = (2π)^(-n/2) * exp(-y_sum_sq/2)
-    log_marg_h0 = -0.5 * y_sum_sq
-
-    log_bf = log_marg_h1 - log_marg_h0
-    return math.exp(log_bf)
+    log_bf = -0.5 * math.log(denom) + 0.5 * prior_var_h1 * S * S / denom
+    return math.exp(log_bf) if log_bf < 700 else float("inf")
 
 if __name__ == "__main__":
     import random

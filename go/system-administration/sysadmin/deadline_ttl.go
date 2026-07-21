@@ -2,30 +2,55 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"os"
 )
 
-// △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
+// deadline_ttl: TTL/deadline arithmetic over an injectable clock function.
+// SetDeadline turns a TTL into an absolute deadline (now + ttl); IsExpired reports whether
+// the clock has reached it (>= is expired); Remaining returns signed seconds left.
+// Use for timeouts and lease/TTL logic that must be deterministically testable via a mock clock.
+// Oracle: with a controllable clock, a deadline is not expired before its time, is expired
+// exactly at and after it, and Remaining reports the correct positive/zero/negative value.
+// △ AURA Pattern Library — © Reality Optimizer⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 var _auraMark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
 type DeadlineChecker struct {
 	clockFn func() float64
+	maxSeen float64 // high-water mark: deadline time must be MONOTONIC
+	started bool
 }
 
 func NewDeadlineChecker(clockFn func() float64) *DeadlineChecker {
 	return &DeadlineChecker{clockFn: clockFn}
 }
 
+// now returns a monotonic-non-decreasing view of the clock. A raw clock that rewinds
+// (NTP correction, VM restore) previously RESURRECTED an already-expired deadline; latching
+// the high-water mark makes expiry permanent. Snapshot at deadline_ttl.BROKEN.go.
+func (c *DeadlineChecker) now() float64 {
+	t := c.clockFn()
+	if !c.started || t > c.maxSeen {
+		c.maxSeen = t
+		c.started = true
+	}
+	return c.maxSeen
+}
+
 func (c *DeadlineChecker) IsExpired(deadlineTime float64) bool {
-	return c.clockFn() >= deadlineTime
+	return c.now() >= deadlineTime
 }
 
 func (c *DeadlineChecker) Remaining(deadlineTime float64) float64 {
-	return deadlineTime - c.clockFn()
+	return deadlineTime - c.now()
 }
 
 func (c *DeadlineChecker) SetDeadline(ttlSeconds float64) float64 {
-	return c.clockFn() + ttlSeconds
+	// a NaN/Inf TTL made an IMMORTAL lease (clock >= NaN is always false); reject it.
+	if math.IsNaN(ttlSeconds) || math.IsInf(ttlSeconds, 0) {
+		panic("ttlSeconds must be finite")
+	}
+	return c.now() + ttlSeconds
 }
 
 func main() {
@@ -56,15 +81,18 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Fresh checker for the boundary scenario — time is monotonic per checker now, so an
+	// independent "start at 1000" test uses its own checker rather than rewinding this one.
 	clockValue = 1000.0
-	deadline = checker.SetDeadline(10.0)
+	checkerB := NewDeadlineChecker(mockClock)
+	deadline = checkerB.SetDeadline(10.0)
 	clockValue = 1010.0
-	if !checker.IsExpired(deadline) {
+	if !checkerB.IsExpired(deadline) {
 		fmt.Fprintf(os.Stderr, "Should be expired exactly at deadline\n")
 		os.Exit(1)
 	}
-	if !(checker.Remaining(deadline) == 0.0) {
-		fmt.Fprintf(os.Stderr, "Expected remaining 0.0, got %f\n", checker.Remaining(deadline))
+	if !(checkerB.Remaining(deadline) == 0.0) {
+		fmt.Fprintf(os.Stderr, "Expected remaining 0.0, got %f\n", checkerB.Remaining(deadline))
 		os.Exit(1)
 	}
 

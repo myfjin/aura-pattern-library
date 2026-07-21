@@ -11,6 +11,7 @@ static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQR
 #include <cassert>
 #include <cstring>
 #include <queue>
+#include <tuple>
 
 using std::vector;
 using std::pair;

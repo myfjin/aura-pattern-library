@@ -14,6 +14,7 @@ static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQR
 #include <numeric>
 #include <cassert>
 #include <iostream>
+#include <limits>
 
 double bayes_factor_normal(const std::vector<double>& data, double prior_var_h1 = 1.0) {
     /*
@@ -21,23 +22,14 @@ double bayes_factor_normal(const std::vector<double>& data, double prior_var_h1 
      * Assumes data ~ N(θ, 1.0). Uses conjugate priors and closed-form marginal likelihoods.
      */
     int n = static_cast<int>(data.size());
-    double y_sum = std::accumulate(data.begin(), data.end(), 0.0);
-    double y_mean = (n > 0) ? y_sum / n : 0.0;
-    
-    double y_sum_sq = 0.0;
-    for (const auto& y : data) {
-        y_sum_sq += y * y;
-    }
+    double S = std::accumulate(data.begin(), data.end(), 0.0);
 
-    // Marginal likelihood under H1: integrated over θ.
-    double denom_h1 = 1.0 + n * prior_var_h1;
-    double log_marg_h1 = -0.5 * std::log(denom_h1) - 0.5 * (y_sum_sq - y_mean * y_mean * n / denom_h1);
-
-    // Marginal likelihood under H0: θ=0 fixed.
-    double log_marg_h0 = -0.5 * y_sum_sq;
-
-    double log_bf = log_marg_h1 - log_marg_h0;
-    return std::exp(log_bf);
+    // Conjugate closed form: log BF = -1/2 log(1 + n*tau2) + 1/2 * tau2 * S^2 / (1 + n*tau2).
+    // (The shipped version used y_mean^2*n/denom = S^2/(n*denom), missing the n*tau2 factor —
+    // the wrong-math twin bug; snapshot preserved as bayes_factor_normal_means.BROKEN.cpp.)
+    double denom = 1.0 + n * prior_var_h1;
+    double log_bf = -0.5 * std::log(denom) + 0.5 * prior_var_h1 * S * S / denom;
+    return (log_bf < 700.0) ? std::exp(log_bf) : std::numeric_limits<double>::infinity();
 }
 
 int main() {
