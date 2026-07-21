@@ -1,3 +1,4 @@
+import math
 """
 Latency Percentile Monitor — p99 tracking in five floats per quantile.
 
@@ -92,7 +93,23 @@ class LatencyMonitor:
                 "p50": s["p50"].query(), "p99": s["p99"].query()}
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_lognormalish(tail):
+    v = []
+    if isinstance(tail, (int, float)) and not math.isfinite(tail):
+        v.append(f"AURA-E008: tail must be finite, got {tail}")
+    if v:
+        raise AuraInputError(v)
+
 def lognormalish(base: float, tail: float) -> float:
+    _aura_validate_lognormalish(tail)
     v = random.lognormvariate(0, 0.4) * base
     if random.random() < 0.01:
         v += tail * random.random()

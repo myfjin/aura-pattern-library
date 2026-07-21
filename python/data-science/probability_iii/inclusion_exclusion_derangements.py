@@ -9,8 +9,33 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_derangements_exact(n):
+    v = []
+    if isinstance(n, (int, float)) and n <= 0:
+        v.append(f"AURA-E009: n must be > 0, got {n}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_derangements_simulate(n, num_sim):
+    v = []
+    if isinstance(n, (int, float)) and n <= 0:
+        v.append(f"AURA-E009: n must be > 0, got {n}")
+    if isinstance(num_sim, (int, float)) and num_sim <= 0:
+        v.append(f"AURA-E009: num_sim must be > 0, got {num_sim}")
+    if v:
+        raise AuraInputError(v)
+
 def derangements_exact(n: int) -> int:
     """Exact count of derangements via inclusion-exclusion."""
+    _aura_validate_derangements_exact(n)
     if n == 0:
         return 1
     if n == 1:
@@ -25,6 +50,7 @@ def derangements_exact(n: int) -> int:
 
 def derangements_simulate(n: int, num_sim: int = 1000) -> int:
     """Estimate derangements via Monte Carlo."""
+    _aura_validate_derangements_simulate(n, num_sim)
     import random
 
     count = 0

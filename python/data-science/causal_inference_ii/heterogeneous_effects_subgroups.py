@@ -1,3 +1,4 @@
+import math
 """Heterogeneous treatment effects (CATE): treatment effect varies by subgroup.
 
 Planted CATE difference between subgroups; pooled estimate masks the heterogeneity.
@@ -8,8 +9,24 @@ Core claim: subgroup estimates recovered; pooled ATE shown obscuring the variati
 _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
 from typing import List
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_subgroup_ate(y):
+    v = []
+    if isinstance(y, (int, float)) and not math.isfinite(y):
+        v.append(f"AURA-E008: y must be finite, got {y}")
+    if v:
+        raise AuraInputError(v)
+
 def subgroup_ate(t: List[int], y: List[float], subgroup: List[int], sg_val: int) -> float:
     """Compute ATE within a subgroup."""
+    _aura_validate_subgroup_ate(y)
     y_t1 = [y[i] for i in range(len(t)) if t[i] == 1 and subgroup[i] == sg_val]
     y_t0 = [y[i] for i in range(len(t)) if t[i] == 0 and subgroup[i] == sg_val]
     if not y_t1 or not y_t0:

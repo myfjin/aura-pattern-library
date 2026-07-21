@@ -15,13 +15,43 @@ import math
 from typing import Dict, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_expected_score(elo1, elo2):
+    v = []
+    if isinstance(elo1, (int, float)) and not math.isfinite(elo1):
+        v.append(f"AURA-E008: elo1 must be finite, got {elo1}")
+    if isinstance(elo2, (int, float)) and not math.isfinite(elo2):
+        v.append(f"AURA-E008: elo2 must be finite, got {elo2}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_update_elo(opponent_elo, k):
+    v = []
+    if isinstance(opponent_elo, (int, float)) and not math.isfinite(opponent_elo):
+        v.append(f"AURA-E008: opponent_elo must be finite, got {opponent_elo}")
+    if isinstance(opponent_elo, (int, float)) and opponent_elo <= 0:
+        v.append(f"AURA-E009: opponent_elo must be > 0, got {opponent_elo}")
+    if isinstance(k, (int, float)) and k <= 0:
+        v.append(f"AURA-E009: k must be > 0, got {k}")
+    if v:
+        raise AuraInputError(v)
+
 def expected_score(elo1: float, elo2: float) -> float:
     """Expected score for player1 vs player2."""
+    _aura_validate_expected_score(elo1, elo2)
     return 1.0 / (1.0 + 10.0 ** ((elo2 - elo1) / 400.0))
 
 
 def update_elo(elo: float, opponent_elo: float, observed_score: float, k: float = 32.0) -> float:
     """Update Elo: new_elo = elo + k * (observed - expected)."""
+    _aura_validate_update_elo(opponent_elo, k)
     expected = expected_score(elo, opponent_elo)
     return elo + k * (observed_score - expected)
 

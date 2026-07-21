@@ -1,3 +1,4 @@
+import math
 """
 Winsorization and Clipping Pattern.
 
@@ -56,6 +57,23 @@ def winsorize(data: List[float], limits: tuple = (0.05, 0.05)) -> List[float]:
     return [max(lower_bound, min(x, upper_bound)) for x in data]
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_clip(min_val, max_val):
+    v = []
+    if isinstance(min_val, (int, float)) and min_val <= 0:
+        v.append(f"AURA-E009: min_val must be > 0, got {min_val}")
+    if isinstance(max_val, (int, float)) and not math.isfinite(max_val):
+        v.append(f"AURA-E008: max_val must be finite, got {max_val}")
+    if v:
+        raise AuraInputError(v)
+
 def clip(data: List[float], min_val: float, max_val: float) -> List[float]:
     """
     Clip data to hard bounds.
@@ -66,6 +84,7 @@ def clip(data: List[float], min_val: float, max_val: float) -> List[float]:
     Returns:
         Clipped data
     """
+    _aura_validate_clip(min_val, max_val)
     return [max(min_val, min(x, max_val)) for x in data]
 
 

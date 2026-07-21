@@ -10,9 +10,38 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_peeking_strategy(n_looks):
+    v = []
+    if isinstance(n_looks, (int, float)) and n_looks <= 0:
+        v.append(f"AURA-E009: n_looks must be > 0, got {n_looks}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_t_test_pvalue(var_t, var_c, n_t, n_c):
+    v = []
+    if isinstance(var_t, (int, float)) and not math.isfinite(var_t):
+        v.append(f"AURA-E008: var_t must be finite, got {var_t}")
+    if isinstance(var_c, (int, float)) and not math.isfinite(var_c):
+        v.append(f"AURA-E008: var_c must be finite, got {var_c}")
+    if isinstance(n_t, (int, float)) and n_t <= 0:
+        v.append(f"AURA-E009: n_t must be > 0, got {n_t}")
+    if isinstance(n_c, (int, float)) and n_c <= 0:
+        v.append(f"AURA-E009: n_c must be > 0, got {n_c}")
+    if v:
+        raise AuraInputError(v)
+
 def t_test_pvalue(mean_treatment: float, mean_control: float, var_t: float, var_c: float,
                  n_t: int, n_c: int) -> float:
     """Compute two-sample t-test p-value (two-tailed)."""
+    _aura_validate_t_test_pvalue(var_t, var_c, n_t, n_c)
     if n_t < 2 or n_c < 2:
         return 1.0
 
@@ -54,6 +83,7 @@ def fixed_n_no_peeking(n_per_arm: int, reps: int, null: bool = True) -> float:
 
 def peeking_strategy(n_per_arm_initial: int, n_looks: int, reps: int) -> float:
     """Run with continuous peeking at interim analyses; return rejection rate."""
+    _aura_validate_peeking_strategy(n_looks)
     import random
     rejections = 0
 

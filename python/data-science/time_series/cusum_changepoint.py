@@ -1,3 +1,4 @@
+import math
 """
 CUSUM Change-Point Detection
 
@@ -13,6 +14,27 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 from typing import List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_cusum_detector(target, k, h):
+    v = []
+    if isinstance(target, (int, float)) and not math.isfinite(target):
+        v.append(f"AURA-E008: target must be finite, got {target}")
+    if isinstance(k, (int, float)) and not math.isfinite(k):
+        v.append(f"AURA-E008: k must be finite, got {k}")
+    if isinstance(k, (int, float)) and k <= 0:
+        v.append(f"AURA-E009: k must be > 0, got {k}")
+    if isinstance(h, (int, float)) and not math.isfinite(h):
+        v.append(f"AURA-E008: h must be finite, got {h}")
+    if v:
+        raise AuraInputError(v)
+
 def cusum_detector(
     series: List[float], target: float, k: float, h: float
 ) -> Tuple[List[float], List[int]]:
@@ -23,6 +45,7 @@ def cusum_detector(
     h: decision threshold
     Returns (cusum_values, changepoint_indices)
     """
+    _aura_validate_cusum_detector(target, k, h)
     cusum = [0.0]
     changepoints = []
     for i in range(len(series)):

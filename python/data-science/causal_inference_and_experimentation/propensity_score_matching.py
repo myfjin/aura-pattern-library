@@ -16,8 +16,24 @@ import math
 from typing import Tuple, List
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_logistic(x):
+    v = []
+    if isinstance(x, (int, float)) and not math.isfinite(x):
+        v.append(f"AURA-E008: x must be finite, got {x}")
+    if v:
+        raise AuraInputError(v)
+
 def logistic(x: float) -> float:
     """Logistic function: 1 / (1 + exp(-x))."""
+    _aura_validate_logistic(x)
     return 1.0 / (1.0 + math.exp(-x))
 
 

@@ -1,3 +1,4 @@
+import math
 """
 Difference-in-Differences (DiD).
 
@@ -14,6 +15,23 @@ import random
 from typing import List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_simulate_did_data(n_per_group, treatment_effect):
+    v = []
+    if isinstance(n_per_group, (int, float)) and n_per_group <= 0:
+        v.append(f"AURA-E009: n_per_group must be > 0, got {n_per_group}")
+    if isinstance(treatment_effect, (int, float)) and treatment_effect <= 0:
+        v.append(f"AURA-E009: treatment_effect must be > 0, got {treatment_effect}")
+    if v:
+        raise AuraInputError(v)
+
 def simulate_did_data(
     n_per_group: int, treatment_effect: float, time_effect: float
 ) -> Tuple[List[float], List[float], List[float], List[float]]:
@@ -21,6 +39,7 @@ def simulate_did_data(
     Generate two groups with parallel trends, treatment applied to group 1 post-period.
     Returns: (pre_control, post_control, pre_treated, post_treated).
     """
+    _aura_validate_simulate_did_data(n_per_group, treatment_effect)
     pre_control = [random.gauss(100, 10) for _ in range(n_per_group)]
     pre_treated = [random.gauss(100, 10) for _ in range(n_per_group)]
 

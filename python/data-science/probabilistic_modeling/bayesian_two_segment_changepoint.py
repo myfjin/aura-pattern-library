@@ -13,8 +13,24 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List, Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_log_normal_likelihood(mean):
+    v = []
+    if isinstance(mean, (int, float)) and mean <= 0:
+        v.append(f"AURA-E009: mean must be > 0, got {mean}")
+    if v:
+        raise AuraInputError(v)
+
 def log_normal_likelihood(data: List[float], mean: float = None, var: float = 1.0) -> float:
     """Log-likelihood of data under N(mean, var). If mean is None, use MLE."""
+    _aura_validate_log_normal_likelihood(mean)
     if mean is None:
         mean = sum(data) / len(data)
     ll = 0.0

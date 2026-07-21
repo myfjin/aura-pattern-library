@@ -1,3 +1,4 @@
+import math
 """
 Exponential histogram / DGIM count of 1s in a sliding window (Datar-Gionis-Indyk-Motwani).
 Core idea: to count the 1-bits among the last N arrivals in O((1/eps) log N) space, keep
@@ -14,6 +15,21 @@ import random
 from typing import List
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_dgim_count(window):
+    v = []
+    if isinstance(window, (int, float)) and window <= 0:
+        v.append(f"AURA-E009: window must be > 0, got {window}")
+    if v:
+        raise AuraInputError(v)
+
 def dgim_count(stream: List[int], window: int, eps: float = 0.1) -> int:
     """
     Estimate the number of 1s among the last `window` bits via DGIM.
@@ -22,6 +38,7 @@ def dgim_count(stream: List[int], window: int, eps: float = 0.1) -> int:
         window: sliding-window size N
         eps: target relative error (buckets-per-size = ceil(1/eps))
     """
+    _aura_validate_dgim_count(window)
     assert 0 < eps < 1
     k = int(1.0 / eps + 0.999999)
     cap = k // 2 + 1

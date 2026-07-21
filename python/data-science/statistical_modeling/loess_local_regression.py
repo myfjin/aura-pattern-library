@@ -21,6 +21,28 @@ def tricube_weight(u: float) -> float:
     return (1.0 - abs_u ** 3) ** 3
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_loess_point(frac_nearest):
+    v = []
+    if isinstance(frac_nearest, (int, float)) and frac_nearest <= 0:
+        v.append(f"AURA-E009: frac_nearest must be > 0, got {frac_nearest}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_loess_smooth(frac_nearest):
+    v = []
+    if isinstance(frac_nearest, (int, float)) and frac_nearest <= 0:
+        v.append(f"AURA-E009: frac_nearest must be > 0, got {frac_nearest}")
+    if v:
+        raise AuraInputError(v)
+
 def loess_point(
     x_vals: List[float],
     y_vals: List[float],
@@ -38,6 +60,7 @@ def loess_point(
     Returns:
         Predicted y at x_target
     """
+    _aura_validate_loess_point(frac_nearest)
     n = len(x_vals)
     k = max(1, int(n * frac_nearest))
 
@@ -94,6 +117,7 @@ def loess_smooth(
     frac_nearest: float = 0.3,
 ) -> List[float]:
     """Apply LOESS to a grid of x values."""
+    _aura_validate_loess_smooth(frac_nearest)
     return [loess_point(x_vals, y_vals, x, frac_nearest) for x in x_grid]
 
 

@@ -13,9 +13,25 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List, Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_kf_forward(meas_var):
+    v = []
+    if isinstance(meas_var, (int, float)) and meas_var < 0:
+        v.append(f"AURA-E-B5: meas_var must be >= 0, got {meas_var}")
+    if v:
+        raise AuraInputError(v)
+
 def kf_forward(observations: List[float], process_var: float = 0.1,
                meas_var: float = 1.0) -> Tuple[List[float], List[float], List[float], List[float]]:
     """Kalman filter forward pass: return filtered states and covariances."""
+    _aura_validate_kf_forward(meas_var)
     n = len(observations)
 
     # Initial state

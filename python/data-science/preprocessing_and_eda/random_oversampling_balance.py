@@ -58,6 +58,25 @@ def random_oversample(
     return X_resampled, y_resampled
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_smote_lite(k, alpha_range):
+    v = []
+    if isinstance(k, (int, float)) and k <= 0:
+        v.append(f"AURA-E009: k must be > 0, got {k}")
+    if isinstance(alpha_range, (int, float)) and not math.isfinite(alpha_range):
+        v.append(f"AURA-E008: alpha_range must be finite, got {alpha_range}")
+    if isinstance(alpha_range, (int, float)) and alpha_range <= 0:
+        v.append(f"AURA-E009: alpha_range must be > 0, got {alpha_range}")
+    if v:
+        raise AuraInputError(v)
+
 def smote_lite(
     X: List[List[float]], y: List[int], k: int = 3, alpha_range: Tuple[float, float] = (0.0, 1.0)
 ) -> Tuple[List[List[float]], List[int]]:
@@ -71,6 +90,7 @@ def smote_lite(
     Returns:
         (X_synthetic, y_synthetic) with new synthetic samples added
     """
+    _aura_validate_smote_lite(k, alpha_range)
     count_0 = sum(1 for label in y if label == 0)
     count_1 = sum(1 for label in y if label == 1)
 

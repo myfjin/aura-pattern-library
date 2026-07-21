@@ -14,6 +14,23 @@ import math
 import random
 from typing import List, Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_particle_filter_step(process_noise, obs_noise):
+    v = []
+    if isinstance(process_noise, (int, float)) and process_noise <= 0:
+        v.append(f"AURA-E009: process_noise must be > 0, got {process_noise}")
+    if isinstance(obs_noise, (int, float)) and not math.isfinite(obs_noise):
+        v.append(f"AURA-E008: obs_noise must be finite, got {obs_noise}")
+    if v:
+        raise AuraInputError(v)
+
 def particle_filter_step(particles: List[float], weights: List[float],
                          observation: float, process_noise: float = 0.2,
                          obs_noise: float = 0.5) -> Tuple[List[float], List[float], float]:
@@ -21,6 +38,7 @@ def particle_filter_step(particles: List[float], weights: List[float],
     One step: predict, weight, resample.
     Return: (new_particles, new_weights, effective_sample_size)
     """
+    _aura_validate_particle_filter_step(process_noise, obs_noise)
     n = len(particles)
 
     # Predict: add process noise

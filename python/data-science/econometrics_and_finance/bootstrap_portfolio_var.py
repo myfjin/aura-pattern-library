@@ -18,6 +18,23 @@ def _quantile(sorted_vals: List[float], q: float) -> float:
     idx = int(q * len(sorted_vals))
     return sorted_vals[max(0, min(idx, len(sorted_vals) - 1))]
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_portfolio_var_bootstrap(confidence_level):
+    v = []
+    if isinstance(confidence_level, (int, float)) and confidence_level <= 0:
+        v.append(f"AURA-E009: confidence_level must be > 0, got {confidence_level}")
+    if isinstance(confidence_level, (int, float)) and not (0.0 < confidence_level < 1.0):
+        v.append(f"AURA-E001: confidence_level must be in (0,1), got {confidence_level}")
+    if v:
+        raise AuraInputError(v)
+
 def portfolio_var_bootstrap(
     returns: List[float],
     confidence_level: float = 0.95,
@@ -28,6 +45,7 @@ def portfolio_var_bootstrap(
     Returns: (var_estimate, var_se) where var_estimate is the mean bootstrap
     (1−confidence) return quantile and var_se is its bootstrap standard error.
     """
+    _aura_validate_portfolio_var_bootstrap(confidence_level)
     import random
     n = len(returns)
     tail = 1.0 - confidence_level

@@ -27,6 +27,42 @@ def gradient_bowl(x: float, y: float) -> Tuple[float, float]:
     return (200 * x, 2 * y)
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_momentum_gd(learning_rate, momentum, tolerance):
+    v = []
+    if isinstance(learning_rate, (int, float)) and learning_rate <= 0:
+        v.append(f"AURA-E009: learning_rate must be > 0, got {learning_rate}")
+    if isinstance(learning_rate, (int, float)) and learning_rate <= 0:
+        v.append(f"AURA-E001: learning_rate must be > 0, got {learning_rate}")
+    if isinstance(momentum, (int, float)) and momentum <= 0:
+        v.append(f"AURA-E009: momentum must be > 0, got {momentum}")
+    if isinstance(tolerance, (int, float)) and not math.isfinite(tolerance):
+        v.append(f"AURA-E008: tolerance must be finite, got {tolerance}")
+    if isinstance(tolerance, (int, float)) and tolerance <= 0:
+        v.append(f"AURA-E009: tolerance must be > 0, got {tolerance}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_vanilla_gd(learning_rate, tolerance):
+    v = []
+    if isinstance(learning_rate, (int, float)) and learning_rate <= 0:
+        v.append(f"AURA-E009: learning_rate must be > 0, got {learning_rate}")
+    if isinstance(learning_rate, (int, float)) and learning_rate <= 0:
+        v.append(f"AURA-E001: learning_rate must be > 0, got {learning_rate}")
+    if isinstance(tolerance, (int, float)) and not math.isfinite(tolerance):
+        v.append(f"AURA-E008: tolerance must be finite, got {tolerance}")
+    if isinstance(tolerance, (int, float)) and tolerance <= 0:
+        v.append(f"AURA-E009: tolerance must be > 0, got {tolerance}")
+    if v:
+        raise AuraInputError(v)
+
 def vanilla_gd(
     x: float,
     y: float,
@@ -38,6 +74,7 @@ def vanilla_gd(
     Vanilla gradient descent.
     Returns (iterations to convergence, final function value).
     """
+    _aura_validate_vanilla_gd(learning_rate, tolerance)
     for i in range(max_iters):
         fx = quadratic_bowl(x, y)
         if fx < tolerance:
@@ -63,6 +100,7 @@ def momentum_gd(
     Maintains velocity (vx, vy) accumulated from past gradients.
     Returns (iterations to convergence, final function value).
     """
+    _aura_validate_momentum_gd(learning_rate, momentum, tolerance)
     vx, vy = 0.0, 0.0
 
     for i in range(max_iters):

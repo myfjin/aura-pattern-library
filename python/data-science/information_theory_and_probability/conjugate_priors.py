@@ -42,6 +42,23 @@ def beta_mean_variance(alpha: float, beta: float) -> Tuple[float, float]:
     return mean, variance
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_normal_normal_posterior_known_variance(sigma2_prior, sigma2_obs):
+    v = []
+    if isinstance(sigma2_prior, (int, float)) and not math.isfinite(sigma2_prior):
+        v.append(f"AURA-E008: sigma2_prior must be finite, got {sigma2_prior}")
+    if isinstance(sigma2_obs, (int, float)) and not math.isfinite(sigma2_obs):
+        v.append(f"AURA-E008: sigma2_obs must be finite, got {sigma2_obs}")
+    if v:
+        raise AuraInputError(v)
+
 def normal_normal_posterior_known_variance(
     mu_prior: float,
     sigma2_prior: float,
@@ -55,6 +72,7 @@ def normal_normal_posterior_known_variance(
     Likelihood: each observation ~ N(mu, sigma2_obs) (known)
     Posterior: N(mu_post, sigma2_post)
     """
+    _aura_validate_normal_normal_posterior_known_variance(sigma2_prior, sigma2_obs)
     n = len(observations)
     obs_mean = sum(observations) / n if n > 0 else 0.0
 

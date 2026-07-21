@@ -15,6 +15,40 @@ import math
 from typing import Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_fixed_n_test(p0, p1, alpha):
+    v = []
+    if isinstance(p0, (int, float)) and not math.isfinite(p0):
+        v.append(f"AURA-E008: p0 must be finite, got {p0}")
+    if isinstance(p1, (int, float)) and not math.isfinite(p1):
+        v.append(f"AURA-E008: p1 must be finite, got {p1}")
+    if isinstance(p1, (int, float)) and not (0.0 <= p1 <= 1.0):
+        v.append(f"AURA-E003: p1 must be in [0,1], got {p1}")
+    if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
+        v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_sprt(p0, p1, alpha, beta):
+    v = []
+    if isinstance(p0, (int, float)) and not math.isfinite(p0):
+        v.append(f"AURA-E008: p0 must be finite, got {p0}")
+    if isinstance(p1, (int, float)) and not math.isfinite(p1):
+        v.append(f"AURA-E008: p1 must be finite, got {p1}")
+    if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
+        v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    if isinstance(beta, (int, float)) and not math.isfinite(beta):
+        v.append(f"AURA-E008: beta must be finite, got {beta}")
+    if v:
+        raise AuraInputError(v)
+
 def sprt(
     data: list,
     p0: float,
@@ -27,6 +61,7 @@ def sprt(
     Stops when LR reaches threshold or runs out of data.
     Returns (decision, number of samples used).
     """
+    _aura_validate_sprt(p0, p1, alpha, beta)
     # Thresholds
     A = (1 - beta) / alpha
     B = beta / (1 - alpha)
@@ -56,6 +91,7 @@ def fixed_n_test(
     Fixed-n test: accumulate all data, make single decision.
     Roughly calibrated to same power as SPRT.
     """
+    _aura_validate_fixed_n_test(p0, p1, alpha)
     successes = sum(data)
     n = len(data)
     p_hat = successes / n

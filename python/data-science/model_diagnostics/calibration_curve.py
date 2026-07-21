@@ -16,11 +16,41 @@ import math
 from typing import List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_calibration_curve(n_bins):
+    v = []
+    if isinstance(n_bins, (int, float)) and n_bins <= 0:
+        v.append(f"AURA-E009: n_bins must be > 0, got {n_bins}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_generate_overconfident_data(n):
+    v = []
+    if isinstance(n, (int, float)) and n <= 0:
+        v.append(f"AURA-E009: n must be > 0, got {n}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_generate_well_calibrated_data(n):
+    v = []
+    if isinstance(n, (int, float)) and n <= 0:
+        v.append(f"AURA-E009: n must be > 0, got {n}")
+    if v:
+        raise AuraInputError(v)
+
 def generate_well_calibrated_data(n: int, seed: int) -> Tuple[List[float], List[int]]:
     """
     Generate synthetic data where predicted probabilities match true frequencies.
     P(y=1) is proportional to the score.
     """
+    _aura_validate_generate_well_calibrated_data(n)
     random.seed(seed)
     scores = []
     labels = []
@@ -38,6 +68,7 @@ def generate_well_calibrated_data(n: int, seed: int) -> Tuple[List[float], List[
 
 def generate_overconfident_data(n: int, seed: int) -> Tuple[List[float], List[int]]:
     """Generate overconfident predictions (predicted prob >> observed freq)."""
+    _aura_validate_generate_overconfident_data(n)
     random.seed(seed)
     scores = []
     labels = []
@@ -67,6 +98,7 @@ def calibration_curve(
     Compute calibration curve: bin scores, compute observed and predicted frequencies.
     Returns (bin_centers, predicted_probs, observed_freqs).
     """
+    _aura_validate_calibration_curve(n_bins)
     bins = []
     for i in range(n_bins):
         bins.append((i / n_bins, (i + 1) / n_bins))

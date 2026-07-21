@@ -16,6 +16,23 @@ import math
 from typing import Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_ab_test_proportions(conversions_a, conversions_b):
+    v = []
+    if isinstance(conversions_a, (int, float)) and conversions_a <= 0:
+        v.append(f"AURA-E009: conversions_a must be > 0, got {conversions_a}")
+    if isinstance(conversions_b, (int, float)) and conversions_b <= 0:
+        v.append(f"AURA-E009: conversions_b must be > 0, got {conversions_b}")
+    if v:
+        raise AuraInputError(v)
+
 def ab_test_proportions(conversions_a: int, trials_a: int, conversions_b: int, trials_b: int) -> Tuple[float, float, float]:
     """
     Perform z-test for two proportions.
@@ -29,6 +46,7 @@ def ab_test_proportions(conversions_a: int, trials_a: int, conversions_b: int, t
     Returns:
         Tuple of (z_statistic, p_value_approx, cohens_h).
     """
+    _aura_validate_ab_test_proportions(conversions_a, conversions_b)
     p_a = conversions_a / trials_a
     p_b = conversions_b / trials_b
     diff = p_a - p_b

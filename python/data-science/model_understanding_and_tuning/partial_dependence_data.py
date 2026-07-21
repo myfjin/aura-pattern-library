@@ -1,3 +1,4 @@
+import math
 """
 Partial Dependence Plot (PD) — Data Generation
 
@@ -37,8 +38,24 @@ def train_linear_model(X: List[List[float]], y: List[float]) -> Tuple[float, Lis
     return intercept, [w1, w2]
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_predict(intercept):
+    v = []
+    if isinstance(intercept, (int, float)) and intercept <= 0:
+        v.append(f"AURA-E009: intercept must be > 0, got {intercept}")
+    if v:
+        raise AuraInputError(v)
+
 def predict(x1: float, x2: float, intercept: float, weights: List[float]) -> float:
     """Predict using linear model."""
+    _aura_validate_predict(intercept)
     return intercept + weights[0] * x1 + weights[1] * x2
 
 

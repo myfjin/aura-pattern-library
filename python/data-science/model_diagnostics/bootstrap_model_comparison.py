@@ -44,6 +44,21 @@ def mean_absolute_error(
     return sum(abs(yt - yp) for yt, yp in zip(y_true, y_pred)) / len(y_true)
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_bootstrap_model_comparison(n_bootstraps):
+    v = []
+    if isinstance(n_bootstraps, (int, float)) and n_bootstraps <= 0:
+        v.append(f"AURA-E009: n_bootstraps must be > 0, got {n_bootstraps}")
+    if v:
+        raise AuraInputError(v)
+
 def bootstrap_model_comparison(
     test_data: List[Tuple[float, float]],
     model1: Callable[[float], float],
@@ -54,6 +69,7 @@ def bootstrap_model_comparison(
     Compare two models using bootstrap resampling.
     Returns (wins_model1, wins_model2, win_rate_model1).
     """
+    _aura_validate_bootstrap_model_comparison(n_bootstraps)
     wins1 = 0
     wins2 = 0
 

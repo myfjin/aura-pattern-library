@@ -16,8 +16,33 @@ import math
 from typing import List, Dict
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_sample_beta(alpha, beta):
+    v = []
+    if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
+        v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    if isinstance(beta, (int, float)) and not math.isfinite(beta):
+        v.append(f"AURA-E008: beta must be finite, got {beta}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_thompson_sampling_bandit(num_rounds):
+    v = []
+    if isinstance(num_rounds, (int, float)) and num_rounds <= 0:
+        v.append(f"AURA-E009: num_rounds must be > 0, got {num_rounds}")
+    if v:
+        raise AuraInputError(v)
+
 def sample_beta(alpha: float, beta: float) -> float:
     """Sample from Beta(alpha, beta) distribution using Gamma method."""
+    _aura_validate_sample_beta(alpha, beta)
     # Beta ~ Gamma(alpha) / (Gamma(alpha) + Gamma(beta))
     # Use simple approximation: sample via rejection or direct method
     # For speed, use numerical approximation
@@ -34,6 +59,7 @@ def thompson_sampling_bandit(
     Run Thompson sampling bandit.
     Returns dict with cumulative_reward and num_pulls per arm.
     """
+    _aura_validate_thompson_sampling_bandit(num_rounds)
     # Initialize Beta priors: Alpha=1, Beta=1 (uniform)
     alpha = [1.0] * num_arms
     beta = [1.0] * num_arms

@@ -1,3 +1,4 @@
+import math
 """
 Benjamini-Hochberg False Discovery Rate Correction
 
@@ -16,6 +17,21 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 from typing import List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_benjamini_hochberg(alpha):
+    v = []
+    if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
+        v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    if v:
+        raise AuraInputError(v)
+
 def benjamini_hochberg(p_values: List[float], alpha: float = 0.05) -> Tuple[List[bool], float]:
     """
     Benjamini-Hochberg FDR procedure.
@@ -29,6 +45,7 @@ def benjamini_hochberg(p_values: List[float], alpha: float = 0.05) -> Tuple[List
         - rejected: Boolean list indicating rejected hypotheses (True = reject H0, H1 accepted).
         - threshold: The p-value threshold used.
     """
+    _aura_validate_benjamini_hochberg(alpha)
     m = len(p_values)
 
     # Pair each p-value with its original index

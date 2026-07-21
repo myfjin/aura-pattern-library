@@ -1,3 +1,4 @@
+import math
 """Ranking metrics suite: Mean Reciprocal Rank, Precision@K, Recall@K.
 
 MRR = mean over queries of 1/(rank of the first relevant item). Precision@K = |relevant ∩
@@ -23,7 +24,23 @@ def precision_at_k(ranking: List[int], relevant: Set[int], k: int) -> float:
     top_k = ranking[:k]
     return sum(1 for x in top_k if x in relevant) / k
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_recall_at_k(relevant):
+    v = []
+    if isinstance(relevant, (int, float)) and relevant <= 0:
+        v.append(f"AURA-E009: relevant must be > 0, got {relevant}")
+    if v:
+        raise AuraInputError(v)
+
 def recall_at_k(ranking: List[int], relevant: Set[int], k: int) -> float:
+    _aura_validate_recall_at_k(relevant)
     top_k = ranking[:k]
     return sum(1 for x in top_k if x in relevant) / len(relevant) if relevant else 0.0
 

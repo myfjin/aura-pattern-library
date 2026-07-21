@@ -1,3 +1,4 @@
+import math
 """
 Exponential Smoothing
 
@@ -57,8 +58,24 @@ def forecast_ses(smoothed: List[float], horizon: int) -> List[float]:
     return [smoothed[-1]] * horizon
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_forecast_holt(trend):
+    v = []
+    if isinstance(trend, (int, float)) and trend <= 0:
+        v.append(f"AURA-E009: trend must be > 0, got {trend}")
+    if v:
+        raise AuraInputError(v)
+
 def forecast_holt(level: float, trend: float, horizon: int) -> List[float]:
     """Forecast with Holt's: level + trend * step."""
+    _aura_validate_forecast_holt(trend)
     return [level + trend * (h + 1) for h in range(horizon)]
 
 

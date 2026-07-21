@@ -11,7 +11,23 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List, Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_logistic(x):
+    v = []
+    if isinstance(x, (int, float)) and not math.isfinite(x):
+        v.append(f"AURA-E008: x must be finite, got {x}")
+    if v:
+        raise AuraInputError(v)
+
 def logistic(x: float) -> float:
+    _aura_validate_logistic(x)
     if x > 100:
         return 1.0
     if x < -100:

@@ -13,11 +13,27 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List, Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_weibull_mle(tol):
+    v = []
+    if isinstance(tol, (int, float)) and not math.isfinite(tol):
+        v.append(f"AURA-E008: tol must be finite, got {tol}")
+    if v:
+        raise AuraInputError(v)
+
 def weibull_mle(times: List[float], max_iter: int = 100, tol: float = 1e-10) -> Tuple[float, float]:
     """Estimate Weibull (shape k, scale λ) by maximum likelihood.
 
     Returns: (k, lambda). Newton-Raphson on the profiled shape equation.
     """
+    _aura_validate_weibull_mle(tol)
     n = len(times)
     ln_t = [math.log(t) for t in times]
     mean_ln = sum(ln_t) / n

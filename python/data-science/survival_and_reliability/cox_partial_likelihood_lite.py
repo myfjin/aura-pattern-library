@@ -10,6 +10,21 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List, Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_cox_partial_likelihood_2cov(tol):
+    v = []
+    if isinstance(tol, (int, float)) and not math.isfinite(tol):
+        v.append(f"AURA-E008: tol must be finite, got {tol}")
+    if v:
+        raise AuraInputError(v)
+
 def cox_partial_likelihood_2cov(
     times: List[float],
     events: List[int],
@@ -22,6 +37,7 @@ def cox_partial_likelihood_2cov(
 
     Returns: (beta1, beta2) where h(t|x) = h0(t) · exp(beta1·x1 + beta2·x2).
     """
+    _aura_validate_cox_partial_likelihood_2cov(tol)
     n = len(times)
     beta = [0.0, 0.0]
 

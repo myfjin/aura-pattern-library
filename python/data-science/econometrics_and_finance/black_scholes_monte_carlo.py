@@ -10,8 +10,35 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_black_scholes_call(r, sigma):
+    v = []
+    if isinstance(r, (int, float)) and not math.isfinite(r):
+        v.append(f"AURA-E008: r must be finite, got {r}")
+    if isinstance(sigma, (int, float)) and sigma < 0:
+        v.append(f"AURA-E-B5: sigma must be >= 0, got {sigma}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_monte_carlo_call(K, sigma):
+    v = []
+    if isinstance(K, (int, float)) and not math.isfinite(K):
+        v.append(f"AURA-E008: K must be finite, got {K}")
+    if isinstance(sigma, (int, float)) and sigma < 0:
+        v.append(f"AURA-E-B5: sigma must be >= 0, got {sigma}")
+    if v:
+        raise AuraInputError(v)
+
 def black_scholes_call(S: float, K: float, T: float, r: float, sigma: float) -> float:
     """Closed-form Black-Scholes call option price."""
+    _aura_validate_black_scholes_call(r, sigma)
     d1 = (math.log(S / K) + (r + 0.5 * sigma**2) * T) / (sigma * math.sqrt(T))
     d2 = d1 - sigma * math.sqrt(T)
 
@@ -24,6 +51,7 @@ def black_scholes_call(S: float, K: float, T: float, r: float, sigma: float) -> 
 
 def monte_carlo_call(S: float, K: float, T: float, r: float, sigma: float, num_sim: int) -> Tuple[float, float]:
     """Monte Carlo call price and standard error."""
+    _aura_validate_monte_carlo_call(K, sigma)
     import random
     payoffs = []
 

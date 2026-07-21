@@ -43,11 +43,33 @@ def empirical_std(samples: List[float]) -> float:
     return math.sqrt(variance)
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_coverage_percentile(true_mean, num_stds):
+    v = []
+    if isinstance(true_mean, (int, float)) and not math.isfinite(true_mean):
+        v.append(f"AURA-E008: true_mean must be finite, got {true_mean}")
+    if isinstance(true_mean, (int, float)) and true_mean <= 0:
+        v.append(f"AURA-E009: true_mean must be > 0, got {true_mean}")
+    if isinstance(num_stds, (int, float)) and not math.isfinite(num_stds):
+        v.append(f"AURA-E008: num_stds must be finite, got {num_stds}")
+    if isinstance(num_stds, (int, float)) and num_stds <= 0:
+        v.append(f"AURA-E009: num_stds must be > 0, got {num_stds}")
+    if v:
+        raise AuraInputError(v)
+
 def coverage_percentile(samples: List[float], true_mean: float, num_stds: float) -> float:
     """
     Compute empirical coverage: fraction of samples within num_stds standard deviations of true_mean.
     E.g., num_stds=1 should give ~68% for a normal distribution.
     """
+    _aura_validate_coverage_percentile(true_mean, num_stds)
     sample_std = empirical_std(samples)
     if sample_std < 1e-10:
         return 0.0

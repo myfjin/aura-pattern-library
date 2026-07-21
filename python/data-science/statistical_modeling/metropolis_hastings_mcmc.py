@@ -55,10 +55,26 @@ def metropolis_hastings(
     return samples, acceptance_rate
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_mixture_target(x):
+    v = []
+    if isinstance(x, (int, float)) and not math.isfinite(x):
+        v.append(f"AURA-E008: x must be finite, got {x}")
+    if v:
+        raise AuraInputError(v)
+
 def mixture_target(x: float) -> float:
     """
     Bimodal target: 0.5 * N(x; -2, 1) + 0.5 * N(x; 2, 1).
     """
+    _aura_validate_mixture_target(x)
     def gauss(x, mu, sd):
         return math.exp(-0.5 * ((x - mu) / sd) ** 2)
 

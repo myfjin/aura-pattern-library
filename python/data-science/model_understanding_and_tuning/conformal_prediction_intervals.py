@@ -1,3 +1,4 @@
+import math
 """
 Split-Conformal Prediction Intervals for Regression
 
@@ -33,6 +34,21 @@ def predict(x: float, params: Tuple[float, float]) -> float:
     return a + b * x
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_split_conformal_intervals(confidence):
+    v = []
+    if isinstance(confidence, (int, float)) and confidence <= 0:
+        v.append(f"AURA-E009: confidence must be > 0, got {confidence}")
+    if v:
+        raise AuraInputError(v)
+
 def split_conformal_intervals(
     X_train: List[float],
     y_train: List[float],
@@ -44,6 +60,7 @@ def split_conformal_intervals(
     Fit model on train, compute calibration residuals, set interval width.
     Returns (model_params, quantile_residual) for interval width.
     """
+    _aura_validate_split_conformal_intervals(confidence)
     # Train model
     params = simple_linear_model(X_train, y_train)
 

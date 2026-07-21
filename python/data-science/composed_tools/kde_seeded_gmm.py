@@ -40,8 +40,24 @@ def kde_modes(values: List[float], n_grid: int = 200) -> List[float]:
             if dens[i] > dens[i - 1] and dens[i] > dens[i + 1]]
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_em_gmm(tol):
+    v = []
+    if isinstance(tol, (int, float)) and not math.isfinite(tol):
+        v.append(f"AURA-E008: tol must be finite, got {tol}")
+    if v:
+        raise AuraInputError(v)
+
 def em_gmm(values: List[float], means: List[float], iters: int = 200,
            tol: float = 1e-7) -> Tuple[List[float], List[float], List[float], float, int]:
+    _aura_validate_em_gmm(tol)
     k = len(means)
     mu = list(means)
     var = [1.0] * k

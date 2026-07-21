@@ -1,3 +1,4 @@
+import math
 """
 Lift & Gain Chart
 
@@ -14,6 +15,30 @@ import random
 from typing import List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_generate_scored_labels(n_positive, n_negative):
+    v = []
+    if isinstance(n_positive, (int, float)) and n_positive <= 0:
+        v.append(f"AURA-E009: n_positive must be > 0, got {n_positive}")
+    if isinstance(n_negative, (int, float)) and n_negative <= 0:
+        v.append(f"AURA-E009: n_negative must be > 0, got {n_negative}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_lift_gain_chart(n_deciles):
+    v = []
+    if isinstance(n_deciles, (int, float)) and n_deciles <= 0:
+        v.append(f"AURA-E009: n_deciles must be > 0, got {n_deciles}")
+    if v:
+        raise AuraInputError(v)
+
 def generate_scored_labels(
     n_positive: int, n_negative: int, signal_strength: float, seed: int
 ) -> List[Tuple[float, int]]:
@@ -21,6 +46,7 @@ def generate_scored_labels(
     Generate predicted scores and true labels.
     Positive labels have higher scores proportional to signal_strength.
     """
+    _aura_validate_generate_scored_labels(n_positive, n_negative)
     random.seed(seed)
     data = []
 
@@ -44,6 +70,7 @@ def lift_gain_chart(scores: List[float], labels: List[int], n_deciles: int = 10)
     Compute gain and lift by decile.
     Returns (decile_percentages, gains, lifts).
     """
+    _aura_validate_lift_gain_chart(n_deciles)
     # Sort by score descending
     scored_labels = sorted(zip(scores, labels), key=lambda x: -x[0])
     labels_sorted = [l for s, l in scored_labels]

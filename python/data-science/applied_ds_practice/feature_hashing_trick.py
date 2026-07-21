@@ -1,3 +1,4 @@
+import math
 """
 Feature hashing for dimensionality reduction of high-dimensional sparse features.
 
@@ -52,6 +53,21 @@ def dot_product(v1: list[float], v2: list[float]) -> float:
     return sum(a * b for a, b in zip(v1, v2))
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_simple_linear_classifier(iterations):
+    v = []
+    if isinstance(iterations, (int, float)) and iterations <= 0:
+        v.append(f"AURA-E009: iterations must be > 0, got {iterations}")
+    if v:
+        raise AuraInputError(v)
+
 def simple_linear_classifier(X_train: list[list[float]], y_train: list[int],
                              X_test: list[list[float]],
                              iterations: int = 100) -> list[float]:
@@ -59,6 +75,7 @@ def simple_linear_classifier(X_train: list[list[float]], y_train: list[int],
     Train a simple linear classifier via stochastic gradient descent.
     Return soft predictions.
     """
+    _aura_validate_simple_linear_classifier(iterations)
     n_features = len(X_train[0]) if X_train else 0
     weights = [0.0] * n_features
 

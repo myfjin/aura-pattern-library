@@ -48,15 +48,14 @@ class CountMinSketch:
             estimates.append(self.table[d][idx])
         return min(estimates)
 
-    def find_heavy_hitters(self, threshold: int) -> List[str]:
-        """Find approximate heavy hitters above threshold."""
-        # Scan all cells and collect candidates
-        candidates = set()
-        for row in self.table:
-            for count in row:
-                if count >= threshold:
-                    candidates.add(count)
-        return sorted(list(candidates))
+    def find_heavy_hitters(self, candidates: List[str], threshold: int) -> List[str]:
+        """Return candidate ITEMS whose estimated count is >= threshold.
+
+        A Count-Min Sketch is keyless — it stores no item names, only hashed counts —
+        so heavy-hitter detection must be given the set of candidate items to query.
+        (The previous version scanned raw cell COUNTS and returned integers, not items.)
+        """
+        return sorted(c for c in candidates if self.query(c) >= threshold)
 
 
 if __name__ == "__main__":
@@ -103,5 +102,11 @@ if __name__ == "__main__":
     total_stream = len(stream)
     max_allowed_error = int(sketch.epsilon * total_stream) + 5  # Allow some slack
     assert cat_est - 50 <= max_allowed_error, f"Error too large: {cat_est - 50}"
+
+    # Heavy-hitter detection: CMS is keyless, so we pass the candidate items to query.
+    all_items = ["cat", "dog"] + light_items
+    heavy = sketch.find_heavy_hitters(all_items, threshold=30)
+    print(f"Heavy hitters (>=30): {heavy}")
+    assert set(heavy) == {"cat", "dog"}, f"Expected {{cat, dog}}, got {heavy}"
 
     print("✓ Count-Min Sketch: PASS")

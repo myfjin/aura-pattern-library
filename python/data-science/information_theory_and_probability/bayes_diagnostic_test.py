@@ -1,3 +1,4 @@
+import math
 """
 Bayes' theorem for diagnostic testing: sensitivity/specificity/prevalence → PPV/NPV.
 
@@ -16,6 +17,29 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 from typing import Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_bayes_diagnostic(sensitivity, specificity, prevalence):
+    v = []
+    if isinstance(sensitivity, (int, float)) and not math.isfinite(sensitivity):
+        v.append(f"AURA-E008: sensitivity must be finite, got {sensitivity}")
+    if isinstance(sensitivity, (int, float)) and sensitivity <= 0:
+        v.append(f"AURA-E009: sensitivity must be > 0, got {sensitivity}")
+    if isinstance(specificity, (int, float)) and not math.isfinite(specificity):
+        v.append(f"AURA-E008: specificity must be finite, got {specificity}")
+    if isinstance(prevalence, (int, float)) and not math.isfinite(prevalence):
+        v.append(f"AURA-E008: prevalence must be finite, got {prevalence}")
+    if isinstance(prevalence, (int, float)) and prevalence <= 0:
+        v.append(f"AURA-E009: prevalence must be > 0, got {prevalence}")
+    if v:
+        raise AuraInputError(v)
+
 def bayes_diagnostic(
     sensitivity: float,
     specificity: float,
@@ -32,6 +56,7 @@ def bayes_diagnostic(
         PPV = P(disease | +) = positive predictive value
         NPV = P(no disease | -) = negative predictive value
     """
+    _aura_validate_bayes_diagnostic(sensitivity, specificity, prevalence)
     # P(+ | disease) * P(disease)
     tp_prob = sensitivity * prevalence
 

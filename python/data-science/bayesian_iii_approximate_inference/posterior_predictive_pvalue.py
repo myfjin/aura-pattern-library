@@ -9,11 +9,27 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_posterior_predictive_pvalue(observed_stat):
+    v = []
+    if isinstance(observed_stat, (int, float)) and not math.isfinite(observed_stat):
+        v.append(f"AURA-E008: observed_stat must be finite, got {observed_stat}")
+    if v:
+        raise AuraInputError(v)
+
 def posterior_predictive_pvalue(observed_stat: float, posterior_samples: List[float]) -> float:
     """Compute posterior predictive p-value.
 
     p-value = fraction of posterior predictive samples ≥ observed statistic.
     """
+    _aura_validate_posterior_predictive_pvalue(observed_stat)
     count = sum(1 for s in posterior_samples if s >= observed_stat)
     return count / len(posterior_samples) if posterior_samples else 0.5
 

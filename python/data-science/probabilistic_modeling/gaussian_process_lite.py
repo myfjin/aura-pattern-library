@@ -13,8 +13,39 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List, Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_gp_posterior(noise, length_scale):
+    v = []
+    if isinstance(noise, (int, float)) and noise <= 0:
+        v.append(f"AURA-E009: noise must be > 0, got {noise}")
+    if isinstance(length_scale, (int, float)) and not math.isfinite(length_scale):
+        v.append(f"AURA-E008: length_scale must be finite, got {length_scale}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_rbf_kernel(x1, x2, length_scale, sigma):
+    v = []
+    if isinstance(x1, (int, float)) and not math.isfinite(x1):
+        v.append(f"AURA-E008: x1 must be finite, got {x1}")
+    if isinstance(x2, (int, float)) and not math.isfinite(x2):
+        v.append(f"AURA-E008: x2 must be finite, got {x2}")
+    if isinstance(length_scale, (int, float)) and not math.isfinite(length_scale):
+        v.append(f"AURA-E008: length_scale must be finite, got {length_scale}")
+    if isinstance(sigma, (int, float)) and sigma < 0:
+        v.append(f"AURA-E-B5: sigma must be >= 0, got {sigma}")
+    if v:
+        raise AuraInputError(v)
+
 def rbf_kernel(x1: float, x2: float, length_scale: float = 1.0, sigma: float = 1.0) -> float:
     """RBF kernel: σ² exp(-||x1-x2||² / (2 * ℓ²))."""
+    _aura_validate_rbf_kernel(x1, x2, length_scale, sigma)
     dist_sq = (x1 - x2) ** 2
     return sigma ** 2 * math.exp(-dist_sq / (2 * length_scale ** 2))
 
@@ -57,6 +88,7 @@ def gp_posterior(X_train: List[float], y_train: List[float],
     GP posterior mean and ~95% CI on test set.
     Returns: (mean, upper_ci_bound)
     """
+    _aura_validate_gp_posterior(noise, length_scale)
     n_train = len(X_train)
     n_test = len(X_test)
 

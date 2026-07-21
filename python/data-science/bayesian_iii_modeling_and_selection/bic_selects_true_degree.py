@@ -37,7 +37,23 @@ def polynomial_rss(x: List[float], y: List[float], degree: int) -> float:
     pred = [sum(coef[j] * xi ** j for j in range(degree + 1)) for xi in x]
     return sum((y[i] - pred[i]) ** 2 for i in range(n))
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_bic(k):
+    v = []
+    if isinstance(k, (int, float)) and k <= 0:
+        v.append(f"AURA-E009: k must be > 0, got {k}")
+    if v:
+        raise AuraInputError(v)
+
 def bic(rss: float, n: int, k: int) -> float:
+    _aura_validate_bic(k)
     return n * math.log(rss / n) + k * math.log(n)
 
 if __name__ == "__main__":

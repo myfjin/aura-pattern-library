@@ -16,6 +16,36 @@ import math
 from typing import List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_gaussian_probability(x, mean, std):
+    v = []
+    if isinstance(x, (int, float)) and not math.isfinite(x):
+        v.append(f"AURA-E008: x must be finite, got {x}")
+    if isinstance(mean, (int, float)) and not math.isfinite(mean):
+        v.append(f"AURA-E008: mean must be finite, got {mean}")
+    if isinstance(mean, (int, float)) and mean <= 0:
+        v.append(f"AURA-E009: mean must be > 0, got {mean}")
+    if isinstance(std, (int, float)) and not math.isfinite(std):
+        v.append(f"AURA-E008: std must be finite, got {std}")
+    if isinstance(std, (int, float)) and std < 0:
+        v.append(f"AURA-E-B5: std must be >= 0, got {std}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_generate_gaussian_data(n_per_class):
+    v = []
+    if isinstance(n_per_class, (int, float)) and n_per_class <= 0:
+        v.append(f"AURA-E009: n_per_class must be > 0, got {n_per_class}")
+    if v:
+        raise AuraInputError(v)
+
 def generate_gaussian_data(
     n_per_class: int, seed: int
 ) -> Tuple[List[Tuple[float, float]], List[int]]:
@@ -23,6 +53,7 @@ def generate_gaussian_data(
     Generate 2D Gaussian data for two classes.
     Class 0: mean=[0, 0], Class 1: mean=[3, 3].
     """
+    _aura_validate_generate_gaussian_data(n_per_class)
     random.seed(seed)
     X = []
     y = []
@@ -87,6 +118,7 @@ def fit_gaussian_naive_bayes(
 
 def gaussian_probability(x: float, mean: float, std: float) -> float:
     """Compute Gaussian PDF at x."""
+    _aura_validate_gaussian_probability(x, mean, std)
     if std == 0:
         return 0
     exponent = -((x - mean) ** 2) / (2 * std * std)

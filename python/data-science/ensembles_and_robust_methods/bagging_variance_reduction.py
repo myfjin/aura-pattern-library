@@ -1,3 +1,4 @@
+import math
 """
 Bagging for Variance Reduction.
 
@@ -26,7 +27,23 @@ def true_fn(x: float) -> float:
     return 2.0 * x
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_make_training_set(n):
+    v = []
+    if isinstance(n, (int, float)) and n <= 0:
+        v.append(f"AURA-E009: n must be > 0, got {n}")
+    if v:
+        raise AuraInputError(v)
+
 def make_training_set(n: int) -> Tuple[List[float], List[float]]:
+    _aura_validate_make_training_set(n)
     X = [random.uniform(0.0, 10.0) for _ in range(n)]
     y = [true_fn(x) + random.gauss(0.0, 3.0) for x in X]
     return X, y

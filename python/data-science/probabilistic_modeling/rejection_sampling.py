@@ -40,8 +40,31 @@ def rejection_sample_1d(target_density, proposal_sample, proposal_density,
     return samples, acceptance_rate
 
 # Example: sample from a mixture-like 1D density
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_proposal_density(x):
+    v = []
+    if isinstance(x, (int, float)) and not math.isfinite(x):
+        v.append(f"AURA-E008: x must be finite, got {x}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_target_density(x):
+    v = []
+    if isinstance(x, (int, float)) and not math.isfinite(x):
+        v.append(f"AURA-E008: x must be finite, got {x}")
+    if v:
+        raise AuraInputError(v)
+
 def target_density(x: float) -> float:
     """Unnormalized density: mixture of two bumps."""
+    _aura_validate_target_density(x)
     return math.exp(-0.5 * ((x - 2) / 0.7) ** 2) + 0.5 * math.exp(-0.5 * ((x + 2) / 0.5) ** 2)
 
 def proposal_sample() -> float:
@@ -50,6 +73,7 @@ def proposal_sample() -> float:
 
 def proposal_density(x: float) -> float:
     """Uniform density."""
+    _aura_validate_proposal_density(x)
     if -5 <= x <= 5:
         return 1.0 / 10
     return 0

@@ -29,8 +29,26 @@ def silverman_bandwidth(samples: List[float]) -> float:
     return h
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_gaussian_kernel_density(x, h):
+    v = []
+    if isinstance(x, (int, float)) and not math.isfinite(x):
+        v.append(f"AURA-E008: x must be finite, got {x}")
+    if isinstance(h, (int, float)) and not math.isfinite(h):
+        v.append(f"AURA-E008: h must be finite, got {h}")
+    if v:
+        raise AuraInputError(v)
+
 def gaussian_kernel_density(samples: List[float], x: float, h: float) -> float:
     """Evaluate KDE at x using Gaussian kernel with bandwidth h."""
+    _aura_validate_gaussian_kernel_density(x, h)
     n = len(samples)
     if n == 0:
         return 0.0

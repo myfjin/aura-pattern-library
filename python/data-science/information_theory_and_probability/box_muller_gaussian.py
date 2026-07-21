@@ -73,11 +73,29 @@ def empirical_skewness(samples: List[float]) -> float:
     return third_moment / (std ** 3)
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_coverage_percentile(num_stds):
+    v = []
+    if isinstance(num_stds, (int, float)) and not math.isfinite(num_stds):
+        v.append(f"AURA-E008: num_stds must be finite, got {num_stds}")
+    if isinstance(num_stds, (int, float)) and num_stds <= 0:
+        v.append(f"AURA-E009: num_stds must be > 0, got {num_stds}")
+    if v:
+        raise AuraInputError(v)
+
 def coverage_percentile(samples: List[float], num_stds: float) -> float:
     """
     Compute empirical coverage: fraction of samples within num_stds standard deviations of mean.
     E.g., num_stds=1 should give ~68% for a normal distribution.
     """
+    _aura_validate_coverage_percentile(num_stds)
     mean = empirical_mean(samples)
     std = math.sqrt(empirical_variance(samples))
     within = sum(1 for x in samples if abs(x - mean) <= num_stds * std)

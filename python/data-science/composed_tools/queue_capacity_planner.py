@@ -1,3 +1,4 @@
+import math
 """
 Queue Capacity Planner — simulate your queue's future before you deploy it.
 
@@ -21,10 +22,45 @@ import random
 from typing import Dict, List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_plan_capacity(service_rate, sla_mean_wait):
+    v = []
+    if isinstance(service_rate, (int, float)) and not math.isfinite(service_rate):
+        v.append(f"AURA-E008: service_rate must be finite, got {service_rate}")
+    if isinstance(service_rate, (int, float)) and service_rate <= 0:
+        v.append(f"AURA-E001: service_rate must be > 0, got {service_rate}")
+    if isinstance(sla_mean_wait, (int, float)) and not math.isfinite(sla_mean_wait):
+        v.append(f"AURA-E008: sla_mean_wait must be finite, got {sla_mean_wait}")
+    if isinstance(sla_mean_wait, (int, float)) and sla_mean_wait <= 0:
+        v.append(f"AURA-E009: sla_mean_wait must be > 0, got {sla_mean_wait}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_simulate_queue(arrival_rate, service_rate):
+    v = []
+    if isinstance(arrival_rate, (int, float)) and not math.isfinite(arrival_rate):
+        v.append(f"AURA-E008: arrival_rate must be finite, got {arrival_rate}")
+    if isinstance(arrival_rate, (int, float)) and arrival_rate <= 0:
+        v.append(f"AURA-E001: arrival_rate must be > 0, got {arrival_rate}")
+    if isinstance(service_rate, (int, float)) and not math.isfinite(service_rate):
+        v.append(f"AURA-E008: service_rate must be finite, got {service_rate}")
+    if isinstance(service_rate, (int, float)) and service_rate <= 0:
+        v.append(f"AURA-E001: service_rate must be > 0, got {service_rate}")
+    if v:
+        raise AuraInputError(v)
+
 def simulate_queue(arrival_rate: float, service_rate: float, workers: int,
                    n_jobs: int, seed: int) -> Dict[str, float]:
     """Discrete-event simulation: Poisson arrivals, exponential service,
     `workers` parallel servers, FIFO queue. Returns wait statistics."""
+    _aura_validate_simulate_queue(arrival_rate, service_rate)
     rng = random.Random(seed)
     t, arrivals = 0.0, []
     for _ in range(n_jobs):
@@ -51,6 +87,7 @@ def simulate_queue(arrival_rate: float, service_rate: float, workers: int,
 def plan_capacity(arrival_rate: float, service_rate: float, sla_mean_wait: float,
                   n_jobs: int = 30000) -> Tuple[int, Dict[int, float]]:
     """Smallest worker count whose simulated mean wait meets the SLA."""
+    _aura_validate_plan_capacity(service_rate, sla_mean_wait)
     results: Dict[int, float] = {}
     k = max(1, int(arrival_rate / service_rate) + 1)   # start at stability
     while k < 50:

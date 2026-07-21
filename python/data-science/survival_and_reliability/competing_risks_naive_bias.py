@@ -1,3 +1,4 @@
+import math
 """Competing risks: the naive 1−KM overestimates incidence; Aalen-Johansen is correct.
 
 With competing events, a common MISTAKE is to estimate the cumulative incidence of
@@ -13,12 +14,35 @@ Core claim: with censoring present, naive (1−KM) > correct (Aalen-Johansen); b
 _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
 from typing import List, Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_aalen_johansen_cif(event_type):
+    v = []
+    if isinstance(event_type, (int, float)) and event_type <= 0:
+        v.append(f"AURA-E009: event_type must be > 0, got {event_type}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_naive_km_cif(event_type):
+    v = []
+    if isinstance(event_type, (int, float)) and event_type <= 0:
+        v.append(f"AURA-E009: event_type must be > 0, got {event_type}")
+    if v:
+        raise AuraInputError(v)
+
 def naive_km_cif(times: List[float], events: List[int], event_type: int) -> Tuple[List[float], List[float]]:
     """NAIVE cumulative incidence = 1 − (cause-specific Kaplan-Meier).
 
     Treats competing events and censoring alike as independent censoring — the classic
     error that overestimates incidence.
     """
+    _aura_validate_naive_km_cif(event_type)
     n = len(times)
     event_times = sorted(set(times))
     surv = 1.0
@@ -35,6 +59,7 @@ def naive_km_cif(times: List[float], events: List[int], event_type: int) -> Tupl
 
 def aalen_johansen_cif(times: List[float], events: List[int], event_type: int) -> Tuple[List[float], List[float]]:
     """CORRECT cumulative incidence (Aalen-Johansen): cause-1 hazard weighted by S(t⁻)."""
+    _aura_validate_aalen_johansen_cif(event_type)
     n = len(times)
     event_times = sorted(set(times))
     cif = [0.0]

@@ -23,8 +23,28 @@ def distance(simulated: List[float], observed: List[float]) -> float:
     """Summary distance: absolute difference in means."""
     return abs(sum(simulated) / len(simulated) - sum(observed) / len(observed))
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_abc_rejection(n_samples, epsilon):
+    v = []
+    if isinstance(n_samples, (int, float)) and n_samples <= 0:
+        v.append(f"AURA-E009: n_samples must be > 0, got {n_samples}")
+    if isinstance(epsilon, (int, float)) and not math.isfinite(epsilon):
+        v.append(f"AURA-E008: epsilon must be finite, got {epsilon}")
+    if isinstance(epsilon, (int, float)) and epsilon <= 0:
+        v.append(f"AURA-E009: epsilon must be > 0, got {epsilon}")
+    if v:
+        raise AuraInputError(v)
+
 def abc_rejection(observed: List[float], n_samples: int, epsilon: float) -> Tuple[List[float], float]:
     """ABC rejection sampler. Returns (posterior_samples, acceptance_rate)."""
+    _aura_validate_abc_rejection(n_samples, epsilon)
     accepted = []
     for _ in range(n_samples):
         theta = prior_sample()

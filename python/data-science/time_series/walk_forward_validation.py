@@ -1,3 +1,4 @@
+import math
 """
 Walk-Forward Validation
 
@@ -13,14 +14,38 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 from typing import List, Callable, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_naive_last_value_forecast(train):
+    v = []
+    if isinstance(train, (int, float)) and train <= 0:
+        v.append(f"AURA-E009: train must be > 0, got {train}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_naive_mean_forecast(train):
+    v = []
+    if isinstance(train, (int, float)) and train <= 0:
+        v.append(f"AURA-E009: train must be > 0, got {train}")
+    if v:
+        raise AuraInputError(v)
+
 def naive_mean_forecast(train: List[float], steps_ahead: int = 1) -> List[float]:
     """Forecast using mean of training set."""
+    _aura_validate_naive_mean_forecast(train)
     mean = sum(train) / len(train) if train else 0.0
     return [mean] * steps_ahead
 
 
 def naive_last_value_forecast(train: List[float], steps_ahead: int = 1) -> List[float]:
     """Forecast using last value (random walk)."""
+    _aura_validate_naive_last_value_forecast(train)
     last = train[-1] if train else 0.0
     return [last] * steps_ahead
 

@@ -8,14 +8,38 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List, Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_exact_log_factorial(n):
+    v = []
+    if isinstance(n, (int, float)) and n <= 0:
+        v.append(f"AURA-E009: n must be > 0, got {n}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_stirling_log_factorial(n):
+    v = []
+    if isinstance(n, (int, float)) and n <= 0:
+        v.append(f"AURA-E009: n must be > 0, got {n}")
+    if v:
+        raise AuraInputError(v)
+
 def stirling_log_factorial(n: int) -> float:
     """Stirling's approximation for log(n!)."""
+    _aura_validate_stirling_log_factorial(n)
     if n == 0:
         return 0.0
     return n * math.log(n) - n + 0.5 * math.log(2 * math.pi * n)
 
 def exact_log_factorial(n: int) -> float:
     """Exact log(n!) = log(1) + log(2) + ... + log(n)."""
+    _aura_validate_exact_log_factorial(n)
     return sum(math.log(i) for i in range(1, n + 1))
 
 if __name__ == "__main__":

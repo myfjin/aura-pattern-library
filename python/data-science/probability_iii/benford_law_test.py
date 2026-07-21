@@ -9,8 +9,24 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_benford_expected_frequencies(n):
+    v = []
+    if isinstance(n, (int, float)) and n <= 0:
+        v.append(f"AURA-E009: n must be > 0, got {n}")
+    if v:
+        raise AuraInputError(v)
+
 def benford_expected_frequencies(n: int) -> List[float]:
     """Expected frequencies for first digit under Benford's law."""
+    _aura_validate_benford_expected_frequencies(n)
     freqs = [n * math.log10(1 + 1 / d) for d in range(1, 10)]
     return freqs
 

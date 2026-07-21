@@ -1,3 +1,4 @@
+import math
 """
 Threshold Tuning with Asymmetric Misclassification Costs
 
@@ -15,6 +16,40 @@ import random
 from typing import List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_compute_total_cost(threshold, cost_fp, cost_fn):
+    v = []
+    if isinstance(threshold, (int, float)) and not math.isfinite(threshold):
+        v.append(f"AURA-E008: threshold must be finite, got {threshold}")
+    if isinstance(cost_fp, (int, float)) and not math.isfinite(cost_fp):
+        v.append(f"AURA-E008: cost_fp must be finite, got {cost_fp}")
+    if isinstance(cost_fn, (int, float)) and not math.isfinite(cost_fn):
+        v.append(f"AURA-E008: cost_fn must be finite, got {cost_fn}")
+    if isinstance(cost_fn, (int, float)) and cost_fn <= 0:
+        v.append(f"AURA-E009: cost_fn must be > 0, got {cost_fn}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_find_optimal_threshold(cost_fp, cost_fn, grid_size):
+    v = []
+    if isinstance(cost_fp, (int, float)) and not math.isfinite(cost_fp):
+        v.append(f"AURA-E008: cost_fp must be finite, got {cost_fp}")
+    if isinstance(cost_fn, (int, float)) and not math.isfinite(cost_fn):
+        v.append(f"AURA-E008: cost_fn must be finite, got {cost_fn}")
+    if isinstance(cost_fn, (int, float)) and cost_fn <= 0:
+        v.append(f"AURA-E009: cost_fn must be > 0, got {cost_fn}")
+    if isinstance(grid_size, (int, float)) and grid_size <= 0:
+        v.append(f"AURA-E009: grid_size must be > 0, got {grid_size}")
+    if v:
+        raise AuraInputError(v)
+
 def compute_total_cost(
     y_true: List[float],
     y_scores: List[float],
@@ -27,6 +62,7 @@ def compute_total_cost(
     cost_fp: cost of false positive
     cost_fn: cost of false negative
     """
+    _aura_validate_compute_total_cost(threshold, cost_fp, cost_fn)
     total_cost = 0.0
     for y, score in zip(y_true, y_scores):
         pred = 1 if score >= threshold else 0
@@ -50,6 +86,7 @@ def find_optimal_threshold(
     Grid search over thresholds to find minimum total cost.
     Returns (best_threshold, min_cost).
     """
+    _aura_validate_find_optimal_threshold(cost_fp, cost_fn, grid_size)
     best_threshold = 0.0
     best_cost = compute_total_cost(y_true, y_scores, 0.0, cost_fp, cost_fn)
 

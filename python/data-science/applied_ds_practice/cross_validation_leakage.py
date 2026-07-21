@@ -50,12 +50,28 @@ def select_top_features(X: list[list[float]], y: list[int], k: int) -> list[int]
     return [j for j, _ in feature_importance[:k]]
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_knn_classify(k):
+    v = []
+    if isinstance(k, (int, float)) and k <= 0:
+        v.append(f"AURA-E009: k must be > 0, got {k}")
+    if v:
+        raise AuraInputError(v)
+
 def knn_classify(X_train: list[list[float]], y_train: list[int],
                  X_test: list[list[float]], k: int = 3) -> list[int]:
     """
     Simple k-NN classifier for speed in demo.
     Returns class predictions.
     """
+    _aura_validate_knn_classify(k)
     preds = []
     for x_test in X_test:
         distances = []

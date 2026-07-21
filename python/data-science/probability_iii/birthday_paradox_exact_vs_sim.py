@@ -9,8 +9,31 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_birthday_probability_exact(n):
+    v = []
+    if isinstance(n, (int, float)) and n <= 0:
+        v.append(f"AURA-E009: n must be > 0, got {n}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_birthday_probability_sim(n):
+    v = []
+    if isinstance(n, (int, float)) and n <= 0:
+        v.append(f"AURA-E009: n must be > 0, got {n}")
+    if v:
+        raise AuraInputError(v)
+
 def birthday_probability_exact(n: int, days: int = 365) -> float:
     """Exact probability that ≥2 people share a birthday (n people, days possibilities)."""
+    _aura_validate_birthday_probability_exact(n)
     if n > days:
         return 1.0
 
@@ -22,6 +45,7 @@ def birthday_probability_exact(n: int, days: int = 365) -> float:
 
 def birthday_probability_sim(n: int, days: int = 365, num_sim: int = 10000) -> float:
     """Simulated probability via collision detection."""
+    _aura_validate_birthday_probability_sim(n)
     import random
     successes = 0
 

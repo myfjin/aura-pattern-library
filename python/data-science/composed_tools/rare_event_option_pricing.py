@@ -24,7 +24,23 @@ from typing import Tuple
 S0, K, R, SIGMA, T = 100.0, 200.0, 0.02, 0.2, 1.0   # deep OTM call
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_norm_cdf(x):
+    v = []
+    if isinstance(x, (int, float)) and not math.isfinite(x):
+        v.append(f"AURA-E008: x must be finite, got {x}")
+    if v:
+        raise AuraInputError(v)
+
 def norm_cdf(x: float) -> float:
+    _aura_validate_norm_cdf(x)
     return 0.5 * (1.0 + math.erf(x / math.sqrt(2.0)))
 
 
