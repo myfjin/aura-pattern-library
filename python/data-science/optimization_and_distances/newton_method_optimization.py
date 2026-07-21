@@ -27,8 +27,46 @@ def gradient(x: float) -> float:
     return 6 * x - 12
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_gradient_descent(learning_rate, tolerance):
+    v = []
+    if isinstance(learning_rate, (int, float)) and learning_rate <= 0:
+        v.append(f"AURA-E009: learning_rate must be > 0, got {learning_rate}")
+    if isinstance(learning_rate, (int, float)) and learning_rate <= 0:
+        v.append(f"AURA-E001: learning_rate must be > 0, got {learning_rate}")
+    if isinstance(tolerance, (int, float)) and not math.isfinite(tolerance):
+        v.append(f"AURA-E008: tolerance must be finite, got {tolerance}")
+    if isinstance(tolerance, (int, float)) and tolerance <= 0:
+        v.append(f"AURA-E009: tolerance must be > 0, got {tolerance}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_hessian(x):
+    v = []
+    if isinstance(x, (int, float)) and not math.isfinite(x):
+        v.append(f"AURA-E008: x must be finite, got {x}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_newton_method(tolerance):
+    v = []
+    if isinstance(tolerance, (int, float)) and not math.isfinite(tolerance):
+        v.append(f"AURA-E008: tolerance must be finite, got {tolerance}")
+    if isinstance(tolerance, (int, float)) and tolerance <= 0:
+        v.append(f"AURA-E009: tolerance must be > 0, got {tolerance}")
+    if v:
+        raise AuraInputError(v)
+
 def hessian(x: float) -> float:
     """d²f/dx² = 6 (constant)."""
+    _aura_validate_hessian(x)
     return 6.0
 
 
@@ -40,6 +78,7 @@ def newton_method(
     x_new = x_old - f'(x) / f''(x)
     Returns (iterations, final_x).
     """
+    _aura_validate_newton_method(tolerance)
     x = x_init
 
     for i in range(max_iters):
@@ -65,6 +104,7 @@ def gradient_descent(
     Gradient descent for comparison.
     Returns (iterations, final_x).
     """
+    _aura_validate_gradient_descent(learning_rate, tolerance)
     x = x_init
 
     for i in range(max_iters):

@@ -16,8 +16,46 @@ import random
 import math
 from typing import List, Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_fit_line_huber(delta, learning_rate, iterations):
+    v = []
+    if isinstance(delta, (int, float)) and not math.isfinite(delta):
+        v.append(f"AURA-E008: delta must be finite, got {delta}")
+    if isinstance(learning_rate, (int, float)) and learning_rate <= 0:
+        v.append(f"AURA-E009: learning_rate must be > 0, got {learning_rate}")
+    if isinstance(learning_rate, (int, float)) and learning_rate <= 0:
+        v.append(f"AURA-E001: learning_rate must be > 0, got {learning_rate}")
+    if isinstance(iterations, (int, float)) and iterations <= 0:
+        v.append(f"AURA-E009: iterations must be > 0, got {iterations}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_huber_gradient(residual, delta):
+    v = []
+    if isinstance(residual, (int, float)) and not math.isfinite(residual):
+        v.append(f"AURA-E008: residual must be finite, got {residual}")
+    if isinstance(delta, (int, float)) and not math.isfinite(delta):
+        v.append(f"AURA-E008: delta must be finite, got {delta}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_huber_loss(delta):
+    v = []
+    if isinstance(delta, (int, float)) and not math.isfinite(delta):
+        v.append(f"AURA-E008: delta must be finite, got {delta}")
+    if v:
+        raise AuraInputError(v)
+
 def huber_loss(residual: float, delta: float = 1.0) -> float:
     """Huber loss: smooth transition between L2 and L1."""
+    _aura_validate_huber_loss(delta)
     abs_res = abs(residual)
     if abs_res <= delta:
         return 0.5 * residual ** 2
@@ -26,6 +64,7 @@ def huber_loss(residual: float, delta: float = 1.0) -> float:
 
 def huber_gradient(residual: float, delta: float = 1.0) -> float:
     """Gradient of Huber loss w.r.t. residual."""
+    _aura_validate_huber_gradient(residual, delta)
     abs_res = abs(residual)
     if abs_res <= delta:
         return residual
@@ -47,6 +86,7 @@ def fit_line_huber(X: List[float], y: List[float], delta: float = 1.5,
     Returns:
         (m, b) coefficients
     """
+    _aura_validate_fit_line_huber(delta, learning_rate, iterations)
     n = len(X)
     # Initialize with OLS as starting point
     mean_x = sum(X) / n

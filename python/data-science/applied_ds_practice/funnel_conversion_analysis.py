@@ -15,12 +15,32 @@ import math
 from collections import defaultdict
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_wilson_confidence_interval(trials, confidence):
+    v = []
+    if isinstance(trials, (int, float)) and trials <= 0:
+        v.append(f"AURA-E009: trials must be > 0, got {trials}")
+    if isinstance(confidence, (int, float)) and not math.isfinite(confidence):
+        v.append(f"AURA-E008: confidence must be finite, got {confidence}")
+    if isinstance(confidence, (int, float)) and confidence <= 0:
+        v.append(f"AURA-E009: confidence must be > 0, got {confidence}")
+    if v:
+        raise AuraInputError(v)
+
 def wilson_confidence_interval(successes: int, trials: int, confidence: float = 0.95) -> tuple[float, float]:
     """
     Wilson score confidence interval for binomial proportion.
     Returns (lower, upper) bounds at given confidence level.
     Recommended over normal approximation for small samples.
     """
+    _aura_validate_wilson_confidence_interval(trials, confidence)
     if trials == 0:
         return 0.0, 1.0
 

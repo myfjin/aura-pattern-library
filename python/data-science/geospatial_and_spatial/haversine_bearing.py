@@ -13,9 +13,25 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_haversine_distance(radius_km):
+    v = []
+    if isinstance(radius_km, (int, float)) and radius_km <= 0:
+        v.append(f"AURA-E009: radius_km must be > 0, got {radius_km}")
+    if v:
+        raise AuraInputError(v)
+
 def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float,
                        radius_km: float = 6371.0) -> float:
     """Distance in km between two points on Earth."""
+    _aura_validate_haversine_distance(radius_km)
     lat1_rad, lon1_rad = math.radians(lat1), math.radians(lon1)
     lat2_rad, lon2_rad = math.radians(lat2), math.radians(lon2)
     dlat, dlon = lat2_rad - lat1_rad, lon2_rad - lon1_rad

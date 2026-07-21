@@ -1,3 +1,4 @@
+import math
 """
 1D Kalman Filter
 
@@ -13,6 +14,29 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 
 from typing import List, Tuple
 
+
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_kalman_filter_1d(process_variance, measurement_variance, initial_state, initial_estimate_error):
+    v = []
+    if isinstance(process_variance, (int, float)) and process_variance <= 0:
+        v.append(f"AURA-E009: process_variance must be > 0, got {process_variance}")
+    if isinstance(measurement_variance, (int, float)) and not math.isfinite(measurement_variance):
+        v.append(f"AURA-E008: measurement_variance must be finite, got {measurement_variance}")
+    if isinstance(measurement_variance, (int, float)) and measurement_variance <= 0:
+        v.append(f"AURA-E009: measurement_variance must be > 0, got {measurement_variance}")
+    if isinstance(initial_state, (int, float)) and initial_state <= 0:
+        v.append(f"AURA-E009: initial_state must be > 0, got {initial_state}")
+    if isinstance(initial_estimate_error, (int, float)) and initial_estimate_error <= 0:
+        v.append(f"AURA-E009: initial_estimate_error must be > 0, got {initial_estimate_error}")
+    if v:
+        raise AuraInputError(v)
 
 def kalman_filter_1d(
     observations: List[float],
@@ -31,6 +55,7 @@ def kalman_filter_1d(
     initial_estimate_error: uncertainty in prior
     Returns (filtered_states, kalman_gains)
     """
+    _aura_validate_kalman_filter_1d(process_variance, measurement_variance, initial_state, initial_estimate_error)
     filtered_states = [initial_state]
     kalman_gains = []
     estimate_error = initial_estimate_error

@@ -1,3 +1,4 @@
+import math
 """
 Sliding Window Min/Max via Monotonic Deque
 
@@ -55,8 +56,24 @@ def sliding_window_min_max_bruteforce(data: List[float], window_size: int) -> Li
     return results
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_sliding_window_min_max_deque(window_size):
+    v = []
+    if isinstance(window_size, (int, float)) and window_size <= 0:
+        v.append(f"AURA-E009: window_size must be > 0, got {window_size}")
+    if v:
+        raise AuraInputError(v)
+
 def sliding_window_min_max_deque(data: List[float], window_size: int) -> List[Tuple[float, float]]:
     """Sliding window min/max using efficient deque."""
+    _aura_validate_sliding_window_min_max_deque(window_size)
     from collections import deque
 
     min_deque = deque()

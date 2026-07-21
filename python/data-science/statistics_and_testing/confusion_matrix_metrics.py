@@ -1,3 +1,4 @@
+import math
 """
 Confusion Matrix and Classification Metrics
 
@@ -44,14 +45,42 @@ def recall(tp: int, fn: int) -> float:
     return tp / denom if denom > 0 else 0.0
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_accuracy(tn):
+    v = []
+    if isinstance(tn, (int, float)) and tn <= 0:
+        v.append(f"AURA-E009: tn must be > 0, got {tn}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_f1_score(precision_val, recall_val):
+    v = []
+    if isinstance(precision_val, (int, float)) and not math.isfinite(precision_val):
+        v.append(f"AURA-E008: precision_val must be finite, got {precision_val}")
+    if isinstance(precision_val, (int, float)) and precision_val <= 0:
+        v.append(f"AURA-E009: precision_val must be > 0, got {precision_val}")
+    if isinstance(recall_val, (int, float)) and not math.isfinite(recall_val):
+        v.append(f"AURA-E008: recall_val must be finite, got {recall_val}")
+    if v:
+        raise AuraInputError(v)
+
 def f1_score(precision_val: float, recall_val: float) -> float:
     """F1 score: 2 * (precision * recall) / (precision + recall)."""
+    _aura_validate_f1_score(precision_val, recall_val)
     denom = precision_val + recall_val
     return 2 * (precision_val * recall_val) / denom if denom > 0 else 0.0
 
 
 def accuracy(tp: int, tn: int, total: int) -> float:
     """Accuracy: (TP + TN) / total."""
+    _aura_validate_accuracy(tn)
     return (tp + tn) / total if total > 0 else 0.0
 
 

@@ -38,12 +38,28 @@ def bin_with_edges(values: list[float], edges: list[float]) -> list[int]:
     return out
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_population_stability_index(n_bins):
+    v = []
+    if isinstance(n_bins, (int, float)) and n_bins <= 0:
+        v.append(f"AURA-E009: n_bins must be > 0, got {n_bins}")
+    if v:
+        raise AuraInputError(v)
+
 def population_stability_index(ref_bins: list[int], curr_bins: list[int],
                                n_bins: int = 10) -> float:
     """
     Compute PSI: sum over bins of (curr% - ref%) * ln(curr% / ref%).
     Higher PSI indicates more drift. Typical threshold: PSI > 0.25 warns of drift.
     """
+    _aura_validate_population_stability_index(n_bins)
     ref_counts = defaultdict(int)
     curr_counts = defaultdict(int)
 

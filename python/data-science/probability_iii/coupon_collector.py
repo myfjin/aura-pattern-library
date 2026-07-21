@@ -9,16 +9,48 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_coupon_collector_expected(n):
+    v = []
+    if isinstance(n, (int, float)) and n <= 0:
+        v.append(f"AURA-E009: n must be > 0, got {n}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_coupon_collector_simulate(n):
+    v = []
+    if isinstance(n, (int, float)) and n <= 0:
+        v.append(f"AURA-E009: n must be > 0, got {n}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_harmonic_sum(n):
+    v = []
+    if isinstance(n, (int, float)) and n <= 0:
+        v.append(f"AURA-E009: n must be > 0, got {n}")
+    if v:
+        raise AuraInputError(v)
+
 def harmonic_sum(n: int) -> float:
     """Compute H_n = 1 + 1/2 + ... + 1/n."""
+    _aura_validate_harmonic_sum(n)
     return sum(1 / i for i in range(1, n + 1))
 
 def coupon_collector_expected(n: int) -> float:
     """Expected trials to collect all n coupons: E[T] = n·H_n."""
+    _aura_validate_coupon_collector_expected(n)
     return n * harmonic_sum(n)
 
 def coupon_collector_simulate(n: int, num_sim: int = 1000) -> float:
     """Simulate coupon collector to estimate E[T]."""
+    _aura_validate_coupon_collector_simulate(n)
     import random
     total_trials = 0
 

@@ -1,3 +1,4 @@
+import math
 """Stratification/Subclassification: divide sample into propensity score strata.
 
 Divide into quintiles (or fewer) on propensity. Within each stratum, treatment is
@@ -9,7 +10,23 @@ Core claim: 5 strata remove bulk of planted confounding; exact bias reduction me
 _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
 from typing import List, Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_logistic(x):
+    v = []
+    if isinstance(x, (int, float)) and not math.isfinite(x):
+        v.append(f"AURA-E008: x must be finite, got {x}")
+    if v:
+        raise AuraInputError(v)
+
 def logistic(x: float) -> float:
+    _aura_validate_logistic(x)
     import math
     if x > 100:
         return 1.0

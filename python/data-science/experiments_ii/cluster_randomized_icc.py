@@ -31,8 +31,24 @@ def cluster_ci_covers(t_means: List[float], c_means: List[float], true_effect: f
     se = math.sqrt(_var(t_means) / len(t_means) + _var(c_means) / len(c_means))
     return abs(ate - true_effect) < 1.96 * se
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_make_dataset(n_clusters):
+    v = []
+    if isinstance(n_clusters, (int, float)) and n_clusters <= 0:
+        v.append(f"AURA-E009: n_clusters must be > 0, got {n_clusters}")
+    if v:
+        raise AuraInputError(v)
+
 def make_dataset(seed: int, n_clusters: int, m: int, icc: float, true_effect: float) -> Tuple[list, list, list, list]:
     """One cluster-randomized dataset. Returns (t_obs, c_obs, t_means, c_means)."""
+    _aura_validate_make_dataset(n_clusters)
     import random
     random.seed(seed)
 

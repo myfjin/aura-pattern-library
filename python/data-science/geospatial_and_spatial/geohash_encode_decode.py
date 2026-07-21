@@ -1,3 +1,4 @@
+import math
 """
 Geohash: encode/decode lat/lon as interleaved bit string, base-32 encoded.
 
@@ -14,8 +15,24 @@ from typing import Tuple
 
 BASE32 = "0123456789bcdefghjkmnpqrstuvwxyz"
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_encode(lat):
+    v = []
+    if isinstance(lat, (int, float)) and not math.isfinite(lat):
+        v.append(f"AURA-E008: lat must be finite, got {lat}")
+    if v:
+        raise AuraInputError(v)
+
 def encode(lat: float, lon: float, precision: int = 6) -> str:
     """Encode lat/lon as geohash string."""
+    _aura_validate_encode(lat)
     lat_range, lon_range = [-90.0, 90.0], [-180.0, 180.0]
     geohash, is_lon = [], True
     bits, ch = 0, 0

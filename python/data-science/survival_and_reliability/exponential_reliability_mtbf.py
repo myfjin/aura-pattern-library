@@ -13,8 +13,26 @@ def exponential_mtbf(failure_times: List[float]) -> float:
     """Estimate MTBF (1/λ) from iid exponential failure times."""
     return sum(failure_times) / len(failure_times)
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_exponential_survival(t, mtbf):
+    v = []
+    if isinstance(t, (int, float)) and not math.isfinite(t):
+        v.append(f"AURA-E008: t must be finite, got {t}")
+    if isinstance(mtbf, (int, float)) and not math.isfinite(mtbf):
+        v.append(f"AURA-E008: mtbf must be finite, got {mtbf}")
+    if v:
+        raise AuraInputError(v)
+
 def exponential_survival(t: float, mtbf: float) -> float:
     """Survival probability S(t) = exp(-t/MTBF)."""
+    _aura_validate_exponential_survival(t, mtbf)
     return math.exp(-t / mtbf)
 
 if __name__ == "__main__":

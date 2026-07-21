@@ -1,3 +1,4 @@
+import math
 """
 Hampel Filter for Outlier Detection and Removal.
 
@@ -13,11 +14,31 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 from typing import List
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_hampel_filter(window_size, k):
+    v = []
+    if isinstance(window_size, (int, float)) and window_size <= 0:
+        v.append(f"AURA-E009: window_size must be > 0, got {window_size}")
+    if isinstance(k, (int, float)) and not math.isfinite(k):
+        v.append(f"AURA-E008: k must be finite, got {k}")
+    if isinstance(k, (int, float)) and k <= 0:
+        v.append(f"AURA-E009: k must be > 0, got {k}")
+    if v:
+        raise AuraInputError(v)
+
 def hampel_filter(signal: List[float], window_size: int = 5, k: float = 3.0) -> List[float]:
     """
     Apply Hampel filter: detect outliers based on rolling median + k*MAD.
     Replace outliers with rolling median.
     """
+    _aura_validate_hampel_filter(window_size, k)
     n = len(signal)
     half_window = window_size // 2
     filtered = signal.copy()

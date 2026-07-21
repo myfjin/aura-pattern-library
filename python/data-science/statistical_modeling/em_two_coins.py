@@ -89,6 +89,21 @@ def m_step(
     return p_a_new, p_b_new
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_em_two_coins(n_iter):
+    v = []
+    if isinstance(n_iter, (int, float)) and n_iter <= 0:
+        v.append(f"AURA-E009: n_iter must be > 0, got {n_iter}")
+    if v:
+        raise AuraInputError(v)
+
 def em_two_coins(
     sessions: List[List[int]],
     p_a_init: float = 0.6,
@@ -106,6 +121,7 @@ def em_two_coins(
     Returns:
         (estimated_p_a, estimated_p_b)
     """
+    _aura_validate_em_two_coins(n_iter)
     p_a = p_a_init
     p_b = p_b_init
 

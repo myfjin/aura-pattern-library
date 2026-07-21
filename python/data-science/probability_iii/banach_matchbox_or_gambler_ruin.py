@@ -25,8 +25,24 @@ def gamblers_ruin_exact(a: int, b: int, p: float = 0.5) -> float:
     # P_i = (r^N − r^i)/(r^N − 1) solves P_i = p·P_{i+1} + q·P_{i−1}, P_0=1, P_N=0.
     return (r**N - r**a) / (r**N - 1)
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_gamblers_ruin_simulate(p):
+    v = []
+    if isinstance(p, (int, float)) and not math.isfinite(p):
+        v.append(f"AURA-E008: p must be finite, got {p}")
+    if v:
+        raise AuraInputError(v)
+
 def gamblers_ruin_simulate(a: int, b: int, p: float = 0.5, num_sim: int = 1000) -> float:
     """Simulate gambler's ruin; returns the fraction of runs that hit 0."""
+    _aura_validate_gamblers_ruin_simulate(p)
     import random
     ruin_count = 0
     for _ in range(num_sim):

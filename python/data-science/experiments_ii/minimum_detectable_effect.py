@@ -9,12 +9,39 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import Tuple, List
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_mde_normal_approx(alpha, power, sigma):
+    v = []
+    if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
+        v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    if isinstance(power, (int, float)) and not math.isfinite(power):
+        v.append(f"AURA-E008: power must be finite, got {power}")
+    if isinstance(sigma, (int, float)) and sigma < 0:
+        v.append(f"AURA-E-B5: sigma must be >= 0, got {sigma}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_simulate_power(true_effect):
+    v = []
+    if isinstance(true_effect, (int, float)) and not math.isfinite(true_effect):
+        v.append(f"AURA-E008: true_effect must be finite, got {true_effect}")
+    if v:
+        raise AuraInputError(v)
+
 def mde_normal_approx(n_per_arm: int, alpha: float = 0.05, power: float = 0.8, sigma: float = 1.0) -> float:
     """Compute MDE via normal approximation.
 
     For two-sample t-test: MDE ≈ (z_α/2 + z_β) * σ * sqrt(2/n)
     Hardcoded z-values for common α and power.
     """
+    _aura_validate_mde_normal_approx(alpha, power, sigma)
     z_alpha = 1.96 if abs(alpha - 0.05) < 0.001 else 2.58  # Two-tailed z_α/2
     z_beta = 0.84 if abs(power - 0.8) < 0.001 else 1.28   # z_β for power
 
@@ -22,6 +49,7 @@ def mde_normal_approx(n_per_arm: int, alpha: float = 0.05, power: float = 0.8, s
 
 def simulate_power(n_per_arm: int, true_effect: float, reps: int = 500) -> float:
     """Simulate power at a given effect size."""
+    _aura_validate_simulate_power(true_effect)
     import random
     random.seed(42)
 

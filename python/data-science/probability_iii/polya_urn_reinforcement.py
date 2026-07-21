@@ -12,8 +12,31 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_beta_mean(b):
+    v = []
+    if isinstance(b, (int, float)) and not math.isfinite(b):
+        v.append(f"AURA-E008: b must be finite, got {b}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_polya_urn_final_proportion(num_draws):
+    v = []
+    if isinstance(num_draws, (int, float)) and num_draws <= 0:
+        v.append(f"AURA-E009: num_draws must be > 0, got {num_draws}")
+    if v:
+        raise AuraInputError(v)
+
 def polya_urn_final_proportion(a: int, b: int, num_draws: int = 1000) -> float:
     """Simulate one Pólya urn; return the final proportion of color A."""
+    _aura_validate_polya_urn_final_proportion(num_draws)
     import random
     num_a, num_b = a, b
     for _ in range(num_draws):
@@ -25,6 +48,7 @@ def polya_urn_final_proportion(a: int, b: int, num_draws: int = 1000) -> float:
 
 def beta_mean(a: float, b: float) -> float:
     """Mean of Beta(a, b) = a/(a+b)."""
+    _aura_validate_beta_mean(b)
     return a / (a + b)
 
 def beta_variance(a: float, b: float) -> float:

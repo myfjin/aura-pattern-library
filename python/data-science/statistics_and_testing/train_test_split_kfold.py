@@ -1,3 +1,4 @@
+import math
 """
 Train/Test Split and K-Fold Cross-Validation
 
@@ -16,6 +17,21 @@ import random
 from typing import List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_train_test_split(test_size):
+    v = []
+    if isinstance(test_size, (int, float)) and test_size <= 0:
+        v.append(f"AURA-E009: test_size must be > 0, got {test_size}")
+    if v:
+        raise AuraInputError(v)
+
 def train_test_split(data: List, labels: List, test_size: float = 0.2) -> Tuple[List, List, List, List]:
     """
     Split data into train and test sets.
@@ -28,6 +44,7 @@ def train_test_split(data: List, labels: List, test_size: float = 0.2) -> Tuple[
     Returns:
         Tuple of (X_train, X_test, y_train, y_test).
     """
+    _aura_validate_train_test_split(test_size)
     n = len(data)
     test_count = int(n * test_size)
     indices = list(range(n))

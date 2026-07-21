@@ -13,6 +13,23 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import Tuple, List
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_bayesian_linreg_conjugate(sigma0_sq, sigma_sq):
+    v = []
+    if isinstance(sigma0_sq, (int, float)) and not math.isfinite(sigma0_sq):
+        v.append(f"AURA-E008: sigma0_sq must be finite, got {sigma0_sq}")
+    if isinstance(sigma_sq, (int, float)) and not math.isfinite(sigma_sq):
+        v.append(f"AURA-E008: sigma_sq must be finite, got {sigma_sq}")
+    if v:
+        raise AuraInputError(v)
+
 def bayesian_linreg_conjugate(X: List[float], y: List[float],
                               mu0: float = 0.0, sigma0_sq: float = 100.0,
                               sigma_sq: float = 1.0) -> Tuple[float, float]:
@@ -22,6 +39,7 @@ def bayesian_linreg_conjugate(X: List[float], y: List[float],
     Prior: β ~ N(μ₀, σ₀²)
     Return: (posterior mean, posterior variance)
     """
+    _aura_validate_bayesian_linreg_conjugate(sigma0_sq, sigma_sq)
     n = len(X)
     if n == 0:
         return mu0, sigma0_sq

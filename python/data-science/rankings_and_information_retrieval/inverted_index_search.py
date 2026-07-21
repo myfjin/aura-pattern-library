@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
     print(
         f"Index size: {len(index)} terms | "
-        f"AND (python, machine): {and_result} | "
-        f"OR (python, machine): {or_result} | "
-        f"Term 'python': {python_docs} | PASS"
+        f"AND (python, machine): {sorted(and_result)} | "
+        f"OR (python, machine): {sorted(or_result)} | "
+        f"Term 'python': {sorted(python_docs)} | PASS"
     )

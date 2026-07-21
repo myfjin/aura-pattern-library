@@ -1,3 +1,4 @@
+import math
 """Richardson extrapolation: boost convergence order via linear combination.
 
 If F(h) ≈ L + C·h^p + O(h^(2p)) and the step is halved, then
@@ -28,8 +29,26 @@ def richardson_extrapolate(
     factor = 2.0 ** p  # halving ratio (2) raised to the error order p
     return (factor * f_h_half - f_h) / (factor - 1.0)
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_midpoint_rule(f, h):
+    v = []
+    if isinstance(f, (int, float)) and not math.isfinite(f):
+        v.append(f"AURA-E008: f must be finite, got {f}")
+    if isinstance(h, (int, float)) and not math.isfinite(h):
+        v.append(f"AURA-E008: h must be finite, got {h}")
+    if v:
+        raise AuraInputError(v)
+
 def midpoint_rule(f: Callable[[float], float], a: float, b: float, h: float) -> float:
     """Midpoint rule: ∑ f(x_i + h/2) · h, O(h²) error."""
+    _aura_validate_midpoint_rule(f, h)
     n = int((b - a) / h)
     if n == 0:
         return 0.0

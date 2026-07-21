@@ -28,6 +28,36 @@ def rugged_landscape(x: float, y: float) -> float:
     )
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_hill_climbing(step_size, tolerance):
+    v = []
+    if isinstance(step_size, (int, float)) and not math.isfinite(step_size):
+        v.append(f"AURA-E008: step_size must be finite, got {step_size}")
+    if isinstance(step_size, (int, float)) and step_size <= 0:
+        v.append(f"AURA-E009: step_size must be > 0, got {step_size}")
+    if isinstance(tolerance, (int, float)) and not math.isfinite(tolerance):
+        v.append(f"AURA-E008: tolerance must be finite, got {tolerance}")
+    if isinstance(tolerance, (int, float)) and tolerance <= 0:
+        v.append(f"AURA-E009: tolerance must be > 0, got {tolerance}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_hill_climbing_with_restarts(step_size):
+    v = []
+    if isinstance(step_size, (int, float)) and not math.isfinite(step_size):
+        v.append(f"AURA-E008: step_size must be finite, got {step_size}")
+    if isinstance(step_size, (int, float)) and step_size <= 0:
+        v.append(f"AURA-E009: step_size must be > 0, got {step_size}")
+    if v:
+        raise AuraInputError(v)
+
 def hill_climbing(
     x: float,
     y: float,
@@ -39,6 +69,7 @@ def hill_climbing(
     Single run of hill climbing: greedily move uphill.
     Returns (best_x, best_y, best_value).
     """
+    _aura_validate_hill_climbing(step_size, tolerance)
     best_x, best_y = x, y
     best_value = rugged_landscape(x, y)
 
@@ -79,6 +110,7 @@ def hill_climbing_with_restarts(
     Hill climbing with multiple random restarts.
     Returns (best_x, best_y, best_value) across all restarts.
     """
+    _aura_validate_hill_climbing_with_restarts(step_size)
     global_best_x, global_best_y, global_best_value = None, None, -float("inf")
 
     for _ in range(num_restarts):

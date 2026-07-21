@@ -24,8 +24,30 @@ def fit_gumbel(block_maxima: List[float]) -> Tuple[float, float]:
 
     return mu, sigma
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_gumbel_cdf(x, mu, sigma):
+    v = []
+    if isinstance(x, (int, float)) and not math.isfinite(x):
+        v.append(f"AURA-E008: x must be finite, got {x}")
+    if isinstance(mu, (int, float)) and not math.isfinite(mu):
+        v.append(f"AURA-E008: mu must be finite, got {mu}")
+    if isinstance(sigma, (int, float)) and not math.isfinite(sigma):
+        v.append(f"AURA-E008: sigma must be finite, got {sigma}")
+    if isinstance(sigma, (int, float)) and sigma < 0:
+        v.append(f"AURA-E-B5: sigma must be >= 0, got {sigma}")
+    if v:
+        raise AuraInputError(v)
+
 def gumbel_cdf(x: float, mu: float, sigma: float) -> float:
     """Gumbel CDF: F(x) = exp(-exp(-(x-μ)/σ))."""
+    _aura_validate_gumbel_cdf(x, mu, sigma)
     if sigma <= 0:
         return 0.0
     return math.exp(-math.exp(-(x - mu) / sigma))

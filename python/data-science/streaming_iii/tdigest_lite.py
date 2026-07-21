@@ -1,3 +1,4 @@
+import math
 """
 t-digest (merging variant) -- accurate tail quantiles in small space.
 Core idea: merge sorted points into centroids under a q-dependent SIZE BOUND
@@ -51,8 +52,24 @@ def tdigest_quantile(centroids: List[Tuple[float, int]], q: float) -> float:
     return centroids[-1][0]
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_tdigest_lite(compression):
+    v = []
+    if isinstance(compression, (int, float)) and not math.isfinite(compression):
+        v.append(f"AURA-E008: compression must be finite, got {compression}")
+    if v:
+        raise AuraInputError(v)
+
 def tdigest_lite(stream: List[float], compression: float = 200.0) -> Tuple[float, float]:
     """Return (p99, p01) estimates from a merging t-digest."""
+    _aura_validate_tdigest_lite(compression)
     centroids = _build(sorted(stream), compression)
     return tdigest_quantile(centroids, 0.99), tdigest_quantile(centroids, 0.01)
 

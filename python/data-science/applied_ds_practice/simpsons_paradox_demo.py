@@ -1,3 +1,4 @@
+import math
 """
 Simpson's Paradox: aggregate trend reverses within strata.
 
@@ -14,8 +15,26 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 from collections import defaultdict
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_compute_rate(numerator, denominator):
+    v = []
+    if isinstance(numerator, (int, float)) and numerator <= 0:
+        v.append(f"AURA-E009: numerator must be > 0, got {numerator}")
+    if isinstance(denominator, (int, float)) and denominator <= 0:
+        v.append(f"AURA-E009: denominator must be > 0, got {denominator}")
+    if v:
+        raise AuraInputError(v)
+
 def compute_rate(numerator: int, denominator: int) -> float:
     """Compute success rate."""
+    _aura_validate_compute_rate(numerator, denominator)
     return numerator / denominator if denominator > 0 else 0
 
 

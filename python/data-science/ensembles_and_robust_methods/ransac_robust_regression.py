@@ -36,6 +36,23 @@ def residual_distance(y_true: float, y_pred: float) -> float:
     """Residual distance (absolute error)."""
     return abs(y_true - y_pred)
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_ransac_regression(n_iterations, threshold):
+    v = []
+    if isinstance(n_iterations, (int, float)) and n_iterations <= 0:
+        v.append(f"AURA-E009: n_iterations must be > 0, got {n_iterations}")
+    if isinstance(threshold, (int, float)) and not math.isfinite(threshold):
+        v.append(f"AURA-E008: threshold must be finite, got {threshold}")
+    if v:
+        raise AuraInputError(v)
+
 def ransac_regression(X: List[float], y: List[float], n_iterations: int = 100,
                       threshold: float = 1.0) -> Tuple[float, float]:
     """
@@ -50,6 +67,7 @@ def ransac_regression(X: List[float], y: List[float], n_iterations: int = 100,
     Returns:
         (m, b) for best fit y = mx + b
     """
+    _aura_validate_ransac_regression(n_iterations, threshold)
     n = len(X)
     best_m = 0.0
     best_b = 0.0

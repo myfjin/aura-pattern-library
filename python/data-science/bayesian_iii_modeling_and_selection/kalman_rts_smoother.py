@@ -11,8 +11,35 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List, Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_kalman_filter(q, r):
+    v = []
+    if isinstance(q, (int, float)) and not (0.0 <= q < 1.0):
+        v.append(f"AURA-E003: q must be in [0,1), got {q}")
+    if isinstance(r, (int, float)) and not math.isfinite(r):
+        v.append(f"AURA-E008: r must be finite, got {r}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_rts_smoother(q):
+    v = []
+    if isinstance(q, (int, float)) and not math.isfinite(q):
+        v.append(f"AURA-E008: q must be finite, got {q}")
+    if isinstance(q, (int, float)) and not (0.0 <= q < 1.0):
+        v.append(f"AURA-E003: q must be in [0,1), got {q}")
+    if v:
+        raise AuraInputError(v)
+
 def kalman_filter(y: List[float], q: float, r: float) -> Tuple[List[float], List[float]]:
     """Forward pass for the local-level (random-walk) model. Returns (states, variances)."""
+    _aura_validate_kalman_filter(q, r)
     x_hat = [0.0]
     p = [1.0]
     for yi in y:
@@ -25,6 +52,7 @@ def kalman_filter(y: List[float], q: float, r: float) -> Tuple[List[float], List
 
 def rts_smoother(x_filt: List[float], p_filt: List[float], q: float) -> List[float]:
     """Backward RTS pass. x_s[i] = x_filt[i] + C_i·(x_s[i+1] − x_pred[i+1]), x_pred=x_filt[i]."""
+    _aura_validate_rts_smoother(q)
     n = len(x_filt)
     x_s = x_filt[:]
     for i in range(n - 2, -1, -1):

@@ -20,7 +20,23 @@ import random
 from typing import Dict, List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_equal_frequency_bins(n_bins):
+    v = []
+    if isinstance(n_bins, (int, float)) and n_bins <= 0:
+        v.append(f"AURA-E009: n_bins must be > 0, got {n_bins}")
+    if v:
+        raise AuraInputError(v)
+
 def equal_frequency_bins(values: List[float], n_bins: int) -> List[int]:
+    _aura_validate_equal_frequency_bins(n_bins)
     order = sorted(range(len(values)), key=lambda i: values[i])
     bins = [0] * len(values)
     for rank, idx in enumerate(order):

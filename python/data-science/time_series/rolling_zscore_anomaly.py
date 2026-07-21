@@ -1,3 +1,4 @@
+import math
 """
 Rolling Z-Score Anomaly Detection
 
@@ -13,6 +14,21 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 from typing import List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_rolling_zscore(threshold):
+    v = []
+    if isinstance(threshold, (int, float)) and not math.isfinite(threshold):
+        v.append(f"AURA-E008: threshold must be finite, got {threshold}")
+    if v:
+        raise AuraInputError(v)
+
 def rolling_zscore(series: List[float], window: int, threshold: float = 3.0) -> Tuple[List[float], List[int]]:
     """
     Compute rolling z-scores and detect anomalies.
@@ -20,6 +36,7 @@ def rolling_zscore(series: List[float], window: int, threshold: float = 3.0) -> 
     threshold: |z-score| above this triggers anomaly flag
     Returns (z_scores, anomaly_indices)
     """
+    _aura_validate_rolling_zscore(threshold)
     if window < 2 or window > len(series):
         raise ValueError("window must be between 2 and len(series)")
 

@@ -1,3 +1,4 @@
+import math
 """
 Savitzky-Golay Filter (Local Polynomial Smoothing).
 
@@ -12,6 +13,35 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 from typing import List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_fit_polynomial_window(poly_order):
+    v = []
+    if isinstance(poly_order, (int, float)) and poly_order <= 0:
+        v.append(f"AURA-E009: poly_order must be > 0, got {poly_order}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_moving_average_filter(window_size):
+    v = []
+    if isinstance(window_size, (int, float)) and window_size <= 0:
+        v.append(f"AURA-E009: window_size must be > 0, got {window_size}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_savitzky_golay_filter(window_size):
+    v = []
+    if isinstance(window_size, (int, float)) and window_size <= 0:
+        v.append(f"AURA-E009: window_size must be > 0, got {window_size}")
+    if v:
+        raise AuraInputError(v)
+
 def fit_polynomial_window(
     window: List[float], poly_order: int = 2
 ) -> Tuple[float, float, float]:
@@ -20,6 +50,7 @@ def fit_polynomial_window(
     x values are 0, 1, ..., len(window)-1.
     Returns (a, b, c).
     """
+    _aura_validate_fit_polynomial_window(poly_order)
     n = len(window)
     x_vals = list(range(n))
 
@@ -80,6 +111,7 @@ def savitzky_golay_filter(signal: List[float], window_size: int = 5) -> List[flo
     """
     Apply Savitzky-Golay filter: fit local polynomial and use center value.
     """
+    _aura_validate_savitzky_golay_filter(window_size)
     n = len(signal)
     half_window = window_size // 2
     filtered = []
@@ -101,6 +133,7 @@ def savitzky_golay_filter(signal: List[float], window_size: int = 5) -> List[flo
 
 def moving_average_filter(signal: List[float], window_size: int = 5) -> List[float]:
     """Moving average filter for comparison."""
+    _aura_validate_moving_average_filter(window_size)
     n = len(signal)
     half_window = window_size // 2
     filtered = []

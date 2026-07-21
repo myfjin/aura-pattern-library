@@ -14,6 +14,21 @@ import math
 from typing import List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_gibbs_bivariate_normal(n_iter):
+    v = []
+    if isinstance(n_iter, (int, float)) and n_iter <= 0:
+        v.append(f"AURA-E009: n_iter must be > 0, got {n_iter}")
+    if v:
+        raise AuraInputError(v)
+
 def gibbs_bivariate_normal(
     rho: float,
     n_iter: int,
@@ -35,6 +50,7 @@ def gibbs_bivariate_normal(
     Returns:
         (x_samples, y_samples)
     """
+    _aura_validate_gibbs_bivariate_normal(n_iter)
     x_samples = []
     y_samples = []
 

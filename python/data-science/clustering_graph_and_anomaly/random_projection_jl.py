@@ -16,6 +16,21 @@ import random
 import math
 from typing import List, Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_random_projection_matrix(original_dim):
+    v = []
+    if isinstance(original_dim, (int, float)) and original_dim <= 0:
+        v.append(f"AURA-E009: original_dim must be > 0, got {original_dim}")
+    if v:
+        raise AuraInputError(v)
+
 def random_projection_matrix(
     original_dim: int,
     target_dim: int,
@@ -32,6 +47,7 @@ def random_projection_matrix(
     Returns:
         Matrix of shape (target_dim, original_dim)
     """
+    _aura_validate_random_projection_matrix(original_dim)
     random.seed(seed)
     # Generate gaussian random matrix
     matrix = []

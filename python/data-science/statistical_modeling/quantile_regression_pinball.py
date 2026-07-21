@@ -23,8 +23,46 @@ def pinball_loss(y: float, pred: float, tau: float) -> float:
         return (tau - 1) * residual
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_count_below_line(a, b):
+    v = []
+    if isinstance(a, (int, float)) and not math.isfinite(a):
+        v.append(f"AURA-E008: a must be finite, got {a}")
+    if isinstance(b, (int, float)) and not math.isfinite(b):
+        v.append(f"AURA-E008: b must be finite, got {b}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_pinball_loss_gradient(y, pred):
+    v = []
+    if isinstance(y, (int, float)) and not math.isfinite(y):
+        v.append(f"AURA-E008: y must be finite, got {y}")
+    if isinstance(pred, (int, float)) and not math.isfinite(pred):
+        v.append(f"AURA-E008: pred must be finite, got {pred}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_quantile_regression_linear(learning_rate, n_iter):
+    v = []
+    if isinstance(learning_rate, (int, float)) and learning_rate <= 0:
+        v.append(f"AURA-E009: learning_rate must be > 0, got {learning_rate}")
+    if isinstance(learning_rate, (int, float)) and learning_rate <= 0:
+        v.append(f"AURA-E001: learning_rate must be > 0, got {learning_rate}")
+    if isinstance(n_iter, (int, float)) and n_iter <= 0:
+        v.append(f"AURA-E009: n_iter must be > 0, got {n_iter}")
+    if v:
+        raise AuraInputError(v)
+
 def pinball_loss_gradient(y: float, pred: float, tau: float) -> float:
     """Gradient of pinball loss w.r.t. pred."""
+    _aura_validate_pinball_loss_gradient(y, pred)
     residual = y - pred
     if residual >= 0:
         return -tau
@@ -51,6 +89,7 @@ def quantile_regression_linear(
     Returns:
         (intercept, slope)
     """
+    _aura_validate_quantile_regression_linear(learning_rate, n_iter)
     n = len(x_vals)
     a, b = 0.0, 0.0  # intercept, slope
 
@@ -74,6 +113,7 @@ def quantile_regression_linear(
 
 def count_below_line(x_vals: List[float], y_vals: List[float], a: float, b: float) -> float:
     """Fraction of points below the fitted line."""
+    _aura_validate_count_below_line(a, b)
     count = sum(1 for xi, yi in zip(x_vals, y_vals) if yi <= a + b * xi)
     return count / len(y_vals)
 

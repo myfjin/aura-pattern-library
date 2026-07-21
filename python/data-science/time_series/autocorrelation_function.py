@@ -1,3 +1,4 @@
+import math
 """
 Autocorrelation Function (ACF)
 
@@ -13,11 +14,27 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 from typing import List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_acf(nlags):
+    v = []
+    if isinstance(nlags, (int, float)) and nlags <= 0:
+        v.append(f"AURA-E009: nlags must be > 0, got {nlags}")
+    if v:
+        raise AuraInputError(v)
+
 def acf(series: List[float], nlags: int) -> List[float]:
     """
     Compute autocorrelation function at lags 0 to nlags.
     ACF(k) = cov(y_t, y_{t-k}) / var(y_t)
     """
+    _aura_validate_acf(nlags)
     if nlags < 0 or nlags >= len(series):
         raise ValueError("nlags must be 0 <= nlags < len(series)")
 

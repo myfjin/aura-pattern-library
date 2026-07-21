@@ -13,13 +13,37 @@ import math
 from math import lgamma
 from typing import List, Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_beta_binomial_loglik(n_trials):
+    v = []
+    if isinstance(n_trials, (int, float)) and n_trials <= 0:
+        v.append(f"AURA-E009: n_trials must be > 0, got {n_trials}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_binomial_loglik(n_trials):
+    v = []
+    if isinstance(n_trials, (int, float)) and n_trials <= 0:
+        v.append(f"AURA-E009: n_trials must be > 0, got {n_trials}")
+    if v:
+        raise AuraInputError(v)
+
 def beta_binomial_loglik(counts: List[int], n_trials: int, alpha: float, beta: float) -> float:
     """Log-likelihood of counts under Beta-Binomial(n_trials, α, β)."""
+    _aura_validate_beta_binomial_loglik(n_trials)
     return sum(lgamma(alpha + k) + lgamma(beta + n_trials - k) - lgamma(alpha + beta + n_trials)
                + lgamma(alpha + beta) - lgamma(alpha) - lgamma(beta) for k in counts)
 
 def binomial_loglik(counts: List[int], n_trials: int, p: float) -> float:
     """Log-likelihood under Binomial(n_trials, p)."""
+    _aura_validate_binomial_loglik(n_trials)
     if not 0 < p < 1:
         return float("-inf")
     return sum(k * math.log(p) + (n_trials - k) * math.log(1 - p) for k in counts)

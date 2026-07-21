@@ -1,3 +1,4 @@
+import math
 """
 Target encoding with smoothing + out-of-fold fitting.
 
@@ -23,10 +24,33 @@ from collections import defaultdict
 from typing import Dict, List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_fit_encoding(alpha):
+    v = []
+    if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
+        v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_oof_encode_train(alpha):
+    v = []
+    if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
+        v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    if v:
+        raise AuraInputError(v)
+
 def fit_encoding(cats: List[str], targets: List[int],
                  alpha: float = 0.0) -> Dict[str, float]:
     """Category → smoothed mean target: (sum + alpha*prior) / (count + alpha).
     alpha=0 gives the raw (unsmoothed) mean."""
+    _aura_validate_fit_encoding(alpha)
     sums: Dict[str, float] = defaultdict(float)
     counts: Dict[str, int] = defaultdict(int)
     for c, t in zip(cats, targets):
@@ -45,6 +69,7 @@ def oof_encode_train(cats: List[str], targets: List[int], n_folds: int = 5,
                      alpha: float = 5.0) -> List[float]:
     """TRUE out-of-fold: row i's encoding is fit on every fold EXCEPT row i's,
     so no training row's own target ever enters its own feature value."""
+    _aura_validate_oof_encode_train(alpha)
     prior = sum(targets) / len(targets)
     folds = [i % n_folds for i in range(len(cats))]
     out = [0.0] * len(cats)

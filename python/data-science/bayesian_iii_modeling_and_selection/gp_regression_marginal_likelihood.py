@@ -26,8 +26,26 @@ def _cholesky(A: List[List[float]]) -> List[List[float]]:
             L[i][j] = math.sqrt(max(A[i][i] - s, 1e-12)) if i == j else (A[i][j] - s) / L[j][j]
     return L
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_gp_log_marginal_likelihood(ls, noise):
+    v = []
+    if isinstance(ls, (int, float)) and not math.isfinite(ls):
+        v.append(f"AURA-E008: ls must be finite, got {ls}")
+    if isinstance(noise, (int, float)) and noise <= 0:
+        v.append(f"AURA-E009: noise must be > 0, got {noise}")
+    if v:
+        raise AuraInputError(v)
+
 def gp_log_marginal_likelihood(x: List[float], y: List[float], ls: float, noise: float = 0.05) -> float:
     """Exact GP log marginal likelihood via Cholesky (no diagonal shortcut)."""
+    _aura_validate_gp_log_marginal_likelihood(ls, noise)
     n = len(x)
     L = _cholesky(_rbf_matrix(x, ls, noise))
     # Solve K·alpha = y  →  forward then back substitution through L.

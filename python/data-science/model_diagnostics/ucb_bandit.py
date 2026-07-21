@@ -27,11 +27,34 @@ class BernoulliArm:
         return 1 if random.random() < self.p else 0
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_run_ucb1_experiment(n_pulls):
+    v = []
+    if isinstance(n_pulls, (int, float)) and n_pulls <= 0:
+        v.append(f"AURA-E009: n_pulls must be > 0, got {n_pulls}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_ucb1_select_arm(c):
+    v = []
+    if isinstance(c, (int, float)) and not math.isfinite(c):
+        v.append(f"AURA-E008: c must be finite, got {c}")
+    if v:
+        raise AuraInputError(v)
+
 def ucb1_select_arm(counts: List[int], rewards: List[float], c: float = 1.0) -> int:
     """
     Select arm with highest UCB.
     UCB = avg_reward + c * sqrt(ln(total_pulls) / arm_pulls)
     """
+    _aura_validate_ucb1_select_arm(c)
     total_pulls = sum(counts)
     if total_pulls == 0:
         return 0
@@ -56,6 +79,7 @@ def run_ucb1_experiment(
     Run UCB1 algorithm for n_pulls.
     Returns (arm_counts, arm_rewards_sum).
     """
+    _aura_validate_run_ucb1_experiment(n_pulls)
     counts = [0] * len(arms)
     rewards = [0.0] * len(arms)
 

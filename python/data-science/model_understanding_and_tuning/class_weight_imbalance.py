@@ -17,19 +17,51 @@ import math
 from typing import List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_binary_cross_entropy(pred):
+    v = []
+    if isinstance(pred, (int, float)) and not math.isfinite(pred):
+        v.append(f"AURA-E008: pred must be finite, got {pred}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_logistic(z):
+    v = []
+    if isinstance(z, (int, float)) and not math.isfinite(z):
+        v.append(f"AURA-E008: z must be finite, got {z}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_weighted_binary_cross_entropy(pred):
+    v = []
+    if isinstance(pred, (int, float)) and not math.isfinite(pred):
+        v.append(f"AURA-E008: pred must be finite, got {pred}")
+    if v:
+        raise AuraInputError(v)
+
 def logistic(z: float) -> float:
     """Sigmoid function."""
+    _aura_validate_logistic(z)
     return 1.0 / (1.0 + math.exp(-z))
 
 
 def binary_cross_entropy(y: float, pred: float) -> float:
     """Binary cross-entropy loss."""
+    _aura_validate_binary_cross_entropy(pred)
     pred = max(1e-7, min(1 - 1e-7, pred))
     return -y * math.log(pred) - (1 - y) * math.log(1 - pred)
 
 
 def weighted_binary_cross_entropy(y: float, pred: float, weight: float) -> float:
     """Weighted binary cross-entropy: upweight minority class."""
+    _aura_validate_weighted_binary_cross_entropy(pred)
     return weight * binary_cross_entropy(y, pred)
 
 

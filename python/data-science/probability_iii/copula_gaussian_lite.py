@@ -9,11 +9,27 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List, Tuple
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_gaussian_copula_sample(n):
+    v = []
+    if isinstance(n, (int, float)) and n <= 0:
+        v.append(f"AURA-E009: n must be > 0, got {n}")
+    if v:
+        raise AuraInputError(v)
+
 def gaussian_copula_sample(rho: float, n: int) -> Tuple[List[float], List[float]]:
     """Sample from bivariate Gaussian copula with correlation rho.
 
     Returns (U, V) ~ Uniform via inverse CDF of Gaussian.
     """
+    _aura_validate_gaussian_copula_sample(n)
     import random
 
     # Sample from bivariate normal with correlation rho.

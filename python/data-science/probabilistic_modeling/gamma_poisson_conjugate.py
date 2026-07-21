@@ -33,16 +33,57 @@ def gamma_poisson_posterior(counts: List[int], alpha_prior: float,
     beta_post = beta_prior + n
     return alpha_post, beta_post
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_gamma_poisson_ll(beta):
+    v = []
+    if isinstance(beta, (int, float)) and not math.isfinite(beta):
+        v.append(f"AURA-E008: beta must be finite, got {beta}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_gamma_posterior_mean(beta):
+    v = []
+    if isinstance(beta, (int, float)) and not math.isfinite(beta):
+        v.append(f"AURA-E008: beta must be finite, got {beta}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_gamma_posterior_var(beta):
+    v = []
+    if isinstance(beta, (int, float)) and not math.isfinite(beta):
+        v.append(f"AURA-E008: beta must be finite, got {beta}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_poisson_sample(lam):
+    v = []
+    if isinstance(lam, (int, float)) and not math.isfinite(lam):
+        v.append(f"AURA-E008: lam must be finite, got {lam}")
+    if isinstance(lam, (int, float)) and lam <= 0:
+        v.append(f"AURA-E001: lam must be > 0, got {lam}")
+    if v:
+        raise AuraInputError(v)
+
 def gamma_posterior_mean(alpha: float, beta: float) -> float:
     """Mean of Gamma(α, β) is α/β."""
+    _aura_validate_gamma_posterior_mean(beta)
     return alpha / beta
 
 def gamma_posterior_var(alpha: float, beta: float) -> float:
     """Variance of Gamma(α, β) is α/β²."""
+    _aura_validate_gamma_posterior_var(beta)
     return alpha / (beta ** 2)
 
 def gamma_poisson_ll(counts: List[int], alpha: float, beta: float) -> float:
     """Log-likelihood under Gamma-Poisson model."""
+    _aura_validate_gamma_poisson_ll(beta)
     # Marginal likelihood: ∫ p(counts|λ) p(λ) dλ
     # = ∏_i (α/β)^count_i * Γ(α + count_i) / (Γ(α) * (β+1)^count_i * count_i!)
     # Simplified log: sum log Γ(α + count_i) - count_i * log(β+1) - log count_i!
@@ -58,6 +99,7 @@ def gamma_poisson_ll(counts: List[int], alpha: float, beta: float) -> float:
 
 def poisson_sample(lam: float) -> int:
     """Simple Poisson sampler via Knuth algorithm."""
+    _aura_validate_poisson_sample(lam)
     import random
     L = math.exp(-lam)
     k = 0

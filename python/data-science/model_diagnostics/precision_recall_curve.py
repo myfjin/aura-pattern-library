@@ -1,3 +1,4 @@
+import math
 """
 Precision-Recall Curve & Average Precision
 
@@ -15,6 +16,34 @@ import random
 from typing import List, Tuple
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_compute_pr_curve(n_points):
+    v = []
+    if isinstance(n_points, (int, float)) and n_points <= 0:
+        v.append(f"AURA-E009: n_points must be > 0, got {n_points}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_generate_scored_labels(n_positive, n_negative, noise):
+    v = []
+    if isinstance(n_positive, (int, float)) and n_positive <= 0:
+        v.append(f"AURA-E009: n_positive must be > 0, got {n_positive}")
+    if isinstance(n_negative, (int, float)) and n_negative <= 0:
+        v.append(f"AURA-E009: n_negative must be > 0, got {n_negative}")
+    if isinstance(noise, (int, float)) and not math.isfinite(noise):
+        v.append(f"AURA-E008: noise must be finite, got {noise}")
+    if isinstance(noise, (int, float)) and noise <= 0:
+        v.append(f"AURA-E009: noise must be > 0, got {noise}")
+    if v:
+        raise AuraInputError(v)
+
 def generate_scored_labels(
     n_positive: int, n_negative: int, noise: float, seed: int
 ) -> List[Tuple[float, int]]:
@@ -22,6 +51,7 @@ def generate_scored_labels(
     Generate predicted scores and true labels.
     Positive labels have higher scores; noise controls overlap.
     """
+    _aura_validate_generate_scored_labels(n_positive, n_negative, noise)
     random.seed(seed)
     data = []
 
@@ -47,6 +77,7 @@ def compute_pr_curve(
     Compute precision-recall curve by varying threshold.
     Returns (thresholds, precisions, recalls).
     """
+    _aura_validate_compute_pr_curve(n_points)
     # Sort by score descending
     scored_labels = sorted(zip(scores, labels), key=lambda x: -x[0])
     scores_sorted = [s for s, l in scored_labels]
