@@ -29,6 +29,8 @@ def _aura_validate_benjamini_hochberg(alpha):
     v = []
     if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
         v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    if isinstance(alpha, (int, float)) and math.isfinite(alpha) and not (0.0 < alpha < 1.0):
+        v.append(f"AURA-E001: alpha must be in (0,1), got {alpha}")  # domain: significance level
     if v:
         raise AuraInputError(v)
 
