@@ -21,10 +21,16 @@ class AuraInputError(ValueError):
         self.violations = violations
         super().__init__("input contract violated:\n  " + "\n  ".join(violations))
 
-def _aura_validate_beta_binomial_loglik(n_trials):
+def _aura_validate_beta_binomial_loglik(n_trials, alpha=1.0, beta=1.0):
     v = []
     if isinstance(n_trials, (int, float)) and n_trials <= 0:
         v.append(f"AURA-E009: n_trials must be > 0, got {n_trials}")
+    # alpha/beta are Beta shape params -> must be finite and > 0 (domain: shape/concentration)
+    for name, val in (("alpha", alpha), ("beta", beta)):
+        if isinstance(val, (int, float)) and not math.isfinite(val):
+            v.append(f"AURA-E008: {name} must be finite, got {val}")
+        elif isinstance(val, (int, float)) and val <= 0:
+            v.append(f"AURA-E001: {name} must be > 0, got {val}")
     if v:
         raise AuraInputError(v)
 
@@ -37,7 +43,7 @@ def _aura_validate_binomial_loglik(n_trials):
 
 def beta_binomial_loglik(counts: List[int], n_trials: int, alpha: float, beta: float) -> float:
     """Log-likelihood of counts under Beta-Binomial(n_trials, α, β)."""
-    _aura_validate_beta_binomial_loglik(n_trials)
+    _aura_validate_beta_binomial_loglik(n_trials, alpha, beta)
     return sum(lgamma(alpha + k) + lgamma(beta + n_trials - k) - lgamma(alpha + beta + n_trials)
                + lgamma(alpha + beta) - lgamma(alpha) - lgamma(beta) for k in counts)
 

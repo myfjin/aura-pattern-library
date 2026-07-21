@@ -8,11 +8,32 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List
 
+
+
+class AuraInputError(ValueError):
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+
+def _aura_validate_pos(**named):
+    """alpha/beta/prior params are shape/concentration -> must be finite and > 0
+    (domains written down in validator/ALPHA_BETA_DOMAINS.md)."""
+    v = []
+    for name, val in named.items():
+        if isinstance(val, (int, float)) and not math.isfinite(val):
+            v.append(f"AURA-E008: {name} must be finite, got {val}")
+        elif isinstance(val, (int, float)) and val <= 0:
+            v.append(f"AURA-E001: {name} must be > 0, got {val}")
+    if v:
+        raise AuraInputError(v)
+
 def dirichlet_posterior_concentration(counts: List[int], prior_alpha: float = 1.0) -> List[float]:
     """Posterior mean for Dirichlet-Multinomial.
 
     Posterior mean of p_k = (α + count_k) / (K*α + n).
     """
+    _aura_validate_pos(prior_alpha=prior_alpha)
     k = len(counts)
     n = sum(counts)
     total_alpha = k * prior_alpha + n
