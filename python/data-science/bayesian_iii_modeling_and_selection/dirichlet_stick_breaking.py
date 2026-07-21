@@ -9,11 +9,28 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List
 
+
+
+class AuraInputError(ValueError):
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_domain_stick_breaking_process(alpha):
+    v = []
+    if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
+        v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    elif isinstance(alpha, (int, float)) and alpha <= 0:
+        v.append(f"AURA-E001: alpha must be > 0, got {alpha}")
+    if v:
+        raise AuraInputError(v)
+
 def stick_breaking_process(alpha: float, num_breaks: int = 100) -> List[float]:
     """Generate stick-breaking weights: V_k ~ Beta(1, α), weights w_k = V_k * ∏(1-V_j).
 
     Returns probabilities that sum to (approximately) 1.
     """
+    _aura_domain_stick_breaking_process(alpha)
     import random
     weights = []
     remaining = 1.0

@@ -162,8 +162,8 @@
     },
     {
       "path": "bayesian_iii_modeling_and_selection/dirichlet_stick_breaking.py",
-      "sha256": "3bf1cb2ffc927cfa38b5e1d37945938cad2d0ee9c5451290e7d4a44d3d30d425",
-      "bytes": 6110
+      "sha256": "043740d26a0d0baebda7624ecefc7cb86e1ed8f958eb2fb3093bff0866f02b13",
+      "bytes": 6707
     },
     {
       "path": "bayesian_iii_modeling_and_selection/evidence_ranks_true_model.py",
@@ -892,8 +892,8 @@
     },
     {
       "path": "linear_algebra/householder_reflection.py",
-      "sha256": "55931ad5ae65735eedb271506256291edaab7bb6be1808d7a9e238e7a13c8c23",
-      "bytes": 5929
+      "sha256": "b61e8b2f8970f8fb0360da76c395475b3c447f3605a808c93a915672bf4cb619",
+      "bytes": 6390
     },
     {
       "path": "linear_algebra/jacobi_eigen_symmetric.py",
@@ -1657,8 +1657,8 @@
     },
     {
       "path": "statistical_modeling/power_analysis_sample_size.py",
-      "sha256": "6a786666a87c803ca5da6f6a169f5dbb46dd4595593cf9eaa45d16b1a350cc90",
-      "bytes": 7592
+      "sha256": "aa1f8e640e2d017b6989358e564cdfd970a137daa193fd65cecc08501e1256c7",
+      "bytes": 8633
     },
     {
       "path": "statistical_modeling/quantile_regression_pinball.py",

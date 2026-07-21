@@ -38,8 +38,23 @@ def householder_reflection(
     v_normalized = [vi / norm_v for vi in v]
     return v_normalized, 2.0
 
+
+
+class AuraInputError(ValueError):
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_domain_apply_householder(beta):
+    v = []
+    if isinstance(beta, (int, float)) and not math.isfinite(beta):
+        v.append(f"AURA-E008: beta must be finite, got {beta}")
+    if v:
+        raise AuraInputError(v)
+
 def apply_householder(H_vector: list, beta: float, x: list) -> list:
     """Apply Householder reflection H = I - beta·v·v^T to vector x."""
+    _aura_domain_apply_householder(beta)
     n = len(x)
     dot_product = sum(H_vector[i] * x[i] for i in range(n))
     return [x[i] - beta * dot_product * H_vector[i] for i in range(n)]
