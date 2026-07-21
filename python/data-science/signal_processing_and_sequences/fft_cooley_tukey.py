@@ -75,13 +75,37 @@ def fft_cooley_tukey(signal: List[float]) -> List[Tuple[float, float]]:
     return result
 
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_count_ops_fft(N):
+    v = []
+    if isinstance(N, (int, float)) and N <= 0:
+        v.append(f"AURA-E009: N must be > 0, got {N}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_validate_count_ops_naive(N):
+    v = []
+    if isinstance(N, (int, float)) and N <= 0:
+        v.append(f"AURA-E009: N must be > 0, got {N}")
+    if v:
+        raise AuraInputError(v)
+
 def count_ops_naive(N: int) -> int:
     """Count complex multiplications in naive DFT."""
+    _aura_validate_count_ops_naive(N)
     return N * N
 
 
 def count_ops_fft(N: int) -> int:
     """Count complex multiplications in Cooley-Tukey FFT (approximate)."""
+    _aura_validate_count_ops_fft(N)
     return int(N * math.log2(N)) if N > 1 else N
 
 

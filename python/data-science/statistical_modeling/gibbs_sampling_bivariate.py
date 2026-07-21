@@ -29,6 +29,21 @@ def _aura_validate_gibbs_bivariate_normal(n_iter):
     if v:
         raise AuraInputError(v)
 
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_gibbs_bivariate_normal(initial_x):
+    v = []
+    if isinstance(initial_x, (int, float)) and not math.isfinite(initial_x):
+        v.append(f"AURA-E008: initial_x must be finite, got {initial_x}")
+    if v:
+        raise AuraInputError(v)
+
 def gibbs_bivariate_normal(
     rho: float,
     n_iter: int,
@@ -50,6 +65,7 @@ def gibbs_bivariate_normal(
     Returns:
         (x_samples, y_samples)
     """
+    _aura_validate_gibbs_bivariate_normal(initial_x)
     _aura_validate_gibbs_bivariate_normal(n_iter)
     x_samples = []
     y_samples = []
