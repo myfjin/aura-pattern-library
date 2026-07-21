@@ -62,8 +62,8 @@
     },
     {
       "path": "applied_ds_practice/target_encoding_smoothing.py",
-      "sha256": "9e246ec169db36791c3ffed33948b0df11d6bc526f79ed65e38c08c2cef402ce",
-      "bytes": 10465
+      "sha256": "082d75a72e819dd211a547ff23fbdba27ae5e983b7fd1de36bb2e6720b5e62fc",
+      "bytes": 10811
     },
     {
       "path": "applied_ds_practice/welford_online_stats.py",
@@ -152,8 +152,8 @@
     },
     {
       "path": "bayesian_iii_modeling_and_selection/crp_table_growth.py",
-      "sha256": "482d5f507872dc3931593bde68b8704e8f1d653d0b1f7661cd3962a3a2e614e6",
-      "bytes": 6292
+      "sha256": "0038226be9e5e91839d5e2fb98bcf96bd2a96087fcfd9c9f215945b53651ecd4",
+      "bytes": 6466
     },
     {
       "path": "bayesian_iii_modeling_and_selection/dirichlet_multinomial_posterior.py",
@@ -227,8 +227,8 @@
     },
     {
       "path": "causal_inference_and_experimentation/sequential_probability_ratio.py",
-      "sha256": "969f7b67cffb4227a13a851b1298dcef083e87ad93f5e64a9793bf82f32fdd57",
-      "bytes": 8793
+      "sha256": "6480831465964e9c08559c386a7f2cca40b59330994696efdb6ed556c659430b",
+      "bytes": 8984
     },
     {
       "path": "causal_inference_and_experimentation/synthetic_control_lite.py",
@@ -667,8 +667,8 @@
     },
     {
       "path": "experiments_ii/minimum_detectable_effect.py",
-      "sha256": "f310f5eebe2e11401c84b8b08af30449a1c661930522863b50e8bd8123cb7715",
-      "bytes": 7862
+      "sha256": "f960420bc0acdc4084084672ba80b790d705724bfe28f7ccef3cacb2067017fb",
+      "bytes": 8053
     },
     {
       "path": "experiments_ii/msprt_lite.py",
@@ -1472,8 +1472,8 @@
     },
     {
       "path": "recommenders_and_graph_sampling/thompson_sampling_bandit.py",
-      "sha256": "14398e60a3379a29f97c72716566ef8b94f8ee192fd2af854025d633fa905a7f",
-      "bytes": 8094
+      "sha256": "41f9c8a2667ca476e4c81209beeb0d3f5a6eb883be4b03aef01c16f91a5dfa06",
+      "bytes": 8437
     },
     {
       "path": "recommenders_and_graph_sampling/user_based_cf.py",
@@ -1677,8 +1677,8 @@
     },
     {
       "path": "statistics_and_testing/benjamini_hochberg.py",
-      "sha256": "d146c9ca041e146f4ebdb9d1fe08c7b0de15b61f1b0c1e5a48f9f326f9a18989",
-      "bytes": 9010
+      "sha256": "42a83d81b9e5e3d1bfb9864fc96acb0d80af9795d768cc2d13b310f69d6dc5ae",
+      "bytes": 9201
     },
     {
       "path": "statistics_and_testing/bootstrap_confidence_interval.py",

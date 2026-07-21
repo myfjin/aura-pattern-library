@@ -36,6 +36,8 @@ def _aura_validate_fit_encoding(alpha):
     v = []
     if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
         v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    if isinstance(alpha, (int, float)) and math.isfinite(alpha) and alpha < 0:
+        v.append(f"AURA-E-B5: alpha must be >= 0, got {alpha}")  # domain: smoothing strength
     if v:
         raise AuraInputError(v)
 
@@ -43,6 +45,8 @@ def _aura_validate_oof_encode_train(alpha):
     v = []
     if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
         v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    if isinstance(alpha, (int, float)) and math.isfinite(alpha) and alpha < 0:
+        v.append(f"AURA-E-B5: alpha must be >= 0, got {alpha}")  # domain: smoothing strength
     if v:
         raise AuraInputError(v)
 

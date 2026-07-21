@@ -21,6 +21,8 @@ def _aura_validate_mde_normal_approx(alpha, power, sigma):
     v = []
     if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
         v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    if isinstance(alpha, (int, float)) and math.isfinite(alpha) and not (0.0 < alpha < 1.0):
+        v.append(f"AURA-E001: alpha must be in (0,1), got {alpha}")  # domain: significance level
     if isinstance(power, (int, float)) and not math.isfinite(power):
         v.append(f"AURA-E008: power must be finite, got {power}")
     if isinstance(sigma, (int, float)) and sigma < 0:

@@ -22,6 +22,8 @@ def _aura_validate_crp_sample_num_tables(n, alpha):
         v.append(f"AURA-E009: n must be > 0, got {n}")
     if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
         v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    if isinstance(alpha, (int, float)) and math.isfinite(alpha) and alpha <= 0:
+        v.append(f"AURA-E001: alpha must be > 0, got {alpha}")  # domain: shape/concentration
     if v:
         raise AuraInputError(v)
 

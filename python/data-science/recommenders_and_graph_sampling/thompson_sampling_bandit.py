@@ -28,8 +28,12 @@ def _aura_validate_sample_beta(alpha, beta):
     v = []
     if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
         v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    if isinstance(alpha, (int, float)) and math.isfinite(alpha) and alpha <= 0:
+        v.append(f"AURA-E001: alpha must be > 0, got {alpha}")  # domain: shape/concentration
     if isinstance(beta, (int, float)) and not math.isfinite(beta):
         v.append(f"AURA-E008: beta must be finite, got {beta}")
+    if isinstance(beta, (int, float)) and math.isfinite(beta) and beta <= 0:
+        v.append(f"AURA-E001: beta must be > 0, got {beta}")  # domain: shape/concentration
     if v:
         raise AuraInputError(v)
 

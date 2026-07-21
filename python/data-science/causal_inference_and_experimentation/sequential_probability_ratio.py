@@ -33,6 +33,8 @@ def _aura_validate_fixed_n_test(p0, p1, alpha):
         v.append(f"AURA-E003: p1 must be in [0,1], got {p1}")
     if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
         v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    if isinstance(alpha, (int, float)) and math.isfinite(alpha) and not (0.0 < alpha < 1.0):
+        v.append(f"AURA-E001: alpha must be in (0,1), got {alpha}")  # domain: significance level
     if v:
         raise AuraInputError(v)
 
