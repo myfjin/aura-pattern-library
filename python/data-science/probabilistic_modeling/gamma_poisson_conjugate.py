@@ -20,6 +20,26 @@ def log_gamma_func(x: float) -> float:
     # Stirling
     return 0.5 * math.log(2 * math.pi) + (x - 0.5) * math.log(x) - x
 
+
+
+class AuraInputError(ValueError):
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+
+def _aura_validate_pos(**named):
+    """alpha/beta/prior params are shape/concentration -> must be finite and > 0
+    (domains written down in validator/ALPHA_BETA_DOMAINS.md)."""
+    v = []
+    for name, val in named.items():
+        if isinstance(val, (int, float)) and not math.isfinite(val):
+            v.append(f"AURA-E008: {name} must be finite, got {val}")
+        elif isinstance(val, (int, float)) and val <= 0:
+            v.append(f"AURA-E001: {name} must be > 0, got {val}")
+    if v:
+        raise AuraInputError(v)
+
 def gamma_poisson_posterior(counts: List[int], alpha_prior: float,
                             beta_prior: float) -> Tuple[float, float]:
     """
@@ -27,6 +47,7 @@ def gamma_poisson_posterior(counts: List[int], alpha_prior: float,
     Posterior: Gamma(α + Σcount, β + n)
     Return: (alpha_post, beta_post)
     """
+    _aura_validate_pos(alpha_prior=alpha_prior, beta_prior=beta_prior)
     n = len(counts)
     sum_counts = sum(counts)
     alpha_post = alpha_prior + sum_counts
@@ -73,16 +94,19 @@ def _aura_validate_poisson_sample(lam):
 
 def gamma_posterior_mean(alpha: float, beta: float) -> float:
     """Mean of Gamma(α, β) is α/β."""
+    _aura_validate_pos(alpha=alpha, beta=beta)
     _aura_validate_gamma_posterior_mean(beta)
     return alpha / beta
 
 def gamma_posterior_var(alpha: float, beta: float) -> float:
     """Variance of Gamma(α, β) is α/β²."""
+    _aura_validate_pos(alpha=alpha, beta=beta)
     _aura_validate_gamma_posterior_var(beta)
     return alpha / (beta ** 2)
 
 def gamma_poisson_ll(counts: List[int], alpha: float, beta: float) -> float:
     """Log-likelihood under Gamma-Poisson model."""
+    _aura_validate_pos(alpha=alpha, beta=beta)
     _aura_validate_gamma_poisson_ll(beta)
     # Marginal likelihood: ∫ p(counts|λ) p(λ) dλ
     # = ∏_i (α/β)^count_i * Γ(α + count_i) / (Γ(α) * (β+1)^count_i * count_i!)

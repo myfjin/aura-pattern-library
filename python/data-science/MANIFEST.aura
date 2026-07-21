@@ -142,8 +142,8 @@
     },
     {
       "path": "bayesian_iii_modeling_and_selection/beta_binomial_overdispersion.py",
-      "sha256": "2d6ffdd002dae6d8b9d266ae3cc58e660a02da5785d867c8901319e696752963",
-      "bytes": 7939
+      "sha256": "a1b69b8e93053a0260f8d988289dc246599f1b93215c4d018cea8259679bf0e2",
+      "bytes": 8386
     },
     {
       "path": "bayesian_iii_modeling_and_selection/bic_selects_true_degree.py",
@@ -157,8 +157,8 @@
     },
     {
       "path": "bayesian_iii_modeling_and_selection/dirichlet_multinomial_posterior.py",
-      "sha256": "b64d3f909994a5a2b8e745f1bdd2907f6124a5844e9bdf3d90a184416744c885",
-      "bytes": 5765
+      "sha256": "f6bc20490f6beb04cadbbeb25b4814ced73bef034828db345dd5cfeca9214a99",
+      "bytes": 6538
     },
     {
       "path": "bayesian_iii_modeling_and_selection/dirichlet_stick_breaking.py",
@@ -837,8 +837,8 @@
     },
     {
       "path": "information_theory_and_probability/conjugate_priors.py",
-      "sha256": "a9218d6e33fdcffd88a1c956d86e918731a6fbbf4dc4051526fb81ce3d189014",
-      "bytes": 11364
+      "sha256": "24e4d3a7f106e3e58abda568622e31bbc58769806e522d23981ee95660f60056",
+      "bytes": 12207
     },
     {
       "path": "information_theory_and_probability/entropy_estimators.py",
@@ -1287,8 +1287,8 @@
     },
     {
       "path": "probabilistic_modeling/gamma_poisson_conjugate.py",
-      "sha256": "5638cd157c9d974b485f4d1c01c47f22cf3a236c4e7aac3629e6b88a7b8709d8",
-      "bytes": 10395
+      "sha256": "138b1c7d480eb5996a55a41799de8aa9b4504849486583051da47d91d865464b",
+      "bytes": 11332
     },
     {
       "path": "probabilistic_modeling/gaussian_process_lite.py",

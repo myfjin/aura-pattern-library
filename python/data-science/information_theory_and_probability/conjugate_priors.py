@@ -17,6 +17,26 @@ import math
 from typing import Tuple, List
 
 
+
+
+class AuraInputError(ValueError):
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+
+def _aura_validate_pos(**named):
+    """alpha/beta/prior params are shape/concentration -> must be finite and > 0
+    (domains written down in validator/ALPHA_BETA_DOMAINS.md)."""
+    v = []
+    for name, val in named.items():
+        if isinstance(val, (int, float)) and not math.isfinite(val):
+            v.append(f"AURA-E008: {name} must be finite, got {val}")
+        elif isinstance(val, (int, float)) and val <= 0:
+            v.append(f"AURA-E001: {name} must be > 0, got {val}")
+    if v:
+        raise AuraInputError(v)
+
 def beta_binomial_posterior(
     alpha_prior: float,
     beta_prior: float,
@@ -30,6 +50,7 @@ def beta_binomial_posterior(
     Likelihood: Binomial(successes, failures)
     Posterior: Beta(alpha + successes, beta + failures)
     """
+    _aura_validate_pos(alpha_prior=alpha_prior, beta_prior=beta_prior)
     alpha_post = alpha_prior + successes
     beta_post = beta_prior + failures
     return alpha_post, beta_post
@@ -37,6 +58,7 @@ def beta_binomial_posterior(
 
 def beta_mean_variance(alpha: float, beta: float) -> Tuple[float, float]:
     """Mean and variance of Beta(alpha, beta) distribution."""
+    _aura_validate_pos(alpha=alpha, beta=beta)
     mean = alpha / (alpha + beta)
     variance = (alpha * beta) / ((alpha + beta) ** 2 * (alpha + beta + 1))
     return mean, variance
