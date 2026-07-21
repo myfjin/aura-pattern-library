@@ -12,6 +12,7 @@ static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQR
 #include <limits>
 #include <tuple>
 #include <vector>
+#include <array>
 
 // Python oracle generated arrays (seed 42)
 // TRAIN: 40 samples

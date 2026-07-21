@@ -3,6 +3,11 @@
 static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO";
 /*
  * Gradient Boosting with Decision Stumps.
+ * Additively fits depth-1 trees (stumps) to the current residuals with
+ * learning-rate shrinkage, summing their shrunken predictions into an ensemble.
+ * Use to learn a piecewise function that a single stump cannot capture. Oracle:
+ * on a 4-quadrant target, a 50-round boosted ensemble cuts MSE by more than 15%
+ * relative to the best single stump.
  */
 
 #include <vector>
@@ -12,6 +17,7 @@ static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQR
 #include <cassert>
 #include <iostream>
 #include <utility>
+#include <tuple>
 
 std::tuple<int, double, double, double> fit_stump(
     const std::vector<std::pair<double, double>>& X,

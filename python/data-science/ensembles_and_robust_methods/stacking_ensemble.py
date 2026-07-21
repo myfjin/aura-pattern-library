@@ -37,12 +37,37 @@ def predict_linear(X: List[float], b0: float, coef: List[float]) -> float:
     """Predict with linear meta-learner."""
     return b0 + sum(X[i] * coef[i] for i in range(len(coef)))
 
+import math as _math
+
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+
+def _validate_fit(X, y, feat):
+    """Guard fit(): NaN/Inf in the sorted feature silently scrambles the threshold (the
+    shipped defect — NaN trained without a trace, output identical to clean). Reject it."""
+    v = []
+    if not X:
+        v.append("AURA-E005: X must be non-empty")
+    if len(X) != len(y):
+        v.append(f"AURA-E007: len(X)={len(X)} != len(y)={len(y)}")
+    if any((not isinstance(x[feat], (int, float))) or (not _math.isfinite(x[feat])) for x in X):
+        v.append(f"AURA-E008: feature {feat} must contain only finite numbers (NaN/Inf rejected)")
+    if v:
+        raise AuraInputError(v)
+
+
 class BaseModel1:
     """Simple threshold classifier on x[0]."""
     def __init__(self):
         self.threshold = None
 
     def fit(self, X: List[Tuple[float, float]], y: List[int]):
+        _validate_fit(X, y, 0)
         values = sorted([X[i][0] for i in range(len(X))])
         self.threshold = values[len(values) // 2]
 
@@ -55,6 +80,7 @@ class BaseModel2:
         self.threshold = None
 
     def fit(self, X: List[Tuple[float, float]], y: List[int]):
+        _validate_fit(X, y, 1)
         values = sorted([X[i][1] for i in range(len(X))])
         self.threshold = values[len(values) // 2]
 

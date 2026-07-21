@@ -16,6 +16,7 @@ static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQR
 #include <iostream>
 #include <random>
 #include <algorithm>
+#include <tuple>
 
 std::vector<std::pair<double, int>> generate_scored_labels(int n_positive, int n_negative,
                                                     double signal_strength, int seed) {

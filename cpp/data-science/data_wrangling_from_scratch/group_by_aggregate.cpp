@@ -3,6 +3,10 @@
 static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO";
 /*
  * Group-By Aggregation (Multi-Key).
+ * Buckets records by a composite (category, region) key or a single key, then
+ * reduces each group with sum / mean / count / min / max. Use as a from-scratch
+ * pandas-style groupby when no dataframe library is available. Oracle: computed
+ * per-group aggregates match hand-verified expected values for each reducer.
  */
 
 #include <vector>

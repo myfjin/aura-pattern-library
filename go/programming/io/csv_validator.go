@@ -2,12 +2,20 @@ package main
 
 import (
 	"encoding/csv"
+	"math"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
 )
 
+// Schema-driven CSV validation and transformation: each field declares a type
+// (string/integer/float/boolean), a required flag, a default, and optional custom
+// validators; rows are validated and then coerced to typed values, delimiter-configurable.
+// Use to validate and type-cast CSV input against an explicit schema.
+// Guarantees: type coercions are exact, validation errors are pinned to the offending
+// row and field, rows missing a required field are excluded from the output, optional
+// empty fields are not flagged, and a non-comma delimiter parses correctly.
 // DataType represents supported data types for validation.
 // △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
@@ -129,12 +137,15 @@ func (v *CSVValidator) validateType(value string, field *FieldSchema, rowIndex i
 			})
 		}
 	case TypeFloat:
-		if _, err := strconv.ParseFloat(value, 64); err != nil {
+		// strconv.ParseFloat accepts "NaN"/"Inf" — a schema validator must NOT bless them
+		// as valid numbers (the shipped bug let NaN salaries through with zero errors;
+		// snapshot at csv_validator.BROKEN.go).
+		if f, err := strconv.ParseFloat(value, 64); err != nil || math.IsNaN(f) || math.IsInf(f, 0) {
 			*errors = append(*errors, ValidationError{
 				RowIndex:     rowIndex,
 				FieldName:    field.Name,
 				Value:        value,
-				ErrorMessage: fmt.Sprintf("Invalid %s: %v", field.DataType.String(), err),
+				ErrorMessage: fmt.Sprintf("Invalid %s: %q is not a finite number", field.DataType.String(), value),
 			})
 		}
 	case TypeBoolean:
@@ -184,16 +195,18 @@ func (t *RowTransformer) TransformRow(row map[string]string) map[string]interfac
 		case TypeString:
 			transformed[field.Name] = value
 		case TypeInteger:
+			// failed coercion must NOT leave a raw string in an integer column ("coercions are
+			// exact" was theater on the failure path); emit nil instead of a mixed-type value.
 			if n, err := strconv.Atoi(value); err == nil {
 				transformed[field.Name] = n
 			} else {
-				transformed[field.Name] = value
+				transformed[field.Name] = nil
 			}
 		case TypeFloat:
-			if f, err := strconv.ParseFloat(value, 64); err == nil {
+			if f, err := strconv.ParseFloat(value, 64); err == nil && !math.IsNaN(f) && !math.IsInf(f, 0) {
 				transformed[field.Name] = f
 			} else {
-				transformed[field.Name] = value
+				transformed[field.Name] = nil
 			}
 		case TypeBoolean:
 			lower := strings.ToLower(value)

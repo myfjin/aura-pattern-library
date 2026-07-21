@@ -10,6 +10,7 @@ static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQR
 #include <iostream>
 #include <set>
 #include <vector>
+#include <algorithm>
 
 double euclidean_distance(const std::vector<double>& p1, const std::vector<double>& p2) {
     double sum = 0.0;

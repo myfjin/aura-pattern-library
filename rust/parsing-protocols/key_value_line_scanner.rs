@@ -5,6 +5,12 @@
 const _AURA_MARK: &str = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO";
 use std::collections::HashMap;
 
+// Scans a single line of whitespace-separated key=value pairs into a HashMap, where a
+// value may be bare (ends at the next space/tab) or double-quoted to contain spaces,
+// with backslash escaping any character inside the quotes.
+// Use for logfmt-style lines where a naive split(' ') would wrongly break quoted values.
+// Guarantees quote-aware tokenization: "hello world" stays one value and \" survives as a
+// literal quote; an empty key or a key with no '=' returns Err rather than being dropped.
 struct KvScanner;
 
 impl KvScanner {

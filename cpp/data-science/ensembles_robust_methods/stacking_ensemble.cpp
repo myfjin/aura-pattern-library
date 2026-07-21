@@ -8,11 +8,23 @@ static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQR
 #include <cmath>
 #include <cassert>
 #include <numeric>
+#include <stdexcept>
+
+// Reject empty/NaN/Inf before sorting: NaN in std::sort is UB and trained a garbage
+// threshold silently (the twin bug; snapshot at stacking_ensemble.BROKEN.cpp).
+static void _validate_fit(const std::vector<std::pair<double, double>>& X, int feat) {
+    if (X.empty()) throw std::invalid_argument("AURA-E005: X must be non-empty");
+    for (const auto& x : X) {
+        double v = (feat == 0) ? x.first : x.second;
+        if (!std::isfinite(v)) throw std::invalid_argument("AURA-E008: feature must be finite (NaN/Inf rejected)");
+    }
+}
 
 // Simple threshold classifier on feature 0.
 struct BaseModel1 {
     double threshold = 0.0;
     void fit(const std::vector<std::pair<double, double>>& X, const std::vector<int>&) {
+        _validate_fit(X, 0);
         std::vector<double> values;
         for (const auto& x : X) values.push_back(x.first);
         std::sort(values.begin(), values.end());
@@ -29,6 +41,7 @@ struct BaseModel1 {
 struct BaseModel2 {
     double threshold = 0.0;
     void fit(const std::vector<std::pair<double, double>>& X, const std::vector<int>&) {
+        _validate_fit(X, 1);
         std::vector<double> values;
         for (const auto& x : X) values.push_back(x.second);
         std::sort(values.begin(), values.end());

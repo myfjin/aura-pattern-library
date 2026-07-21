@@ -17,6 +17,7 @@ static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQR
 #include <random>
 #include <map>
 #include <utility>
+#include <functional>
 
 using Point = std::pair<double, double>;
 

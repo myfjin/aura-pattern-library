@@ -23,7 +23,10 @@ fn rle_encode(data: &[u8]) -> Vec<u8> {
 fn rle_decode(encoded: &[u8]) -> Vec<u8> {
     let mut decoded = Vec::new();
     let mut i = 0;
-    while i < encoded.len() - 1 {
+    // `encoded.len() - 1` underflowed (usize wraps) on empty input, panicking with an
+    // out-of-bounds index; `i + 1 < len` is empty-safe. Snapshot at
+    // compressed_block_store.BROKEN.rs.
+    while i + 1 < encoded.len() {
         let run = encoded[i] as usize;
         let byte = encoded[i + 1];
         for _ in 0..run {

@@ -3,6 +3,11 @@
 static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO";
 /*
  * Huber Loss Robust Regression.
+ * Fits a line by gradient descent on the Huber loss (quadratic for small
+ * residuals, linear beyond delta), so outliers get bounded gradient influence.
+ * Use to fit slope/intercept when the data contains heavy-tailed or corrupted y
+ * values. Oracle: on data with outliers, the Huber slope estimate is closer to
+ * the true slope than ordinary least squares.
  */
 
 #include <vector>

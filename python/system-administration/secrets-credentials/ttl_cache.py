@@ -20,6 +20,8 @@ class LogicalClock:
 
 def ttl_cache(ttl_seconds=100, clock=None):
     """Cache with time-to-live expiry based on logical clock."""
+    if not (isinstance(ttl_seconds, (int, float)) and ttl_seconds > 0):
+        raise ValueError(f"ttl_seconds must be > 0, got {ttl_seconds}")
     if clock is None:
         clock = LogicalClock()
 
@@ -28,6 +30,9 @@ def ttl_cache(ttl_seconds=100, clock=None):
             self.ttl = ttl
             self.clock = clk
             self.cache = {}  # key -> (value, insertion_time)
+
+        def _expired(self, insertion_time):
+            return (self.clock.current() - insertion_time) > self.ttl
 
         def set(self, key, value):
             """Store value with current logical time."""
@@ -38,16 +43,23 @@ def ttl_cache(ttl_seconds=100, clock=None):
             if key not in self.cache:
                 return None
             value, insertion_time = self.cache[key]
-            age = self.clock.current() - insertion_time
-            if age > self.ttl:
-                # Expired
+            if self._expired(insertion_time):
                 del self.cache[key]
                 return None
             return value
 
+        def purge(self):
+            """Free all expired entries (lazy expiry otherwise leaks their memory)."""
+            dead = [k for k, (_, t) in self.cache.items() if self._expired(t)]
+            for k in dead:
+                del self.cache[k]
+            return len(dead)
+
         def size(self):
-            """Return count of non-expired items."""
-            return len(self.cache)
+            """Return count of NON-EXPIRED items (counts truthfully; the shipped version
+            returned raw len() including expired-but-unpurged entries — the docstring-lie
+            preserved as ttl_cache.BROKEN.py)."""
+            return sum(1 for (_, t) in self.cache.values() if not self._expired(t))
 
     return TTLCache(ttl_seconds, clock)
 
