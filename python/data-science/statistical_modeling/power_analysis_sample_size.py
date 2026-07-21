@@ -30,6 +30,31 @@ def normal_cdf_approx(z: float) -> float:
     return 0.5 * (1.0 + math.tanh(0.7978845608 * z))
 
 
+
+
+class AuraInputError(ValueError):
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_domain_two_proportion_power(alpha):
+    v = []
+    if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
+        v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    elif isinstance(alpha, (int, float)) and not (0.0 < alpha < 1.0):
+        v.append(f"AURA-E001: alpha must be in (0,1), got {alpha}")
+    if v:
+        raise AuraInputError(v)
+
+def _aura_domain_sample_size_two_proportion(alpha):
+    v = []
+    if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
+        v.append(f"AURA-E008: alpha must be finite, got {alpha}")
+    elif isinstance(alpha, (int, float)) and not (0.0 < alpha < 1.0):
+        v.append(f"AURA-E001: alpha must be in (0,1), got {alpha}")
+    if v:
+        raise AuraInputError(v)
+
 def two_proportion_power(n: int, p1: float, p2: float, alpha: float = 0.05) -> float:
     """
     Compute power of two-proportion z-test (one-sided).
@@ -42,6 +67,7 @@ def two_proportion_power(n: int, p1: float, p2: float, alpha: float = 0.05) -> f
     Returns:
         Power (probability of detecting the effect)
     """
+    _aura_domain_two_proportion_power(alpha)
     # Use two-tailed critical value
     z_crit = normal_quantile(1.0 - alpha / 2.0)
 
@@ -85,6 +111,7 @@ def sample_size_two_proportion(
     Returns:
         Required n per group
     """
+    _aura_domain_sample_size_two_proportion(alpha)
     # Initial guess using normal approximation
     z_alpha = normal_quantile(1.0 - alpha / 2.0)
     z_beta = normal_quantile(target_power)
