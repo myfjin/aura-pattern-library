@@ -939,6 +939,16 @@ _Generated 2026-07-11. **934 patterns** (923 unique IDs — a stem in two sphere
 | `token_gated_priority_scheduler` | rust | Rust — Composed Systems (bridge) |
 | `validated_config_loader` | rust | Rust — Composed Systems (bridge) |
 | `merkle_verified_sync` | rust | Rust — Composed Systems (bridge) |
+| `copy_on_write_config` | go | Go — Concurrency |
+| `cyclic_barrier` | go | Go — Concurrency |
+| `errgroup_first_error` | go | Go — Concurrency |
+| `fan_in_multiplexer` | go | Go — Concurrency |
+| `graceful_shutdown_drain` | go | Go — Concurrency |
+| `once_init_with_retry` | go | Go — Concurrency |
+| `pipeline_cancellation` | go | Go — Concurrency |
+| `sharded_counter` | go | Go — Concurrency |
+| `singleflight_dedup` | go | Go — Concurrency |
+| `treiber_lock_free_stack` | go | Go — Concurrency |
 
 ## Counts (2026-07-11)
 - **python/programming**: 99 · gate_ok 99 · authentic + unaltered

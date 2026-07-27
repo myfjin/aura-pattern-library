@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-21",
+  "created": "2026-07-27",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -12,17 +12,17 @@
     },
     {
       "path": ".folder-nature",
-      "sha256": "6f91a3d4dd6bd055c7e2ecfcebe4cbd2bba86ff0009d3d899069ec59b7384832",
-      "bytes": 309
+      "sha256": "de63bccee7c269cc0778b34eb5273134efa12b938ee8ea1f767bc4c65c28ac0d",
+      "bytes": 310
     },
     {
       "path": "programming/.folder-nature",
-      "sha256": "40e9c1c4131d6c748e8211de2dd4576dafaedab8b7498f5d1ea73d6ca94f9ba6",
+      "sha256": "8f8fa1ff4eb42b8f4ece4b3ddf0a740dd92749a94bc359979112400f987320a6",
       "bytes": 342
     },
     {
       "path": "programming/architecture/.folder-nature",
-      "sha256": "28c9385f33e34b80a5109b0bcaaff18177c82f07008c6201b9aa0b972ebb45dc",
+      "sha256": "4703fb64bc24d2fbae48d0544c93d5110568a88fe8cbacc8b88014bd367f576b",
       "bytes": 342
     },
     {
@@ -31,9 +31,19 @@
       "bytes": 10534
     },
     {
+      "path": "programming/architecture/cqrs_bus.md",
+      "sha256": "f2a7552d715526b23add043e8567adb9a8c304f95033b40af0a86fb4a04459c6",
+      "bytes": 5413
+    },
+    {
       "path": "programming/architecture/event_bus.go",
       "sha256": "84d9b8bd46979e81bde3d422179e6af961e6e37982d843128c5ce89b024b9b29",
       "bytes": 12262
+    },
+    {
+      "path": "programming/architecture/event_bus.md",
+      "sha256": "92ae4a2a5f36ff574c0f985757747d79bb121d7c41f02b5e3482ead5a8443602",
+      "bytes": 5324
     },
     {
       "path": "programming/architecture/event_sourcing_store.go",
@@ -41,8 +51,13 @@
       "bytes": 15049
     },
     {
+      "path": "programming/architecture/event_sourcing_store.md",
+      "sha256": "1d24fca2cea1affa0e87a95c51cda3e3c92b1eaf87fd46d794a673346323590b",
+      "bytes": 5378
+    },
+    {
       "path": "programming/async/.folder-nature",
-      "sha256": "c581a6267e719f82c49d25f0ff33c42373e7474b972b7296f47723c3c9e4b309",
+      "sha256": "725654919452cb844938768d5d3da87ecf9c3ef4c477a4e7903e838b8f6d3f13",
       "bytes": 321
     },
     {
@@ -51,13 +66,128 @@
       "bytes": 17926
     },
     {
+      "path": "programming/async/async_task_queue.md",
+      "sha256": "3f86a7bb2303834d4a6b1340bfdf219314807e48da4afbf566769b8eb2ef553a",
+      "bytes": 5371
+    },
+    {
       "path": "programming/async/cancellable_task_group.go",
       "sha256": "fabd6d9e374be69af7f42e4077220e24e2ef59f5d1185a27077190fbe074b0de",
       "bytes": 9054
     },
     {
+      "path": "programming/async/cancellable_task_group.md",
+      "sha256": "5f4e0b6518fadbc7157c3e9a5ebc0fc01af90cbee4d70b29c73d3eb96b97c818",
+      "bytes": 5293
+    },
+    {
+      "path": "programming/concurrency/.folder-nature",
+      "sha256": "b5621a37abd52ac82242c005957f99327c4ea5989375667b2c12764e8e226fea",
+      "bytes": 300
+    },
+    {
+      "path": "programming/concurrency/copy_on_write_config.go",
+      "sha256": "b476f08f7308a610d9f5abbde6785f2c0d17f24150386e5d9aa8099980308913",
+      "bytes": 8310
+    },
+    {
+      "path": "programming/concurrency/copy_on_write_config.md",
+      "sha256": "d732cf563cb320dfc0a88724936b29f97dd545be67e2a72e835b7d1c1f7e14da",
+      "bytes": 2849
+    },
+    {
+      "path": "programming/concurrency/cyclic_barrier.go",
+      "sha256": "0cf0c20ca73c48e47c16ffcb4c1010f78fe2a7a14b3153dc4e1dcb4a71bb2ddb",
+      "bytes": 8567
+    },
+    {
+      "path": "programming/concurrency/cyclic_barrier.md",
+      "sha256": "1ca9b2672fe4c9de2784fbeb8a9ca403f486ee67908a4f8d0ce707786ae379b3",
+      "bytes": 3272
+    },
+    {
+      "path": "programming/concurrency/errgroup_first_error.go",
+      "sha256": "a5a41e5bbc5bb3425ca92548b796b76fce41a1c8a1b8fe268c506ee53c5100ca",
+      "bytes": 7661
+    },
+    {
+      "path": "programming/concurrency/errgroup_first_error.md",
+      "sha256": "df798cf882bd2a6eea814b8b077ac790ad46f9fb7e3390217c45a67b062ff575",
+      "bytes": 3344
+    },
+    {
+      "path": "programming/concurrency/fan_in_multiplexer.go",
+      "sha256": "9e1eaa7db4f7f59dc391a2426cbde7b3671494471de515571186d38d6b20bbb6",
+      "bytes": 7102
+    },
+    {
+      "path": "programming/concurrency/fan_in_multiplexer.md",
+      "sha256": "cc1e8078d10f520ed54dedf3cc19d7d71339884dd48adf5831590c9922c6c392",
+      "bytes": 2740
+    },
+    {
+      "path": "programming/concurrency/graceful_shutdown_drain.go",
+      "sha256": "b810772a74197fea826edf86453b76d416da2d580249d7d71abdaa042a69f728",
+      "bytes": 9602
+    },
+    {
+      "path": "programming/concurrency/graceful_shutdown_drain.md",
+      "sha256": "882aefba10954bdd32d1ffec935452b625c2bf169753e8b17d2ed6f4762d6661",
+      "bytes": 3887
+    },
+    {
+      "path": "programming/concurrency/once_init_with_retry.go",
+      "sha256": "337ea1fcab05f8557429470c55bd27b8668eb50816e2919c5a935cfaf27e91ba",
+      "bytes": 13894
+    },
+    {
+      "path": "programming/concurrency/once_init_with_retry.md",
+      "sha256": "13903e74384ea51912116761451167359649ae97d45712c71a5cffd3d991a7a3",
+      "bytes": 3951
+    },
+    {
+      "path": "programming/concurrency/pipeline_cancellation.go",
+      "sha256": "e8099f56829f3683d542d453fcf4468725f8aa7b6a0e2f61f6fc28f8860772ca",
+      "bytes": 9261
+    },
+    {
+      "path": "programming/concurrency/pipeline_cancellation.md",
+      "sha256": "e0ce8000974979faec828c5906429a81c886b0d1ad283608fbbebfe300a12e45",
+      "bytes": 3861
+    },
+    {
+      "path": "programming/concurrency/sharded_counter.go",
+      "sha256": "b80aedec9d510a4fb49b7f21d84d9855b9ef994fc032baee96dd58d35329f823",
+      "bytes": 7334
+    },
+    {
+      "path": "programming/concurrency/sharded_counter.md",
+      "sha256": "60920e7278777ea7299af5da11bed2dd6f0a08b362202f7f43663a96beec403a",
+      "bytes": 3281
+    },
+    {
+      "path": "programming/concurrency/singleflight_dedup.go",
+      "sha256": "8bc8d608eeaca65c89d48f0775f15fe9d7ccce864c9203cfccfd70d10a724a07",
+      "bytes": 8855
+    },
+    {
+      "path": "programming/concurrency/singleflight_dedup.md",
+      "sha256": "3e3ad867177bb9c977976ff105dfd0de28ca7b5a2745726f266dcea0ebfbfbe6",
+      "bytes": 3653
+    },
+    {
+      "path": "programming/concurrency/treiber_lock_free_stack.go",
+      "sha256": "0011375783128fdfd587e2c529b730a32cb0b529ffdaf0d1af137252834ab6cc",
+      "bytes": 8923
+    },
+    {
+      "path": "programming/concurrency/treiber_lock_free_stack.md",
+      "sha256": "b9488d4a4b16abcbfd62d629ff1b97297a78c93d1e476f696f1751f9ac2593f8",
+      "bytes": 3755
+    },
+    {
       "path": "programming/data_structures/.folder-nature",
-      "sha256": "14b4955fe05aead67ed598045b5d9ee5d03b79c717c361731a8ea77b4323a766",
+      "sha256": "e44ad82fdc651f17b9fa17cabf3a7fa9636b304e6f153617c235c65cadb771a2",
       "bytes": 351
     },
     {
@@ -66,9 +196,19 @@
       "bytes": 12680
     },
     {
+      "path": "programming/data_structures/avl_tree.md",
+      "sha256": "206cca96cf64f7b825a510419ea3c125b7ac62aab8e4059bc0062c325ff7838a",
+      "bytes": 5274
+    },
+    {
       "path": "programming/data_structures/binary_indexed_tree.go",
       "sha256": "a40d6c81fc6cfbad1f94ff715335e2273feb5631f44efdd9f4bfb64548e3d045",
       "bytes": 8312
+    },
+    {
+      "path": "programming/data_structures/binary_indexed_tree.md",
+      "sha256": "cbf1546cae4e5b04fc0c78a9092d78477ded8d61763e1e9af14efd44afdef3ae",
+      "bytes": 5174
     },
     {
       "path": "programming/data_structures/bloom_filter.go",
@@ -76,13 +216,23 @@
       "bytes": 10329
     },
     {
+      "path": "programming/data_structures/bloom_filter.md",
+      "sha256": "8ca9deeb25c7e8f422fdf291cc479bbbf2b817434138d6c8b0c37b2dfc53fb66",
+      "bytes": 5371
+    },
+    {
       "path": "programming/data_structures/fenwick_tree.go",
       "sha256": "bf5a971b84010dc28cfbce932074b766a3083d95af8842952fc1f671a7ad1c98",
       "bytes": 8197
     },
     {
+      "path": "programming/data_structures/fenwick_tree.md",
+      "sha256": "776fe60da11a745b5fd8b9449135a80dcab138028bc4dedb484b75094f7751f1",
+      "bytes": 5222
+    },
+    {
       "path": "programming/distributed/.folder-nature",
-      "sha256": "143b07f75a0c41b62fd2e6a557aeaba9798d1e102c19238becd57295202fe368",
+      "sha256": "1f93d1f66088f1b3126d154d2d61e3dc747c45592062315905fa823314d1dcc2",
       "bytes": 339
     },
     {
@@ -91,9 +241,19 @@
       "bytes": 10532
     },
     {
+      "path": "programming/distributed/consistent_hash_ring.md",
+      "sha256": "5bf087b34abbc53ae5b783545d5cde2eb09016053bc2025f0b77584c56215c78",
+      "bytes": 5737
+    },
+    {
       "path": "programming/distributed/crdt_sets.go",
       "sha256": "766cdf35639030c3551be1807692d99228814a6f8219b3969a494e38bdfeb323",
       "bytes": 13346
+    },
+    {
+      "path": "programming/distributed/crdt_sets.md",
+      "sha256": "9a4297a5e7a3406b7a9fe990703c35762937464bf8f69618c27f84c0ceaf5899",
+      "bytes": 1110
     },
     {
       "path": "programming/distributed/distributed_lock_manager.go",
@@ -101,13 +261,23 @@
       "bytes": 12950
     },
     {
+      "path": "programming/distributed/distributed_lock_manager.md",
+      "sha256": "51e324b61d9ae1016ac9125ffd21c1cf0d44a175085ee868fadbe8be58981bb9",
+      "bytes": 1227
+    },
+    {
       "path": "programming/distributed/g_counter_crdt.go",
       "sha256": "6e5f66ad532dbfc09e1be68da16dd7738f528223bbdd59337c925eb67e87a350",
       "bytes": 12877
     },
     {
+      "path": "programming/distributed/g_counter_crdt.md",
+      "sha256": "3942b6e42f83e59ec7af7a66bca02ff72296003d23292e71ce4c35bc2d2a0fa3",
+      "bytes": 4841
+    },
+    {
       "path": "programming/io/.folder-nature",
-      "sha256": "582079bc5011c600fb018b5ce92b5a7ed9b4ccdc5db606da352effc9a557891c",
+      "sha256": "6ccba7b88b9eb83e58c2831d44a0df7ad223e2b12a073f8e4a90a4188a447389",
       "bytes": 312
     },
     {
@@ -116,9 +286,19 @@
       "bytes": 18786
     },
     {
+      "path": "programming/io/arg_parser.md",
+      "sha256": "8bc9a4ecc68eeba84b142849f9f98e5fc632a9eb676e9af84fa033e16b726fab",
+      "bytes": 5205
+    },
+    {
       "path": "programming/io/chunked_reader.go",
       "sha256": "8db6e1ae23a09b43317e6a090c9f42fb62872c0135a528d58e2758dfd9864b30",
       "bytes": 9722
+    },
+    {
+      "path": "programming/io/chunked_reader.md",
+      "sha256": "235d8658e2f2e7aa7e6737ab92a33314d0fbcdb9312abf19e47b4c6b1017c1df",
+      "bytes": 5171
     },
     {
       "path": "programming/io/csv_to_json.go",
@@ -126,9 +306,19 @@
       "bytes": 15891
     },
     {
+      "path": "programming/io/csv_to_json.md",
+      "sha256": "0bd6d40cec63b1da777707d225c07fa62cd7b188a8dde360ab2e44924f45ca31",
+      "bytes": 4886
+    },
+    {
       "path": "programming/io/csv_validator.go",
       "sha256": "11347880890a8f93a1488209be1f7efb8e27dce33a1214f973352e255e864710",
       "bytes": 15926
+    },
+    {
+      "path": "programming/io/csv_validator.md",
+      "sha256": "ec75741ef12befb89787dea5f88770f87f10c498b22387c386583d78ee021a2b",
+      "bytes": 5505
     },
     {
       "path": "programming/io/diff_engine.go",
@@ -136,8 +326,13 @@
       "bytes": 13592
     },
     {
+      "path": "programming/io/diff_engine.md",
+      "sha256": "0056c78d391007ba0846895dc34ba38b14652b96c8375abb3dbb5c2c976663a2",
+      "bytes": 1174
+    },
+    {
       "path": "programming/monitoring/.folder-nature",
-      "sha256": "617f6c5291c49787b5e167c64c48f79aa346cdea7199131ce9f1a3a2d8199ff4",
+      "sha256": "bd62a60fc468a800017734ebd3d54df68ab839b5e474fc089e14d7cb71b4a2b7",
       "bytes": 336
     },
     {
@@ -146,13 +341,23 @@
       "bytes": 14796
     },
     {
+      "path": "programming/monitoring/alert_manager.md",
+      "sha256": "8330e14e73b230b06e3bdec412a116a23883ecd9091560ab6bac007df023cb8f",
+      "bytes": 5396
+    },
+    {
       "path": "programming/monitoring/event_logger.go",
       "sha256": "d9dd9bea5d8b02b18a72eb0284d04e55fd478e9f4636e67f8e842d4b5094fa48",
       "bytes": 13558
     },
     {
+      "path": "programming/monitoring/event_logger.md",
+      "sha256": "ac01696386440b43b4170e673bf1d16d10ebeb2cc467bbd516bf4b119dd5fde7",
+      "bytes": 5292
+    },
+    {
       "path": "programming/networking/.folder-nature",
-      "sha256": "f87aeb0e6187df7345ae5f7a3fb796a3a0320d04b078850b771596e6153ab217",
+      "sha256": "383fa32e95b7b85aed39e2b5c92d68eb85bc47b5d5a4f5c2263c5d2bc7f65049",
       "bytes": 336
     },
     {
@@ -161,9 +366,19 @@
       "bytes": 11683
     },
     {
+      "path": "programming/networking/connection_pool.md",
+      "sha256": "994702a646b4fbe3449d364842f53b885e356f03648a28c4a9a68ed48b20fdf8",
+      "bytes": 5340
+    },
+    {
       "path": "programming/networking/connection_pool_health_checks.go",
       "sha256": "7a2029c642c530f91da31b7b671ca017b27799a57fe87a7b02557d2f6a1c1db0",
       "bytes": 14707
+    },
+    {
+      "path": "programming/networking/connection_pool_health_checks.md",
+      "sha256": "db3e5f6345fa026092fbf880d9df5cfe15fe67ea74583e4728b6b9f7e0fbef48",
+      "bytes": 4831
     },
     {
       "path": "programming/networking/dns_cache.go",
@@ -171,8 +386,13 @@
       "bytes": 10650
     },
     {
+      "path": "programming/networking/dns_cache.md",
+      "sha256": "8101f12086f4a3c08ea73169f47064defd15554487869322237e5b89b99bc8cd",
+      "bytes": 5233
+    },
+    {
       "path": "programming/performance/.folder-nature",
-      "sha256": "0cab1c63787d4914026b4228a8212ca09c7ab08f66796c415b8adcd6cc4b0a53",
+      "sha256": "cf0ff6c5d58f79c9621ed5ab54ae3670d0e4e215fad843e33f0fb644d6c3395a",
       "bytes": 339
     },
     {
@@ -181,9 +401,19 @@
       "bytes": 18857
     },
     {
+      "path": "programming/performance/batch_controller.md",
+      "sha256": "778a2fa586ee17657f5a7cec7e49416a2c3e696f6efa4564532caee2a2d4b0b2",
+      "bytes": 4736
+    },
+    {
       "path": "programming/performance/budget_allocator.go",
       "sha256": "e7e305a119a2617e93d405d1f2dd9b825e0b2b3d975d0ac8a3f8f398135749ac",
       "bytes": 12700
+    },
+    {
+      "path": "programming/performance/budget_allocator.md",
+      "sha256": "78cc600fdf57bd1f7f1fdbca95f4fc7a4dc0c46a7c4442896b52957560dd5eb9",
+      "bytes": 5339
     },
     {
       "path": "programming/performance/free_list_allocator.go",
@@ -191,8 +421,13 @@
       "bytes": 11836
     },
     {
+      "path": "programming/performance/free_list_allocator.md",
+      "sha256": "a35680c9d20a52afd6d001284418afc6df918a18b94edb66ecd2fe8a1395a1eb",
+      "bytes": 5133
+    },
+    {
       "path": "programming/reasoning/.folder-nature",
-      "sha256": "6e6601a88223ccdfede9193a1eae9f06d5b7fd2236f6e3f5bf98010ba95297a5",
+      "sha256": "7f4145164eb701afc7a78335ec94dd17869946476926ea245f21fcd1c310371a",
       "bytes": 333
     },
     {
@@ -201,9 +436,19 @@
       "bytes": 14295
     },
     {
+      "path": "programming/reasoning/astar_pathfinding.md",
+      "sha256": "4533cb3910110d3d69a8d3bca1d2c5391f9f2696afaa738a0515bd28807c32cd",
+      "bytes": 1192
+    },
+    {
       "path": "programming/reasoning/bayesian_network.go",
       "sha256": "64f0ad1765dda5fef7b572ebd9b8b32e95a1ba6145937f59ab864b061f96e521",
       "bytes": 16723
+    },
+    {
+      "path": "programming/reasoning/bayesian_network.md",
+      "sha256": "4211b1d0972f5f1e5cd9ad455af763236d4eaaed7b889c105770ecff8e1d4fe4",
+      "bytes": 5187
     },
     {
       "path": "programming/reasoning/csp_solver.go",
@@ -211,9 +456,19 @@
       "bytes": 18457
     },
     {
+      "path": "programming/reasoning/csp_solver.md",
+      "sha256": "b6d0c37b44cca017178e7474590044c59b90cb7da41c22b738989358cdb18eaa",
+      "bytes": 1097
+    },
+    {
       "path": "programming/reasoning/decision_tree.go",
       "sha256": "f0201ccd75cf09cbd489d17f3c4c03e8be69e887ab8525026a544e690087a5dd",
       "bytes": 14780
+    },
+    {
+      "path": "programming/reasoning/decision_tree.md",
+      "sha256": "643362dbf4412b5db1ac045beacaaa2ec3450f526dd6d89702659bd6a0eef47c",
+      "bytes": 945
     },
     {
       "path": "programming/reasoning/expression_evaluator.go",
@@ -221,13 +476,23 @@
       "bytes": 20490
     },
     {
+      "path": "programming/reasoning/expression_evaluator.md",
+      "sha256": "9f4e00ef887f08d4faaa3a8578c991face184a715120b7346e5ad527f9a186fb",
+      "bytes": 5167
+    },
+    {
       "path": "programming/reasoning/sat_solver.go",
       "sha256": "ef2e2e06c875569ff455087cb539bba39ff50beac46439919c2bf4b2e0790e5b",
       "bytes": 14854
     },
     {
+      "path": "programming/reasoning/sat_solver.md",
+      "sha256": "7553b5b83482ab220c502b9e81bf6c933712b4ef5c92fc5796b265fafbffad7f",
+      "bytes": 5262
+    },
+    {
       "path": "programming/resilience/.folder-nature",
-      "sha256": "19b1101855624b7732247e8e9010e5355375f7690d7b2c454628b136e79b0713",
+      "sha256": "6c882a9a813f65999284673ee26c34e557dd8764f2586814a62d411ccd4c868c",
       "bytes": 336
     },
     {
@@ -236,9 +501,19 @@
       "bytes": 14906
     },
     {
+      "path": "programming/resilience/bulkhead_isolator.md",
+      "sha256": "6219753b22e839cb60caa7986474816464612251473cc1d05af55d176a59a65e",
+      "bytes": 4815
+    },
+    {
       "path": "programming/resilience/circuit_breaker.go",
       "sha256": "c57e9922c2304cf1f751d9df871401dd1faaa5b164a65851eaa602783e87bca8",
       "bytes": 11960
+    },
+    {
+      "path": "programming/resilience/circuit_breaker.md",
+      "sha256": "5103d69419b985669d0c9d1a3cef94eadc21742d4759574fa7e3a831851d5c41",
+      "bytes": 5090
     },
     {
       "path": "programming/resilience/dead_letter_queue.go",
@@ -246,13 +521,18 @@
       "bytes": 14487
     },
     {
+      "path": "programming/resilience/dead_letter_queue.md",
+      "sha256": "e72cc4d8c98a7ea9304e5207fe6340bc84deefc78fb6bcfc8c5e5d0862fbc8ad",
+      "bytes": 1125
+    },
+    {
       "path": "system-administration/.folder-nature",
-      "sha256": "905a8983c78a911d6bbcb16473eb8515150a1cd5b6986c474e759072675fb4cc",
+      "sha256": "b60c0c63325ee30d37f074bd3d2f0fc0d0bd39f5a3a36199ebec6e926dbd453d",
       "bytes": 371
     },
     {
       "path": "system-administration/sysadmin/.folder-nature",
-      "sha256": "9ad7312842fb79f648dc04e389919c6698230e795b40dc553dee94f637a5c0e5",
+      "sha256": "f8c6a421235ac00c82cd3b5a5ad3d4322bbd1abb7aed5629d4447be911723cc9",
       "bytes": 341
     },
     {
@@ -261,9 +541,19 @@
       "bytes": 8251
     },
     {
+      "path": "system-administration/sysadmin/advisory_lock_timeout.md",
+      "sha256": "7af9e531d065b137328ee42f5d7345b8a477755148e295948b81f113dc170c9e",
+      "bytes": 5774
+    },
+    {
       "path": "system-administration/sysadmin/ansi_strip.go",
       "sha256": "a0cef8708da617a5bb2d25e7c50829d16fc638f8c88279d459d4010c304052f5",
       "bytes": 8272
+    },
+    {
+      "path": "system-administration/sysadmin/ansi_strip.md",
+      "sha256": "86da005abbf5ad745e4d41f7b0cab58d9939474d344ea5fbca38a7a55ef549a2",
+      "bytes": 4751
     },
     {
       "path": "system-administration/sysadmin/append_only_audit.go",
@@ -271,9 +561,19 @@
       "bytes": 8165
     },
     {
+      "path": "system-administration/sysadmin/append_only_audit.md",
+      "sha256": "8f236212d69dc5f53dcdd2e5e748968ed66bfcabee35a4e143258f61214744b8",
+      "bytes": 6011
+    },
+    {
       "path": "system-administration/sysadmin/atomic_append.go",
       "sha256": "66f20dbefd1d85a8bf8d986cf7fb923c7a6fc7d53fe4ea4733a693816cb7b649",
       "bytes": 7439
+    },
+    {
+      "path": "system-administration/sysadmin/atomic_append.md",
+      "sha256": "3ea091faea863a520449ba7ab6af0abbdcf10eb1d988e120eb7630e2895bc8ef",
+      "bytes": 5641
     },
     {
       "path": "system-administration/sysadmin/atomic_snapshot.go",
@@ -281,9 +581,19 @@
       "bytes": 7184
     },
     {
+      "path": "system-administration/sysadmin/atomic_snapshot.md",
+      "sha256": "fbe68ee65b0bba9dcaef3e9c2a43e7a9a1b33be5023a3e6b3531066099eb4e97",
+      "bytes": 5077
+    },
+    {
       "path": "system-administration/sysadmin/atomic_symlink_swap.go",
       "sha256": "74abc17def5128392e6ab89658be8e590fa8b53b03ae7d6d9465b46e9282aebc",
       "bytes": 9331
+    },
+    {
+      "path": "system-administration/sysadmin/atomic_symlink_swap.md",
+      "sha256": "5d1c55faa027ceeb7ddf1269644d209c335951bfe82ef4314905492b0517d5c1",
+      "bytes": 6385
     },
     {
       "path": "system-administration/sysadmin/atomic_write_temp_rename.go",
@@ -291,9 +601,19 @@
       "bytes": 9488
     },
     {
+      "path": "system-administration/sysadmin/atomic_write_temp_rename.md",
+      "sha256": "50600dcf4f04ce5f4278ef28bcc606188df36c916ac633011f89ca63bf553ad4",
+      "bytes": 1418
+    },
+    {
       "path": "system-administration/sysadmin/backfill_range.go",
       "sha256": "48b7a0472922817d4bb85806bd4012489012bfc4372205234f369ec04c02c225",
       "bytes": 10053
+    },
+    {
+      "path": "system-administration/sysadmin/backfill_range.md",
+      "sha256": "75ec965cf30a4e0f24739068099b84d21e01ae729db87bc5f0c621947cd01c4b",
+      "bytes": 2220
     },
     {
       "path": "system-administration/sysadmin/backpressure_queue.go",
@@ -301,9 +621,19 @@
       "bytes": 5996
     },
     {
+      "path": "system-administration/sysadmin/backpressure_queue.md",
+      "sha256": "e5ec65ae00824a7b1c38f5fa5b3ff5ab9f7f66967ac28d03b9d57242a1dfcc91",
+      "bytes": 1121
+    },
+    {
       "path": "system-administration/sysadmin/backup_catalog.go",
       "sha256": "f2e1d1483b9fbfe144b97cc3fb4c9507df8db60714f07ab69581ebede134c0de",
       "bytes": 11948
+    },
+    {
+      "path": "system-administration/sysadmin/backup_catalog.md",
+      "sha256": "537f26011f90663d6ae723d87ea8ac00428d1f5c29330e249366dcd49a391cb5",
+      "bytes": 2238
     },
     {
       "path": "system-administration/sysadmin/backup_dedup.go",
@@ -311,9 +641,19 @@
       "bytes": 9442
     },
     {
+      "path": "system-administration/sysadmin/backup_dedup.md",
+      "sha256": "eafaa63239feabe0ea827344cd0e34916630d7f9c329307f5dafbb8827e959eb",
+      "bytes": 2319
+    },
+    {
       "path": "system-administration/sysadmin/backup_encryption.go",
       "sha256": "5b91c9513eef11e5a2f012fd635ad3ec2d6667566bd3a1b084cb1169c99048fb",
       "bytes": 7846
+    },
+    {
+      "path": "system-administration/sysadmin/backup_encryption.md",
+      "sha256": "03727c3072f8759e649d7e13346066b263500471eda8ae225f65a6094976c2b5",
+      "bytes": 2296
     },
     {
       "path": "system-administration/sysadmin/backup_rotation.go",
@@ -321,9 +661,19 @@
       "bytes": 7801
     },
     {
+      "path": "system-administration/sysadmin/backup_rotation.md",
+      "sha256": "913087dbd870621aca8b0d4f8dd6bdaf11e88dd46ff4d6106d5d750e3556478c",
+      "bytes": 4875
+    },
+    {
       "path": "system-administration/sysadmin/binary_presence_check.go",
       "sha256": "0ab88ce50eda9cf8480ee3371e89c4c734dbf2b1c4a46e7192aa99251b085d15",
       "bytes": 6592
+    },
+    {
+      "path": "system-administration/sysadmin/binary_presence_check.md",
+      "sha256": "6cb15c6589a2fbd1ea3dafb5133ee62a178d3cd68f79711630d5f031c0f47db5",
+      "bytes": 4800
     },
     {
       "path": "system-administration/sysadmin/blue_green_deploy.go",
@@ -331,9 +681,19 @@
       "bytes": 10396
     },
     {
+      "path": "system-administration/sysadmin/blue_green_deploy.md",
+      "sha256": "e0df95158bb2c9ef65099051c4cc90937fc26c6cf6e5823fa132f4af50ba1416",
+      "bytes": 5978
+    },
+    {
       "path": "system-administration/sysadmin/canary_gate.go",
       "sha256": "20087e10aef640f2704134ba0ca33784010d09fdd435d3804f7d28c2528d9660",
       "bytes": 8411
+    },
+    {
+      "path": "system-administration/sysadmin/canary_gate.md",
+      "sha256": "8b196853448d256b492539e22e76f8a9bb8641e8de6f680acbb21ef2dd4c529b",
+      "bytes": 5973
     },
     {
       "path": "system-administration/sysadmin/capability_probe.go",
@@ -341,9 +701,19 @@
       "bytes": 6983
     },
     {
+      "path": "system-administration/sysadmin/capability_probe.md",
+      "sha256": "fd0290fd0f5ba0ae46fa165f89e613fa16c8475d50954001e07d82f04dccd6dd",
+      "bytes": 5181
+    },
+    {
       "path": "system-administration/sysadmin/cas_file_update.go",
       "sha256": "c6ad91528d6681e8d9cd979b8d92a1af7700e82c9a6413c1668479aa31d64b26",
       "bytes": 8358
+    },
+    {
+      "path": "system-administration/sysadmin/cas_file_update.md",
+      "sha256": "eded58ca085165de17cef6b1b6fb439b443b5097d002a07f8765498f05fa0c8a",
+      "bytes": 6087
     },
     {
       "path": "system-administration/sysadmin/checkpoint_resume.go",
@@ -351,9 +721,19 @@
       "bytes": 8127
     },
     {
+      "path": "system-administration/sysadmin/checkpoint_resume.md",
+      "sha256": "142548dea38bfb5ca61b1306e8d2b9cd706041bb3479af8ce314d2106a73ac1d",
+      "bytes": 6070
+    },
+    {
       "path": "system-administration/sysadmin/circuit_breaker.go",
       "sha256": "96107f56990f57ac3cfd688e4e63d474aebe2de215b22ddb11609ec1412dd499",
       "bytes": 6872
+    },
+    {
+      "path": "system-administration/sysadmin/circuit_breaker.md",
+      "sha256": "98552e8d082ebff47ff7989e3bdf13adb5c4d19406a46075292126a2d0fae5f3",
+      "bytes": 5066
     },
     {
       "path": "system-administration/sysadmin/clock_skew_detect.go",
@@ -361,9 +741,19 @@
       "bytes": 7568
     },
     {
+      "path": "system-administration/sysadmin/clock_skew_detect.md",
+      "sha256": "3300f0b9a285debbecf865c878a4d121f3ad86d45fb5441a09f466f50deeda7e",
+      "bytes": 5264
+    },
+    {
       "path": "system-administration/sysadmin/command_allowlist.go",
       "sha256": "e7140c34a3a9a8ddac083a7a40ac532ffd76f5f5085692bf668cbb358b13d7f9",
       "bytes": 7172
+    },
+    {
+      "path": "system-administration/sysadmin/command_allowlist.md",
+      "sha256": "5560b000a2a9eed3143e6756a0ee3ca1c025eaef2aa704640b846aaee72cab93",
+      "bytes": 6268
     },
     {
       "path": "system-administration/sysadmin/config_diff.go",
@@ -371,9 +761,19 @@
       "bytes": 8700
     },
     {
+      "path": "system-administration/sysadmin/config_diff.md",
+      "sha256": "f518dca11a8e7c85e711341ce78e86f0f12592b93b9a246b064590fc740a090a",
+      "bytes": 5911
+    },
+    {
       "path": "system-administration/sysadmin/config_drift_detect.go",
       "sha256": "c188ca5f1d3ff2906e563b72f9e6ce47e74c23ce0561baea883214434d7f34dd",
       "bytes": 11709
+    },
+    {
+      "path": "system-administration/sysadmin/config_drift_detect.md",
+      "sha256": "eb8445ffba28d7f9fe02aa456e8d71afff7c67b3e02a0463cf327acd9cc093af",
+      "bytes": 6212
     },
     {
       "path": "system-administration/sysadmin/config_versioning.go",
@@ -381,9 +781,19 @@
       "bytes": 11830
     },
     {
+      "path": "system-administration/sysadmin/config_versioning.md",
+      "sha256": "87b3836177b02e9086e3896f48c078df20aca211d24d564a23135b296d5a367d",
+      "bytes": 6220
+    },
+    {
       "path": "system-administration/sysadmin/corruption_repair.go",
       "sha256": "33e089acee1002d97daa112334541e6a9a48289fee8862399e0e933eae8408fe",
       "bytes": 7243
+    },
+    {
+      "path": "system-administration/sysadmin/corruption_repair.md",
+      "sha256": "39dff351cda2bdee80291522044f77dd69fa3cc5c04df4bfe7a1fa0a599d412f",
+      "bytes": 5043
     },
     {
       "path": "system-administration/sysadmin/cow_backup.go",
@@ -391,9 +801,19 @@
       "bytes": 7476
     },
     {
+      "path": "system-administration/sysadmin/cow_backup.md",
+      "sha256": "55ac857dd9955855066dbd8b6f9052de793af60fffd3e6cc9c9d953a564220eb",
+      "bytes": 1433
+    },
+    {
       "path": "system-administration/sysadmin/cpu_throttle.go",
       "sha256": "b1dec045602a016704002ee1d48b856d35658bb16e9314ba794029e7d3416898",
       "bytes": 5828
+    },
+    {
+      "path": "system-administration/sysadmin/cpu_throttle.md",
+      "sha256": "070600d1853c78520ce1fcce494fafafe8a3f0f37ab548a9a2f8fd7f8470165a",
+      "bytes": 934
     },
     {
       "path": "system-administration/sysadmin/crash_consistent_snapshot.go",
@@ -401,9 +821,19 @@
       "bytes": 8424
     },
     {
+      "path": "system-administration/sysadmin/crash_consistent_snapshot.md",
+      "sha256": "a09f7a2149cba8ae4da7a60195d46b59dc67577fd8dce16cd63d0ff94e626a80",
+      "bytes": 1048
+    },
+    {
       "path": "system-administration/sysadmin/crash_log_capture.go",
       "sha256": "267bf2d8185c4633e37a3421bd5ed44755c15bf02205b86cac6387e958c82f9e",
       "bytes": 6959
+    },
+    {
+      "path": "system-administration/sysadmin/crash_log_capture.md",
+      "sha256": "97f04f91c83de8699838cc20dfe1ea85225b96e0fd9827f5ae681f16481862ff",
+      "bytes": 1055
     },
     {
       "path": "system-administration/sysadmin/crash_loop_detector.go",
@@ -411,9 +841,19 @@
       "bytes": 6054
     },
     {
+      "path": "system-administration/sysadmin/crash_loop_detector.md",
+      "sha256": "6937576f95cd32c6d5950db3c57367d7d319e5ec7fa8e9d9a5ab77d437989918",
+      "bytes": 1170
+    },
+    {
       "path": "system-administration/sysadmin/cron_expr_next_fire.go",
       "sha256": "f0b0b7b25a51264c41a474942cea86e8f3c241f69be4ed5cf8c4daed5fed59b8",
       "bytes": 7387
+    },
+    {
+      "path": "system-administration/sysadmin/cron_expr_next_fire.md",
+      "sha256": "63275cdefd0253b1afd1d50d330a126974d84d25f6c45c1268ab39c02c5655b9",
+      "bytes": 1159
     },
     {
       "path": "system-administration/sysadmin/deadline_ttl.go",
@@ -421,9 +861,19 @@
       "bytes": 7779
     },
     {
+      "path": "system-administration/sysadmin/deadline_ttl.md",
+      "sha256": "fd49e2325e3f926e17bb439e310d66d1ffa4f8a13f1a030fa1b506fe39e6ac2a",
+      "bytes": 5347
+    },
+    {
       "path": "system-administration/sysadmin/deadlock_timeout.go",
       "sha256": "fa78d273ce2b06ca602c7f555e391f1e7a56fa1f72022849e28872085bf0fdf2",
       "bytes": 7397
+    },
+    {
+      "path": "system-administration/sysadmin/deadlock_timeout.md",
+      "sha256": "51cb1a604dfb29295fc8b57e6d14689c7c56a39c8fe6019f1b2feba9eb2ec469",
+      "bytes": 6160
     },
     {
       "path": "system-administration/sysadmin/dedup_stream.go",
@@ -431,9 +881,19 @@
       "bytes": 8158
     },
     {
+      "path": "system-administration/sysadmin/dedup_stream.md",
+      "sha256": "ffa8b05186ef92435f27708674a72ab702648269e4f6e9c5ded754bcc27ed3c0",
+      "bytes": 1122
+    },
+    {
       "path": "system-administration/sysadmin/deplock_verify.go",
       "sha256": "258cde68bb8bb68dba53363733befb0f93164a7c12248424540efbe1e2dda8ce",
       "bytes": 9753
+    },
+    {
+      "path": "system-administration/sysadmin/deplock_verify.md",
+      "sha256": "2550f35764d6d844f4ca20dd1a43981878e54c463f8165695817f2c48b3efbaa",
+      "bytes": 6639
     },
     {
       "path": "system-administration/sysadmin/deploy_idempotency.go",
@@ -441,9 +901,19 @@
       "bytes": 9588
     },
     {
+      "path": "system-administration/sysadmin/deploy_idempotency.md",
+      "sha256": "3f30107da3fc8163646693c636d517f51f8d3c3808327408e37ffe45eecb55b3",
+      "bytes": 6510
+    },
+    {
       "path": "system-administration/sysadmin/deps_verify.go",
       "sha256": "364fce5561d79a29f16fc1832d54a45cae684163b4f6a38189a192dfc5823854",
       "bytes": 7216
+    },
+    {
+      "path": "system-administration/sysadmin/deps_verify.md",
+      "sha256": "609f067cd9dce20dfe2a971a3e5948f46e34036ff07ad2dbfaca53ad627ecfd1",
+      "bytes": 5167
     },
     {
       "path": "system-administration/sysadmin/dir_tree_diff.go",
@@ -451,9 +921,19 @@
       "bytes": 12146
     },
     {
+      "path": "system-administration/sysadmin/dir_tree_diff.md",
+      "sha256": "d1df0d4fc23989401ebc87a68d6ca33597731fefcf806a083448aa4851831a21",
+      "bytes": 5361
+    },
+    {
       "path": "system-administration/sysadmin/disk_full_write_guard.go",
       "sha256": "e0c237bad61e70cd3c2676aaff67a02ac81f7fc462b0aafc3b0d1a4e5b06efcf",
       "bytes": 10760
+    },
+    {
+      "path": "system-administration/sysadmin/disk_full_write_guard.md",
+      "sha256": "6b627e50ddd381ecae5fd3f9ed46dbba5725a6ace7848dc54757582b4e87f243",
+      "bytes": 5332
     },
     {
       "path": "system-administration/sysadmin/disk_space_watchdog.go",
@@ -461,9 +941,19 @@
       "bytes": 6937
     },
     {
+      "path": "system-administration/sysadmin/disk_space_watchdog.md",
+      "sha256": "dd5a2f889768d9869186c03dcc04d8294f9a69c441f7baaea270e0410837fb98",
+      "bytes": 5011
+    },
+    {
       "path": "system-administration/sysadmin/dns_resolve_check.go",
       "sha256": "6fa5662a6d3566f88f02717bb897ae8414b12b357aaef566fbcdc4954c659202",
       "bytes": 6090
+    },
+    {
+      "path": "system-administration/sysadmin/dns_resolve_check.md",
+      "sha256": "75e8e32654eea73898ed5de878817bea07921077c84d360036a3fae96e1e1bda",
+      "bytes": 5140
     },
     {
       "path": "system-administration/sysadmin/dotenv_parse.go",
@@ -471,9 +961,19 @@
       "bytes": 9528
     },
     {
+      "path": "system-administration/sysadmin/dotenv_parse.md",
+      "sha256": "9491f2181835452c8361bc15bc6b193b512fc319553e32abca26d88be1f6af53",
+      "bytes": 5986
+    },
+    {
       "path": "system-administration/sysadmin/double_launch_block.go",
       "sha256": "1ac3c4c8578f30541f618d347e191fa1caf6509da86bf10ed016f34dc194fe36",
       "bytes": 11126
+    },
+    {
+      "path": "system-administration/sysadmin/double_launch_block.md",
+      "sha256": "e47c5fbbc1beef162b75b299522f781da39b219b9039d52064eb54911d0cb183",
+      "bytes": 5804
     },
     {
       "path": "system-administration/sysadmin/drift_compensation.go",
@@ -481,9 +981,19 @@
       "bytes": 6847
     },
     {
+      "path": "system-administration/sysadmin/drift_compensation.md",
+      "sha256": "dbda63e178c2c7308fd6f33645acc9360549de12f7f5b9b263f986cdea984f84",
+      "bytes": 4698
+    },
+    {
       "path": "system-administration/sysadmin/dryrun_installer.go",
       "sha256": "1007727511d19dd47ab1afbd9bb1eb33908a36fff77c1d2a39abddb5be02b558",
       "bytes": 8158
+    },
+    {
+      "path": "system-administration/sysadmin/dryrun_installer.md",
+      "sha256": "3d6d8ad37502fd24474b9dbad5f0aa0b36eccc5f414bb7493bd066e9e68d999a",
+      "bytes": 4996
     },
     {
       "path": "system-administration/sysadmin/enforce_600_perms.go",
@@ -491,9 +1001,19 @@
       "bytes": 5761
     },
     {
+      "path": "system-administration/sysadmin/enforce_600_perms.md",
+      "sha256": "cdba38ade29d4a6384be8f88f85d468593ceb08d86bf41574232cd30846c70ed",
+      "bytes": 953
+    },
+    {
       "path": "system-administration/sysadmin/env_diff.go",
       "sha256": "7ccf6813ae95c2ec2947911ec84ea66b2275e907b52d7cd53dae72da816b3366",
       "bytes": 6650
+    },
+    {
+      "path": "system-administration/sysadmin/env_diff.md",
+      "sha256": "95ce55658535276b70ff9b8d63e2a5af9cdb33f09c8a995a091bf05f4929f272",
+      "bytes": 4849
     },
     {
       "path": "system-administration/sysadmin/env_load_defaults.go",
@@ -501,9 +1021,19 @@
       "bytes": 6688
     },
     {
+      "path": "system-administration/sysadmin/env_load_defaults.md",
+      "sha256": "923e9fd2b4fab8729f25dea80b5855a7c64fa146350258eb4fa827a71dfeec91",
+      "bytes": 5739
+    },
+    {
       "path": "system-administration/sysadmin/env_secret_load.go",
       "sha256": "1b0f727d4dd4c926c2d944c308723fcba106309ea08967bee8738b5e678f6de5",
       "bytes": 7644
+    },
+    {
+      "path": "system-administration/sysadmin/env_secret_load.md",
+      "sha256": "4915c2ab899362314a05baf5750654c3b0f0785511384e9bd672973ad2e02b3f",
+      "bytes": 4849
     },
     {
       "path": "system-administration/sysadmin/exactly_once_dedup.go",
@@ -511,9 +1041,19 @@
       "bytes": 9886
     },
     {
+      "path": "system-administration/sysadmin/exactly_once_dedup.md",
+      "sha256": "538b6ee296edadb68382f7f84375710094715b77a0700e51aeba45fe9741dcfc",
+      "bytes": 6118
+    },
+    {
       "path": "system-administration/sysadmin/expiry_check.go",
       "sha256": "b48d95e2ebab5c46860948174a258996dbf98149a8b22d615440adb13c436672",
       "bytes": 6054
+    },
+    {
+      "path": "system-administration/sysadmin/expiry_check.md",
+      "sha256": "8457a32811902b57aa14eb54000594a52f5bc37d631b95d7d07174cec445b681",
+      "bytes": 5076
     },
     {
       "path": "system-administration/sysadmin/exponential_backoff.go",
@@ -521,9 +1061,19 @@
       "bytes": 6855
     },
     {
+      "path": "system-administration/sysadmin/exponential_backoff.md",
+      "sha256": "47967aa20ab81b4190c23df31844f4aafd51b01747a3e11274a3469bc67bd341",
+      "bytes": 5334
+    },
+    {
       "path": "system-administration/sysadmin/fd_leak_detector.go",
       "sha256": "11ea09a713195f897626fd1def6d9a2abad4f44bb60d58066eaf0e786ac70a04",
       "bytes": 6034
+    },
+    {
+      "path": "system-administration/sysadmin/fd_leak_detector.md",
+      "sha256": "a97b37c7a40361b0a3b23567fc1823b8a8d0654c8e35fc5c00d27d8512fe8651",
+      "bytes": 5061
     },
     {
       "path": "system-administration/sysadmin/field_extract.go",
@@ -531,9 +1081,19 @@
       "bytes": 7357
     },
     {
+      "path": "system-administration/sysadmin/field_extract.md",
+      "sha256": "b785ef8f02198611412349c863a325ad07aed86875ac553c45780faabb12769b",
+      "bytes": 5229
+    },
+    {
       "path": "system-administration/sysadmin/fsync_durability.go",
       "sha256": "4a7030ff2f1ce3cee9b5cbee87da7057227cc927695c6fe710fbbb4ca350f7aa",
       "bytes": 6805
+    },
+    {
+      "path": "system-administration/sysadmin/fsync_durability.md",
+      "sha256": "32b0da6e7f55c8981f5993317a267e7c3c2615fcb74afffcdd83d1661a8400ce",
+      "bytes": 5265
     },
     {
       "path": "system-administration/sysadmin/full_incremental_backup.go",
@@ -541,9 +1101,19 @@
       "bytes": 9813
     },
     {
+      "path": "system-administration/sysadmin/full_incremental_backup.md",
+      "sha256": "38713423606bbb6d0ce918106c4ee427f909b4b96af26ada52cccf69a623a391",
+      "bytes": 6409
+    },
+    {
       "path": "system-administration/sysadmin/timeout_kill.go",
       "sha256": "e841779d3e9da9a52112269e32858b62c6c2a62b7d5f51f01a381b25787eb6c8",
       "bytes": 8166
+    },
+    {
+      "path": "system-administration/sysadmin/timeout_kill.md",
+      "sha256": "d538c62998047158751959f3d98ecf8fdcc959a9efa46021fffdb40703d63ba1",
+      "bytes": 5100
     }
   ]
 }

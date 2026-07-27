@@ -5,21 +5,27 @@
 //! back to the same format. THE ONE LAW: plant a config with sections, comments, and mixed
 //! whitespace, parse it, serialize it back, then assert the round-trip preserves structure
 //! and values exactly — a naive line-split would lose sections or merge comments.
+//! serialize() emits a CANONICAL (sorted) order and is byte-deterministic across instances
+//! and runs, so output is diffable, reproducible, and safe to hash or sign.
 //! When to use: application config files, deployment settings, feature flags.
 
 // △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
 // ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
 const _AURA_MARK: &str = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO";
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
+// BTreeMap (NOT HashMap): serialize() iterates these maps directly, so an unordered map
+// makes the emitted config ORDER-NONDETERMINISTIC across instances/runs — breaking config
+// diffing, reproducible output, and any hash/signature over the serialized text. BTreeMap
+// gives a canonical (sorted) order, so serialize() is stable and byte-identical every time.
 struct IniConfig {
-    sections: HashMap<String, HashMap<String, String>>,
+    sections: BTreeMap<String, BTreeMap<String, String>>,
 }
 
 impl IniConfig {
     fn new() -> Self {
         IniConfig {
-            sections: HashMap::new(),
+            sections: BTreeMap::new(),
         }
     }
 
@@ -37,7 +43,7 @@ impl IniConfig {
             // Section header: [section_name]
             if trimmed.starts_with('[') && trimmed.ends_with(']') {
                 current_section = trimmed[1..trimmed.len() - 1].to_string();
-                self.sections.entry(current_section.clone()).or_insert_with(HashMap::new);
+                self.sections.entry(current_section.clone()).or_insert_with(BTreeMap::new);
             } else if !current_section.is_empty() {
                 // Key=value line within a section.
                 if let Some(eq_pos) = trimmed.find('=') {
@@ -120,6 +126,29 @@ file=/var/log/app.log
     assert!(serialized.contains("host=127.0.0.1"));
     assert!(serialized.contains("[database]"));
     assert!(serialized.contains("url=postgres://localhost:5432/mydb"));
+
+    // THE DETERMINISM LAW (the `contains` checks above are too weak to see order):
+    // independently parsing the SAME text must serialize to BYTE-IDENTICAL output. With an
+    // unordered map this fails intermittently — sections/keys emit in varying order.
+    for _ in 0..25 {
+        let mut again = IniConfig::new();
+        again.parse(config_text);
+        assert_eq!(
+            again.serialize(),
+            serialized,
+            "serialize() must be deterministic across instances (canonical order)"
+        );
+    }
+
+    // ROUND-TRIP FIXED POINT: re-parsing our own output must reproduce it exactly, and
+    // preserve every value — this is the "round-trip exact" the doc claims.
+    let mut reparsed = IniConfig::new();
+    reparsed.parse(&serialized);
+    assert_eq!(reparsed.serialize(), serialized, "serialize is a canonical fixed point");
+    assert_eq!(reparsed.get("server", "host"), Some("127.0.0.1"));
+    assert_eq!(reparsed.get("database", "pool_size"), Some("20"));
+    assert_eq!(reparsed.get("logging", "file"), Some("/var/log/app.log"));
+    assert_eq!(reparsed.sections.len(), 3);
 
     println!("ini_config_parser: round-trip exact, all values preserved — PASS");
 }

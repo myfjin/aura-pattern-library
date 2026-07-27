@@ -41,8 +41,8 @@
       "signature": "authentic + unaltered"
     },
     "go/programming": {
-      "files": 35,
-      "gate_ok": 35,
+      "files": 45,
+      "gate_ok": 45,
       "gate_fail": 0,
       "signature": "authentic + unaltered"
     },
@@ -69,5 +69,24 @@
     "rust",
     "go",
     "r"
-  ]
+  ],
+  "total_doc_files": 1409,
+  "docs_added": "2026-07-23 per-pattern detail docs (signed)",
+  "docs_revisions": [
+    "2026-07-26 constraint-render fix: hollow `assert False` markers no longer rendered as checkable constraints (114 lines / 69 cards; extractor tag honoured)"
+  ],
+  "native_patterns": {
+    "go": [
+      "copy_on_write_config",
+      "cyclic_barrier",
+      "errgroup_first_error",
+      "fan_in_multiplexer",
+      "graceful_shutdown_drain",
+      "once_init_with_retry",
+      "pipeline_cancellation",
+      "sharded_counter",
+      "singleflight_dedup",
+      "treiber_lock_free_stack"
+    ]
+  }
 }
