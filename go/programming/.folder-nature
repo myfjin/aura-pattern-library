@@ -2,7 +2,7 @@ schema_version: '1.0'
 identity:
   name: programming
   being: collector
-  purpose: Programming — 35 patterns / 10 subfolders
+  purpose: Programming — 45 patterns / 11 subfolders
 director: false
 tags:
 - go
@@ -10,6 +10,6 @@ tags:
 - verified
 memory:
   created: '2026-07-12'
-  last_significant_change: '2026-07-12'
+  last_significant_change: '2026-07-27'
   notable_events:
   - '2026-07-12: semantic identity layer added (REQ-tag-library-folders)'

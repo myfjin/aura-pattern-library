@@ -9,7 +9,21 @@ Green means the library is what it claims:
       a missing toolchain is a LOUD per-language SKIP that turns the run RED —
       a skipped language is never counted as validated
   (e) quarantine IDs absent from all shippable trees
-  (f) twin integrity: no cpp/go twin whose source ID is quarantined or missing
+  (f) twin integrity: no cpp/go twin whose source ID is quarantined or missing,
+      UNLESS it is explicitly declared NATIVE in MANIFEST.json (see below)
+
+RULER v2 — 2026-07-27, the NATIVE LANE (versioned change, Illia's yes).
+Until now (f) assumed every cpp/go file is a CONVERSION TWIN of a python/r pattern. That was
+true when written and is no longer: a sphere can be harvested natively in a compiled language
+(the Go concurrency sphere has no meaningful python source — goroutine scheduling and sync.Mutex
+do not survive translation). The rule is NOT relaxed: an orphan twin still goes RED. A native
+pattern must be DECLARED, in MANIFEST.json:
+
+    "native_patterns": { "go": ["fan_in_multiplexer", ...], "cpp": [...] }
+
+Declared -> exempt from the source-ID requirement. Undeclared and sourceless -> RED, as before.
+The declaration is the point: a native pattern is a deliberate statement, never an inference
+from a missing file. Silence still fails.
 
 Requires `folder-nature>=0.2` (falls back to the v-next checkout on sys.path).
 """
@@ -115,14 +129,38 @@ def main() -> int:
     # (f) twin integrity — cpp/go twin whose source ID is missing or quarantined.
     # source_ids holds python/r stems only (disk_ids would include the twin itself).
     # cpp/go are SIGNED_SUBTREES, so the loop above already gated them — no re-gate here.
+    # RULER v2: natives are exempt from the source-ID requirement, but only when DECLARED.
+    try:
+        _mf = json.loads((ROOT / "MANIFEST.json").read_text())
+        native = {k: set(v) for k, v in (_mf.get("native_patterns") or {}).items()}
+    except (OSError, ValueError) as e:
+        native = {}
+        fails.append(f"MANIFEST.json unreadable for native_patterns ({e}) — natives cannot be verified")
+    declared = sum(len(v) for v in native.values())
+
     for tl in ("cpp", "go"):
+        nat = native.get(tl, set())
         for p in (ROOT / tl).rglob("*"):
             if p.suffix not in (".cpp", ".go"):
                 continue
             if p.stem in quarantined:
                 fails.append(f"{p.relative_to(ROOT)}: twin of a quarantined pattern")
+            if p.stem in nat:
+                # A native must NOT also have a source — that would mean it is really a twin
+                # and the declaration is hiding a coupling the ruler exists to enforce.
+                if p.stem in source_ids:
+                    fails.append(f"{p.relative_to(ROOT)}: declared NATIVE but a python/r source "
+                                 f"of the same ID exists — it is a twin, undeclare it")
+                continue
             if p.stem not in source_ids:
-                fails.append(f"{p.relative_to(ROOT)}: twin with no python/r source ID")
+                fails.append(f"{p.relative_to(ROOT)}: twin with no python/r source ID "
+                             f"(declare it in MANIFEST.json native_patterns if it is a native harvest)")
+
+    # A declaration naming a file that is not on disk is a stale claim — catch it, don't ignore it.
+    for tl, stems in native.items():
+        on_disk = {p.stem for p in (ROOT / tl).rglob("*") if p.suffix in (".cpp", ".go")}
+        for missing in sorted(stems - on_disk):
+            fails.append(f"MANIFEST native_patterns[{tl}]: '{missing}' declared native but not on disk")
 
     # (c) catalog ID parity — parity is over UNIQUE ids; the headline count is
     # ROWS (934): a stem living in two spheres is two patterns (census law),
@@ -138,6 +176,9 @@ def main() -> int:
     print(f"[catalog               ] {len(rows)} pattern rows — unique IDs:"
           f" {len(disk_ids)} on disk, {len(listed)} listed"
           f" — {'OK' if listed == disk_ids else 'MISMATCH'}")
+
+    print(f"[native lane           ] {declared} pattern(s) declared native"
+          f"{' — ' + ', '.join(f'{k}:{len(v)}' for k, v in sorted(native.items()) if v) if declared else ' (twin-only library)'}")
 
     print("-" * 60)
     if fails:

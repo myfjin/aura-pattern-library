@@ -1,0 +1,15 @@
+schema_version: '1.0'
+identity:
+  name: concurrency
+  being: collector
+  purpose: Concurrency — 10 patterns
+director: false
+tags:
+- go
+- programming
+- concurrency
+- verified
+memory:
+  created: '2026-07-27'
+  notable_events:
+  - '2026-07-27: semantic identity layer added (REQ-tag-library-folders)'
