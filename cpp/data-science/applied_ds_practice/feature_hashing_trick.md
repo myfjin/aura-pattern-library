@@ -34,7 +34,7 @@ When it runs, feature hashing trick guarantees abs(acc_repeat - results[1][1]) <
 **Valid input:** `texts` non-empty list of strings; `n_dims > 0`; `iterations > 0`; binary labels in `y_train`.
 **Core:** Feature hashing (hashing trick): maps words to a fixed-size dimension via SHA-256, builds count vectors, then trains a simple SGD logistic classifier. Collision rate measures how many unique words share hash bins.
 **Assert:** On a tiny spam/ham dataset, classification accuracy beats chance; hash vectors are deterministic under the same input; collision rate is higher for 32 dims than for 128 dims.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

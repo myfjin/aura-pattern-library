@@ -35,7 +35,7 @@ When it runs, drift detection psi guarantees psi_no_drift < 0.25; ks_no_drift < 
 **Valid input:** `ref_values` and `curr_values` non-empty numeric lists; `n_bins >= 2`.
 **Core:** Population Stability Index (PSI) and Kolmogorov-Smirnov statistic for distribution drift. Bins the reference window on its own quantile edges, then bins the current window on those same edges to avoid hiding drift. PSI uses Laplace-smoothed bin proportions; KS uses the maximum absolute CDF difference.
 **Assert:** On 500 reference + 500 current samples from the same N(100, 15): PSI < 0.25 and KS < 0.1. On a shifted N(145, 25) current window: KS > 0.1 and PSI > 0.25, with drift PSI exceeding no-drift PSI.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

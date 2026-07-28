@@ -38,7 +38,7 @@ When it runs, conjugate priors guarantees abs(mean_prior - 0.5) < 1e-09; abs(mu_
 **Valid input:** `alpha_prior`, `beta_prior`, `alpha`, `beta`, `sigma2_prior`, `sigma2_obs` > 0; `successes`, `failures` ≥ 0; `observations` non-empty for meaningful inference.
 **Core:** Closed-form Bayesian updates: Beta-Binomial adds successes/failures to prior parameters; Normal-Normal (known variance) combines prior precision with observed data precision to update the posterior mean and variance. Includes sequential-update equivalence checks.
 **Assert:** Batch and sequential updates produce identical posterior parameters within 1e-9; more data reduces posterior variance; a strong prior regularizes the posterior toward the prior mean.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

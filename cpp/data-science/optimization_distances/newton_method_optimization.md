@@ -39,7 +39,7 @@ When it runs, newton method optimization guarantees abs(x_newton - 2.0) < 1e-08;
 **Valid input:** Any real `x_init`; hard-wired to the quadratic `f(x)=3x²-12x+10`.
 **Core:** Demonstrates 1D Newton’s method and gradient descent on a fixed quadratic. Newton uses exact gradient and constant Hessian (`6.0`); GD uses fixed learning rate.
 **Assert:** From `x_init=0`, both methods converge to `x=2` and `f=-2`, and Newton uses fewer iterations than GD.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

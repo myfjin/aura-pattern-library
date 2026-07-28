@@ -34,7 +34,7 @@ When it runs, target encoding smoothing guarantees corr_test_leaky > 0.3; corr_t
 **Valid input:** `cats` and `targets` same-length lists; binary targets in `targets`; `n_folds >= 2`; `alpha >= 0`.
 **Core:** Target (mean) encoding with smoothing and true out-of-fold (OOF) fitting. The demo plants pure-noise targets to show that leakage (encoding fit on train+test) fabricates test-set "skill" while OOF and proper train-only encoding show near-zero correlation.
 **Assert:** On 80 categories × 5 rows of pure-noise binary targets, leaky test-set |correlation| > 0.30, proper test |correlation| < 0.15, OOF train |correlation| < 0.15, and smoothing pulls a rare category toward the global prior.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

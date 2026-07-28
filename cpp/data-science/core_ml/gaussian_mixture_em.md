@@ -36,7 +36,7 @@ When it runs, gaussian mixture em guarantees abs(means_sorted[1] - 5.0) < 1.5; a
 **Valid input:** `X: List[float]` — 1D data, non-empty. `k: int` ≥ 1. `max_iterations ≥ 1`.
 **Core:** 1D Gaussian Mixture Model via EM. E-step: compute responsibilities γᵢⱼ = πⱼ·N(xᵢ|μⱼ,σⱼ²) / Σ πₖ·N(xᵢ|μₖ,σₖ²). M-step: update πⱼ, μⱼ, σⱼ². Initialize with random data points as means, equal variances/weights. Converges when log-likelihood change < tolerance.
 **Assert:** On 2-component mixture (μ=0, μ=5, σ=1 each, 25 pts each), recovered means within 1.5 of true, variances positive, weights sum to 1.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

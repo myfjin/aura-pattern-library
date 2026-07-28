@@ -35,7 +35,7 @@ When it runs, simpsons paradox demo guarantees not b_wins_aggregate (weak-grade:
 **Valid input:** `denominator > 0`; `0 <= numerator <= denominator`.
 **Core:** Demonstrates Simpson's paradox: treatment B can beat treatment A within every stratum yet lose in the aggregate because the strata have different base rates and unequal treatment allocation.
 **Assert:** On the planted two-strata example, B wins stratum 1 (90% vs 80%), B wins stratum 2 (12% vs 10%), but A wins aggregate (73% vs 19%). The paradox is detected and asserted.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

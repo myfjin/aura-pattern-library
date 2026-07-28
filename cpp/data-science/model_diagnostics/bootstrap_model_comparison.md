@@ -32,7 +32,7 @@ When it runs, bootstrap model comparison guarantees win_rate_a > 0.7; wins_same1
 **Valid input:** `test_data: List[Tuple[float, float]]` — (x, y) pairs. `model1, model2: Callable[[float], float]`. `n_bootstraps ≥ 1`.
 **Core:** Compare two models via paired bootstrap on the same test set. Resample test set with replacement, compute MAE for both models on each bootstrap, count wins. Model A (true: 2x) vs Model B (biased: 1.8x) on y = 2x + N(0,1).
 **Assert:** On 200 test samples, 100 bootstraps: better model (A) wins > 70% of samples. Identical models produce few wins (ties dominate).
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

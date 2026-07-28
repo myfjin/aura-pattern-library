@@ -32,7 +32,7 @@ When it runs, numerical gradient check guarantees max_rel_err < 0.0001 (weak-gra
 **Valid input:** Fixed tiny network (2→2→1) with hardcoded weights. `x: List[float]` length 2. `y_true: float`.
 **Core:** Verify backprop gradients against finite-difference numerical gradients (central difference). Compare all 13 parameters (4 w1, 2 b1, 2 w2, 1 b2). Max relative error < 1e-4 confirms backprop is correct.
 **Assert:** On fixed test point x=[0.5, -0.3], y_true=0.7, max relative error between analytic and numerical gradients < 1e-4.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

@@ -31,7 +31,7 @@ When it runs, ransac robust regression guarantees ransac_error < ols_error (weak
 **Valid input:** `X: List[float]` non-empty. `y: List[float]` same length. `n_iterations ≥ 1`. `threshold > 0`.
 **Core:** RANSAC: randomly sample 2 points, fit line y = mx + b, count inliers (|y - (mx+b)| < threshold). Repeat n_iterations. Return model with most inliers. Robust to > 30% outliers.
 **Assert:** On y = 2x + 1 with 50 inliers + 15 outliers (uniform ±[10,30]), RANSAC slope error < OLS slope error.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

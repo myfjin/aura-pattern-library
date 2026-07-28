@@ -33,7 +33,7 @@ When it runs, quantile regression pinball guarantees 0.35 < frac_below_median < 
 **Valid input:** `x_vals, y_vals: List[float]` — same length. `tau` in (0, 1). `learning_rate > 0`.
 **Core:** Linear quantile regression via pinball loss gradient descent. Pinball loss: L_τ(y, ŷ) = τ·max(y-ŷ, 0) + (τ-1)·min(y-ŷ, 0). Gradient: -τ if y > ŷ, -(τ-1) if y ≤ ŷ. Fit median (τ=0.5) and 90th percentile (τ=0.9) lines.
 **Assert:** On y = 1 + 0.5x + N(0,0.5) with 50 points, median line has 35-65% of points below it, 90th percentile line has 75-99% below, and 90th line is above median line.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

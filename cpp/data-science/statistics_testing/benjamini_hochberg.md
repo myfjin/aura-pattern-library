@@ -36,7 +36,7 @@ When it runs, benjamini hochberg guarantees num_rejected_null <= 2; num_rejected
 **Valid input:** `p_values` is a list of floats in [0, 1]; `alpha` is a float in (0, 1].
 **Core:** Benjamini-Hochberg FDR procedure. Sorts p-values, finds the largest rank where `p_i <= (i/m) * alpha`, and rejects all hypotheses up to that rank.
 **Assert:** A uniform null set of 10 p-values yields very few rejections; a mixed set of small planted signals yields several rejections and the three smallest p-values are rejected; a large 1000-test scenario with 50 true effects detects most true effects while keeping total rejections bounded.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

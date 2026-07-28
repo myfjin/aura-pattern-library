@@ -35,7 +35,7 @@ When it runs, gradient descent momentum guarantees fx_vanilla < 1e-06; fx_moment
 **Valid input:** Any real `x`, `y`; `learning_rate > 0`; `momentum` in `[0,1)`; `tolerance > 0`.
 **Core:** Minimizes the 2D quadratic bowl `f(x,y)=100x²+y²`. Vanilla GD takes raw gradient steps; momentum GD accumulates velocity `v = β·v + lr·grad` and subtracts `v` from parameters.
 **Assert:** From `(10,10)` with `lr=0.005`, both reach `f < 1e-6`, and momentum uses fewer iterations than vanilla.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

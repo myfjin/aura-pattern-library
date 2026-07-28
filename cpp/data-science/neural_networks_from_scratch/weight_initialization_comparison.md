@@ -31,7 +31,7 @@ When it runs, weight initialization comparison guarantees small_first < xavier_f
 **Valid input:** Random 10D input. No training — just forward pass to measure activation variance.
 **Core:** Compare three initialization schemes on a 5-layer network: small uniform [-0.1, 0.1], large uniform [-1, 1], Xavier uniform [±√(1/fan_in)]. Measure activation variance at each layer. Xavier preserves variance; small init causes vanishing; large init causes exploding.
 **Assert:** On random 10D input, Xavier init maintains activation variance within [0.01, 10] at all layers. Small init produces variance < 0.01 at layer 5. Large init produces variance > 10 or NaN at some layer.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

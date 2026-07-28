@@ -32,7 +32,7 @@ When it runs, cox partial likelihood lite guarantees abs(beta1 - 0.5) < 0.5; abs
 **Valid input:** All input lists are equal-length; `events[i]` ∈ {0,1}; `max_iter` > 0; `tol` > 0.
 **Core:** Fits a Cox proportional hazards model with two covariates by Newton-Raphson on the partial likelihood. Returns estimated log hazard ratios `β1` and `β2` where `h(t|x) = h₀(t)·exp(β1·x1 + β2·x2)`.
 **Assert:** On planted data with true `β1 = 0.5`, `β2 = -0.3`, the estimates are within ±0.5 of the true values.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

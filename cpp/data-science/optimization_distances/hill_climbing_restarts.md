@@ -34,7 +34,7 @@ When it runs, hill climbing restarts guarantees value_restart >= value_single - 
 **Valid input:** `x`, `y` within `bounds`; `step_size > 0`; `num_restarts >= 1`.
 **Core:** Maximizes a rugged 2D landscape (`sin(5πx)·cos(5πy) + 0.1·(x²+y²)`) via greedy hill climbing with 4-neighbor search and random restarts. Bounds are clamped.
 **Assert:** With `random.seed(42)`, restarts produce a value at least as good as a single run, and the final value is above `-0.5`.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

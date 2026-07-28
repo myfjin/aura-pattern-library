@@ -31,7 +31,7 @@ When it runs, gaussian naive bayes guarantees accuracy >= 0.9 (weak-grade: direc
 **Valid input:** `X: List[Tuple[float, float]]` — 2D features. `y: List[int]` — class labels.
 **Core:** Gaussian Naive Bayes classifier. For each class, compute per-feature mean and std (using sample variance, denominator n-1). Predict: posterior ∝ prior × Π P(feature|class) using Gaussian PDF. Assumes feature independence given class.
 **Assert:** On 2-class 2D Gaussian data (100 train, 100 test, means at (0,0) and (3,3), σ=1), accuracy ≥ 90%.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

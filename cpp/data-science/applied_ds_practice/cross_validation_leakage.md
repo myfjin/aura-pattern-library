@@ -32,7 +32,7 @@ When it runs, cross validation leakage guarantees mean_leaky > mean_correct; mea
 **Valid input:** `X` non-empty, rectangular; `y` same length as `X`; `k >= 1`. Feature selection and k-NN operate on binary labels {0, 1}.
 **Core:** Demonstrates data leakage: univariate feature selection fit on the full dataset (including the test fold) inflates CV accuracy compared to fitting feature selection inside each train fold. Uses k-NN and accuracy as a downstream classifier.
 **Assert:** On 200 samples with 100 noise + 5 weak signal features, leaky CV accuracy exceeds train-only CV accuracy by at least 0.05; both scores are reported and compared.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*
