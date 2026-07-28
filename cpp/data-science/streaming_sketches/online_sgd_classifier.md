@@ -32,7 +32,7 @@ When it runs, online sgd classifier guarantees online_acc > 0.7; online_loss < b
 **Valid input:** `stream` is a list of `(feature_vector, binary_label)` tuples; all feature vectors have the same dimension; labels are 0 or 1.
 **Core:** Logistic-regression training via online SGD (single pass) and batch SGD (multiple epochs). Uses a clamped sigmoid and binary cross-entropy loss.
 **Assert:** Online SGD on seeded separable 2D data achieves >70% accuracy; online loss is within 3× of batch loss.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

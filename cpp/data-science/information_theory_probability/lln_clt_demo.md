@@ -38,7 +38,7 @@ When it runs, lln clt demo guarantees 0.9 < source_mean < 1.1; source_skew > 1.5
 **Valid input:** `source_distribution` non-empty; `sample_size`, `num_samples` ≥ 1; `true_mean` numeric.
 **Core:** Demonstrates the Law of Large Numbers (sample mean converges to population mean as `n` grows) and the Central Limit Theorem (distribution of sample means becomes normal, satisfying the empirical rule, regardless of skewed source). Uses an exponential source distribution.
 **Assert:** Final error across `n = 10, 50, 100, 500` decreases (LLN); skewness of sample means decreases as `n` increases (CLT); for `n=500`, 1σ coverage ≈ 68%, 2σ ≈ 95%, 3σ ≈ 99.7%.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

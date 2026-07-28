@@ -38,7 +38,7 @@ When it runs, bayes diagnostic test guarantees abs(ppv - expected_ppv) < 1e-09; 
 **Valid input:** `sensitivity`, `specificity`, `prevalence` are probabilities in [0, 1].
 **Core:** Computes Positive Predictive Value (PPV) and Negative Predictive Value (NPV) from test sensitivity/specificity and disease prevalence using Bayes' theorem. Demonstrates that even highly accurate tests yield low PPV when prevalence is low.
 **Assert:** At 1% prevalence, 90% sensitivity, 95% specificity, PPV ≈ 0.154; NPV > 0.99. Higher prevalence increases PPV; a perfect test gives PPV = NPV = 1.0.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

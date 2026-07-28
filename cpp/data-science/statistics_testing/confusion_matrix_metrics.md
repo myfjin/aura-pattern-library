@@ -36,7 +36,7 @@ When it runs, confusion matrix metrics guarantees tp == 3 and fp == 0 and (tn ==
 **Valid input:** `y_true` and `y_pred` are equal-length lists of binary labels (0 or 1); metric denominators are handled with zero-guard returns.
 **Core:** Computes TP, FP, TN, FN for binary classification, then precision, recall, F1, and accuracy from those counts.
 **Assert:** Perfect predictions yield (3, 0, 3, 0) and all metrics equal 1.0; a planted imperfect case yields the expected confusion counts and intermediate metric values between 0 and 1.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

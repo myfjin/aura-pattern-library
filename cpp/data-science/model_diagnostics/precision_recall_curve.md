@@ -33,7 +33,7 @@ When it runs, precision recall curve guarantees ap_strong > 0.8; ap_weak < 0.6; 
 **Valid input:** `scores: List[float]` — predicted scores. `labels: List[int]` — 0 or 1.
 **Core:** Compute precision-recall curve by varying decision threshold. Strong classifier (scores at 0.7 for positives, 0.3 for negatives, noise=0.1) should have high AP. Weak classifier (random scores) should have AP near base rate.
 **Assert:** On 50 positives + 50 negatives: strong classifier AP > 0.8, weak classifier AP < 0.6, strong AP > weak AP.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

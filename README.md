@@ -19,15 +19,24 @@ tracing channels, and a cryptographic signature.
 | `r/` | 60 | run-gated | Ed25519 signed |
 | `cpp/` | 370 | g++ **and** clang, `-std=c++17 -pedantic` | Ed25519 signed |
 | `rust/` | 200 | `rustc -O -D warnings` | Ed25519 signed |
-| `go/` | 93 | `go build` + run + 3× determinism | Ed25519 signed |
+| `go/programming` | 45 | `go build` + run + 3× determinism | Ed25519 signed |
+| `go/system-administration` | 58 | `go build` + run + 3× determinism | Ed25519 signed |
 
-**934 patterns · 1,399 verified files across five languages · 463 patterns in
-two or more languages.** (923 unique IDs — 11 catalog rows share a stem across
+**944 patterns · 1,409 verified files across five languages · 466 patterns in
+two or more languages.** (933 unique IDs — 11 catalog rows share a stem across
 spheres, e.g. `circuit_breaker` lives in programming, sysadmin *and* rust-systems;
-by the census law a stem in two spheres is two patterns.) Language twins are strictly downstream of their Python/R source:
+by the census law a stem in two spheres is two patterns.) Eight shelves, 138
+categories. Language twins are strictly downstream of their Python/R source:
 each carries the source's proven claims (same assert, same tolerance) and is coupling-pinned
-to the source's hash. Four data-science patterns are held in `_quarantine/` (assert-linter
-REJECTs) and are **not** shipped.
+to the source's hash. Four data-science patterns are excluded from the tree entirely
+(assert-linter REJECTs, listed in `_quarantine/QUARANTINE.md`) and are **not** shipped.
+
+## Browse every pattern
+
+**[PATTERNS_INDEX.md](PATTERNS_INDEX.md)** — a direct link and a description for every one
+of the 1,409 files, grouped by shelf and category, with each pattern's language twins named.
+Descriptions are extracted from the files themselves at generation time, so the index cannot
+drift from the code; regenerate with `python3 build_patterns_index.py`.
 
 ## Layout
 
@@ -38,9 +47,11 @@ cpp/data-science/<category>/<pattern>.cpp      # language twins, final-approved 
 rust/<category>/<pattern>.rs
 go/<shelf>/<category>/<pattern>.go
 _quarantine/                   # excluded, with reason + date
+PATTERNS_INDEX.md              # every pattern: direct link + description + twins
 CATALOG.md                     # ID-keyed master: pattern ID -> languages + category
 MANIFEST.json                  # machine-readable index
 library_verify.py              # the library's CI (run it)
+build_patterns_index.py        # regenerates PATTERNS_INDEX.md from the files themselves
 tag_folders.py                 # semantic identity: a .folder-nature in every folder
 SYNC.md                        # how the snapshot re-pulls from its sources
 ```

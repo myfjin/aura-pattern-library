@@ -32,7 +32,7 @@ When it runs, funnel conversion analysis guarantees weakest_step == 'purchase'; 
 **Valid input:** `events` are dicts with `user_id` and `step`. `funnel` is the output of `build_funnel_events`. `step_order` lists steps in progression order.
 **Core:** Multi-step funnel analysis. Aggregates unique users per step, computes step-to-step conversion rates, and adds Wilson score confidence intervals. Identifies the weakest step by minimum conversion rate.
 **Assert:** On a planted funnel (visit→signup 80%, signup→trial 75%, trial→purchase 20%), the weakest step is "purchase" and the trial conversion CI lies entirely above the purchase conversion CI.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

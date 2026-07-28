@@ -31,7 +31,7 @@ When it runs, em two coins guarantees min_error < 0.3 (weak-grade: directional, 
 **Valid input:** `sessions: List[List[int]]` — each session is a list of flips (1=heads, 0=tails). `n_iter ≥ 1`.
 **Core:** Classic EM for two-coin problem. E-step: compute posterior probability that each session came from coin A (using current bias estimates). M-step: update bias estimates as weighted averages of heads/tails counts. Handles label switching by checking both orderings.
 **Assert:** On 100 sessions (30 flips each) from coins with p=0.8 and p=0.3, 100 EM iterations, min recovery error < 0.3 (accounting for label switching).
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

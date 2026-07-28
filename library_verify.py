@@ -11,6 +11,9 @@ Green means the library is what it claims:
   (e) quarantine IDs absent from all shippable trees
   (f) twin integrity: no cpp/go twin whose source ID is quarantined or missing,
       UNLESS it is explicitly declared NATIVE in MANIFEST.json (see below)
+  (g) self-test: the quarantine checks are PROVEN non-vacuous on every run (--self-test
+      to run it alone); a check that cannot fail is worse than no check
+  (h) twin contract divergence == the number MANIFEST.json declares it to be
 
 RULER v2 — 2026-07-27, the NATIVE LANE (versioned change, Illia's yes).
 Until now (f) assumed every cpp/go file is a CONVERSION TWIN of a python/r pattern. That was
@@ -25,9 +28,41 @@ Declared -> exempt from the source-ID requirement. Undeclared and sourceless -> 
 The declaration is the point: a native pattern is a deliberate statement, never an inference
 from a missing file. Silence still fails.
 
+RULER v3 — 2026-07-28, the QUARANTINE LEDGERS (bug fix, no relaxation).
+(e) and (f) built their ID set with `(_quarantine).glob("*.py")`. That directory holds no .py
+files — the held-out sources were deleted, not stored — so the set was ALWAYS EMPTY and both
+checks passed trivially for months. They never blocked anything. A vacuous check that prints
+GREEN is the exact failure class this library exists to prevent, so the fix comes in two parts:
+read the real ledgers, and prove on every run that the checks can still go RED (see self_test).
+
+The ledgers, all three of them:
+    _quarantine/QUARANTINE.md   — held-out SOURCES (assert-linter REJECTs)
+    QUARANTINE.jsonl            — structured records, one JSON object per line
+    MANIFEST.json["quarantine"] — the manifest's mirror of the .md list; a disagreement
+                                  between the two is a ledger split and goes RED
+
+SCOPE is part of the record. A source quarantine condemns the ID everywhere, twins included.
+A twin quarantine (`"lang": "cpp"` — twin invalidated by source_sha256 drift) condemns THAT
+TREE ONLY: the python source drifted because it was FIXED, and a ruler that punishes the repair
+is a broken ruler. Anything unscoped fails closed to source-wide.
+
+RULER v3.1 — 2026-07-28, TWIN CONTRACT DIVERGENCE (a declared number, not a verdict).
+The 2026-07-21 retrofit (7497d40) gave 119 python sources an `_aura_validate_*` input contract
+and deliberately excluded the compiled lanes. So 125 cpp twin files now reject nothing their
+sources reject. Nothing in the tree could see that — the same blindness that let the quarantine
+glob run empty for weeks.
+
+This is NOT scored as a defect. No cpp attack lane exists yet, so it is unknown which of those
+twins actually accept the attacks their sources now refuse; C++ typing kills whole classes for
+free, and the library's own measured base rate for NaN/domain flags is ~15% real. Declaring 125
+patterns broken on that evidence would be the opposite failure to a vacuous green: a loud check
+that is wrong. So the number is DECLARED in MANIFEST.json and RED only when it MOVES — in either
+direction. A rise means twins shipped behind their sources; a fall means twins were fixed and the
+manifest still claims otherwise. Both are claims about the library that stopped being true.
+
 Requires `folder-nature>=0.2` (falls back to the v-next checkout on sys.path).
 """
-import argparse, json, re, shutil, subprocess, sys
+import argparse, json, re, shutil, subprocess, sys, tempfile
 from pathlib import Path
 
 try:
@@ -42,6 +77,18 @@ ROOT = Path(__file__).resolve().parent
 SIGNED_SUBTREES = ["python/programming", "python/data-science", "python/system-administration", "r", "cpp", "rust", "go"]
 GATE = {".py": ["python3"], ".R": ["Rscript"]}          # cpp/go/rust handled specially
 SRC_EXT = (".py", ".R", ".cpp", ".go", ".rs")
+
+# Ledgers that MUST exist and MUST parse to at least one record. Emptying the quarantine is a
+# deliberate act: you remove the ledger from this tuple in code, where it is reviewed. Silence
+# — a deleted ledger, a parser that reads zero — fails, exactly as the native lane fails.
+QUARANTINE_LEDGERS = ("_quarantine/QUARANTINE.md", "QUARANTINE.jsonl")
+SOURCE_LANGS = {"python", "r"}                          # a quarantine here condemns twins too
+_MD_ENTRY = re.compile(r"^\s*[-*]\s+`([^`]+)`")
+
+# (h) An input contract is recognised by the retrofit's own markers. A twin that grows one by
+# some other name reads as divergent — deliberately: the marker IS the declaration.
+CONTRACT_MARKS = ("_aura_validate_", "AuraInputError", "aura_validate")
+TWIN_LANES = (("cpp", ".cpp"), ("go", ".go"), ("rust", ".rs"))
 
 
 def run_gate(p: Path) -> str:
@@ -81,26 +128,168 @@ def run_gate(p: Path) -> str:
     return "ok"
 
 
-def main() -> int:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--pubkey", default=str(ROOT / "aura-signing.pub"))
-    ap.add_argument("--gate", action="store_true", help="also compile/run every file (slow)")
-    args = ap.parse_args()
-    pub = Path(args.pubkey).read_text().strip() if Path(args.pubkey).exists() else args.pubkey
+def load_quarantine(root: Path):
+    """Read the ACTUAL quarantine ledgers on disk. Returns (q_all, q_lang, counts, problems).
 
+      q_all    — IDs quarantined at the SOURCE: forbidden in EVERY shippable tree, twins included.
+      q_lang   — lang -> IDs quarantined in that language tree ONLY (a twin invalidated while its
+                 source stayed good). See the SCOPE paragraph in the module docstring.
+      counts   — ledger path -> records parsed (rejoined ones included: this counts READS, not
+                 active holds, so a parser that silently reads nothing is visible).
+      problems — every one of these is RED. An unreadable record is never a skip.
+    """
+    q_all, q_lang, counts, problems = set(), {}, {}, []
+
+    md = root / "_quarantine" / "QUARANTINE.md"
+    md_ids = set()
+    if md.exists():
+        for line in md.read_text(encoding="utf-8").splitlines():
+            m = _MD_ENTRY.match(line)
+            if not m:
+                continue
+            tok = m.group(1).strip()
+            stem, dot, ext = tok.rpartition(".")
+            if not dot:
+                stem = tok
+            elif f".{ext}" not in SRC_EXT:
+                problems.append(f"QUARANTINE.md: entry `{tok}` has no recognised source suffix")
+                continue
+            md_ids.add(stem)
+        counts["_quarantine/QUARANTINE.md"] = len(md_ids)
+    q_all |= md_ids
+
+    jl = root / "QUARANTINE.jsonl"
+    if jl.exists():
+        n = 0
+        for i, line in enumerate(jl.read_text(encoding="utf-8").splitlines(), 1):
+            if not line.strip():
+                continue
+            try:
+                e = json.loads(line)
+            except ValueError as exc:
+                problems.append(f"QUARANTINE.jsonl:{i}: unparseable ({exc}) — an unreadable "
+                                f"quarantine record is RED, never a skip")
+                continue
+            pid = str(e.get("id") or "").strip()
+            if not pid:
+                problems.append(f"QUARANTINE.jsonl:{i}: record with no id")
+                continue
+            n += 1
+            if str(e.get("status") or "").strip().lower() == "rejoined":
+                continue
+            lang = str(e.get("lang") or "").strip().lower()
+            if lang in SOURCE_LANGS or lang in ("", "*", "all"):
+                q_all.add(pid)                       # unscoped fails closed to source-wide
+            else:
+                q_lang.setdefault(lang, set()).add(pid)
+        counts["QUARANTINE.jsonl"] = n
+
+    for led in QUARANTINE_LEDGERS:
+        if not (root / led).exists():
+            problems.append(f"declared quarantine ledger '{led}' is MISSING — an absent ledger "
+                            f"reads as 'nothing quarantined', which is how (e)/(f) went vacuous")
+        elif not counts.get(led):
+            problems.append(f"quarantine ledger '{led}' parsed 0 records — either it was emptied "
+                            f"without removing it from QUARANTINE_LEDGERS, or the parser is broken")
+
+    try:
+        mf_q = {Path(x).stem for x in (json.loads((root / "MANIFEST.json").read_text(encoding="utf-8"))
+                                       .get("quarantine") or [])}
+    except (OSError, ValueError) as exc:
+        problems.append(f"MANIFEST.json unreadable for the quarantine list ({exc})")
+        mf_q = None
+    if mf_q is not None and mf_q != md_ids:
+        problems.append(f"ledger split: MANIFEST.json 'quarantine' != _quarantine/QUARANTINE.md "
+                        f"(manifest-only: {sorted(mf_q - md_ids)}; md-only: {sorted(md_ids - mf_q)})")
+    if mf_q:
+        q_all |= mf_q                                # union, so a split still blocks while it is fixed
+
+    return q_all, q_lang, counts, problems
+
+
+def _has_contract(p: Path) -> bool:
+    return any(m in p.read_text(encoding="utf-8", errors="replace") for m in CONTRACT_MARKS)
+
+
+def count_contract_divergence(root: Path):
+    """Count twin FILES whose python/r source carries an input contract they do not.
+
+    Files, not IDs: a stem living in two spheres is two patterns (census law), so this number
+    is legitimately larger than the count of distinct sources. Returns (per-lane counts, examples).
+    """
+    src = {}
+    for p in root.glob("python/**/*.py"):
+        if "__pycache__" not in p.parts:
+            src[p.stem] = _has_contract(p)
+    for p in root.glob("r/**/*.R"):
+        src.setdefault(p.stem, _has_contract(p))
+
+    lanes, examples = {}, []
+    for lane, ext in TWIN_LANES:
+        n = 0
+        for p in sorted(root.glob(f"{lane}/**/*{ext}")):
+            if src.get(p.stem) and not _has_contract(p):
+                n += 1
+                if len(examples) < 3:
+                    examples.append(str(p.relative_to(root)))
+        lanes[lane] = n
+    return lanes, examples
+
+
+def divergence_fails(block, lanes, examples) -> list:
+    """Compare the declared divergence against disk. Pure, so the self-test can drive it both ways.
+
+    Movement in EITHER direction is RED — see RULER v3.1. The declaration is the point: this
+    number may only change by a deliberate edit, never by a commit nobody noticed.
+    """
+    if not isinstance(block, dict):
+        return ["MANIFEST.json has no 'twin_contract_divergence' block — the source/twin input-"
+                "contract gap would move in silence (RULER v3.1)"]
+    fails = []
+    declared_lanes = block.get("lanes") or {}
+    if block.get("declared") != sum(declared_lanes.values()):
+        fails.append(f"MANIFEST twin_contract_divergence is internally inconsistent: "
+                     f"declared {block.get('declared')} != sum of lanes {sum(declared_lanes.values())}")
+    for lane, n in sorted(lanes.items()):
+        d = declared_lanes.get(lane, 0)
+        if d != n:
+            eg = f" (e.g. {examples[0]})" if examples and n > d else ""
+            fails.append(f"twin contract divergence[{lane}] {'ROSE' if n > d else 'FELL'}: "
+                         f"MANIFEST declares {d}, disk has {n}{eg} — update the declaration "
+                         f"deliberately, do not silence it")
+    return fails
+
+
+def run_checks(pub, gate=False, inject_all=frozenset(), inject_lang=None,
+               quiet=False, probe=False) -> list:
+    """The checks. Returns the failure list.
+
+    inject_* add IDs to the quarantine sets on top of the real ledgers — that is how self_test
+    proves (e)/(f) can still fire. probe=True skips signature/watermark/catalog work so those
+    injections cost a file walk, not a full verify; the quarantine logic is the SAME code path.
+    """
+    say = (lambda *a, **k: None) if quiet else print
     fails, disk_ids, source_ids = [], set(), set()
     skipped = {}   # toolchain -> file count (missing compiler/runner under --gate)
-    quarantined = {p.stem for p in (ROOT / "_quarantine").glob("*.py")}
+
+    q_all, q_lang, counts, q_problems = load_quarantine(ROOT)
+    q_all = set(q_all) | set(inject_all)
+    q_lang = {k: set(v) for k, v in q_lang.items()}
+    for k, v in (inject_lang or {}).items():
+        q_lang.setdefault(k, set()).update(v)
+    fails.extend(q_problems)
 
     # (a)(b)(d) per signed subtree
     for st in SIGNED_SUBTREES:
         sroot = ROOT / st
         if not sroot.exists():
             continue
-        rep = signing.verify_directory(sroot, pub)
-        print(f"[{st:22}] signature: {rep.summary()}")
-        if not rep.ok:
-            fails.append(f"{st}: {rep.summary()}")
+        if not probe:
+            rep = signing.verify_directory(sroot, pub)
+            say(f"[{st:22}] signature: {rep.summary()}")
+            if not rep.ok:
+                fails.append(f"{st}: {rep.summary()}")
+        qset = q_all | q_lang.get(st.split("/")[0], set())
         bad = 0
         for p in sroot.rglob("*"):
             if p.suffix not in SRC_EXT:
@@ -108,22 +297,24 @@ def main() -> int:
             disk_ids.add(p.stem)
             if st.startswith("python") or st == "r":
                 source_ids.add(p.stem)
-            mr = verify_file(p)
-            if mr.status != "authentic" or (mr.payload and not mr.payload.is_master):
-                bad += 1; fails.append(f"{p.relative_to(ROOT)}: watermark {mr.status}")
-            if p.stem in quarantined:
+            if not probe:
+                mr = verify_file(p)
+                if mr.status != "authentic" or (mr.payload and not mr.payload.is_master):
+                    bad += 1; fails.append(f"{p.relative_to(ROOT)}: watermark {mr.status}")
+            if p.stem in qset:
                 fails.append(f"{p.relative_to(ROOT)}: quarantined ID present in shippable tree")
-            if args.gate:
+            if gate:
                 g = run_gate(p)
                 if g == "fail":
                     fails.append(f"{p.relative_to(ROOT)}: GATE fail")
                 elif g.startswith("skip:"):
                     skipped[g[5:]] = skipped.get(g[5:], 0) + 1
-        print(f"                         watermark: {'all valid' if not bad else f'{bad} BAD'}")
+        if not probe:
+            say(f"                         watermark: {'all valid' if not bad else f'{bad} BAD'}")
 
     if skipped:
         for tc, n in sorted(skipped.items()):
-            print(f"!! GATE SKIPPED — toolchain '{tc}' missing: {n} file(s) NOT validated")
+            say(f"!! GATE SKIPPED — toolchain '{tc}' missing: {n} file(s) NOT validated")
             fails.append(f"GATE SKIPPED: toolchain '{tc}' missing — {n} file(s) not validated")
 
     # (f) twin integrity — cpp/go twin whose source ID is missing or quarantined.
@@ -143,7 +334,9 @@ def main() -> int:
         for p in (ROOT / tl).rglob("*"):
             if p.suffix not in (".cpp", ".go"):
                 continue
-            if p.stem in quarantined:
+            # q_all only: a twin quarantined in its own lane is caught above as (e). This line is
+            # the SOURCE-quarantine rule — you may not ship a twin of a pattern we pulled.
+            if p.stem in q_all:
                 fails.append(f"{p.relative_to(ROOT)}: twin of a quarantined pattern")
             if p.stem in nat:
                 # A native must NOT also have a source — that would mean it is really a twin
@@ -162,6 +355,9 @@ def main() -> int:
         for missing in sorted(stems - on_disk):
             fails.append(f"MANIFEST native_patterns[{tl}]: '{missing}' declared native but not on disk")
 
+    if probe:
+        return fails
+
     # (c) catalog ID parity — parity is over UNIQUE ids; the headline count is
     # ROWS (934): a stem living in two spheres is two patterns (census law),
     # so rows > unique ids. Print both so the numbers can't be misread.
@@ -173,12 +369,191 @@ def main() -> int:
         extra = disk_ids - listed
         if miss: fails.append(f"catalog lists {len(miss)} ID(s) not on disk")
         if extra: fails.append(f"disk has {len(extra)} ID(s) not in catalog")
-    print(f"[catalog               ] {len(rows)} pattern rows — unique IDs:"
-          f" {len(disk_ids)} on disk, {len(listed)} listed"
-          f" — {'OK' if listed == disk_ids else 'MISMATCH'}")
+    say(f"[catalog               ] {len(rows)} pattern rows — unique IDs:"
+        f" {len(disk_ids)} on disk, {len(listed)} listed"
+        f" — {'OK' if listed == disk_ids else 'MISMATCH'}")
 
-    print(f"[native lane           ] {declared} pattern(s) declared native"
-          f"{' — ' + ', '.join(f'{k}:{len(v)}' for k, v in sorted(native.items()) if v) if declared else ' (twin-only library)'}")
+    say(f"[native lane           ] {declared} pattern(s) declared native"
+        f"{' — ' + ', '.join(f'{k}:{len(v)}' for k, v in sorted(native.items()) if v) if declared else ' (twin-only library)'}")
+
+    say(f"[quarantine            ] {sum(counts.values())} record(s) read from "
+        f"{len(counts)} ledger(s) — {len(q_all)} source-wide, "
+        f"{sum(len(v) for v in q_lang.values())} lang-scoped"
+        f"{' — ' + ', '.join(f'{k}:{len(v)}' for k, v in sorted(q_lang.items()) if v) if q_lang else ''}")
+
+    # (h) twin contract divergence — a declared number, RED when it moves. Not a defect verdict.
+    dlanes, dexamples = count_contract_divergence(ROOT)
+    try:
+        dblock = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8")).get("twin_contract_divergence")
+    except (OSError, ValueError):
+        dblock = None          # the MANIFEST.json failure is already reported above
+    fails.extend(divergence_fails(dblock, dlanes, dexamples))
+    say(f"[twin contract         ] {sum(dlanes.values())} twin file(s) whose source carries an "
+        f"input contract they do not ({', '.join(f'{k}:{v}' for k, v in sorted(dlanes.items()))})"
+        f" — declared {(dblock or {}).get('declared')}")
+
+    return fails
+
+
+def self_test(pub) -> list:
+    """Prove the quarantine checks are NOT vacuous. Returns the failure list.
+
+    (e) and (f) globbed a directory that holds no .py files, so the quarantine set was always
+    empty and both checks passed for every pattern ever shipped. Nothing detected it because an
+    empty set is indistinguishable from a clean library — from the outside. So this test walks
+    in from the inside: it feeds a known-quarantined ID into the REAL tree checks and requires
+    them to go RED, and feeds a nonsense ID and requires them to stay quiet. Both halves matter —
+    a check wired to always fire is as useless as one wired never to.
+    """
+    out = []
+
+    def check(name, ok, got=None):
+        print(f"  {'ok  ' if ok else 'FAIL'} {name}")
+        if not ok:
+            out.append(f"SELF-TEST '{name}' failed (got: {got!r})")
+
+    print("[self-test             ] quarantine parser + non-vacuity probes")
+
+    with tempfile.TemporaryDirectory() as td:
+        troot = Path(td)
+        (troot / "_quarantine").mkdir()
+        (troot / "_quarantine" / "QUARANTINE.md").write_text(
+            "# Quarantine\n\n"
+            "- `alpha_pattern.py` — assert-linter REJECT\n"
+            "- `beta_pattern.py` — assert-linter REJECT\n"
+            "prose that is not an entry\n", encoding="utf-8")
+        (troot / "QUARANTINE.jsonl").write_text(
+            '{"id": "gamma_twin", "lang": "cpp", "status": "fix-to-rejoin"}\n'
+            '{"id": "delta_done", "lang": "cpp", "status": "rejoined"}\n'
+            '{"id": "epsilon_unscoped", "status": "held"}\n', encoding="utf-8")
+        (troot / "MANIFEST.json").write_text(
+            json.dumps({"quarantine": ["alpha_pattern.py", "beta_pattern.py"]}), encoding="utf-8")
+
+        qa, ql, counts, probs = load_quarantine(troot)
+        check("md entries + unscoped jsonl -> source-wide",
+              qa == {"alpha_pattern", "beta_pattern", "epsilon_unscoped"}, qa)
+        check("lang-scoped record stays in its lane", ql == {"cpp": {"gamma_twin"}}, ql)
+        check("status 'rejoined' is not quarantined",
+              "delta_done" not in qa and "delta_done" not in ql.get("cpp", set()), (qa, ql))
+        check("every declared ledger reported as read",
+              counts == {"_quarantine/QUARANTINE.md": 2, "QUARANTINE.jsonl": 3}, counts)
+        check("clean fixture raises no problems", not probs, probs)
+
+        (troot / "MANIFEST.json").write_text(json.dumps({"quarantine": ["alpha_pattern.py"]}),
+                                             encoding="utf-8")
+        check("ledger split (manifest vs md) is caught",
+              any("ledger split" in p for p in load_quarantine(troot)[3]), None)
+
+    with tempfile.TemporaryDirectory() as td:
+        troot = Path(td)
+        (troot / "_quarantine").mkdir()
+        (troot / "_quarantine" / "QUARANTINE.md").write_text("# Quarantine\n\nnone\n", encoding="utf-8")
+        (troot / "QUARANTINE.jsonl").write_text("", encoding="utf-8")
+        (troot / "MANIFEST.json").write_text(json.dumps({"quarantine": []}), encoding="utf-8")
+        _, _, _, probs = load_quarantine(troot)
+        check("a ledger that parses 0 records is RED (THE bug)",
+              sum("parsed 0 records" in p for p in probs) == 2, probs)
+
+    with tempfile.TemporaryDirectory() as td:
+        troot = Path(td)
+        (troot / "MANIFEST.json").write_text(json.dumps({"quarantine": []}), encoding="utf-8")
+        check("a MISSING ledger is RED, not 'nothing quarantined'",
+              sum("is MISSING" in p for p in load_quarantine(troot)[3]) == 2, None)
+
+    # --- (h) twin contract divergence: same discipline, proven on a fixture tree -------------
+    with tempfile.TemporaryDirectory() as td:
+        troot = Path(td)
+        for rel, body in (
+            ("python/ds/guarded_one.py", "def f():\n    _aura_validate_f(1)\n"),
+            ("python/ds/guarded_two.py", "def g():\n    _aura_validate_g(1)\n"),
+            ("python/ds/plain.py",       "def h():\n    pass\n"),
+            ("cpp/ds/guarded_one.cpp",   "int main(){return 0;}\n"),              # divergent
+            ("cpp/other/guarded_one.cpp", "int main(){return 0;}\n"),             # divergent (2nd sphere)
+            ("cpp/ds/guarded_two.cpp",   "// aura_validate mirrored\nint main(){}\n"),  # not divergent
+            ("cpp/ds/plain.cpp",         "int main(){return 0;}\n"),              # source has no contract
+            ("go/ds/guarded_one.go",     "package main\nfunc main(){}\n"),        # divergent, other lane
+        ):
+            f = troot / rel
+            f.parent.mkdir(parents=True, exist_ok=True)
+            f.write_text(body, encoding="utf-8")
+
+        lanes, examples = count_contract_divergence(troot)
+        check("divergence counts FILES, not IDs (two spheres = two)",
+              lanes == {"cpp": 2, "go": 1, "rust": 0}, lanes)
+        check("a twin that mirrored the contract is not counted",
+              all("guarded_two" not in e for e in examples), examples)
+        check("declared == disk -> silent",
+              divergence_fails({"declared": 3, "lanes": {"cpp": 2, "go": 1, "rust": 0}},
+                               lanes, examples) == [], None)
+        check("a RISE is RED",
+              any("ROSE" in f for f in divergence_fails(
+                  {"declared": 2, "lanes": {"cpp": 1, "go": 1, "rust": 0}}, lanes, examples)), None)
+        check("a FALL is RED too (a fix that leaves a stale claim)",
+              any("FELL" in f for f in divergence_fails(
+                  {"declared": 4, "lanes": {"cpp": 3, "go": 1, "rust": 0}}, lanes, examples)), None)
+        check("a missing declaration is RED, not 'no divergence'",
+              len(divergence_fails(None, lanes, examples)) == 1, None)
+        check("an internally inconsistent declaration is caught",
+              any("internally inconsistent" in f for f in divergence_fails(
+                  {"declared": 99, "lanes": {"cpp": 2, "go": 1, "rust": 0}}, lanes, examples)), None)
+
+    # --- non-vacuity against the real tree -------------------------------------------------
+    live_all, live_lang, _, _ = load_quarantine(ROOT)
+    held = live_all | {i for v in live_lang.values() for i in v}
+    py = {p.stem for p in (ROOT / "python").rglob("*.py")}
+    twins = sorted({p.stem for p in (ROOT / "cpp").rglob("*.cpp")} & py - held)
+    if len(twins) < 2:
+        out.append("SELF-TEST: fewer than 2 clean cpp twins on disk — probes cannot run")
+        return out
+    probe_a, probe_b = twins[0], twins[1]
+
+    def hit(fails, stem, msg, tree=None):
+        return any(msg in f and f"/{stem}." in f and (tree is None or f.startswith(tree + "/"))
+                   for f in fails)
+
+    fa = run_checks(pub, inject_all={probe_a}, quiet=True, probe=True)
+    check(f"(e) fires on a source-quarantined ID ({probe_a})",
+          hit(fa, probe_a, "quarantined ID present in shippable tree", "python"), None)
+    check(f"(f) fires on the twin of a quarantined source ({probe_a})",
+          hit(fa, probe_a, "twin of a quarantined pattern", "cpp"), None)
+
+    fb = run_checks(pub, inject_lang={"cpp": {probe_b}}, quiet=True, probe=True)
+    check(f"(e) fires on a lang-scoped quarantined twin ({probe_b})",
+          hit(fb, probe_b, "quarantined ID present in shippable tree", "cpp"), None)
+    check("a lang-scoped twin quarantine does NOT condemn its python source",
+          not hit(fb, probe_b, "quarantined ID present in shippable tree", "python")
+          and not hit(fb, probe_b, "twin of a quarantined pattern"), None)
+
+    fc = run_checks(pub, inject_all={"__no_such_pattern_id__"}, quiet=True, probe=True)
+    check("no probe -> the checks stay quiet (not wired to always fire)",
+          not any("__no_such_pattern_id__" in f for f in fc), None)
+
+    return out
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--pubkey", default=str(ROOT / "aura-signing.pub"))
+    ap.add_argument("--gate", action="store_true", help="also compile/run every file (slow)")
+    ap.add_argument("--self-test", action="store_true",
+                    help="run ONLY the non-vacuity self-test (it runs on every verify anyway)")
+    args = ap.parse_args()
+    pub = Path(args.pubkey).read_text().strip() if Path(args.pubkey).exists() else args.pubkey
+
+    # (g) The self-test runs FIRST and on EVERY run. GREEN is not reachable without the proof
+    # that (e)/(f) can still go RED — that is the whole lesson of the empty-glob bug.
+    fails = self_test(pub)
+    if args.self_test:
+        print("-" * 60)
+        if fails:
+            print(f"RED — self-test: {len(fails)} problem(s):")
+            for f in fails:
+                print(f"  - {f}")
+            return 1
+        print("GREEN — the quarantine checks are live and can fail.")
+        return 0
+
+    fails += run_checks(pub, gate=args.gate)
 
     print("-" * 60)
     if fails:

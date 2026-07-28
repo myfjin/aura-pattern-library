@@ -33,7 +33,7 @@ When it runs, competing risks naive bias guarantees final_naive > final_correct 
 **Valid input:** `times` and `events` are equal-length lists; `events` ∈ {0,1,2} where 0 = censored, 1/2 = competing events; `event_type` is 1 or 2.
 **Core:** Shows the bias in competing-risks analysis. The naive `1 − KM` cumulative incidence treats competing events as independent censoring and overstates incidence. The correct Aalen-Johansen estimator weights each cause-specific hazard increment by the overall survival probability just before the event time.
 **Assert:** Final naive CIF exceeds final Aalen-Johansen CIF by at least 0.1; Aalen-Johansen CIF is a valid probability in (0, 1); naive CIF does not exceed 1.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

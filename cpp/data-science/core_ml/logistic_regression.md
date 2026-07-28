@@ -31,7 +31,7 @@ When it runs, logistic regression guarantees accuracy >= 0.85 (weak-grade: direc
 **Valid input:** `X: List[List[float]]` non-empty. `y: List[int]` with values 0 or 1. `learning_rate > 0`.
 **Core:** Binary logistic regression via gradient descent. Sigmoid σ(z) = 1/(1+e⁻ᶻ) with overflow clamp (z > 100 → 1, z < -100 → 0). Binary cross-entropy loss. Initialize w=0, b=0. Each iteration: compute p = σ(Xw + b), gradients dw = (1/n) Σ (pᵢ - yᵢ) xᵢ, db = (1/n) Σ (pᵢ - yᵢ), update.
 **Assert:** On 2-class synthetic data (2 features, 30 samples per class, Gaussian clusters at (2,2) and (5,5) with σ=1.5), accuracy > 80%.
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*

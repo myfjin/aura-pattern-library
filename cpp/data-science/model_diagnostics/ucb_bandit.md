@@ -34,7 +34,7 @@ When it runs, ucb bandit guarantees best_arm_pulls > counts[0]; best_arm_pulls >
 **Valid input:** `arms: List[BernoulliArm]` — each with `p` in [0, 1]. `n_pulls ≥ 1`. `c ≥ 0`.
 **Core:** UCB1 multi-armed bandit. Select arm with highest UCB = avg_reward + c·√(ln(total_pulls) / arm_pulls). Unplayed arms get infinite UCB (always selected first). Three Bernoulli arms: p=[0.1, 0.5, 0.9]. Best arm (p=0.9) should receive most pulls.
 **Assert:** On 500 pulls with c=1.0: best arm pulled more than worst and medium, best arm pulled > 50% of time, best arm pulled more than random baseline (1/3).
-**✔ Retrofitted:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E retrofit pass; the current signed code reflects the fix.
+**⚠ Retrofit NOT in this twin:** a defect noted in the 2026-07-20 audit was corrected by the AURA-E input-contract retrofit on the PY original (7497d40, 2026-07-21). That pass deliberately excluded the compiled lanes, so this C++ twin does NOT carry the contract its source now enforces. Declared in MANIFEST.json `twin_contract_divergence`; unblocking it needs the cpp attack lane. Corrected 2026-07-28 — the card previously claimed the fix was in this file.
 
 ---
 *△ AURA Pattern Library — © Reality Optimizer*
