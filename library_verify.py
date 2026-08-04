@@ -5,9 +5,9 @@ Green means the library is what it claims:
   (a) every populated subtree: Ed25519 signature valid + catalog/manifest integrity
   (b) every file carries a valid master-0 watermark with the right mark
   (c) master CATALOG.md ID set == on-disk ID set
-  (d) [--gate] every file compiles/runs exit 0 (python3/Rscript/g++/go/rustc);
-      a missing toolchain is a LOUD per-language SKIP that turns the run RED —
-      a skipped language is never counted as validated
+  (d) [--gate] every file compiles/runs exit 0 (python3/Rscript/node/g++/go/rustc);
+      a missing toolchain is a LOUD per-language SKIP that turns the run RED, and a file
+      that HANGS is INCONCLUSIVE — also RED. Neither is ever counted as validated
   (e) quarantine IDs absent from all shippable trees
   (f) twin integrity: no cpp/go twin whose source ID is quarantined or missing,
       UNLESS it is explicitly declared NATIVE in MANIFEST.json (see below)
@@ -60,9 +60,26 @@ that is wrong. So the number is DECLARED in MANIFEST.json and RED only when it M
 direction. A rise means twins shipped behind their sources; a fall means twins were fixed and the
 manifest still claims otherwise. Both are claims about the library that stopped being true.
 
+RULER v3.2 — 2026-08-04, THE GATE REAPS ITS CHILDREN + "I COULD NOT MEASURE THIS".
+Two fixes, both defects rather than enhancements.
+
+(1) All six `subprocess.run(..., timeout=)` calls killed only the DIRECT child. `go run` execs its
+compiled binary as a grandchild, so on timeout the runner died and the binary kept spinning at
+100% CPU. Six of those once cooked this laptop; the same shape burned 18 hours at 92°C on .8.
+Every spawn now goes through `_run()`: `start_new_session=True`, and `killpg` on timeout. The
+self-test proves it with a fixture that ACTUALLY orphans — it first demonstrates the leak under
+the old semantics, because a reaper never observed to reap is not a reaper.
+Also fixed alongside: the gate compiled every cpp and rust file to ONE fixed path (`/tmp/_apl_x`),
+so a failed compile left a stale binary exactly where the next file's run would look.
+
+(2) run_gate had no way to say "I could not measure this" as distinct from "I measured it and it
+is wrong". A hang used to raise TimeoutExpired and crash the verifier outright. There are now four
+outcomes — ok / fail / skip / inconclusive — routed through the pure `gate_outcome()`, which FAILS
+CLOSED: any verdict it does not recognise is inconclusive, never a pass.
+
 Requires `folder-nature>=0.2` (falls back to the v-next checkout on sys.path).
 """
-import argparse, json, re, shutil, subprocess, sys, tempfile
+import argparse, json, os, re, shutil, signal, subprocess, sys, tempfile, time
 from pathlib import Path
 
 try:
@@ -91,40 +108,121 @@ CONTRACT_MARKS = ("_aura_validate_", "AuraInputError", "aura_validate")
 TWIN_LANES = (("cpp", ".cpp"), ("go", ".go"), ("rust", ".rs"))
 
 
-def run_gate(p: Path) -> str:
-    """Gate one file. Returns 'ok' | 'fail' | 'skip:<toolchain>'.
+class GateTimeout(Exception):
+    """Raised after a hung gate's process GROUP has been reaped."""
 
-    A missing toolchain is NEVER a pass — the caller records the skip and the
-    run goes RED, so an ungated language can't hide behind a green."""
-    if p.suffix in (".py", ".R", ".js"):
-        runner = GATE[p.suffix][0]
-        if not shutil.which(runner):
-            return f"skip:{runner}"
-        ok = subprocess.run([runner, str(p)], capture_output=True, timeout=120).returncode == 0
-        return "ok" if ok else "fail"
-    if p.suffix == ".cpp":
-        if not shutil.which("g++"):
-            return "skip:g++"
-        out = Path("/tmp/_apl_x")
-        c = subprocess.run(["g++", "-O2", "-std=c++17", str(p), "-o", str(out)],
-                           capture_output=True, timeout=120)
-        ok = c.returncode == 0 and subprocess.run([str(out)], capture_output=True,
-                                                  timeout=120).returncode == 0
-        return "ok" if ok else "fail"
-    if p.suffix == ".go":
-        if not shutil.which("go"):
-            return "skip:go"
-        ok = subprocess.run(["go", "run", str(p)], capture_output=True, timeout=120).returncode == 0
-        return "ok" if ok else "fail"
-    if p.suffix == ".rs":
-        if not shutil.which("rustc"):
-            return "skip:rustc"
-        out = Path("/tmp/_apl_rs")
-        c = subprocess.run(["rustc", "-O", "--edition", "2021", "-D", "warnings", str(p), "-o", str(out)],
-                           capture_output=True, timeout=120)
-        ok = c.returncode == 0 and subprocess.run([str(out)], capture_output=True,
-                                                  timeout=120).returncode == 0
-        return "ok" if ok else "fail"
+
+def _reap(proc) -> None:
+    """SIGKILL the process GROUP, not the process. Never raises — the caller is already failing."""
+    try:
+        os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+    except (ProcessLookupError, PermissionError, OSError):
+        pass
+    try:
+        proc.communicate(timeout=5)
+    except Exception:
+        try:
+            proc.kill()
+        except Exception:
+            pass
+
+
+def _run(cmd, timeout: int, cwd=None) -> int:
+    """Run cmd in its OWN SESSION and reap the WHOLE GROUP on timeout. Returns the returncode.
+
+    `subprocess.run(timeout=)` kills only the DIRECT child. `go run` compiles to a temp binary and
+    execs it as a grandchild; a python pattern may spawn anything. On timeout the runner dies and
+    the grandchild keeps spinning at 100% CPU — six of those once cooked this laptop, and the same
+    shape burned 18 hours at 92°C on .8. start_new_session makes the child a group leader so its
+    descendants share its pgid, and killpg takes the whole family.
+    """
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                            cwd=cwd, start_new_session=True)
+    try:
+        proc.communicate(timeout=timeout)
+        return proc.returncode
+    except subprocess.TimeoutExpired:
+        _reap(proc)
+        raise GateTimeout(f"{cmd[0]} exceeded {timeout}s")
+
+
+def gate_outcome(verdict: str):
+    """Map a run_gate verdict to (kind, detail). Pure, so the self-test can prove that nothing
+    except a literal 'ok' can ever be bucketed as a pass.
+
+    ⛔ FAILS CLOSED: an unrecognised verdict is INCONCLUSIVE, never a pass. A future verdict
+    string added to run_gate and forgotten here must go RED, not silently green.
+    """
+    if verdict == "ok":
+        return ("pass", None)
+    if verdict == "fail":
+        return ("fail", None)
+    if verdict.startswith("skip:"):
+        return ("skip", verdict[5:])
+    if verdict.startswith("inconclusive:"):
+        return ("inconclusive", verdict.split(":", 1)[1])
+    return ("inconclusive", f"unrecognised gate verdict {verdict!r}")
+
+
+_GATE_TMP = None
+
+
+def _gate_tmp() -> Path:
+    """Per-run scratch for compiled binaries. The old code reused a single fixed /tmp path for
+    every cpp and rust file in the library — one name, 570 files, and a stale binary left behind
+    by a failed compile sitting exactly where the next run looks."""
+    global _GATE_TMP
+    if _GATE_TMP is None:
+        _GATE_TMP = Path(tempfile.mkdtemp(prefix="apl-gate-"))
+    return _GATE_TMP
+
+
+def run_gate(p: Path, timeout: int = 120) -> str:
+    """Gate one file. Returns 'ok' | 'fail' | 'skip:<toolchain>' | 'inconclusive:<why>'.
+
+    FOUR outcomes, and only one of them is a pass:
+      ok           — measured, exit 0
+      fail         — MEASURED AND WRONG
+      skip:<tc>    — toolchain missing; nothing was measured
+      inconclusive — the tool could not measure this file at all (a hang, a reaped group)
+
+    'inconclusive' exists because there was previously no way to say "I could not tell" as
+    distinct from "I checked and it is fine". Both skip and inconclusive turn the run RED. A
+    verifier that cannot express its own ignorance will eventually report it as a pass.
+    """
+    try:
+        if p.suffix in (".py", ".R", ".js"):
+            runner = GATE[p.suffix][0]
+            if not shutil.which(runner):
+                return f"skip:{runner}"
+            return "ok" if _run([runner, str(p)], timeout) == 0 else "fail"
+        if p.suffix == ".cpp":
+            if not shutil.which("g++"):
+                return "skip:g++"
+            out = _gate_tmp() / f"{p.stem}_cpp"
+            try:
+                if _run(["g++", "-O2", "-std=c++17", str(p), "-o", str(out)], timeout) != 0:
+                    return "fail"
+                return "ok" if _run([str(out)], timeout) == 0 else "fail"
+            finally:
+                out.unlink(missing_ok=True)
+        if p.suffix == ".go":
+            if not shutil.which("go"):
+                return "skip:go"
+            return "ok" if _run(["go", "run", str(p)], timeout) == 0 else "fail"
+        if p.suffix == ".rs":
+            if not shutil.which("rustc"):
+                return "skip:rustc"
+            out = _gate_tmp() / f"{p.stem}_rs"
+            try:
+                if _run(["rustc", "-O", "--edition", "2021", "-D", "warnings",
+                         str(p), "-o", str(out)], timeout) != 0:
+                    return "fail"
+                return "ok" if _run([str(out)], timeout) == 0 else "fail"
+            finally:
+                out.unlink(missing_ok=True)
+    except GateTimeout as e:
+        return f"inconclusive:{e}"
     return "ok"
 
 
@@ -270,7 +368,8 @@ def run_checks(pub, gate=False, inject_all=frozenset(), inject_lang=None,
     """
     say = (lambda *a, **k: None) if quiet else print
     fails, disk_ids, source_ids = [], set(), set()
-    skipped = {}   # toolchain -> file count (missing compiler/runner under --gate)
+    skipped = {}       # toolchain -> file count (missing compiler/runner under --gate)
+    inconclusive = []  # files the gate could not measure at all — never a pass, always RED
 
     q_all, q_lang, counts, q_problems = load_quarantine(ROOT)
     q_all = set(q_all) | set(inject_all)
@@ -304,11 +403,13 @@ def run_checks(pub, gate=False, inject_all=frozenset(), inject_lang=None,
             if p.stem in qset:
                 fails.append(f"{p.relative_to(ROOT)}: quarantined ID present in shippable tree")
             if gate:
-                g = run_gate(p)
-                if g == "fail":
+                kind, detail = gate_outcome(run_gate(p))
+                if kind == "fail":
                     fails.append(f"{p.relative_to(ROOT)}: GATE fail")
-                elif g.startswith("skip:"):
-                    skipped[g[5:]] = skipped.get(g[5:], 0) + 1
+                elif kind == "skip":
+                    skipped[detail] = skipped.get(detail, 0) + 1
+                elif kind == "inconclusive":
+                    inconclusive.append(f"{p.relative_to(ROOT)}: {detail}")
         if not probe:
             say(f"                         watermark: {'all valid' if not bad else f'{bad} BAD'}")
 
@@ -316,6 +417,12 @@ def run_checks(pub, gate=False, inject_all=frozenset(), inject_lang=None,
         for tc, n in sorted(skipped.items()):
             say(f"!! GATE SKIPPED — toolchain '{tc}' missing: {n} file(s) NOT validated")
             fails.append(f"GATE SKIPPED: toolchain '{tc}' missing — {n} file(s) not validated")
+
+    if inconclusive:
+        say(f"!! GATE INCONCLUSIVE — {len(inconclusive)} file(s) could NOT be measured "
+            f"(hung and were reaped). This is not a fail and it is CERTAINLY not a pass.")
+        for item in inconclusive:
+            fails.append(f"GATE INCONCLUSIVE: {item}")
 
     # (f) twin integrity — cpp/go twin whose source ID is missing or quarantined.
     # source_ids holds python/r stems only (disk_ids would include the twin itself).
@@ -395,7 +502,7 @@ def run_checks(pub, gate=False, inject_all=frozenset(), inject_lang=None,
     return fails
 
 
-def self_test(pub) -> list:
+def self_test(pub, deep=False) -> list:
     """Prove the quarantine checks are NOT vacuous. Returns the failure list.
 
     (e) and (f) globbed a directory that holds no .py files, so the quarantine set was always
@@ -497,6 +604,69 @@ def self_test(pub) -> list:
               any("internally inconsistent" in f for f in divergence_fails(
                   {"declared": 99, "lanes": {"cpp": 2, "go": 1, "rust": 0}}, lanes, examples)), None)
 
+    # --- (1)(3) the gate: orphan reaping + the inconclusive outcome ---------------------------
+    if deep:
+        marker = f"APL_ORPHAN_PROBE_{os.getpid()}"
+
+        def survivors():
+            r = subprocess.run(["pgrep", "-f", marker], capture_output=True, text=True)
+            return [x for x in r.stdout.split() if x.strip()]
+
+        def kill_all():
+            for pid in survivors():
+                try:
+                    os.kill(int(pid), signal.SIGKILL)
+                except (ProcessLookupError, ValueError, PermissionError):
+                    pass
+
+        with tempfile.TemporaryDirectory() as td:
+            fx = Path(td) / "hang_fixture.py"
+            # Mimics `go run`: the runner spawns a GRANDCHILD, then both hang. The marker lives in
+            # the grandchild's argv (not the file), so pgrep finds the survivor and nothing else.
+            fx.write_text(
+                "import subprocess, sys, time\n"
+                f"subprocess.Popen([sys.executable, '-c', "
+                f"'import time; time.sleep(300)  # {marker}'])\n"
+                "time.sleep(300)\n", encoding="utf-8")
+
+            # CONTROL — the old semantics. If this does NOT leak, the fixture proves nothing and
+            # a passing reaper test below would be worthless.
+            old = subprocess.Popen([sys.executable, str(fx)],
+                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            time.sleep(1.0)
+            old.kill(); old.wait()
+            time.sleep(0.4)
+            leaked = survivors()
+            check("control: killing only the child LEAKS the grandchild (fixture really orphans)",
+                  len(leaked) >= 1, leaked)
+            kill_all(); time.sleep(0.2)
+
+            # THE FIX — same fixture, through the real gate.
+            verdict = run_gate(fx, timeout=2)
+            time.sleep(0.4)
+            left = survivors()
+            check("a hung gate reports 'inconclusive', never 'ok' or 'fail'",
+                  verdict.startswith("inconclusive:"), verdict)
+            check("REAPED — no grandchild survives the timeout", left == [], left)
+            kill_all()
+
+        with tempfile.TemporaryDirectory() as td:
+            ok_f, bad_f = Path(td) / "ok.py", Path(td) / "bad.py"
+            ok_f.write_text("assert 1 == 1\n", encoding="utf-8")
+            bad_f.write_text("raise SystemExit(3)\n", encoding="utf-8")
+            check("gate GREEN case: a clean file is 'ok'", run_gate(ok_f, timeout=30) == "ok")
+            check("gate RED case: a failing file is 'fail'", run_gate(bad_f, timeout=30) == "fail")
+
+        # the WIRING: only a literal 'ok' may ever be bucketed as a pass
+        check("only 'ok' is a pass", gate_outcome("ok")[0] == "pass")
+        check("'inconclusive' is NOT a pass",
+              gate_outcome("inconclusive:node exceeded 2s")[0] == "inconclusive")
+        check("'skip' is NOT a pass", gate_outcome("skip:go")[0] == "skip")
+        check("an UNRECOGNISED verdict fails closed to inconclusive, never pass",
+              gate_outcome("okay")[0] == "inconclusive" and gate_outcome("")[0] == "inconclusive")
+    else:
+        print("  --   gate/orphan proof not exercised (runs under --gate or --self-test)")
+
     # --- non-vacuity against the real tree -------------------------------------------------
     live_all, live_lang, _, _ = load_quarantine(ROOT)
     held = live_all | {i for v in live_lang.values() for i in v}
@@ -542,7 +712,7 @@ def main() -> int:
 
     # (g) The self-test runs FIRST and on EVERY run. GREEN is not reachable without the proof
     # that (e)/(f) can still go RED — that is the whole lesson of the empty-glob bug.
-    fails = self_test(pub)
+    fails = self_test(pub, deep=args.self_test or args.gate)
     if args.self_test:
         print("-" * 60)
         if fails:
