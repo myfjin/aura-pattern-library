@@ -36,6 +36,21 @@ MATRIX_NAME = re.compile(r"^(X|A|mat|matrix|data|features|design)$", re.I)
 
 DOC_ENTRY = re.compile(r"^\*\*Entry fn:\*\*\s*(.+)$", re.M)
 
+# A 1-D sequence a prober CAN synthesise (targets, labels, a sample). Distinct from `matrix`
+# and from `other` — an `other` required parameter (k, alpha, a prior, a callable) is the thing
+# that makes a function undrivable, and it must be named as such rather than guessed at.
+VECTOR_ANN = re.compile(r"list\s*\[\s*(float|int)|List\s*\[\s*(float|int)|\[\]float|Vec<\s*f64", re.I)
+VECTOR_NAME = re.compile(r"^(y|labels?|target|targets|values|samples?|obs|observations)$", re.I)
+
+
+def param_role(name: str, ann) -> str:
+    """matrix | vector | other. `other` required => the prober cannot drive this function."""
+    if (ann and MATRIX_ANN.search(ann)) or MATRIX_NAME.match(name):
+        return "matrix"
+    if (ann and VECTOR_ANN.search(ann)) or VECTOR_NAME.match(name):
+        return "vector"
+    return "other"
+
 
 def domain_of(shelf: str, category: str, fns) -> str:
     """Classify what KIND of input this pattern takes. The robustness sweep's six classes are
@@ -66,13 +81,20 @@ def py_entries(p: Path):
             continue
         if SKIP_FN.match(node.name):
             continue
+        # Defaults bind to the LAST n positional args. Without this, a prober cannot tell a
+        # parameter it MUST supply from one it may omit — which is precisely why the 172-pattern
+        # run produced 549 TypeErrors and read them as a robustness finding.
+        n_req = len(node.args.args) - len(node.args.defaults)
         params = []
-        for a in node.args.args:
+        for i, a in enumerate(node.args.args):
             ann = ast.unparse(a.annotation) if a.annotation is not None else None
-            params.append({"name": a.arg, "annotation": ann})
-        matrix = any((q["annotation"] and MATRIX_ANN.search(q["annotation"]))
-                     or MATRIX_NAME.match(q["name"]) for q in params)
-        out.append({"name": node.name, "params": params, "matrix_param": matrix})
+            params.append({"name": a.arg, "annotation": ann, "required": i < n_req,
+                           "role": param_role(a.arg, ann)})
+        matrix = any(q["role"] == "matrix" for q in params)
+        drivable = all((not q["required"]) or q["role"] in ("matrix", "vector")
+                       for q in params) and matrix
+        out.append({"name": node.name, "params": params,
+                    "matrix_param": matrix, "drivable": drivable})
     return out
 
 
@@ -90,8 +112,10 @@ def doc_entries(card: Path):
             continue
         name = re.search(r"(?:def|func|fn)?\s*([A-Za-z_]\w*)\s*\(", chunk)
         if name and not SKIP_FN.match(name.group(1)):
+            # Doc-derived entries carry no parsed signature, so drivability is UNKNOWN — and
+            # unknown must never read as drivable. Fail closed.
             out.append({"name": name.group(1), "params": [],
-                        "matrix_param": bool(MATRIX_ANN.search(chunk))})
+                        "matrix_param": bool(MATRIX_ANN.search(chunk)), "drivable": False})
     return out
 
 
