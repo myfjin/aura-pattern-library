@@ -53,3 +53,14 @@ whose source ID is missing or quarantined is a RED failure.
 
 ## The one gate above all
 Nothing here is public. **Illia's explicit yes on the final artifact is the only door.**
+
+## javascript (added 2026-08-04)
+
+Source lane, written directly in JavaScript — no twins, not converted from python/R.
+Staged at `~/js-patterns-staging` (from `au@.8:~/ai-lab/js-patterns-staging`, git `c033c7e`).
+91 of 100 candidates shipped: nine `linreg_gd_*` files were byte-identical copies of
+`linreg_gd_1d_univariate` and were dropped before ingest.
+
+Each pattern carries a self-test proven to fail under mutation, over a baseline validated
+at staging by three independent engines (V8 / JavaScriptCore / QuickJS). The library gate
+runs `node` only. See `javascript/ROBUSTNESS.md` for measured behaviour outside the fixtures.

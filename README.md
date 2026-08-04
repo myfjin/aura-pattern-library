@@ -21,12 +21,15 @@ tracing channels, and a cryptographic signature.
 | `rust/` | 200 | `rustc -O -D warnings` | Ed25519 signed |
 | `go/programming` | 45 | `go build` + run + 3× determinism | Ed25519 signed |
 | `go/system-administration` | 58 | `go build` + run + 3× determinism | Ed25519 signed |
+| `javascript/` | 91 | `node` (exit 0) | Ed25519 signed |
 
-**944 patterns · 1,409 verified files across five languages · 466 patterns in
-two or more languages.** (933 unique IDs — 11 catalog rows share a stem across
+**1,035 patterns · 1,500 verified files across six languages · 466 patterns in
+two or more languages.** (1,024 unique IDs — 11 catalog rows share a stem across
 spheres, e.g. `circuit_breaker` lives in programming, sysadmin *and* rust-systems;
-by the census law a stem in two spheres is two patterns.) Eight shelves, 138
-categories. Language twins are strictly downstream of their Python/R source:
+by the census law a stem in two spheres is two patterns.) Nine shelves, 144
+categories. **JavaScript, like Python and R, is a source lane** — its patterns were
+written directly in the language and have no twins, which is why the
+two-or-more-languages count is unchanged. Language twins are strictly downstream of their Python/R source:
 each carries the source's proven claims (same assert, same tolerance) and is coupling-pinned
 to the source's hash. Four data-science patterns are excluded from the tree entirely
 (assert-linter REJECTs, listed in `_quarantine/QUARANTINE.md`) and are **not** shipped.
@@ -34,9 +37,16 @@ to the source's hash. Four data-science patterns are excluded from the tree enti
 ## Browse every pattern
 
 **[PATTERNS_INDEX.md](PATTERNS_INDEX.md)** — a direct link and a description for every one
-of the 1,409 files, grouped by shelf and category, with each pattern's language twins named.
+of the 1,500 files, grouped by shelf and category, with each pattern's language twins named.
 Descriptions are extracted from the files themselves at generation time, so the index cannot
 drift from the code; regenerate with `python3 build_patterns_index.py`.
+
+**JavaScript lane — measured limits.** Every JS pattern has a companion `.md` recording what
+its self-test actually proves and its known defects, plus
+[`javascript/ROBUSTNESS.md`](javascript/ROBUSTNESS.md) — the measured behaviour of all 91
+patterns on six input classes beyond their own fixtures. **This sweep has been run on the
+JavaScript lane only**; the other lanes carry generated verification evidence and have not
+been measured this way.
 
 ## Layout
 
@@ -46,6 +56,7 @@ r/<category>/<pattern>.R
 cpp/data-science/<category>/<pattern>.cpp      # language twins, final-approved only
 rust/<category>/<pattern>.rs
 go/<shelf>/<category>/<pattern>.go
+javascript/<category>/<pattern>.js
 _quarantine/                   # excluded, with reason + date
 PATTERNS_INDEX.md              # every pattern: direct link + description + twins
 CATALOG.md                     # ID-keyed master: pattern ID -> languages + category
