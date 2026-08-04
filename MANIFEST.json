@@ -1,7 +1,7 @@
 {
   "library": "AURA Pattern Library",
   "owner": "Reality Optimizer",
-  "generated": "2026-07-11",
+  "generated": "2026-08-04",
   "signing_pubkey": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "languages": {
     "python/programming": {
@@ -51,6 +51,12 @@
       "gate_ok": 58,
       "gate_fail": 0,
       "signature": "authentic + unaltered"
+    },
+    "javascript": {
+      "files": 91,
+      "gate_ok": 91,
+      "gate_fail": 0,
+      "signature": "authentic + unaltered"
     }
   },
   "quarantine": [
@@ -59,8 +65,8 @@
     "stratified_sampling.py",
     "value_iteration_gridworld.py"
   ],
-  "total_shippable": 934,
-  "unique_ids": 934,
+  "total_shippable": 1500,
+  "unique_ids": 1024,
   "total_signed_files": 1399,
   "multi_language_patterns": 463,
   "languages_present": [
@@ -85,7 +91,7 @@
     "unique_source_ids": 119,
     "as_of": "2026-07-28",
     "introduced_by": "7497d40 (2026-07-21 input-contract retrofit; compiled lanes deliberately excluded)",
-    "note": "Twin FILES whose python/r source carries an _aura_validate_* input contract that the twin does not. NOT a defect verdict: no cpp attack lane exists yet, so it is unknown which of these twins actually accept the attacks their sources now reject. Declared so the number cannot move in silence — library_verify goes RED on any change, in either direction. Fix the twins or update this block; do not silence it.",
+    "note": "Twin FILES whose python/r source carries an _aura_validate_* input contract that the twin does not. NOT a defect verdict: no cpp attack lane exists yet, so it is unknown which of these twins actually accept the attacks their sources now reject. Declared so the number cannot move in silence \u2014 library_verify goes RED on any change, in either direction. Fix the twins or update this block; do not silence it.",
     "unblocks": "build the cpp attack lane, measure, then fix only what dies"
   },
   "native_patterns": {

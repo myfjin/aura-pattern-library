@@ -1,6 +1,6 @@
 # AURA Pattern Library — Pattern Index
 
-Direct link and description for every one of the **1,409 pattern files** (933 unique pattern IDs across five languages).
+Direct link and description for every one of the **1,500 pattern files** (1,024 unique pattern IDs across 6 languages).
 
 Descriptions are extracted from each file at generation time under the frozen ruler (python = module docstring; others = first real comment block), so this index cannot drift from the code. `—` means the file carries no description.
 
@@ -11,6 +11,7 @@ Regenerate with `python3 build_patterns_index.py`. For the ID-keyed master (twin
 - [`cpp`](#cpp) — 370 files, 37 categories
 - [`go/programming`](#goprogramming) — 45 files, 11 categories
 - [`go/system-administration`](#gosystem-administration) — 58 files, 1 categories
+- [`javascript`](#javascript) — 91 files, 6 categories
 - [`python/data-science`](#pythondata-science) — 377 files, 37 categories
 - [`python/programming`](#pythonprogramming) — 99 files, 13 categories
 - [`python/system-administration`](#pythonsystem-administration) — 200 files, 20 categories
@@ -746,6 +747,131 @@ Regenerate with `python3 build_patterns_index.py`. For the ID-keyed master (twin
 | [`fsync_durability`](go/system-administration/sysadmin/fsync_durability.go) | durableWrite writes data to a file and calls f.Sync() (fsync) before returning, forcing the bytes out of the OS buffer to the storage device rather than leaving them in cache. Use… | Python |
 | [`full_incremental_backup`](go/system-administration/sysadmin/full_incremental_backup.go) | A full+incremental backup scheme: backupFull copies every file into level0 with a SHA256 manifest; backupIncremental copies only files whose SHA256 changed since the last manifest… | Python |
 | [`timeout_kill`](go/system-administration/sysadmin/timeout_kill.go) | runWithTimeout runs a subprocess under a context deadline, capturing stdout/stderr and elapsed time: if the process exceeds the timeout it is killed and returns -1, otherwise it… | Python |
+
+## javascript
+
+*91 files across 6 categories.*
+
+### clustering
+
+| Pattern | Description | Also in |
+|---|---|---|
+| [`01_kmeans_lloyd`](javascript/clustering/01_kmeans_lloyd.js) | Lloyd's k-means clustering. Uses the first k points as initial centroids (the harness data is ordered round-robin, so this picks one point from each planted cluster) and runs… | — |
+| [`01_kmeans_parallel_pp`](javascript/clustering/01_kmeans_parallel_pp.js) | k-means\|\| (scalable k-means++). k-means\|\| oversamples candidate centroids via probability proportional to squared distance, then re-clusters those candidates with Lloyd's… | — |
+| [`02_kmeans_pp`](javascript/clustering/02_kmeans_pp.js) | k-means++ seeding followed by Lloyd's algorithm. A seeded PRNG is defined inside the fixture so the result is identical across the different harness-injected RNG seeds. k-means++… | — |
+| [`02_kmeans_yinyang`](javascript/clustering/02_kmeans_yinyang.js) | Yinyang k-means. Groups centroids into super-clusters, maintains group-level lower bounds and per-point upper bounds, and filters distance computations. The acceleration is… | — |
+| [`03_kmeans_annulus`](javascript/clustering/03_kmeans_annulus.js) | Annulus k-means. Sorts centroids by norm and uses the ordering to prune distance computations with the annulus rule: if \|norm(x)-norm(c)\| is already larger than the best… | — |
+| [`03_kmeans_macqueen`](javascript/clustering/03_kmeans_macqueen.js) | MacQueen's incremental k-means. Unlike Lloyd, which updates all centroids after a full pass, MacQueen updates a centroid immediately each time a point is reassigned. The online… | — |
+| [`04_kmeans_compare_means`](javascript/clustering/04_kmeans_compare_means.js) | Compare-means k-means. Maintains a table of inter-centroid distances and uses the triangle inequality to skip point-centroid comparisons whose lower bound already exceeds the best… | — |
+| [`04_kmeans_hartigan_wong`](javascript/clustering/04_kmeans_hartigan_wong.js) | Hartigan-Wong k-means. Iteratively moves a single point to another cluster when the move strictly lowers the total within-cluster sum of squares, accounting for the centroid… | — |
+| [`05_kmeans_elkan`](javascript/clustering/05_kmeans_elkan.js) | Elkan's triangle-inequality accelerated k-means. Uses per-point upper and lower distance bounds to avoid redundant distance computations. With exact arithmetic the final partition… | — |
+| [`05_kmeans_sort_means`](javascript/clustering/05_kmeans_sort_means.js) | Sort-means k-means. After each iteration, sorts centroids along a projection direction and uses the sorted order to prune the search for the nearest centroid. The final centroids… | — |
+| [`06_kmeans_hamerly`](javascript/clustering/06_kmeans_hamerly.js) | Hamerly's bound-accelerated k-means. Each point keeps one upper bound to its assigned centroid and one lower bound to the nearest other centroid. These bounds prune distance… | — |
+| [`06_kmeans_kdtree`](javascript/clustering/06_kmeans_kdtree.js) | kd-tree accelerated k-means (blacklisting / filtering algorithm). Builds an axis-aligned kd-tree over the points. Each internal node carries the set of centroid candidates that… | — |
+| [`07_kmeans_heap`](javascript/clustering/07_kmeans_heap.js) | Heap-based k-means. Maintains each point's upper bound and a max-heap over those bounds. At each iteration the heap is used to process the points most likely to change assignment… | — |
+| [`07_kmeans_minibatch`](javascript/clustering/07_kmeans_minibatch.js) | Mini-batch k-means. A seeded PRNG inside the fixture selects deterministic mini-batches. Mini-batch updates do not in general converge to a Lloyd fixed point, so the algorithm… | — |
+| [`08_kmeans_forgy`](javascript/clustering/08_kmeans_forgy.js) | Forgy initialization followed by Lloyd's algorithm. Forgy selects k distinct data points as initial centroids. A seeded PRNG is defined inside the fixture so the output is stable… | — |
+| [`08_kmeans_hybrid_bounds`](javascript/clustering/08_kmeans_hybrid_bounds.js) | Hybrid Elkan+Hamerly bound k-means. Combines Elkan's per-centroid lower bounds with Hamerly's single global "second closest" lower bound. Each point keeps an upper bound to its… | — |
+| [`09_kmeans_canopy`](javascript/clustering/09_kmeans_canopy.js) | Canopy pre-clustering followed by Lloyd's k-means. A seeded PRNG is defined inside the fixture. Points are greedily grouped into loose "canopies" using a distance threshold, then… | — |
+| [`09_kmeans_random_partition`](javascript/clustering/09_kmeans_random_partition.js) | Random-partition initialization followed by Lloyd's algorithm. Each point is assigned to a random cluster using a seeded PRNG local to this file, initial centroids are the… | — |
+| [`10_kmeans_bisecting`](javascript/clustering/10_kmeans_bisecting.js) | Bisecting k-means. Starts with one cluster containing all points, then repeatedly splits the cluster with the largest within-cluster SSE using 2-means until k clusters exist.… | — |
+| [`10_kmeans_repeated_restart`](javascript/clustering/10_kmeans_repeated_restart.js) | Repeated-restart k-means. Runs N seeded Lloyd restarts with k-means++ style initialization, keeps the result with the lowest within-cluster sum of squares, and returns its exact… | — |
+
+### direct-solvers
+
+| Pattern | Description | Also in |
+|---|---|---|
+| [`linreg_cholesky`](javascript/direct-solvers/linreg_cholesky.js) | Linear regression via Cholesky decomposition of A^T A. lr and iters are unused. @param {number[][]} X - design matrix @param {number[]} y - target values @param {number} lr -… | — |
+| [`linreg_gauss_jordan`](javascript/direct-solvers/linreg_gauss_jordan.js) | Linear regression via Gauss-Jordan elimination to invert X^T X explicitly. Builds A = [1 \| X], forms the normal-equations matrix M = A^T A, then reduces the augmented matrix [M… | — |
+| [`linreg_givens`](javascript/direct-solvers/linreg_givens.js) | Linear regression via Givens-rotation QR decomposition. Applies plane rotations to reduce A = [1 \| X] to upper triangular form R while simultaneously transforming y, then… | — |
+| [`linreg_householder_qr`](javascript/direct-solvers/linreg_householder_qr.js) | Linear regression via Householder QR reflection. Reduces A = [1 \| X] to upper triangular R by orthogonal Householder reflections applied to A and to y, then back-substitutes.… | — |
+| [`linreg_lu`](javascript/direct-solvers/linreg_lu.js) | Linear regression via LU decomposition with partial pivoting. Builds A^T A theta = A^T y and solves with LU factorization. @param {number[][]} X - design matrix @param {number[]}… | — |
+| [`linreg_modified_gram_schmidt`](javascript/direct-solvers/linreg_modified_gram_schmidt.js) | Linear regression via Modified Gram-Schmidt QR decomposition. Computes the reduced QR factorisation of A=[1\|X] with immediate orthogonalisation, then solves R*theta = Q^T*y. This… | — |
+| [`linreg_normal_eq`](javascript/direct-solvers/linreg_normal_eq.js) | Closed-form linear regression via normal equations. The implementation is a direct least-squares solve; lr and iters are ignored. @param {number[][]} X - design matrix @param… | — |
+| [`linreg_power_iteration_svd`](javascript/direct-solvers/linreg_power_iteration_svd.js) | Linear regression via power-iteration SVD. Computes the thin SVD of A = [1 \| X] by repeated power iteration with deterministic deflation, then forms the Moore-Penrose… | — |
+| [`linreg_qr`](javascript/direct-solvers/linreg_qr.js) | Linear regression via QR decomposition (Gram-Schmidt). lr and iters are ignored because the method is closed-form. @param {number[][]} X - design matrix @param {number[]} y -… | — |
+| [`linreg_ridge`](javascript/direct-solvers/linreg_ridge.js) | Ridge regression solved via normal equations with tiny regularisation. lambda = 1e-8 is chosen so the solution reduces to ordinary least squares on the harness data. @param… | — |
+| [`linreg_sherman_morrison`](javascript/direct-solvers/linreg_sherman_morrison.js) | Linear regression via Sherman-Morrison rank-1 updates to an inverse. The normal-equations matrix M = A^T A is accumulated as a sum of outer products A_i A_i^T of rows of A = [1 \|… | — |
+| [`linreg_svd`](javascript/direct-solvers/linreg_svd.js) | Linear regression via one-sided Jacobi SVD / Moore-Penrose pseudoinverse. Builds A = [1 \| X], computes the thin SVD A = U S V^T by applying Jacobi rotations to orthogonalise the… | — |
+
+### gradient-and-adaptive-methods
+
+| Pattern | Description | Also in |
+|---|---|---|
+| [`linreg_adadelta`](javascript/gradient-and-adaptive-methods/linreg_adadelta.js) | Linear regression via AdaDelta adaptive gradient descent. Maintains exponential moving averages of squared gradients and squared parameter updates to scale the step size per… | — |
+| [`linreg_adagrad`](javascript/gradient-and-adaptive-methods/linreg_adagrad.js) | Batch AdaGrad for linear regression. AdaGrad accumulates squared gradients and uses per-coordinate adaptive learning rates. Because the harness calls with only 200 iterations at… | — |
+| [`linreg_adam`](javascript/gradient-and-adaptive-methods/linreg_adam.js) | Adam (adaptive moment estimation) batch gradient descent for linear regression. @param {number[][]} X - design matrix @param {number[]} y - target values @param {number} lr -… | — |
+| [`linreg_backtracking`](javascript/gradient-and-adaptive-methods/linreg_backtracking.js) | Gradient descent with backtracking line search (Armijo condition) for linear regression. @param {number[][]} X - design matrix @param {number[]} y - target values @param {number}… | — |
+| [`linreg_barzilai_borwein`](javascript/gradient-and-adaptive-methods/linreg_barzilai_borwein.js) | Linear regression via the Barzilai-Borwein (BB) gradient method. Minimises the least-squares objective f(theta) = 0.5 \|\|A theta - y\|\|^2. The step size is chosen from the… | — |
+| [`linreg_gd_1d_univariate`](javascript/gradient-and-adaptive-methods/linreg_gd_1d_univariate.js) | Univariate linear regression via batch gradient descent @param {number[][]} X - design matrix @param {number[]} y - target values @param {number} lr - learning rate @param… | — |
+| [`linreg_minibatch`](javascript/gradient-and-adaptive-methods/linreg_minibatch.js) | Mini-batch gradient descent for linear regression. Deterministic shuffling via a seeded LCG; batch size fixed at 5. @param {number[][]} X - design matrix @param {number[]} y -… | — |
+| [`linreg_momentum`](javascript/gradient-and-adaptive-methods/linreg_momentum.js) | Momentum-accelerated batch gradient descent for linear regression. @param {number[][]} X - design matrix @param {number[]} y - target values @param {number} lr - learning rate… | — |
+| [`linreg_nadam`](javascript/gradient-and-adaptive-methods/linreg_nadam.js) | Linear regression via Nadam (Adam with Nesterov momentum). Combines adaptive second-moment scaling with Nesterov-style momentum lookahead. This is distinct from batch 2 Nesterov… | — |
+| [`linreg_nesterov`](javascript/gradient-and-adaptive-methods/linreg_nesterov.js) | Nesterov accelerated gradient descent for linear regression. @param {number[][]} X - design matrix @param {number[]} y - target values @param {number} lr - learning rate @param… | — |
+| [`linreg_polyak_sgd`](javascript/gradient-and-adaptive-methods/linreg_polyak_sgd.js) | Linear regression via Polyak-averaged stochastic gradient descent. Performs one-sample SGD with a fixed learning rate and returns the average of the iterates (Polyak averaging),… | — |
+| [`linreg_rmsprop`](javascript/gradient-and-adaptive-methods/linreg_rmsprop.js) | RMSProp batch gradient descent for linear regression. Uses an exponentially moving average of squared gradients to scale the learning rate per coordinate. @param {number[][]} X -… | — |
+| [`linreg_sgd`](javascript/gradient-and-adaptive-methods/linreg_sgd.js) | Stochastic gradient descent for linear regression. Uses a deterministic (seeded) sample order. @param {number[][]} X - design matrix @param {number[]} y - target values @param… | — |
+| [`linreg_steepest_descent_exact`](javascript/gradient-and-adaptive-methods/linreg_steepest_descent_exact.js) | Linear regression via steepest descent with EXACT line search. Minimises f(theta) = 0.5 \|\|A theta - y\|\|^2 where A = [1 \| X]. The step size is the closed-form minimiser along… | — |
+
+### iterative-solvers
+
+| Pattern | Description | Also in |
+|---|---|---|
+| [`01_iterative_refinement`](javascript/iterative-solvers/01_iterative_refinement.js) | Iterative refinement for linear regression. Computes an initial solution via normal equations, then repeatedly refines it by solving the same normal system for the residual… | — |
+| [`02_richardson_iteration`](javascript/iterative-solvers/02_richardson_iteration.js) | Richardson iteration for linear regression. Stationary Richardson iteration applied to the normal equations AtA * theta = Aty: each step adds a fixed multiple of the residual to… | — |
+| [`03_chebyshev_semi_iterative`](javascript/iterative-solvers/03_chebyshev_semi_iterative.js) | Chebyshev semi-iterative method for linear regression. Accelerates the stationary Richardson iteration on the normal equations AtA * theta = Aty with the optimal Chebyshev… | — |
+| [`04_randomized_kaczmarz`](javascript/iterative-solvers/04_randomized_kaczmarz.js) | Randomized Kaczmarz for linear regression. Unlike cyclic Kaczmarz, rows are picked with probability proportional to their squared norm using a seeded PRNG local to this file. This… | — |
+| [`linreg_cg`](javascript/iterative-solvers/linreg_cg.js) | Conjugate gradient on the normal equations for linear regression. Solves A^T A theta = A^T y, where A = [1 \| X]. lr and iters are accepted for signature compatibility; iters caps… | — |
+| [`linreg_gauss_seidel`](javascript/iterative-solvers/linreg_gauss_seidel.js) | Gauss-Seidel iteration on the normal equations for linear regression. Solves A^T A theta = A^T y by repeatedly updating each coordinate with the newest values of the others.… | — |
+| [`linreg_jacobi`](javascript/iterative-solvers/linreg_jacobi.js) | Jacobi iteration on the normal equations for linear regression. Solves A^T A theta = A^T y by repeatedly updating all coordinates from the previous iterate in parallel. @param… | — |
+| [`linreg_kaczmarz`](javascript/iterative-solvers/linreg_kaczmarz.js) | Linear regression via cyclic Kaczmarz row-action projection. For a consistent linear system A*theta = y (which holds here because y is generated exactly from the true… | — |
+| [`linreg_landweber`](javascript/iterative-solvers/linreg_landweber.js) | Linear regression via Landweber iteration. Repeatedly applies the fixed-step iteration theta_{k+1} = theta_k - alpha * A^T(A*theta_k - y) which is gradient descent on the OLS… | — |
+| [`linreg_lsqr`](javascript/iterative-solvers/linreg_lsqr.js) | Linear regression via LSQR, the iterative least-squares solver based on Golub-Kahan bidiagonalisation of A = [1 \| X]. LSQR minimises \|\|A theta - y\|\| without forming A^T A… | — |
+| [`linreg_minres`](javascript/iterative-solvers/linreg_minres.js) | Linear regression via MINRES (minimum residual) / conjugate residual on the symmetric normal equations A^T A theta = A^T y, where A = [1 \| X]. MINRES minimises the residual norm… | — |
+| [`linreg_pcg`](javascript/iterative-solvers/linreg_pcg.js) | Linear regression via preconditioned conjugate gradient on the normal equations. Uses a Jacobi (diagonal) preconditioner M = diag(A^T A), which makes this numerically distinct… | — |
+| [`linreg_sor`](javascript/iterative-solvers/linreg_sor.js) | Linear regression via successive over-relaxation (SOR) on the normal equations A^T A theta = A^T y, where A = [1 \| X]. SOR generalises Gauss-Seidel with a relaxation factor omega… | — |
+
+### second-order-and-splitting
+
+| Pattern | Description | Also in |
+|---|---|---|
+| [`05_block_coordinate_descent`](javascript/second-order-and-splitting/05_block_coordinate_descent.js) | Block coordinate descent for linear regression. Updates blocks of coordinates jointly rather than one coordinate at a time. Here the parameter vector is split into a bias block… | — |
+| [`06_admm_zero_regularization`](javascript/second-order-and-splitting/06_admm_zero_regularization.js) | ADMM for linear regression with zero regularisation. Splits the OLS problem into two blocks with an augmented Lagrangian and a dual variable. With zero regularisation the z-update… | — |
+| [`07_dual_ascent`](javascript/second-order-and-splitting/07_dual_ascent.js) | Dual ascent for linear regression. Treats OLS as the primal problem and updates the dual variables associated with the prediction constraints. With a fixed step size chosen from… | — |
+| [`08_gauss_newton`](javascript/second-order-and-splitting/08_gauss_newton.js) | Gauss-Newton for linear regression. For a linear model the Gauss-Newton approximation of the Hessian equals the normal-equation matrix A^T A, so the method converges in a single… | — |
+| [`09_trust_region_dogleg`](javascript/second-order-and-splitting/09_trust_region_dogleg.js) | Trust-region / dogleg method for linear regression. On a linear least-squares problem the dogleg path is the segment from the current iterate through the full Gauss-Newton step;… | — |
+| [`10_proximal_point`](javascript/second-order-and-splitting/10_proximal_point.js) | Proximal point method for linear regression. Each iteration solves a regularised subproblem whose exact minimiser is given by the normal equations of (A; sqrt(lambda) I). As the… | — |
+| [`linreg_bfgs`](javascript/second-order-and-splitting/linreg_bfgs.js) | Linear regression via BFGS quasi-Newton optimization. Minimises the ordinary least-squares objective f(theta)=0.5*\|\|A*theta-y\|\|^2 where A=[1\|X]. Uses a rank-2 inverse-Hessian… | — |
+| [`linreg_coordinate`](javascript/second-order-and-splitting/linreg_coordinate.js) | * Coordinate descent for linear regression. Alternates between a closed-form intercept update and closed-form updates for each weight coordinate. lr is unused. @param {number[][]}… | — |
+| [`linreg_lbfgs`](javascript/second-order-and-splitting/linreg_lbfgs.js) | Linear regression via L-BFGS (limited-memory BFGS). Minimises the OLS objective f(theta)=0.5*\|\|A*theta-y\|\|^2 with a limited-memory inverse-Hessian update. @param {number[][]}… | — |
+| [`linreg_levenberg_marquardt`](javascript/second-order-and-splitting/linreg_levenberg_marquardt.js) | Linear regression via Levenberg-Marquardt (damped Gauss-Newton). Solves the nonlinear least-squares problem min 0.5*sum r_i^2 where r_i = (bias + w^T X_i) - y_i. For a linear… | — |
+| [`linreg_newton`](javascript/second-order-and-splitting/linreg_newton.js) | Newton's method for linear regression. For ordinary least squares the exact Hessian is A^T A and the gradient is A^T A theta - A^T y. One Newton step from the origin is therefore… | — |
+| [`linreg_rls`](javascript/second-order-and-splitting/linreg_rls.js) | Linear regression via Recursive Least Squares (RLS). Processes samples online in a fixed deterministic order and maintains the inverse covariance (P) matrix. With an exact… | — |
+
+### summary-statistics
+
+| Pattern | Description | Also in |
+|---|---|---|
+| [`01_sorted_summation`](javascript/summary-statistics/01_sorted_summation.js) | Sorted summation statistics. Reduces floating-point error by sorting values by magnitude before accumulating sums and sum-of-squared-deviations. Variance is computed in a second… | — |
+| [`02_blocked_summation`](javascript/summary-statistics/02_blocked_summation.js) | Blocked / tiled summation statistics. Accumulates sums in fixed-size blocks (partial sums) to reduce error growth from naive left-to-right accumulation. Means, variances and… | — |
+| [`03_recursive_summation`](javascript/summary-statistics/03_recursive_summation.js) | Recursive divide-and-conquer summation statistics. Sums are computed recursively, splitting the array until it reaches a small base case. This minimises the depth of sequential… | — |
+| [`04_klein_compensation`](javascript/summary-statistics/04_klein_compensation.js) | Klein second-order iterative compensation statistics. Performs compensated summation and then re-sums the per-step rounding-error residuals with a second compensated pass,… | — |
+| [`05_error_free_transforms`](javascript/summary-statistics/05_error_free_transforms.js) | Error-free transformation (TwoSum) statistics. Uses Knuth/TwoSum error-free transformations for each addition: every sum is split into a rounded result and an exact residual, and… | — |
+| [`06_double_double`](javascript/summary-statistics/06_double_double.js) | Double-double accumulation statistics. Each scalar is represented as a non-overlapping hi/lo float pair. Sums and sum-of-products are accumulated in double-double arithmetic, then… | — |
+| [`07_fixed_point`](javascript/summary-statistics/07_fixed_point.js) | Scaled fixed-point / integer accumulation statistics. Scales floating-point values into a fixed-point representation based on the observed data range, accumulates integer-like… | — |
+| [`08_streaming_recompaction`](javascript/summary-statistics/08_streaming_recompaction.js) | Streaming summation with periodic recompaction. Adds incoming values into a small local buffer; when the buffer is full it is compacted into a single partial sum using compensated… | — |
+| [`09_long_accumulator`](javascript/summary-statistics/09_long_accumulator.js) | Long-accumulator style exact summation (bucketed by exponent). Each addend is split into a set of non-overlapping floating-point numbers stored in bins indexed by exponent. Bins… | — |
+| [`10_shuffled_permutations`](javascript/summary-statistics/10_shuffled_permutations.js) | Seeded shuffled-order summation averaged over several permutations. A deterministic seeded PRNG inside the fixture generates several random permutations of the input. The required… | — |
+| [`statistics_chan`](javascript/summary-statistics/statistics_chan.js) | Chan's parallel merge formula for one-pass mean and population variance. Combines partial statistics without re-scanning raw data. | — |
+| [`statistics_kahan`](javascript/summary-statistics/statistics_kahan.js) | Kahan-compensated summation for mean and population variance. | — |
+| [`statistics_naive_sos`](javascript/summary-statistics/statistics_naive_sos.js) | Naive sum-of-squares formula for mean and population variance. This is the numerically weakest method: it subtracts (sum/n)^2 from the raw sum of squares, which can… | — |
+| [`statistics_neumaier`](javascript/summary-statistics/statistics_neumaier.js) | Neumaier's improved Kahan summation for mean and population variance. | — |
+| [`statistics_pairwise`](javascript/summary-statistics/statistics_pairwise.js) | Pairwise (divide-and-conquer) summation for mean and population variance. | — |
+| [`statistics_shifted`](javascript/summary-statistics/statistics_shifted.js) | Shifted (compensated) one-pass variance: subtract a shift constant to reduce catastrophic cancellation when numbers are large relative to their spread. | — |
+| [`statistics_twopass`](javascript/summary-statistics/statistics_twopass.js) | Two-pass summary statistics (mean first, then variance). This function does not perform regression. | — |
+| [`statistics_welford`](javascript/summary-statistics/statistics_welford.js) | Welford's online algorithm for one-pass mean and population variance. This function does not perform regression. | — |
+| [`statistics_west`](javascript/summary-statistics/statistics_west.js) | West's weighted incremental algorithm for online mean and population variance. | — |
+| [`statistics_youngs_cramer`](javascript/summary-statistics/statistics_youngs_cramer.js) | Youngs-Cramer online update for mean and population variance. | — |
 
 ## python/data-science
 

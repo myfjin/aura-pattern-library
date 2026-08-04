@@ -74,15 +74,15 @@ except ModuleNotFoundError:
     from folder_nature.mark.watermark import verify_file
 
 ROOT = Path(__file__).resolve().parent
-SIGNED_SUBTREES = ["python/programming", "python/data-science", "python/system-administration", "r", "cpp", "rust", "go"]
-GATE = {".py": ["python3"], ".R": ["Rscript"]}          # cpp/go/rust handled specially
-SRC_EXT = (".py", ".R", ".cpp", ".go", ".rs")
+SIGNED_SUBTREES = ["python/programming", "python/data-science", "python/system-administration", "r", "cpp", "rust", "go", "javascript"]
+GATE = {".py": ["python3"], ".R": ["Rscript"], ".js": ["node"]}   # cpp/go/rust handled specially
+SRC_EXT = (".py", ".R", ".cpp", ".go", ".rs", ".js")
 
 # Ledgers that MUST exist and MUST parse to at least one record. Emptying the quarantine is a
 # deliberate act: you remove the ledger from this tuple in code, where it is reviewed. Silence
 # — a deleted ledger, a parser that reads zero — fails, exactly as the native lane fails.
 QUARANTINE_LEDGERS = ("_quarantine/QUARANTINE.md", "QUARANTINE.jsonl")
-SOURCE_LANGS = {"python", "r"}                          # a quarantine here condemns twins too
+SOURCE_LANGS = {"python", "r", "javascript"}             # a quarantine here condemns twins too
 _MD_ENTRY = re.compile(r"^\s*[-*]\s+`([^`]+)`")
 
 # (h) An input contract is recognised by the retrofit's own markers. A twin that grows one by
@@ -96,7 +96,7 @@ def run_gate(p: Path) -> str:
 
     A missing toolchain is NEVER a pass — the caller records the skip and the
     run goes RED, so an ungated language can't hide behind a green."""
-    if p.suffix in (".py", ".R"):
+    if p.suffix in (".py", ".R", ".js"):
         runner = GATE[p.suffix][0]
         if not shutil.which(runner):
             return f"skip:{runner}"
@@ -295,7 +295,7 @@ def run_checks(pub, gate=False, inject_all=frozenset(), inject_lang=None,
             if p.suffix not in SRC_EXT:
                 continue
             disk_ids.add(p.stem)
-            if st.startswith("python") or st == "r":
+            if st.startswith("python") or st in ("r", "javascript"):
                 source_ids.add(p.stem)
             if not probe:
                 mr = verify_file(p)

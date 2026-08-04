@@ -15,8 +15,9 @@ Run after adding/removing patterns:  python3 build_patterns_index.py
 import ast, os, re, glob, collections
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-EXT = {"python": "py", "cpp": "cpp", "rust": "rs", "go": "go", "r": "R"}
-LANG_LABEL = {"python": "Python", "cpp": "C++", "rust": "Rust", "go": "Go", "r": "R"}
+EXT = {"python": "py", "cpp": "cpp", "rust": "rs", "go": "go", "r": "R", "javascript": "js"}
+LANG_LABEL = {"python": "Python", "cpp": "C++", "rust": "Rust", "go": "Go", "r": "R",
+              "javascript": "JavaScript"}
 MAXDESC = 180
 
 WM = "AURA Pattern Library"
@@ -48,6 +49,12 @@ def is_structural(line, lang):
                          or (s.startswith('"') and s.endswith('"'))):
         return True
     if lang == "cpp" and s.startswith(("#include", "#pragma", "#define")):
+        return True
+    # javascript: `// @forge-family <name>` is a Forge Gate provenance TAG, not a description.
+    # Skipping it lets the /* */ handler below reach the JSDoc block, which is where the claim
+    # actually lives. Without this the tag would be read as the description — or, since the
+    # `//` branch does not list javascript, no description would be found at all.
+    if lang == "javascript" and s.startswith("// @forge-family"):
         return True
     return False
 
@@ -153,8 +160,11 @@ def main():
     L = []
     L.append("# AURA Pattern Library — Pattern Index")
     L.append("")
+    # Derived, not written down: the language count was hardcoded as "five" and would have
+    # silently become a lie the moment a sixth lane landed. Count the lanes actually present.
+    langs_present = sorted({lang for _, lang in files})
     L.append(f"Direct link and description for every one of the **{total:,} pattern files** "
-             f"({len(stems):,} unique pattern IDs across five languages).")
+             f"({len(stems):,} unique pattern IDs across {len(langs_present)} languages).")
     L.append("")
     L.append("Descriptions are extracted from each file at generation time under the frozen ruler "
              "(python = module docstring; others = first real comment block), so this index cannot "
