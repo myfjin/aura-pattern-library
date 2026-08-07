@@ -12,18 +12,18 @@ added or removed.
 
 ## Guarantee
 
-When it runs, consistent hash ring guarantees assert!(new_loc == 1 || new_loc == 2, "node-3 key {i} moved to {new_loc}, not a survivor") (proven by rustc-run on the RUST original).
+When it runs, consistent hash ring guarantees `len(ring.ring) == 120`; `all((v in nodes for v in before.values()))`; `before == {k: ring.get_node(k) for k in keys}` — read from this file's own self-test. The oracle behind this pattern was established on the rust original and is not claimed to have been run against this file.
 
 **Checkable constraints:**
 
-- `assert!(count_1 > 100 && count_1 < 600, "node 1 should have a reasonable fraction of keys")`
-- `assert!(new_loc == 1 || new_loc == 2, "node-3 key {i} moved to {new_loc}, not a survivor")`
-- `assert!(moved_set.contains(&i), "node-3 key {i} must be reported as moved")`
-- `assert_eq!(new_loc as usize, initial_dist[i as usize], "key {i} moved but shouldn't have")`
-- `assert!(!moved_set.contains(&i), "non-node-3 key {i} must not be reported moved")`
-- `assert_eq!(moved_keys.len(), node3_keys, "moved count must equal exactly node-3's key count")`
-- `assert_eq!(node3_keys, count_3, "node-3 key count must match the initial distribution")`
-- `assert!(moved_keys.len() < 500, "a correct ring moves only ~1/N, never a majority")`
+- `len(ring.ring) == 120`
+- `all((v in nodes for v in before.values()))`
+- `before == {k: ring.get_node(k) for k in keys}`
+- `sum(counts.values()) == 1000`
+- `all((150 <= c <= 550 for c in counts.values()))`
+- `illegal == []`
+- `0 < len(moved) < 500`
+- `restored == before`
 
 ## Verification evidence
 

@@ -17,14 +17,18 @@ monotone in capacity/strictness, and invalid construction is refused.
 
 ## Guarantee
 
-When it runs, bloom filter guarantees assert!(filter[h1 / 8] & (1 << (h1 % 8)) != 0); assert!(filter[h2 / 8] & (1 << (h2 % 8)) != 0); assert!(filter[h3 / 8] & (1 << (h3 % 8)) != 0) (weak-grade: proven by rustc-run on the RUST original).
+When it runs, bloom filter guarantees `bf.false_positive_rate() == 0.0`; `sum((1 for i in range(50) if f'probe_{i}' in bf)) == 0`; `len(bf) == 1000` — read from this file's own self-test. The oracle behind this pattern was established on the rust original and is not claimed to have been run against this file.
 
 **Checkable constraints:**
 
-- `assert!(filter[h1 / 8] & (1 << (h1 % 8)) != 0)`
-- `assert!(filter[h2 / 8] & (1 << (h2 % 8)) != 0)`
-- `assert!(filter[h3 / 8] & (1 << (h3 % 8)) != 0)`
-- `assert!(false_positives <= bound, "FP {} exceeds computed bound {} (bits_set={}, expected≈{:.4})", false_positives, bound, bits_set, expected_fp)`
+- `bf.false_positive_rate() == 0.0`
+- `sum((1 for i in range(50) if f'probe_{i}' in bf)) == 0`
+- `len(bf) == 1000`
+- `found == 1000`
+- `fp < 60`
+- `0.0 < est < 0.05`
+- `BloomFilter(2000, 0.01).bit_count > bf.bit_count`
+- `BloomFilter(1000, 0.001).bit_count > bf.bit_count`
 
 ## Verification evidence
 

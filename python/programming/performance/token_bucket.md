@@ -17,16 +17,18 @@ at capacity, and a request larger than capacity is refused as impossible.
 
 ## Guarantee
 
-When it runs, token bucket guarantees assert_eq!(burst_count, 0, "burst should be fully depleted") (proven by rustc-run on the RUST original).
+When it runs, token bucket guarantees `ok and wait == 0.0`; `not ok`; `abs(wait - 0.2) < 1e-09` — read from this file's own self-test. The oracle behind this pattern was established on the rust original and is not claimed to have been run against this file.
 
 **Checkable constraints:**
 
-- `assert!(bucket.try_consume(0, 10.0), "should consume full capacity")`
-- `assert!(!bucket.try_consume(0, 1.0), "should be empty after consuming all")`
-- `assert!(available_at_5 >= 4.9 && available_at_5 <= 5.1, "should have ~5 tokens at t=5")`
-- `assert!(bucket.try_consume(5, 5.0), "should consume 5 at t=5")`
-- `assert!(available_at_15 >= 9.9 && available_at_15 <= 10.1, "should be capped at capacity")`
-- `assert_eq!(burst_count, 0, "burst should be fully depleted")`
+- `ok and wait == 0.0`
+- `not ok`
+- `abs(wait - 0.2) < 1e-09`
+- `abs(tb.peek() - 2.5) < 1e-09`
+- `ok`
+- `abs(tb.peek() - 0.5) < 1e-09`
+- `abs(tb.peek() - 10.0) < 1e-09`
+- `not ok and wait == float('inf')`
 
 ## Verification evidence
 
