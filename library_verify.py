@@ -226,6 +226,45 @@ def run_gate(p: Path, timeout: int = 120) -> str:
     return "ok"
 
 
+def annotation_failures(root: Path, files=None) -> list:
+    """(i) Every top-level function's signature must be READABLE. Returns [(file, fn, error)].
+
+    WHY THIS EXISTS — found 2026-08-07 by the robustness probe, not by this verifier.
+    `pca_power_iteration` annotated `-> Tuple[...]` while importing the name as `TupleType`.
+    Python 3.14 evaluates annotations LAZILY (PEP 649), so the module imports, the file exits 0,
+    and `--gate` passed it happily. Anything that then reads `__annotations__` —
+    `inspect.signature`, doc tooling, a type checker, this library's own doc generators —
+    raises `NameError`. The gate asks "does it run"; a published signature that cannot be read
+    is a false claim the gate is structurally blind to.
+
+    Imports are safe here: all python patterns are `__main__`-guarded, so nothing executes.
+    Modules are given unique names from their path and are never inserted into sys.modules.
+    """
+    import importlib.util, inspect, io, contextlib
+    out = []
+    for p in (files if files is not None else sorted(root.glob("python/**/*.py"))):
+        if "__pycache__" in p.parts:
+            continue
+        modname = "aplchk_" + str(p).replace("/", "_").replace(".", "_")
+        try:
+            spec = importlib.util.spec_from_file_location(modname, p)
+            mod = importlib.util.module_from_spec(spec)
+            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+                spec.loader.exec_module(mod)
+        except Exception:
+            continue          # an unimportable file is the GATE's finding, not this check's
+        for name, obj in vars(mod).items():
+            if not inspect.isfunction(obj) or obj.__module__ != modname:
+                continue
+            try:
+                inspect.signature(obj)
+            except NameError as e:
+                out.append((p, name, str(e)))
+            except Exception:
+                pass          # unresolvable for other reasons is not this check's claim
+    return out
+
+
 def load_quarantine(root: Path):
     """Read the ACTUAL quarantine ledgers on disk. Returns (q_all, q_lang, counts, problems).
 
@@ -417,6 +456,13 @@ def run_checks(pub, gate=False, inject_all=frozenset(), inject_lang=None,
         for tc, n in sorted(skipped.items()):
             say(f"!! GATE SKIPPED — toolchain '{tc}' missing: {n} file(s) NOT validated")
             fails.append(f"GATE SKIPPED: toolchain '{tc}' missing — {n} file(s) not validated")
+
+    if gate:
+        ann = annotation_failures(ROOT)
+        say(f"[annotations           ] {len(ann)} unreadable signature(s)"
+            + ("" if not ann else " — a published signature nobody can read is a false claim"))
+        for f, fn, err in ann:
+            fails.append(f"{f.relative_to(ROOT)}: {fn}() signature unreadable — {err}")
 
     if inconclusive:
         say(f"!! GATE INCONCLUSIVE — {len(inconclusive)} file(s) could NOT be measured "
@@ -656,6 +702,26 @@ def self_test(pub, deep=False) -> list:
             bad_f.write_text("raise SystemExit(3)\n", encoding="utf-8")
             check("gate GREEN case: a clean file is 'ok'", run_gate(ok_f, timeout=30) == "ok")
             check("gate RED case: a failing file is 'fail'", run_gate(bad_f, timeout=30) == "fail")
+
+        # (i) unreadable signatures — RED case and GREEN case, on fixtures
+        with tempfile.TemporaryDirectory() as td:
+            broken = Path(td) / "broken_ann.py"
+            fine = Path(td) / "fine_ann.py"
+            # imported under an ALIAS but annotated with the bare name: the exact shape found in
+            # pca_power_iteration. Under PEP 649 the def succeeds and the file exits 0.
+            broken.write_text("from typing import List, Tuple as TupleType\n"
+                              "def entry(x: List[int]) -> Tuple[int, int]:\n    return (1, 2)\n",
+                              encoding="utf-8")
+            fine.write_text("from typing import List, Tuple\n"
+                            "def entry(x: List[int]) -> Tuple[int, int]:\n    return (1, 2)\n",
+                            encoding="utf-8")
+            bad = annotation_failures(Path(td), files=[broken])
+            good = annotation_failures(Path(td), files=[fine])
+            check("(i) RED case: an unreadable signature is caught",
+                  len(bad) == 1 and "Tuple" in bad[0][2], bad)
+            check("(i) GREEN case: a resolvable signature is silent", good == [], good)
+            check("(i) the broken fixture still EXITS 0 — proving --gate is blind to it",
+                  run_gate(broken, timeout=30) == "ok")
 
         # the WIRING: only a literal 'ok' may ever be bucketed as a pass
         check("only 'ok' is a pass", gate_outcome("ok")[0] == "pass")
