@@ -4,6 +4,15 @@
 
 **Signature:** `(lat: float, lon: float, precision: int) → str`
 
+## What it does
+
+Geohash: encode/decode lat/lon as interleaved bit string, base-32 encoded.
+
+Core idea: recursively bisect latitude and longitude, interleave bits,
+encode as base32. Neighbors share prefixes; precision ∝ string length.
+
+When to use: spatial indexing, proximity queries, tile-based mapping.
+
 ## Guarantee
 
 When it runs, geohash encode decode guarantees len(gh) == prec; abs(dec_lat - lat) < lat_err + 0.001; abs(dec_lon - lon) < lon_err + 0.001 (weak-grade: directional, proven by run).

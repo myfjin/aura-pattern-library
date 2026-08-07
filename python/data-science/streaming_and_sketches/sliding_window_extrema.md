@@ -4,6 +4,16 @@
 
 **Signature:** `(data: List[float], window_size: int) → List[Tuple[float, float]]`
 
+## What it does
+
+Sliding Window Min/Max via Monotonic Deque
+
+Core idea: Maintain a deque of indices whose values are monotone. Each new element
+replaces non-competitive elements in O(1) amortized time. Verify against brute-force.
+
+When to use: You need sliding window min/max on a stream efficiently, or want to verify
+correctness of a deque-based implementation.
+
 ## Guarantee
 
 When it runs, sliding window extrema guarantees abs(brute_min - deque_min) < 1e-09; abs(brute_max - deque_max) < 1e-09; deque_ops < brute_ops (weak-grade: directional, proven by run).

@@ -4,6 +4,15 @@
 
 **Signature:** `(series: List[float], alpha: float) → List[float]`
 
+## What it does
+
+Exponential Smoothing
+
+Apply single exponential smoothing (Simple Exponential Smoothing, SES) and
+double exponential smoothing (Holt's method) to a time series.
+SES smooths level; Holt's also captures linear trend. Use for short-horizon
+forecasting when trend matters (e.g., demand planning).
+
 ## Guarantee
 
 When it runs, exponential smoothing guarantees len(ses) == len(series); ses[0] == series[0]; ses_var < raw_var (weak-grade: directional, proven by run).

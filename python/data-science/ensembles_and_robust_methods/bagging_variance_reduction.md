@@ -4,6 +4,20 @@
 
 **Signature:** `(x: float) → float`
 
+## What it does
+
+Bagging for Variance Reduction.
+
+Bagging (bootstrap aggregating) trains many copies of an UNSTABLE base learner
+on bootstrap resamples and averages them. The averaged predictor has markedly
+lower variance across retrainings than a single base learner — that reduction,
+measured at fixed test points over many independent training draws, is the
+whole point of the method. (A stable learner like plain linear regression
+barely benefits; instability is bagging's fuel.)
+
+Use when: high-variance base learners (deep trees, stumps on small data),
+prediction stability across retrainings matters.
+
 ## Guarantee
 
 When it runs, bagging variance reduction guarantees bagged_var < 0.5 * single_var (weak-grade: directional, proven by run).

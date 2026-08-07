@@ -4,6 +4,17 @@
 
 **Signature:** `(data: List[float], p: float) → float`
 
+## What it does
+
+Winsorization and Clipping Pattern.
+
+Caps extreme values at percentile thresholds (winsorization) or hard bounds
+(clipping). Core idea: reduce influence of outliers while preserving sample
+count and general structure; interior values untouched.
+
+When to use: outlier mitigation before analysis, handling measurement errors,
+reducing leverage of extreme observations, robust preprocessing.
+
 ## Guarantee
 
 When it runs, winsorize clip outliers guarantees min(clipped) == 10; max(clipped) == 90; len(winsorized) == n_original (proven by run).

@@ -4,6 +4,15 @@
 
 **Signature:** `(series: List[float], initial_window: int, forecast_func: Callable[[List[float]], List[float]]) → Tuple[List[float], List[float]]`
 
+## What it does
+
+Walk-Forward Validation
+
+Time-series cross-validation using expanding windows: train on the first
+window, forecast 1 step ahead, expand window by 1, repeat.
+Evaluates forecasters on realistic out-of-sample data without lookahead bias.
+Compare multiple forecasters (naive mean vs. other methods) using MAE.
+
 ## Guarantee
 
 When it runs, walk forward validation guarantees len(actuals_mean) == len(preds_mean); len(actuals_mean) == len(series) - 30; mae_mean > 0 and mae_last > 0 (weak-grade: directional, proven by run).

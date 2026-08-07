@@ -4,6 +4,15 @@
 
 **Signature:** `(scores: List[float], labels: List[int], n_deciles: int) → Tuple[List[float], List[float], List[float]]`
 
+## What it does
+
+Lift & Gain Chart
+
+Computes cumulative gain (% of positives captured) and lift (gain / base rate) by decile.
+Lift > 1 indicates the model is better than random.
+
+Use this in marketing/targeting to quantify how much better a model ranks customers than random.
+
 ## Guarantee
 
 When it runs, lift gain chart guarantees lifts_strong[0] > 1.5; 0.7 < avg_lift_random < 1.3; gains_strong[0] > gains_random[0] (weak-grade: directional, proven by run).

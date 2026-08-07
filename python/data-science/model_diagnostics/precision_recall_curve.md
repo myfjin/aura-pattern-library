@@ -4,6 +4,16 @@
 
 **Signature:** `(n_positive: int, n_negative: int, noise: float, seed: int) → List[Tuple[float, int]]`
 
+## What it does
+
+Precision-Recall Curve & Average Precision
+
+Computes PR curve by varying decision threshold on predicted scores.
+Average Precision (AP) summarizes the curve as area under the PR curve.
+
+Use this to evaluate binary classifiers, especially on imbalanced datasets where
+PR curve is more informative than ROC curve.
+
 ## Guarantee
 
 When it runs, precision recall curve guarantees ap_strong > 0.8; ap_weak < 0.6; ap_strong > ap_weak (weak-grade: directional, proven by run).

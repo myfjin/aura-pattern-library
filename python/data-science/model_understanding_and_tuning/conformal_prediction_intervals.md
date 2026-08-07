@@ -4,6 +4,16 @@
 
 **Signature:** `(X: List[float], y: List[float]) → Tuple[float, float]`
 
+## What it does
+
+Split-Conformal Prediction Intervals for Regression
+
+Core idea: Split data into train/calibration. Train a regression model, then on calibration
+data compute residuals to set interval width such that coverage is guaranteed.
+
+When to use: You want prediction intervals with a formal coverage guarantee, even if the
+model is miscalibrated or the error distribution is non-Gaussian.
+
 ## Guarantee
 
 When it runs, conformal prediction intervals guarantees coverage >= 0.7; avg_width > 0 and avg_width < 100 (weak-grade: directional, proven by run).

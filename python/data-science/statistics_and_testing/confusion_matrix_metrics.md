@@ -4,6 +4,16 @@
 
 **Signature:** `(y_true: List[int], y_pred: List[int]) → Tuple[int, int, int, int]`
 
+## What it does
+
+Confusion Matrix and Classification Metrics
+
+Core idea: Build a confusion matrix (TP, FP, TN, FN) from binary predictions and true labels.
+Compute precision (TP/(TP+FP)), recall (TP/(TP+FN)), F1 (harmonic mean), and accuracy.
+
+When to use: Evaluate binary classification models, especially with imbalanced classes where
+accuracy alone is misleading.
+
 ## Guarantee
 
 When it runs, confusion matrix metrics guarantees tp == 3 and fp == 0 and (tn == 3) and (fn == 0); tp == 2 and fp == 2 and (tn == 1) and (fn == 1); prec == 1.0 and rec == 1.0 and (f1 == 1.0) (proven by run).

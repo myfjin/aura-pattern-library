@@ -4,6 +4,16 @@
 
 **Signature:** `(numerator: int, denominator: int) → float`
 
+## What it does
+
+Simpson's Paradox: aggregate trend reverses within strata.
+
+An association between two variables at the aggregate level reverses direction
+when data is split by a confounding variable (stratum). Classic example:
+treatment A beats B overall, but B beats A within every subgroup.
+
+Use: causal inference, detecting confounding, interpreting correlations.
+
 ## Guarantee
 
 When it runs, simpsons paradox demo guarantees not b_wins_aggregate (weak-grade: directional, proven by run).
