@@ -21,6 +21,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -78,21 +79,47 @@ def mutate_source(source, func_name, mode):
 
 
 def run_python_file(path, timeout=60):
-    """Run python3 path and return (rc, stdout, stderr)."""
-    proc = subprocess.run(
+    """Run python3 path and return (rc, stdout, stderr, timed_out).
+
+    ⛔ NEVER `subprocess.run(..., timeout=)` HERE. That kills only the DIRECT child, so a
+    pattern that spawns its own worker (multiprocessing, a concurrency pattern, anything
+    that shells out) leaves the grandchild spinning at 100% CPU after the ruler moves on.
+    Measured against a fixture built to orphan on purpose: the old semantics left the
+    grandchild RUNNING, these semantics reaped it. Same discipline as guard_lens.py.
+
+    ⭐ A TIMEOUT IS A VERDICT, NOT AN EXCEPTION. The old code let TimeoutExpired propagate
+    out of the sweep, so one hanging pattern aborted the whole run and — because the TSV is
+    flushed per row — left a truncated file with NO row for the pattern that hung. A reader
+    counts the missing rows as nothing at all. Absence must never default to pass, so the
+    caller turns `timed_out` into INCONCLUSIVE.
+    """
+    p = subprocess.Popen(
         [sys.executable, str(path)],
-        capture_output=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
         text=True,
-        timeout=timeout,
+        start_new_session=True,          # its own process group, so killpg can reach the tree
     )
-    return proc.returncode, proc.stdout, proc.stderr
+    try:
+        out, err = p.communicate(timeout=timeout)
+        return p.returncode, out, err, False
+    except subprocess.TimeoutExpired:
+        try:
+            os.killpg(os.getpgid(p.pid), signal.SIGKILL)
+        except (ProcessLookupError, PermissionError):
+            pass
+        out, err = p.communicate()
+        return None, out, err, True
 
 
 def mutate_and_test(src_path, func_name, work_dir):
     original_path = work_dir / src_path.name
     shutil.copy(src_path, original_path)
     original_source = src_path.read_text()
-    rc0, out0, err0 = run_python_file(original_path)
+    rc0, out0, err0, to0 = run_python_file(original_path)
+    if to0:
+        reason = 'unmutated timed out — cannot measure this pattern'
+        return [(func_name, m, 'INCONCLUSIVE', reason) for m in ('ZERO', 'DOUBLE')]
     if rc0 != 0:
         return [
             (func_name, 'ZERO', 'INCONCLUSIVE', f'unmutated failed rc={rc0}'),
@@ -110,8 +137,14 @@ def mutate_and_test(src_path, func_name, work_dir):
             continue
         mutant_path = work_dir / f'{src_path.stem}_{mode.lower()}{src_path.suffix}'
         mutant_path.write_text(mutant_src)
-        rc, out, err = run_python_file(mutant_path)
+        rc, out, err, timed_out = run_python_file(mutant_path)
         detail = f'mutated {mutated_count} literal(s)'
+        if timed_out:
+            # A mutant that hangs was NOT detected by the assert and did NOT survive —
+            # it could not be measured. Never let that read as either.
+            results.append((func_name, mode, 'INCONCLUSIVE',
+                            detail + '; mutant timed out — could not measure'))
+            continue
         if rc == 0:
             outcome = 'SURVIVED'
             detail += '; exited 0'
