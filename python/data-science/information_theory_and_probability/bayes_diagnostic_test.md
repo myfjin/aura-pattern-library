@@ -4,6 +4,18 @@
 
 **Signature:** `(sensitivity: float, specificity: float, prevalence: float) → Tuple[float, float]`
 
+## What it does
+
+Bayes' theorem for diagnostic testing: sensitivity/specificity/prevalence → PPV/NPV.
+
+Core idea: Positive Predictive Value (PPV) = P(disease | positive test) depends critically
+on the base rate (prevalence). Even with high sensitivity/specificity, low prevalence causes
+low PPV (most positives are false positives). Bayes' theorem links test performance to
+clinical utility.
+
+Use when: evaluating medical/diagnostic tests, understanding false positive rates, combining
+multiple test results, assessing clinical decision thresholds.
+
 ## Guarantee
 
 When it runs, bayes diagnostic test guarantees abs(ppv - expected_ppv) < 1e-09; abs(ppv_perfect - 1.0) < 1e-09; abs(npv_perfect - 1.0) < 1e-09 (proven by run).

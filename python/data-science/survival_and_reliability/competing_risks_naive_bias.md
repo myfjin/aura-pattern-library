@@ -4,6 +4,18 @@
 
 **Signature:** `(times: List[float], events: List[int], event_type: int) → Tuple[List[float], List[float]]`
 
+## What it does
+
+Competing risks: the naive 1−KM overestimates incidence; Aalen-Johansen is correct.
+
+With competing events, a common MISTAKE is to estimate the cumulative incidence of
+cause 1 as 1 − KM, where the cause-specific Kaplan-Meier treats every competing event
+(and censoring) as if it were independent right-censoring. That double-counts the people
+removed by the competing risk and OVERSTATES the incidence. The correct Aalen-Johansen
+CIF weights each cause-1 hazard increment by the overall survival S(t⁻):
+    F₁(t) = Σ_{s≤t} [d₁(s)/Y(s)] · S(s⁻),  S(s) = ∏ (1 − d_any(s)/Y(s)).
+Core claim: with censoring present, naive (1−KM) > correct (Aalen-Johansen); bias shown.
+
 ## Guarantee
 
 When it runs, competing risks naive bias guarantees final_naive > final_correct + 0.1; 0.0 < final_correct < 1.0; final_naive <= 1.0 + 1e-09 (weak-grade: directional, proven by run).

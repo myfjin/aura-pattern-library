@@ -4,6 +4,17 @@
 
 **Signature:** `(feature_name: str, n_dims: int) → int`
 
+## What it does
+
+Feature hashing for dimensionality reduction of high-dimensional sparse features.
+
+Hash trick maps unbounded categorical/text features to a fixed number of
+dimensions via hashing. Trade-off: reduces memory/computation but introduces
+collisions. Deterministic, works online, and maintains separability for
+classification tasks.
+
+Use: text/NLP feature extraction, streaming data, memory-constrained settings.
+
 ## Guarantee
 
 When it runs, feature hashing trick guarantees abs(acc_repeat - results[1][1]) < 1e-06; results[1][1] > 0.5; results[0][2] > results[2][2] (weak-grade: directional, proven by run).

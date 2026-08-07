@@ -4,6 +4,13 @@
 
 **Signature:** `(t: List[int], y: List[float], subgroup: List[int], sg_val: int) → float`
 
+## What it does
+
+Heterogeneous treatment effects (CATE): treatment effect varies by subgroup.
+
+Planted CATE difference between subgroups; pooled estimate masks the heterogeneity.
+Core claim: subgroup estimates recovered; pooled ATE shown obscuring the variation.
+
 ## Guarantee
 
 When it runs, heterogeneous effects subgroups guarantees abs(ate_group_0 - 1.0) < 0.5; abs(ate_group_1 - 3.0) < 0.5; abs(ate_group_1 - ate_group_0) > 1.0 (proven by run).

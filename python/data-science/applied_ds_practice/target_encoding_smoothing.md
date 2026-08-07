@@ -4,6 +4,23 @@
 
 **Signature:** `(cats: List[str], targets: List[int], alpha: float) → Dict[str, float]`
 
+## What it does
+
+Target encoding with smoothing + out-of-fold fitting.
+
+Target (mean) encoding replaces a category with the mean target of that
+category — powerful, and the classic way to leak: if the encoding is fit on
+data that includes the rows being encoded (or the test set), the feature
+memorizes target noise and shows FAKE predictive skill. Two defenses, both
+implemented here: SMOOTHING (shrink rare-category means toward the global
+prior: (sum + a*prior)/(count + a)) and OUT-OF-FOLD fitting (each training
+row is encoded using an encoding fit WITHOUT its own fold; test rows use an
+encoding fit on all of train).
+
+The demo plants PURE-NOISE targets, so any measured "skill" is fabricated:
+leaky encoding shows high test correlation on noise; OOF shows ≈ zero — the
+truth. Use when: encoding high-cardinality categoricals for models.
+
 ## Guarantee
 
 When it runs, target encoding smoothing guarantees corr_test_leaky > 0.3; corr_test_proper < 0.15; corr_train_oof < 0.15 (weak-grade: directional, proven by run).

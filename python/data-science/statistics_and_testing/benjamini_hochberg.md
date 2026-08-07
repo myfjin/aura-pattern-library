@@ -4,6 +4,18 @@
 
 **Signature:** `(p_values: List[float], alpha: float) → Tuple[List[bool], float]`
 
+## What it does
+
+Benjamini-Hochberg False Discovery Rate Correction
+
+Core idea: When testing many hypotheses, Bonferroni is overly conservative. Benjamini-Hochberg
+controls the False Discovery Rate (FDR): the expected proportion of false positives among
+rejected hypotheses. Sort p-values, find largest index i where p_i <= (i/m) * alpha,
+then reject all p-values up to that index.
+
+When to use: Multiple hypothesis testing (e.g., genome-wide association, gene expression).
+FDR is less stringent than family-wise error rate (FWER), allowing more discoveries.
+
 ## Guarantee
 
 When it runs, benjamini hochberg guarantees num_rejected_null <= 2; num_rejected_mixed >= 3; rejected_mixed[0] and rejected_mixed[1] and rejected_mixed[2] (weak-grade: directional, proven by run).

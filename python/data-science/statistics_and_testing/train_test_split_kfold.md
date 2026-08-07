@@ -4,6 +4,17 @@
 
 **Signature:** `(data: List, labels: List, test_size: float) → Tuple[List, List, List, List]`
 
+## What it does
+
+Train/Test Split and K-Fold Cross-Validation
+
+Core idea: Split data into train/test subsets for model evaluation. Extend to k-fold CV
+where data is divided into k folds; iterate k times, using each fold as test and the rest
+for training, then average results.
+
+When to use: Evaluate model performance with limited data, avoid overfitting estimates,
+and get stable generalization metrics.
+
 ## Guarantee
 
 When it runs, train test split kfold guarantees len(X_train) + len(X_test) == len(X); len(X_test) == int(len(X) * 0.2); all((len(X_tr) + len(X_te) == len(X) for X_tr, X_te, _, _ in folds)) (weak-grade: directional, proven by run).

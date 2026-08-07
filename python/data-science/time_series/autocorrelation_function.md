@@ -4,6 +4,15 @@
 
 **Signature:** `(series: List[float], nlags: int) → List[float]`
 
+## What it does
+
+Autocorrelation Function (ACF)
+
+Compute the autocorrelation of a time series at multiple lags.
+ACF(k) = correlation between y_t and y_{t-k}.
+Include simple significance bounds (±2/sqrt(n)) to identify significant lags.
+Use to detect seasonality and memory in the data.
+
 ## Guarantee
 
 When it runs, autocorrelation function guarantees acf_vals[0] == 1.0; 0.4 < acf_vals[1] < 0.8; acf_vals[1] > acf_vals[2] (weak-grade: directional, proven by run).

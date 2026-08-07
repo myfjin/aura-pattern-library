@@ -4,6 +4,15 @@
 
 **Signature:** `(signal: List[float], window_size: int, k: float) → List[float]`
 
+## What it does
+
+Hampel Filter for Outlier Detection and Removal.
+
+Use rolling-median and MAD (median absolute deviation) to detect outliers.
+Replace outliers with the rolling median.
+Outliers are values > median + k*MAD, typically k=3.
+We plant spikes and verify they are removed while the true signal is preserved.
+
 ## Guarantee
 
 When it runs, hampel filter outliers guarantees mse_filtered < mse_noisy; spike_removals >= 3 (weak-grade: directional, proven by run).
