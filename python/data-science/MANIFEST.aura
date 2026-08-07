@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-28",
+  "created": "2026-08-07",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -14,6 +14,11 @@
       "path": ".folder-nature",
       "sha256": "7a825456023a8622872ea1ef5c16ea2d71efe607310937f7dcd3d2778a2bdae0",
       "bytes": 350
+    },
+    {
+      "path": "ROBUSTNESS.md",
+      "sha256": "06f6ba3c7b48a16aed1def3cd020c8442097b976398778e116529e36d2b8a1f7",
+      "bytes": 10282
     },
     {
       "path": "applied_ds_practice/.folder-nature",
@@ -902,8 +907,8 @@
     },
     {
       "path": "core_ml/pca_power_iteration.py",
-      "sha256": "f573bf2b6d5a734023c8a23918c974b773d163d92ea276f6a5c2f1ee142ca05d",
-      "bytes": 9504
+      "sha256": "8ed2ce5ccac993dcd9a414dcc68c9a1603d1390b042a553af0b28c459c0176a6",
+      "bytes": 9508
     },
     {
       "path": "core_ml/perceptron.md",

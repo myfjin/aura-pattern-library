@@ -76,7 +76,7 @@ def power_iteration(
     cov: List[List[float]],
     num_components: int = 1,
     max_iterations: int = 100
-) -> Tuple[List[List[float]], List[float]]:
+) -> TupleType[List[List[float]], List[float]]:
     """
     Find top eigenvectors using power iteration.
 
