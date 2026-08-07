@@ -1,8 +1,6 @@
 # dirichlet multinomial posterior
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Bayesian III — Modeling & Selection
-
-**Signature:** `(counts: List[int], prior_alpha: float) → List[float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Bayesian III — Modeling & Selection
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # rank fusion rrf
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Rankings & Information Retrieval
-
-**Signature:** `(item: str, rankings: List[List[str]], k: int) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Rankings & Information Retrieval
 
 ## What it does
 

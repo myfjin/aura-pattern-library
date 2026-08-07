@@ -1,8 +1,6 @@
 # posterior contraction rate
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Bayesian III — Approximate Inference
-
-**Signature:** `(data: ?, prior_mu: ?, prior_sigma_sq: ?) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Bayesian III — Approximate Inference
 
 ## What it does
 

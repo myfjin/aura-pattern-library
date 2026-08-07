@@ -1,8 +1,6 @@
 # simulated annealing
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Optimization & Distances
-
-**Signature:** `(x_init: float, y_init: float, func: ?, bounds: Tuple[float, float], initial_temp: float, cooling_rate: float, max_iters: int) → Tuple[float, float, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Optimization & Distances
 
 ## What it does
 

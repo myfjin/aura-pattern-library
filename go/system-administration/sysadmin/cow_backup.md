@@ -1,8 +1,6 @@
 # cow backup
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 2 · Filesystem Integrity & Atomic Ops
-
-**Signature:** `(source_path: str, backup_path: str) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 2 · Filesystem Integrity & Atomic Ops
 
 ## What it does
 

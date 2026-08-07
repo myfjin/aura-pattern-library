@@ -1,8 +1,6 @@
 # online covariance
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Streaming & Sketches
-
-**Signature:** `(data: List[List[float]]) → List[List[float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Streaming & Sketches
 
 ## What it does
 

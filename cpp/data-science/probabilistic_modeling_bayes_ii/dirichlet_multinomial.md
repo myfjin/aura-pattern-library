@@ -1,8 +1,6 @@
 # dirichlet multinomial
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Probabilistic Modeling
-
-**Signature:** `(x: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Probabilistic Modeling
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # cubic spline interpolation
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Numerical Methods
-
-**Signature:** `(x_data: list, y_data: list, x_eval: list) → list`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Numerical Methods
 
 ## What it does
 

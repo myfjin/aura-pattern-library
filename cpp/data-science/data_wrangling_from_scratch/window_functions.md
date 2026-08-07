@@ -1,8 +1,6 @@
 # window functions
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Data Wrangling From Scratch
-
-**Signature:** `(records: List[Dict[str, Any]], partition_key: str, order_key: str) → List[Dict[str, Any]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Data Wrangling From Scratch
 
 ## What it does
 

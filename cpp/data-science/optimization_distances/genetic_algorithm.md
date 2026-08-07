@@ -1,8 +1,6 @@
 # genetic algorithm
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Optimization & Distances
-
-**Signature:** `(bitstring: List[int]) → int`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Optimization & Distances
 
 ## What it does
 

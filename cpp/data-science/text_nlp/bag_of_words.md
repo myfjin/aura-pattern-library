@@ -1,8 +1,6 @@
 # bag of words
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Text / NLP
-
-**Signature:** `(vec1: List[int], vec2: List[int]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Text / NLP
 
 ## What it does
 

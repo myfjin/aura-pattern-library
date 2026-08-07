@@ -1,8 +1,6 @@
 # spectral clustering lite
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Ensembles & Robust Methods
-
-**Signature:** `(p1: Tuple[float, float], p2: Tuple[float, float]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Ensembles & Robust Methods
 
 ## What it does
 

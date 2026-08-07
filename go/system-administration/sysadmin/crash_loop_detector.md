@@ -1,8 +1,6 @@
 # crash loop detector
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 1 · Process Supervision & Immortality
-
-**Signature:** `(restart_threshold: int, window_seconds: float) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 1 · Process Supervision & Immortality
 
 ## What it does
 

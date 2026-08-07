@@ -1,8 +1,6 @@
 # model persistence roundtrip
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Model Understanding & Tuning
-
-**Signature:** `(X: List[List[float]], y: List[float]) → SimpleLinearModel`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Model Understanding & Tuning
 
 ## What it does
 

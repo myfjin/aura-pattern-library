@@ -1,8 +1,6 @@
 # garch lite volatility clustering
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Econometrics & Finance
-
-**Signature:** `(returns: List[float], max_pass: int) → Tuple[float, float, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Econometrics & Finance
 
 ## What it does
 

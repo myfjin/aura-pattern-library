@@ -1,8 +1,6 @@
 # append only audit
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 18 · Access control & audit
-
-**Signature:** `(event: str) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 18 · Access control & audit
 
 ## What it does
 

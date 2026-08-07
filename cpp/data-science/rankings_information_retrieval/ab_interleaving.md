@@ -1,8 +1,6 @@
 # ab interleaving
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Rankings & Information Retrieval
-
-**Signature:** `(ranking_a: List[str], ranking_b: List[str]) → List[tuple]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Rankings & Information Retrieval
 
 ## What it does
 

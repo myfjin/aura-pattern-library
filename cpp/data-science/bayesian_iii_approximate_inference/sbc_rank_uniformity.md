@@ -1,8 +1,6 @@
 # sbc rank uniformity
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Bayesian III — Approximate Inference
-
-**Signature:** `(n_sims: int, seed_offset: ?) → List[int]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Bayesian III — Approximate Inference
 
 ## What it does
 

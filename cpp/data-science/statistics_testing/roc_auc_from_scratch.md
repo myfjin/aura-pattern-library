@@ -1,8 +1,6 @@
 # roc auc from scratch
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Statistics & Testing
-
-**Signature:** `(y_true: List[int], y_scores: List[float]) → List[Tuple[float, float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Statistics & Testing
 
 ## What it does
 

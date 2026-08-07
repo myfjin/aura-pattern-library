@@ -1,8 +1,6 @@
 # log rank test
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Survival & Reliability
-
-**Signature:** `(times_g1: List[float], events_g1: List[int], times_g2: List[float], events_g2: List[int]) → Tuple[float, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Survival & Reliability
 
 ## What it does
 

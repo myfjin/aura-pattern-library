@@ -1,6 +1,6 @@
 # budget allocator
 
-**Language:** Go · **Sphere:** programming · **Category:** Performance
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Performance
 
 ## What it does
 

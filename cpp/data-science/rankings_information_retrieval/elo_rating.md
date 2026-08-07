@@ -1,8 +1,6 @@
 # elo rating
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Rankings & Information Retrieval
-
-**Signature:** `(elo1: float, elo2: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Rankings & Information Retrieval
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # lossy counting frequent
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Streaming III
-
-**Signature:** `(stream: list, support: float, eps: float) → Tuple[Set, Dict]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Streaming III
 
 ## What it does
 

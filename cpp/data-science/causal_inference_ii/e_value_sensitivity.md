@@ -1,8 +1,6 @@
 # e value sensitivity
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Causal Inference II
-
-**Signature:** `(t1_y1: int, t1_y0: int, t0_y1: int, t0_y0: int) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Causal Inference II
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # sort multi key
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Data Wrangling From Scratch
-
-**Signature:** `(records: List[Dict[str, Any]], keys: List[tuple]) → List[Dict[str, Any]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Data Wrangling From Scratch
 
 ## What it does
 

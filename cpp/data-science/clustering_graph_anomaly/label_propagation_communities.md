@@ -1,8 +1,6 @@
 # label propagation communities
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Clustering, Graph & Anomaly
-
-**Signature:** `(graph: Dict[int, List[int]], max_iterations: int, seed: int) → Dict[int, int]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Clustering, Graph & Anomaly
 
 ## What it does
 

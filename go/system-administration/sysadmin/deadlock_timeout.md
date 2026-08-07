@@ -1,8 +1,6 @@
 # deadlock timeout
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 3 · Concurrency & Locking
-
-**Signature:** `(lock1: TimeoutLock, lock2: TimeoutLock, lock_order: List[int], results: dict, thread_id: str, timeout: float, barrier: Barrier) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 3 · Concurrency & Locking
 
 ## What it does
 

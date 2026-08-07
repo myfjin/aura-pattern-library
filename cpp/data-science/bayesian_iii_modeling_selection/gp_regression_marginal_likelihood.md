@@ -1,8 +1,6 @@
 # gp regression marginal likelihood
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Bayesian III — Modeling & Selection
-
-**Signature:** `(x: List[float], y: List[float], ls: float, noise: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Bayesian III — Modeling & Selection
 
 ## What it does
 

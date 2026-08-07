@@ -1,8 +1,6 @@
 # query expansion prf
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Rankings & Information Retrieval
-
-**Signature:** `(query_terms: List[str], docs: Dict[str, str]) → List[str]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Rankings & Information Retrieval
 
 ## What it does
 

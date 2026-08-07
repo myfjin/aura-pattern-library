@@ -1,8 +1,6 @@
 # accelerated failure time lite
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Survival & Reliability
-
-**Signature:** `(log_times: List[float], x: List[float]) → Tuple[float, float, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Survival & Reliability
 
 ## What it does
 

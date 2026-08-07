@@ -1,8 +1,6 @@
 # bayesian changepoint offline
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Bayesian III — Modeling & Selection
-
-**Signature:** `(data: List[float]) → int`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Bayesian III — Modeling & Selection
 
 ## What it does
 

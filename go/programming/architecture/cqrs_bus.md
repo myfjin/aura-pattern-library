@@ -1,8 +1,6 @@
 # cqrs bus
 
-**Language:** Go · **Sphere:** programming · **Category:** Architecture
-
-**Signature:** `() → None`
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Architecture
 
 ## What it does
 

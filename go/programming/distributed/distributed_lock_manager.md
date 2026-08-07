@@ -1,6 +1,6 @@
 # distributed lock manager
 
-**Language:** Go · **Sphere:** programming · **Category:** Distributed
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Distributed
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # dynamic range compression
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Signal Processing & Sequences
-
-**Signature:** `(values: List[float], offset: float) → List[float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Signal Processing & Sequences
 
 ## What it does
 

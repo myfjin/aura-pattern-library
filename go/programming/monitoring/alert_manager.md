@@ -1,6 +1,6 @@
 # alert manager
 
-**Language:** Go · **Sphere:** programming · **Category:** Monitoring
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Monitoring
 
 ## What it does
 

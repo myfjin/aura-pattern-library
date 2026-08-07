@@ -1,8 +1,6 @@
 # pca power iteration
 
-**Language:** R · **Sphere:** data-science · **Category:** Core ML
-
-**Signature:** `(X: List[List[float]]) → TupleType[List[List[float]], List[float]]`
+**Language:** R · **Oracle sphere:** data-science (this file is the R twin) · **Category:** Core ML
 
 ## What it does
 

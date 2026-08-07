@@ -1,8 +1,6 @@
 # peeking alpha inflation
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Experiments II
-
-**Signature:** `(mean_treatment: float, mean_control: float, var_t: float, var_c: float, n_t: int, n_c: int) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Experiments II
 
 ## What it does
 

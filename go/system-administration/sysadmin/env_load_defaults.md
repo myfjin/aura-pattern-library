@@ -1,8 +1,6 @@
 # env load defaults
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 9 · Config management
-
-**Signature:** `(required_vars: List[str], optional_defaults: None) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 9 · Config management
 
 ## What it does
 

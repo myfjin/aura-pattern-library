@@ -1,8 +1,6 @@
 # value averaging vs dca
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Econometrics & Finance
-
-**Signature:** `(prices: list, invest_per_period: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Econometrics & Finance
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # csv validator
 
-**Language:** Go · **Sphere:** programming · **Category:** Io
-
-**Signature:** `(csv_data: str, schema: List[FieldSchema], delimiter: str) → Dict[str, Union[List[Dict[str, Any]], List[ValidationError]]]`
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Io
 
 ## What it does
 

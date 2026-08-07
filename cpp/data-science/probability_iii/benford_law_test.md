@@ -1,8 +1,6 @@
 # benford law test
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Probability III
-
-**Signature:** `(n: int) → List[float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Probability III
 
 ## What it does
 

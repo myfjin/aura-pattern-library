@@ -1,8 +1,6 @@
 # matrix factorization sgd
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Recommenders & Graph Sampling
-
-**Signature:** `(ratings: Dict[Tuple[int, int], float], num_users: int, num_items: int, rank: int, learning_rate: float, lambda_reg: float, epochs: int) → Tuple[Dict[int, Dict[int, float]], Dict[int, Dict[int, float]], float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Recommenders & Graph Sampling
 
 ## What it does
 

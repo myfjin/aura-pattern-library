@@ -1,8 +1,6 @@
 # linear regression gd
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Core ML
-
-**Signature:** `(X: List[List[float]], y: List[float], learning_rate: float, iterations: int) → Tuple[List[float], float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Core ML
 
 ## What it does
 

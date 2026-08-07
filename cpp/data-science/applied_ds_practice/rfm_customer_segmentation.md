@@ -1,8 +1,6 @@
 # rfm customer segmentation
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Applied DS Practice
-
-**Signature:** `(transactions: list[dict]) → dict[int, dict]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Applied DS Practice
 
 ## What it does
 

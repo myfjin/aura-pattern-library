@@ -1,8 +1,6 @@
 # circuit breaker
 
-**Language:** Rust · **Sphere:** system-administration · **Category:** Wave 6 · Resource guards & quotas
-
-**Signature:** `(failure_threshold: int, recovery_timeout: float) → ?`
+**Language:** Rust · **Oracle sphere:** system-administration (this file is the Rust twin) · **Category:** Wave 6 · Resource guards & quotas
 
 ## What it does
 

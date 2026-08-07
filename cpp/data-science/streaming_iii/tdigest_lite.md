@@ -1,8 +1,6 @@
 # tdigest lite
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Streaming III
-
-**Signature:** `(stream: List[float], compression: float) → Tuple[float, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Streaming III
 
 ## What it does
 

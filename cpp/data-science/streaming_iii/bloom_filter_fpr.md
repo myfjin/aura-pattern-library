@@ -1,8 +1,6 @@
 # bloom filter fpr
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Streaming III
-
-**Signature:** `(stream: list, size: int, k: int) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Streaming III
 
 ## What it does
 

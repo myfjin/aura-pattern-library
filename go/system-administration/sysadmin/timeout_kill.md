@@ -1,8 +1,6 @@
 # timeout kill
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 7 · Scheduling & jobs
-
-**Signature:** `(cmd: List[str], timeout_seconds: float, stdin_data: None) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 7 · Scheduling & jobs
 
 ## What it does
 

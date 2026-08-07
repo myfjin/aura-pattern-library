@@ -1,8 +1,6 @@
 # convex hull graham
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Geospatial & Spatial
-
-**Signature:** `(points: List[Tuple[float, float]]) → List[Tuple[float, float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Geospatial & Spatial
 
 ## What it does
 

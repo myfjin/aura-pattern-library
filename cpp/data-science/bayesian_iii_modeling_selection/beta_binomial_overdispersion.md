@@ -1,8 +1,6 @@
 # beta binomial overdispersion
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Bayesian III — Modeling & Selection
-
-**Signature:** `(counts: List[int], n_trials: int, alpha: float, beta: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Bayesian III — Modeling & Selection
 
 ## What it does
 

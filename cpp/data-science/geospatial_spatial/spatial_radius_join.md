@@ -1,8 +1,6 @@
 # spatial radius join
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Geospatial & Spatial
-
-**Signature:** `(points: List[Tuple[float, float]], centers: List[Tuple[float, float]], radius: float, grid_size: float) → Tuple[List[Tuple[int, int]], int]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Geospatial & Spatial
 
 ## What it does
 

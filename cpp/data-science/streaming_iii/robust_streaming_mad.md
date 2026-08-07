@@ -1,8 +1,6 @@
 # robust streaming mad
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Streaming III
-
-**Signature:** `(stream: List[float], outlier_idx: set, k: float) → Tuple[int, int, int]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Streaming III
 
 ## What it does
 

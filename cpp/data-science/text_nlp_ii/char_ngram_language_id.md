@@ -1,8 +1,6 @@
 # char ngram language id
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Text / NLP II
-
-**Signature:** `(text: str) → Dict[str, int]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Text / NLP II
 
 ## What it does
 

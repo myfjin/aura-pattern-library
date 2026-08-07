@@ -1,8 +1,6 @@
 # ols robust se white
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Econometrics & Finance
-
-**Signature:** `(y: List[float], X: List[List[float]]) → Tuple[List[float], List[float], List[float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Econometrics & Finance
 
 ## What it does
 

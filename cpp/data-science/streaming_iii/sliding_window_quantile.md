@@ -1,8 +1,6 @@
 # sliding window quantile
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Streaming III
-
-**Signature:** `(stream: List[float], window_size: int, q: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Streaming III
 
 ## What it does
 

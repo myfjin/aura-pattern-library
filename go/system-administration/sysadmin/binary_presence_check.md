@@ -1,8 +1,6 @@
 # binary presence check
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 17 · Packaging & environment
-
-**Signature:** `(binary_paths: List[str]) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 17 · Packaging & environment
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # convolution filtering
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Signal Processing & Sequences
-
-**Signature:** `(signal: List[float], kernel: List[float]) → List[float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Signal Processing & Sequences
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # skip list
 
-**Language:** Python · **Sphere:** rust · **Category:** data structures
-
-**Signature:** `() → usize`
+**Language:** Python · **Oracle sphere:** rust (this file is the Python twin) · **Category:** data structures
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # switchback experiment lite
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Experiments II
-
-**Signature:** `(n_users: int, true_effect: float, spillover: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Experiments II
 
 ## What it does
 

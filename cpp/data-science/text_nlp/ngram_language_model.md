@@ -1,6 +1,6 @@
 # ngram language model
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Text / NLP
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Text / NLP
 
 ## What it does
 

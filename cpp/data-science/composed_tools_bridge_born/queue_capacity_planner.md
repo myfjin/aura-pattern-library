@@ -1,8 +1,6 @@
 # queue capacity planner
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Composed Tools
-
-**Signature:** `(arrival_rate: float, service_rate: float, workers: int, n_jobs: int, seed: int) → Dict[str, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Composed Tools
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # hierarchical agglomerative
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Clustering, Graph & Anomaly
-
-**Signature:** `(points: List[Tuple[float, ...]], linkage: str) → Tuple[List[List[int]], List[Tuple[int, int, float]]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Clustering, Graph & Anomaly
 
 ## What it does
 

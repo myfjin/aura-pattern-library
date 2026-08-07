@@ -1,8 +1,6 @@
 # bayesian linear regression
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Probabilistic Modeling
-
-**Signature:** `(X: List[float], y: List[float], mu0: float, sigma0_sq: float, sigma_sq: float) → Tuple[float, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Probabilistic Modeling
 
 ## What it does
 

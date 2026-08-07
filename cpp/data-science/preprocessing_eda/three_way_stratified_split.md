@@ -1,8 +1,6 @@
 # three way stratified split
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Preprocessing & EDA
-
-**Signature:** `(data: List[tuple], labels: List[int], splits: Tuple[float, float, float]) → Tuple[List[tuple], List[tuple], List[tuple], List[int], List[int], List[int]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Preprocessing & EDA
 
 ## What it does
 

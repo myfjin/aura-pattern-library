@@ -1,8 +1,6 @@
 # pca power iteration
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Core ML
-
-**Signature:** `(X: List[List[float]]) → TupleType[List[List[float]], List[float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Core ML
 
 ## What it does
 

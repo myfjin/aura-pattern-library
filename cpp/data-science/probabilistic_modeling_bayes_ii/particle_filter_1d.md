@@ -1,8 +1,6 @@
 # particle filter 1d
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Probabilistic Modeling
-
-**Signature:** `(particles: List[float], weights: List[float], observation: float, process_noise: float, obs_noise: float) → Tuple[List[float], List[float], float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Probabilistic Modeling
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # conv1d feature detector
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Neural Networks From Scratch
-
-**Signature:** `(pred: float, target: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Neural Networks From Scratch
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # welford online stats
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Applied DS Practice
-
-**Signature:** `(values: list[float]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Applied DS Practice
 
 ## What it does
 

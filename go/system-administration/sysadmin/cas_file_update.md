@@ -1,8 +1,6 @@
 # cas file update
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 3 · Concurrency & Locking
-
-**Signature:** `(path: str) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 3 · Concurrency & Locking
 
 ## What it does
 

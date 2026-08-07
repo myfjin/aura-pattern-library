@@ -1,8 +1,6 @@
 # backfill range
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 19 · Data pipeline ops
-
-**Signature:** `(records: List[dict], range_start: int, range_end: int, backfill_path: str) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 19 · Data pipeline ops
 
 ## What it does
 

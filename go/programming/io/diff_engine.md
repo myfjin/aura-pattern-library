@@ -1,8 +1,6 @@
 # diff engine
 
-**Language:** Go · **Sphere:** programming · **Category:** Io
-
-**Signature:** `() → None`
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Io
 
 ## What it does
 

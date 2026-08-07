@@ -1,8 +1,6 @@
 # evidence ranks true model
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Bayesian III — Modeling & Selection
-
-**Signature:** `(data: List[float]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Bayesian III — Modeling & Selection
 
 ## What it does
 

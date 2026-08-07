@@ -1,8 +1,6 @@
 # multi armed holm correction
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Experiments II
-
-**Signature:** `(alpha: float, num_tests: int) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Experiments II
 
 ## What it does
 

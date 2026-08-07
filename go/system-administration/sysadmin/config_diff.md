@@ -1,8 +1,6 @@
 # config diff
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 9 · Config management
-
-**Signature:** `(old_config: dict, new_config: dict) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 9 · Config management
 
 ## What it does
 

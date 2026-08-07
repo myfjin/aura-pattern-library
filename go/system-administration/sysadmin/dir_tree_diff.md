@@ -1,8 +1,6 @@
 # dir tree diff
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 2 · Filesystem Integrity & Atomic Ops
-
-**Signature:** `(tree1_index: dict, tree2_index: dict) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 2 · Filesystem Integrity & Atomic Ops
 
 ## What it does
 

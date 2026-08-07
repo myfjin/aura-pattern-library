@@ -1,8 +1,6 @@
 # env secret load
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 10 · Secrets & credentials
-
-**Signature:** `(env_key: str, default: None) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 10 · Secrets & credentials
 
 ## What it does
 

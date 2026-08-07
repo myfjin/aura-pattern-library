@@ -1,8 +1,6 @@
 # config drift detect
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 12 · Deployment & rollback
-
-**Signature:** `(config_dict: dict) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 12 · Deployment & rollback
 
 ## What it does
 

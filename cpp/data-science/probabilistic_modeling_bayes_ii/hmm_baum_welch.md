@@ -1,8 +1,6 @@
 # hmm baum welch
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Probabilistic Modeling
-
-**Signature:** `(obs_seq: List[int], pi: List[float], A: List[List[float]], B: List[List[float]]) → Tuple[List[List[float]], float, List[float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Probabilistic Modeling
 
 ## What it does
 

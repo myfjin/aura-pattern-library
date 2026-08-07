@@ -1,8 +1,6 @@
 # dtw dynamic time warping
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Optimization & Distances
-
-**Signature:** `(a: float, b: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Optimization & Distances
 
 ## What it does
 

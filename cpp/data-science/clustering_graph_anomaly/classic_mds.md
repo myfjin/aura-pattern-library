@@ -1,8 +1,6 @@
 # classic mds
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Clustering, Graph & Anomaly
-
-**Signature:** `(p1: Tuple[float, ...], p2: Tuple[float, ...]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Clustering, Graph & Anomaly
 
 ## What it does
 

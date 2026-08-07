@@ -1,8 +1,6 @@
 # linear discriminant analysis
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Clustering, Graph & Anomaly
-
-**Signature:** `(m: List[List[float]]) → List[List[float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Clustering, Graph & Anomaly
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # gauss seidel vs jacobi
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Linear Algebra
-
-**Signature:** `(A: list, b: list, x0: list, max_iter: int, tol: float) → Tuple[list, int]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Linear Algebra
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # logit marginal effects
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Econometrics & Finance
-
-**Signature:** `(x: float, beta: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Econometrics & Finance
 
 ## What it does
 

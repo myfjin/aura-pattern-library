@@ -1,8 +1,6 @@
 # event sourcing store
 
-**Language:** Go · **Sphere:** programming · **Category:** Architecture
-
-**Signature:** `(account_id: str, owner: str, initial_balance: int, version: int) → Event`
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Architecture
 
 ## What it does
 

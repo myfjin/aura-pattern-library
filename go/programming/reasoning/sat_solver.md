@@ -1,8 +1,6 @@
 # sat solver
 
-**Language:** Go · **Sphere:** programming · **Category:** Reasoning
-
-**Signature:** `(formula: Formula, assignment: Dict[int, bool]) → Optional[Dict[int, bool]]`
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Reasoning
 
 ## What it does
 

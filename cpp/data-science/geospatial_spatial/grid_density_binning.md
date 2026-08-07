@@ -1,8 +1,6 @@
 # grid density binning
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Geospatial & Spatial
-
-**Signature:** `(points: List[Tuple[float, float]], grid_size: float) → Tuple[Dict[Tuple[int, int], int], float, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Geospatial & Spatial
 
 ## What it does
 

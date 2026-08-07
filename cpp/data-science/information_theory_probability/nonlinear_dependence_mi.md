@@ -1,8 +1,6 @@
 # nonlinear dependence mi
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Information Theory & Probability
-
-**Signature:** `(samples: List[float]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Information Theory & Probability
 
 ## What it does
 

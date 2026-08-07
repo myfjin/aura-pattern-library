@@ -1,8 +1,6 @@
 # dedup stream
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 16 · Text/stream processing for ops
-
-**Signature:** `(lines: List[str], keep_first: bool) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 16 · Text/stream processing for ops
 
 ## What it does
 

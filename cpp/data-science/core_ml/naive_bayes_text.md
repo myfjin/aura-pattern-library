@@ -1,8 +1,6 @@
 # naive bayes text
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Core ML
-
-**Signature:** `(texts: List[List[str]], labels: List[int]) → Tuple[Dict[int, float], Dict[int, Dict[str, float]]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Core ML
 
 ## What it does
 

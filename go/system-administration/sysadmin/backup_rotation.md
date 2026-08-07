@@ -1,8 +1,6 @@
 # backup rotation
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 4 · State/DB durability
-
-**Signature:** `(d: str) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 4 · State/DB durability
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # ndcg evaluation
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Rankings & Information Retrieval
-
-**Signature:** `(relevances: List[float]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Rankings & Information Retrieval
 
 ## What it does
 

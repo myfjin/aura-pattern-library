@@ -1,8 +1,6 @@
 # batch controller
 
-**Language:** Go · **Sphere:** programming · **Category:** Performance
-
-**Signature:** `(batch_size: int, baseline_time_per_item: float) → Metrics`
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Performance
 
 ## What it does
 

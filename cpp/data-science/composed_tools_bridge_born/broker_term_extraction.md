@@ -1,8 +1,6 @@
 # broker term extraction
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Composed Tools
-
-**Signature:** `(sentences: List[List[str]]) → Dict[str, Set[str]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Composed Tools
 
 ## What it does
 

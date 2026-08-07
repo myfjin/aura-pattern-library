@@ -1,8 +1,6 @@
 # kde seeded gmm
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Composed Tools
-
-**Signature:** `(values: List[float], grid: List[float]) → List[float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Composed Tools
 
 ## What it does
 

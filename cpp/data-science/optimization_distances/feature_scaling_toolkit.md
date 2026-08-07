@@ -1,8 +1,6 @@
 # feature scaling toolkit
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Optimization & Distances
-
-**Signature:** `(data: List[float]) → Tuple[List[float], float, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Optimization & Distances
 
 ## What it does
 

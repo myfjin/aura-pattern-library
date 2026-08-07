@@ -1,8 +1,6 @@
 # full incremental backup
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 13 · Backup & disaster recovery
-
-**Signature:** `(src_dir: Path, backup_dir: Path, level_num: int, last_manifest: dict) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 13 · Backup & disaster recovery
 
 ## What it does
 

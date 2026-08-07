@@ -1,8 +1,6 @@
 # cointegration engle granger lite
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Econometrics & Finance
-
-**Signature:** `(y: List[float], x: List[float]) → Tuple[float, bool]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Econometrics & Finance
 
 ## What it does
 

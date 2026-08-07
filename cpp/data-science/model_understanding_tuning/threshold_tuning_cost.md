@@ -1,8 +1,6 @@
 # threshold tuning cost
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Model Understanding & Tuning
-
-**Signature:** `(y_true: List[float], y_scores: List[float], threshold: float, cost_fp: float, cost_fn: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Model Understanding & Tuning
 
 ## What it does
 

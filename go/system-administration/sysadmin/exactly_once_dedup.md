@@ -1,8 +1,6 @@
 # exactly once dedup
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 19 · Data pipeline ops
-
-**Signature:** `(records: List[dict], dedup_journal_path: str) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 19 · Data pipeline ops
 
 ## What it does
 

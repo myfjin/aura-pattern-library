@@ -1,8 +1,6 @@
 # banach matchbox or gambler ruin
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Probability III
-
-**Signature:** `(a: int, b: int, p: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Probability III
 
 ## What it does
 

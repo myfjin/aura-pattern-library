@@ -1,8 +1,6 @@
 # rejection sampling
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Probabilistic Modeling
-
-**Signature:** `(target_density: ?, proposal_sample: ?, proposal_density: ?, M: float, n_samples: int) → Tuple[List[float], float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Probabilistic Modeling
 
 ## What it does
 

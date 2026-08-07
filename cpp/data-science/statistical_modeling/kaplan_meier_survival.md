@@ -1,8 +1,6 @@
 # kaplan meier survival
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Statistical Modeling
-
-**Signature:** `(times: List[float], events: List[int]) → List[Tuple[float, float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Statistical Modeling
 
 ## What it does
 

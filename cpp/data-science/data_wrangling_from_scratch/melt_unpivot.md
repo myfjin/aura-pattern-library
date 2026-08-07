@@ -1,8 +1,6 @@
 # melt unpivot
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Data Wrangling From Scratch
-
-**Signature:** `(wide_data: Dict[Any, Dict[Any, float]], row_key_name: str, col_key_name: str, val_key_name: str) → List[Dict[str, Any]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Data Wrangling From Scratch
 
 ## What it does
 

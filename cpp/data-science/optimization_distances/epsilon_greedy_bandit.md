@@ -1,6 +1,6 @@
 # epsilon greedy bandit
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Optimization & Distances
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Optimization & Distances
 
 ## What it does
 

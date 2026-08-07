@@ -1,8 +1,6 @@
 # canary gate
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 12 · Deployment & rollback
-
-**Signature:** `(percent: float) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 12 · Deployment & rollback
 
 ## What it does
 

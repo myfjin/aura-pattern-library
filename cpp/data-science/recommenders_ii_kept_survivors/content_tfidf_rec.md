@@ -1,8 +1,6 @@
 # content tfidf rec
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Recommenders II — kept survivors
-
-**Signature:** `(doc1: list, doc2: list) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Recommenders II — kept survivors
 
 ## What it does
 

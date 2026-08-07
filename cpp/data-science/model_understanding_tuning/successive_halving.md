@@ -1,8 +1,6 @@
 # successive halving
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Model Understanding & Tuning
-
-**Signature:** `(initial_configs: List[Dict[str, float]], initial_budget: int, reduction_factor: int) → Tuple[Dict[str, float], float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Model Understanding & Tuning
 
 ## What it does
 

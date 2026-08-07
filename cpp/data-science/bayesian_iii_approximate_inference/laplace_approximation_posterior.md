@@ -1,8 +1,6 @@
 # laplace approximation posterior
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Bayesian III — Approximate Inference
-
-**Signature:** `(theta: float, data: ?, prior_mu: ?, prior_sigma: ?) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Bayesian III — Approximate Inference
 
 ## What it does
 

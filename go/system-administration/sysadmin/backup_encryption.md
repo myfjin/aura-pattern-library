@@ -1,8 +1,6 @@
 # backup encryption
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 13 · Backup & disaster recovery
-
-**Signature:** `(src_dir: Path, backup_dir: Path, passphrase: str) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 13 · Backup & disaster recovery
 
 ## What it does
 

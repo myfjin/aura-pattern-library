@@ -1,8 +1,6 @@
 # dns resolve check
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 8 · Network reachability & health
-
-**Signature:** `(hostname: str, timeout_sec: float) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 8 · Network reachability & health
 
 ## What it does
 

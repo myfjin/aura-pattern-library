@@ -1,6 +1,6 @@
 # csv to json
 
-**Language:** Go · **Sphere:** programming · **Category:** Io
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Io
 
 ## What it does
 

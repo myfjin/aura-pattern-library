@@ -1,8 +1,6 @@
 # heterogeneous effects subgroups
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Causal Inference II
-
-**Signature:** `(t: List[int], y: List[float], subgroup: List[int], sg_val: int) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Causal Inference II
 
 ## What it does
 

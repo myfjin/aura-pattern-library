@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-26",
+  "created": "2026-08-07",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -172,8 +172,8 @@
     },
     {
       "path": "data_structures/bloom_filter.md",
-      "sha256": "6b7f5365ca98fb2f190fcf04c052e3efd8471468974fdc477d0df55a4b0c8832",
-      "bytes": 1754
+      "sha256": "bdfc840d98a833586a444a795570d6eea5f1b18112e8ee75ce3a58edf46c2a2a",
+      "bytes": 1752
     },
     {
       "path": "data_structures/bloom_filter.py",
@@ -212,8 +212,8 @@
     },
     {
       "path": "data_structures/merkle_tree.md",
-      "sha256": "ea1b8f873bb4f9329b686fcb4a31ad95563414316b2bfb3ec8cfdd7b9dce1aab",
-      "bytes": 1390
+      "sha256": "4dccd73be9547e470af5fa1042e872d2063049e84e1087b3f85daeff168b93a3",
+      "bytes": 1388
     },
     {
       "path": "data_structures/merkle_tree.py",
@@ -282,8 +282,8 @@
     },
     {
       "path": "data_structures/skip_list.md",
-      "sha256": "65e4a895569d960cb31c14ac33791b008fac929b5b97f4b3157e35d34c460d90",
-      "bytes": 1784
+      "sha256": "2f03895b5195ba75e54665ce35d0d18bffb9b8c7375eb41495ec93d70ea9771f",
+      "bytes": 1791
     },
     {
       "path": "data_structures/skip_list.py",
@@ -337,8 +337,8 @@
     },
     {
       "path": "distributed/consistent_hash_ring.md",
-      "sha256": "33d15d9bd61501b02f2016507eeee6a09bdab720e0291ff3b684eb19d9d5731d",
-      "bytes": 1740
+      "sha256": "3106ae3036e2c4d5d9ed26901128c39ce46ae16bcf8c78906a3f785194542528",
+      "bytes": 1738
     },
     {
       "path": "distributed/consistent_hash_ring.py",
@@ -787,8 +787,8 @@
     },
     {
       "path": "performance/lru_cache.md",
-      "sha256": "259e8c9d9e1e1659180e65080048008e60ee72d386a7bb9c149fa63658a4e3f2",
-      "bytes": 1627
+      "sha256": "7f552a660ed4afcaad362ff0071e2807c0893c7bd53f46125f431d556b86abe2",
+      "bytes": 1618
     },
     {
       "path": "performance/lru_cache.py",
@@ -827,8 +827,8 @@
     },
     {
       "path": "performance/token_bucket.md",
-      "sha256": "e72c46c5a630b621636921654c73927688314d5dbabb4ca1eb6429c97f41d03c",
-      "bytes": 1900
+      "sha256": "ad75584f5ece0c79bd74fc168654793c32abd273748b383fd79ba8c8d29a0ad5",
+      "bytes": 1903
     },
     {
       "path": "performance/token_bucket.py",

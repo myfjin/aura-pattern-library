@@ -1,8 +1,6 @@
 # censoring bias demo
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Survival & Reliability
-
-**Signature:** `(times: List[float], events: List[int]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Survival & Reliability
 
 ## What it does
 

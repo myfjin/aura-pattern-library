@@ -1,8 +1,6 @@
 # point in polygon
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Geospatial & Spatial
-
-**Signature:** `(point: Tuple[float, float], polygon: List[Tuple[float, float]]) → bool`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Geospatial & Spatial
 
 ## What it does
 

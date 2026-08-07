@@ -1,8 +1,6 @@
 # expiry check
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 10 · Secrets & credentials
-
-**Signature:** `(token: str, expiry_time: int, clock: LogicalClock) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 10 · Secrets & credentials
 
 ## What it does
 
