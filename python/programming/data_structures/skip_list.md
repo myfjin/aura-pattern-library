@@ -16,16 +16,18 @@ place, delete reports honestly, and a 600-op fuzz agrees with a dict oracle.
 
 ## Guarantee
 
-When it runs, skip list guarantees assert_eq!(SkipList::new(1).iter_sorted().len(), 0, "empty skip list") (proven by rustc-run on the RUST original).
+When it runs, skip list guarantees `len(sl) == 100`; `[k for k, _ in sl] == list(range(100))`; `sl.search(50) == 'value_50'` — read from this file's own self-test. The oracle behind this pattern was established on the rust original and is not claimed to have been run against this file.
 
 **Checkable constraints:**
 
-- `assert_eq!(sl.iter_sorted(), sorted, "skip-list iteration must match BTreeSet order")`
-- `assert_eq!(sl.search(v), reference.contains(&v), "search({v}) must match reference")`
-- `assert!(sl.max_level_used() > 1, "a real skip list builds >1 level, got {}", sl.max_level_used())`
-- `assert!(has_express, "at least one node must have an express-lane link above level 0")`
-- `assert_eq!(sl.iter_sorted().len(), vals.len(), "duplicate insert does not grow the set")`
-- `assert_eq!(SkipList::new(1).iter_sorted().len(), 0, "empty skip list")`
+- `len(sl) == 100`
+- `[k for k, _ in sl] == list(range(100))`
+- `sl.search(50) == 'value_50'`
+- `sl.search(150) is None`
+- `sl.range_query(10, 13) == [(10, 'value_10'), (11, 'value_11'), (12, 'value_12'), (13, 'value_13')]`
+- `sum((k for k, _ in sl.range_query(10, 13))) == 46`
+- `sl.range_query(200, 300) == []`
+- `len(sl) == 100 and sl.search(50) == 'replaced'`
 
 ## Verification evidence
 

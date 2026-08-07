@@ -16,15 +16,18 @@ fake clock, and concurrent writes from many threads are not lost or corrupted.
 
 ## Guarantee
 
-When it runs, lru cache guarantees assert_eq!(cache.data, expected, "cache state matches") (proven by rustc-run on the RUST original).
+When it runs, lru cache guarantees `cache.size == 3`; `cache.get('k1') is None`; `cache.get('k2') == 'v2'` — read from this file's own self-test. The oracle behind this pattern was established on the rust original and is not claimed to have been run against this file.
 
 **Checkable constraints:**
 
-- `assert_eq!(cache.data, expected, "cache state matches")`
-- `assert!(!cache2.data.contains_key(&2), "2 was evicted")`
-- `assert!(cache2.data.contains_key(&1), "1 is still cached")`
-- `assert!(!cache3.data.contains_key(&1))`
-- `assert_eq!(cache3.get(2), Some(20))`
+- `cache.size == 3`
+- `cache.get('k1') is None`
+- `cache.get('k2') == 'v2'`
+- `cache.get('k3') is None`
+- `cache.get('short') == 's'`
+- `cache.get('short') is None`
+- `cache.get('forever') == 'f'`
+- `cache.delete('forever') is True`
 
 ## Verification evidence
 

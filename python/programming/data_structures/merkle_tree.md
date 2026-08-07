@@ -11,14 +11,18 @@ including building trees, generating proofs, and verifying them.
 
 ## Guarantee
 
-When it runs, merkle tree guarantees assert_ne!(tampered_root, root, "tampering leaf changes root"); assert_eq!(single_tree.root(), leaves[0], "single leaf root is the leaf") (weak-grade: proven by rustc-run on the RUST original).
+When it runs, merkle tree guarantees `tree.get_root() == level[0]`; `tree.verify_proof(leaf, i, proof) is True`; `total_steps == 24` — read from this file's own self-test. The oracle behind this pattern was established on the rust original and is not claimed to have been run against this file.
 
 **Checkable constraints:**
 
-- `assert!(MerkleTree::verify_proof(*leaf, &proof, root), "leaf {i} proof verifies")`
-- `assert_ne!(tampered_root, root, "tampering leaf changes root")`
-- `assert!(!MerkleTree::verify_proof(leaves[0], &proof_leaf0, tampered_root), "original proof fails on tampered root")`
-- `assert_eq!(single_tree.root(), leaves[0], "single leaf root is the leaf")`
+- `tree.get_root() == level[0]`
+- `tree.verify_proof(leaf, i, proof) is True`
+- `total_steps == 24`
+- `tree.verify_proof('evil_data', 3, proof) is False`
+- `tree.verify_proof(leaves[3], 3, bad) is False`
+- `tree.verify_proof(leaves[3], 3, proof[:-1]) is False`
+- `t2.get_root() != old_root`
+- `odd.verify_proof(x, i, odd.get_proof(i)) is True`
 
 ## Verification evidence
 
