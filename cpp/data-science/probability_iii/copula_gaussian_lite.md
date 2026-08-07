@@ -1,8 +1,6 @@
 # copula gaussian lite
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Probability III
-
-**Signature:** `(rho: float, n: int) → Tuple[List[float], List[float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Probability III
 
 ## What it does
 

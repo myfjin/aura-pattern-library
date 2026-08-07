@@ -1,8 +1,6 @@
 # importance sampling
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Statistical Modeling
-
-**Signature:** `(target_pdf: Callable[[float], float], proposal_pdf: Callable[[float], float], proposal_sample: Callable[[], float], h: Callable[[float], float], n_samples: int) → Tuple[float, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Statistical Modeling
 
 ## What it does
 

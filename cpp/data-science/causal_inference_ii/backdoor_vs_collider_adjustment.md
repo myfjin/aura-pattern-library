@@ -1,8 +1,6 @@
 # backdoor vs collider adjustment
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Causal Inference II
-
-**Signature:** `(x: List[float], y: List[float]) → Tuple[float, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Causal Inference II
 
 ## What it does
 

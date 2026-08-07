@@ -1,8 +1,6 @@
 # mutual information feature selection
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Recommenders & Graph Sampling
-
-**Signature:** `(values: List[int]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Recommenders & Graph Sampling
 
 ## What it does
 

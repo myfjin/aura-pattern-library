@@ -1,8 +1,6 @@
 # rolling zscore anomaly
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Time Series
-
-**Signature:** `(series: List[float], window: int, threshold: float) → Tuple[List[float], List[int]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Time Series
 
 ## What it does
 

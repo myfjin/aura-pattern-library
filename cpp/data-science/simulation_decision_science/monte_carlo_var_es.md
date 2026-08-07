@@ -1,8 +1,6 @@
 # monte carlo var es
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Simulation & Decision Science
-
-**Signature:** `() → None`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Simulation & Decision Science
 
 ## What it does
 

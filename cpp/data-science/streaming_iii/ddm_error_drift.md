@@ -1,8 +1,6 @@
 # ddm error drift
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Streaming III
-
-**Signature:** `(error_stream: List[int], min_samples: int) → Tuple[bool, int]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Streaming III
 
 ## What it does
 

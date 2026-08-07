@@ -1,8 +1,6 @@
 # crash log capture
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 5 · Log management
-
-**Signature:** `(log_path: str, crash_after_n: int) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 5 · Log management
 
 ## What it does
 

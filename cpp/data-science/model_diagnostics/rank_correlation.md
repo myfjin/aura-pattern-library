@@ -1,8 +1,6 @@
 # rank correlation
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Model Diagnostics
-
-**Signature:** `(data: List[float]) → List[float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Model Diagnostics
 
 ## What it does
 

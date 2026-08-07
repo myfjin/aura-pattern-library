@@ -1,8 +1,6 @@
 # hazard vs survival conversion
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Survival & Reliability
-
-**Signature:** `(S: Callable[[float], float], t: float, eps: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Survival & Reliability
 
 ## What it does
 

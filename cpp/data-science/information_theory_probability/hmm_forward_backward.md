@@ -1,8 +1,6 @@
 # hmm forward backward
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Information Theory & Probability
-
-**Signature:** `(observations: List[int], initial_state: List[float], transition_matrix: List[List[float]], emission_matrix: List[List[float]]) → Tuple[float, List[List[float]]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Information Theory & Probability
 
 ## What it does
 

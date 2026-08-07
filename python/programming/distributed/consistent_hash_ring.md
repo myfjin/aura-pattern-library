@@ -1,8 +1,6 @@
 # consistent hash ring
 
-**Language:** Python · **Sphere:** rust · **Category:** distributed
-
-**Signature:** `(data: &[u8]) → u64`
+**Language:** Python · **Oracle sphere:** rust (this file is the Python twin) · **Category:** distributed
 
 ## What it does
 

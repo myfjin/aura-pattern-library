@@ -1,8 +1,6 @@
 # exponential backoff
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 8 · Network reachability & health
-
-**Signature:** `(operation: Callable, max_attempts: int, base_delay_ms: int) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 8 · Network reachability & health
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # distance metrics toolkit
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Optimization & Distances
-
-**Signature:** `(p: List[float], q: List[float]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Optimization & Distances
 
 ## What it does
 

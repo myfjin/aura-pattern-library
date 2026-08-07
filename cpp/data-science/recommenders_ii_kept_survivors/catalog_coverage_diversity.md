@@ -1,6 +1,6 @@
 # catalog coverage diversity
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Recommenders II — kept survivors
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Recommenders II — kept survivors
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # elbo monotone vi
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Bayesian III — Approximate Inference
-
-**Signature:** `(data: ?, mu0: ?, s0: ?) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Bayesian III — Approximate Inference
 
 ## What it does
 

@@ -1,6 +1,6 @@
 # event bus
 
-**Language:** Go · **Sphere:** programming · **Category:** Architecture
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Architecture
 
 ## What it does
 

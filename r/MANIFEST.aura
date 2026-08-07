@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-26",
+  "created": "2026-08-07",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -262,8 +262,8 @@
     },
     {
       "path": "multivariate_and_applied_modeling/pca_power_iteration.md",
-      "sha256": "a66fb5a93238cde5a1a0878a190e8d33f0a57b507b138b370629f78b72667766",
-      "bytes": 2691
+      "sha256": "f55fc4c0f773600b900817693bbf72961ba594f055d19c0df6153b316fc24d27",
+      "bytes": 2637
     },
     {
       "path": "multivariate_and_applied_modeling/stratified_split.R",
@@ -297,8 +297,8 @@
     },
     {
       "path": "nonparametric_and_categorical/chi_square_independence.md",
-      "sha256": "9e31e6caa8c1e55347245d78c432fe0b5131e2f9910bc35cd450a54e957e91c1",
-      "bytes": 1919
+      "sha256": "80384352923cee7532991432c26153387ae1d891f0c277e90df049475bf00183",
+      "bytes": 1867
     },
     {
       "path": "nonparametric_and_categorical/cramers_v_effect.R",

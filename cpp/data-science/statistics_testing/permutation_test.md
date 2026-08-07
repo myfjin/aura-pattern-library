@@ -1,8 +1,6 @@
 # permutation test
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Statistics & Testing
-
-**Signature:** `(group_a: List[float], group_b: List[float], n_perms: int) → Tuple[float, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Statistics & Testing
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # csv type inference
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Data Wrangling From Scratch
-
-**Signature:** `(value: str) → str`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Data Wrangling From Scratch
 
 ## What it does
 

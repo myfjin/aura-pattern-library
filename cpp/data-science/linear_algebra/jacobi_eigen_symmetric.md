@@ -1,8 +1,6 @@
 # jacobi eigen symmetric
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Linear Algebra
-
-**Signature:** `(A: list, max_iter: int, tol: float) → Tuple[list, list]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Linear Algebra
 
 ## What it does
 

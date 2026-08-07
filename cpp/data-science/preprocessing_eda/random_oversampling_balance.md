@@ -1,8 +1,6 @@
 # random oversampling balance
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Preprocessing & EDA
-
-**Signature:** `(X: List[List[float]], y: List[int]) → Tuple[List[List[float]], List[int]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Preprocessing & EDA
 
 ## What it does
 

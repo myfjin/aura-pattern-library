@@ -1,8 +1,6 @@
 # empirical bayes shrinkage
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Probabilistic Modeling
-
-**Signature:** `(groups: List[List[float]]) → Tuple[List[float], List[float], float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Probabilistic Modeling
 
 ## What it does
 

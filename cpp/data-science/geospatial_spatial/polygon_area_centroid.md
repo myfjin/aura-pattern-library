@@ -1,8 +1,6 @@
 # polygon area centroid
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Geospatial & Spatial
-
-**Signature:** `(vertices: List[Tuple[float, float]]) → Tuple[float, Tuple[float, float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Geospatial & Spatial
 
 ## What it does
 

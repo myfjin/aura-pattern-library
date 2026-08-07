@@ -1,8 +1,6 @@
 # equalized odds thresholds
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Fairness, Privacy & Robustness
-
-**Signature:** `() → None`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Fairness, Privacy & Robustness
 
 ## What it does
 

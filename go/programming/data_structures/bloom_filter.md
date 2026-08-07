@@ -1,8 +1,6 @@
 # bloom filter
 
-**Language:** Go · **Sphere:** rust · **Category:** data structures
-
-**Signature:** `(data: &[u8]) → u32`
+**Language:** Go · **Oracle sphere:** rust (this file is the Go twin) · **Category:** data structures
 
 ## What it does
 

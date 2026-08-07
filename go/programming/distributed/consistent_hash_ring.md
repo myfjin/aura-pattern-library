@@ -1,8 +1,6 @@
 # consistent hash ring
 
-**Language:** Go · **Sphere:** rust · **Category:** distributed
-
-**Signature:** `(data: &[u8]) → u64`
+**Language:** Go · **Oracle sphere:** rust (this file is the Go twin) · **Category:** distributed
 
 ## What it does
 

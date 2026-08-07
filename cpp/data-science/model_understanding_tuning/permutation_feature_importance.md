@@ -1,8 +1,6 @@
 # permutation feature importance
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Model Understanding & Tuning
-
-**Signature:** `(X: List[List[float]], y: List[float]) → Tuple[float, float, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Model Understanding & Tuning
 
 ## What it does
 

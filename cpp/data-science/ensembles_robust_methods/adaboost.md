@@ -1,8 +1,6 @@
 # adaboost
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Ensembles & Robust Methods
-
-**Signature:** `(X: List[Tuple[float, float]], y: List[int], n_rounds: int) → List[Tuple]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Ensembles & Robust Methods
 
 ## What it does
 

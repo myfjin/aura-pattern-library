@@ -1,8 +1,6 @@
 # mahalanobis distance
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Optimization & Distances
-
-**Signature:** `(point: Tuple[float, float], mean: Tuple[float, float], cov_inv: List[List[float]]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Optimization & Distances
 
 ## What it does
 

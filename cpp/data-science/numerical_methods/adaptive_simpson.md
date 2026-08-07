@@ -1,8 +1,6 @@
 # adaptive simpson
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Numerical Methods
-
-**Signature:** `(f: Callable[[float], float], a: float, b: float, tol: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Numerical Methods
 
 ## What it does
 

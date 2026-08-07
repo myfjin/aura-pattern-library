@@ -1,8 +1,6 @@
 # rts kalman smoother
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Probabilistic Modeling
-
-**Signature:** `(observations: List[float], process_var: float, meas_var: float) → Tuple[List[float], List[float], List[float], List[float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Probabilistic Modeling
 
 ## What it does
 

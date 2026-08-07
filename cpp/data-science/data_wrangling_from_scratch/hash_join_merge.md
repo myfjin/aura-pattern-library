@@ -1,8 +1,6 @@
 # hash join merge
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Data Wrangling From Scratch
-
-**Signature:** `(left_table: List[Dict[str, Any]], right_table: List[Dict[str, Any]], join_key: str) → List[Dict[str, Any]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Data Wrangling From Scratch
 
 ## What it does
 

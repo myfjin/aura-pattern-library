@@ -1,8 +1,6 @@
 # extreme value block maxima
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Probability III
-
-**Signature:** `(block_maxima: List[float]) → Tuple[float, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Probability III
 
 ## What it does
 

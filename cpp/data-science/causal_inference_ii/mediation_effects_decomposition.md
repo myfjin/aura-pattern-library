@@ -1,8 +1,6 @@
 # mediation effects decomposition
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Causal Inference II
-
-**Signature:** `(x_vals: ?, y_vals: ?) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Causal Inference II
 
 ## What it does
 

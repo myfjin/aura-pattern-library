@@ -1,8 +1,6 @@
 # difference in differences
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Causal Inference & Experimentation
-
-**Signature:** `(n_per_group: int, treatment_effect: float, time_effect: float) → Tuple[List[float], List[float], List[float], List[float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Causal Inference & Experimentation
 
 ## What it does
 

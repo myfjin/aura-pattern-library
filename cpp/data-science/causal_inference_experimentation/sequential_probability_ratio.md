@@ -1,8 +1,6 @@
 # sequential probability ratio
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Causal Inference & Experimentation
-
-**Signature:** `(data: list, p0: float, p1: float, alpha: float, beta: float) → Tuple[str, int]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Causal Inference & Experimentation
 
 ## What it does
 

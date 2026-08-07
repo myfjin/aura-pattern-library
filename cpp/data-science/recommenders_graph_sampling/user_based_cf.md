@@ -1,8 +1,6 @@
 # user based cf
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Recommenders & Graph Sampling
-
-**Signature:** `(vec_a: Dict[int, float], vec_b: Dict[int, float]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Recommenders & Graph Sampling
 
 ## What it does
 

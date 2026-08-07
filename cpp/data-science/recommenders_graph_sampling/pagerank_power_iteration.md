@@ -1,8 +1,6 @@
 # pagerank power iteration
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Recommenders & Graph Sampling
-
-**Signature:** `(graph: Dict[int, List[int]], damping: float, tol: float, max_iter: int) → Dict[int, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Recommenders & Graph Sampling
 
 ## What it does
 

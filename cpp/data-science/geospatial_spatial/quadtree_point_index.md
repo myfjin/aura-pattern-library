@@ -1,6 +1,6 @@
 # quadtree point index
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Geospatial & Spatial
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Geospatial & Spatial
 
 ## What it does
 

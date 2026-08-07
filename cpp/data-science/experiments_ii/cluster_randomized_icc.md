@@ -1,8 +1,6 @@
 # cluster randomized icc
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Experiments II
-
-**Signature:** `(t_obs: List[float], c_obs: List[float], true_effect: float) → bool`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Experiments II
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # double launch block
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 3 · Concurrency & Locking
-
-**Signature:** `(.0: range_iterator) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 3 · Concurrency & Locking
 
 ## What it does
 

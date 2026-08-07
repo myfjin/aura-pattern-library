@@ -1,8 +1,6 @@
 # backup catalog
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 13 · Backup & disaster recovery
-
-**Signature:** `(backup_dir: Path, catalog_dir: Path) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 13 · Backup & disaster recovery
 
 ## What it does
 

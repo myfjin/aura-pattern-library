@@ -1,8 +1,6 @@
 # richardson extrapolation
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Numerical Methods
-
-**Signature:** `(F: Callable[[float], float], h: float, p: int) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Numerical Methods
 
 ## What it does
 

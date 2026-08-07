@@ -1,8 +1,6 @@
 # reliability series parallel
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Survival & Reliability
-
-**Signature:** `(component_reliabilities: List[float]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Survival & Reliability
 
 ## What it does
 

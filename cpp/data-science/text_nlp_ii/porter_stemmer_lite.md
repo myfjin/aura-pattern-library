@@ -1,8 +1,6 @@
 # porter stemmer lite
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Text / NLP II
-
-**Signature:** `(word: str) → str`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Text / NLP II
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # quantile binning
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Preprocessing & EDA
-
-**Signature:** `(data: List[float], n_bins: int) → List[int]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Preprocessing & EDA
 
 ## What it does
 

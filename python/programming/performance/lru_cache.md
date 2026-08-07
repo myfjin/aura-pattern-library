@@ -1,8 +1,6 @@
 # lru cache
 
-**Language:** Python · **Sphere:** rust · **Category:** performance
-
-**Signature:** `(key: u32, value: u32) → ?`
+**Language:** Python · **Oracle sphere:** rust (this file is the Python twin) · **Category:** performance
 
 ## What it does
 

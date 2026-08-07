@@ -1,8 +1,6 @@
 # cron expr next fire
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 7 · Scheduling & jobs
-
-**Signature:** `(cron_expr: str, from_time: float) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 7 · Scheduling & jobs
 
 ## What it does
 

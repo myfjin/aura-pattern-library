@@ -1,8 +1,6 @@
 # deadline ttl
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 11 · Time, clock & correctness
-
-**Signature:** `(ttl_seconds: float) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 11 · Time, clock & correctness
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # theil sen estimator
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Ensembles & Robust Methods
-
-**Signature:** `(X: List[float], y: List[float]) → Tuple[float, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Ensembles & Robust Methods
 
 ## What it does
 

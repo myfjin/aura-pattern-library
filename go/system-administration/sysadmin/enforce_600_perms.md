@@ -1,8 +1,6 @@
 # enforce 600 perms
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 10 · Secrets & credentials
-
-**Signature:** `(filepath: str) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 10 · Secrets & credentials
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # rk4 ode solver
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Numerical Methods
-
-**Signature:** `(f: Callable[[float, float], float], t0: float, y0: float, t_final: float, num_steps: int) → Tuple[list, list]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Numerical Methods
 
 ## What it does
 

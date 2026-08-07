@@ -1,8 +1,6 @@
 # kl divergence cross entropy
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Information Theory & Probability
-
-**Signature:** `(p: List[float], q: List[float]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Information Theory & Probability
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # cohort retention analysis
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Applied DS Practice
-
-**Signature:** `(events: list[dict]) → dict[str, dict[int, int]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Applied DS Practice
 
 ## What it does
 

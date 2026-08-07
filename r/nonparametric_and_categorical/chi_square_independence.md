@@ -1,8 +1,6 @@
 # chi square independence
 
-**Language:** R · **Sphere:** data-science · **Category:** Statistics & Testing
-
-**Signature:** `(contingency_table: List[List[int]]) → Tuple[float, float, bool]`
+**Language:** R · **Oracle sphere:** data-science (this file is the R twin) · **Category:** Statistics & Testing
 
 ## What it does
 

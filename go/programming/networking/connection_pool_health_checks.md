@@ -1,6 +1,6 @@
 # connection pool health checks
 
-**Language:** Go · **Sphere:** programming · **Category:** Networking
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Networking
 
 ## What it does
 

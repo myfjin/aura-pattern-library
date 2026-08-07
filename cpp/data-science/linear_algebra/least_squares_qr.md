@@ -1,8 +1,6 @@
 # least squares qr
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Linear Algebra
-
-**Signature:** `(A: list, b: list) → list`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Linear Algebra
 
 ## What it does
 

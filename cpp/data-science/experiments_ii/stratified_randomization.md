@@ -1,8 +1,6 @@
 # stratified randomization
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Experiments II
-
-**Signature:** `(x: List[float], seed: int) → List[int]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Experiments II
 
 ## What it does
 

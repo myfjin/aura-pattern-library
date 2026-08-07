@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-26",
+  "created": "2026-08-07",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -437,8 +437,8 @@
     },
     {
       "path": "concurrency-resilience/circuit_breaker.md",
-      "sha256": "700a0bf7f62c9c2777609b2546ec70522416e46070832112006173d74fa6a640",
-      "bytes": 1521
+      "sha256": "edc2fbfe441c359e1db7fdcdfa78c824c6c43a46325dfbfc8b55e2254fa9acaa",
+      "bytes": 1483
     },
     {
       "path": "concurrency-resilience/circuit_breaker.rs",
@@ -487,8 +487,8 @@
     },
     {
       "path": "concurrency-resilience/exponential_backoff.md",
-      "sha256": "97a74cbf510c10e7511b962c7a0a7e58312a66a5f04b0ab11be881fbac461e96",
-      "bytes": 1477
+      "sha256": "a0aaea874528960b734c6c593b573e4a31d9037b980a560c003bce6b8cb93569",
+      "bytes": 1428
     },
     {
       "path": "concurrency-resilience/exponential_backoff.rs",
@@ -672,8 +672,8 @@
     },
     {
       "path": "cross-sphere-twins/count_min_sketch.md",
-      "sha256": "32f53adb09b15624bf8522bc1e93dbe22bbb91ce9dfe4a0fdd7f8329be676547",
-      "bytes": 2379
+      "sha256": "f68453e4afddca078fe28ec09ffa29f07ac6e38977f80a3451fa9f753dcd04ee",
+      "bytes": 2415
     },
     {
       "path": "cross-sphere-twins/count_min_sketch.rs",

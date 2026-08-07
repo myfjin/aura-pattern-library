@@ -1,8 +1,6 @@
 # knn classifier
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Core ML
-
-**Signature:** `(p1: List[float], p2: List[float]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Core ML
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # circuit breaker
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 6 · Resource guards & quotas
-
-**Signature:** `(failure_threshold: int, recovery_timeout: float) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 6 · Resource guards & quotas
 
 ## What it does
 

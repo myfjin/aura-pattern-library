@@ -1,8 +1,6 @@
 # synthetic control lite
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Causal Inference & Experimentation
-
-**Signature:** `(pre_treated: List[float], pre_controls: List[List[float]]) → List[float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Causal Inference & Experimentation
 
 ## What it does
 

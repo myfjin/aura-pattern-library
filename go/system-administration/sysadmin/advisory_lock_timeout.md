@@ -1,8 +1,6 @@
 # advisory lock timeout
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 3 · Concurrency & Locking
-
-**Signature:** `(filename: ?, timeout_sec: ?) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 3 · Concurrency & Locking
 
 ## What it does
 

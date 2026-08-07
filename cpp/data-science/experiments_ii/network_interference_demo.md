@@ -1,8 +1,6 @@
 # network interference demo
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Experiments II
-
-**Signature:** `(n: int, treatment: List[int], effect_direct: float, effect_spillover: float) → List[float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Experiments II
 
 ## What it does
 

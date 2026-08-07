@@ -1,8 +1,6 @@
 # isolation tree anomaly
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Clustering, Graph & Anomaly
-
-**Signature:** `(points: List[Tuple[float, ...]], indices: List[int], depth: int, max_depth: int) → IsolationNode`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Clustering, Graph & Anomaly
 
 ## What it does
 

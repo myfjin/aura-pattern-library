@@ -1,8 +1,6 @@
 # autoregressive model
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Time Series
-
-**Signature:** `(a: float, b: float, c: float, d: float, e: float, f: float) → Tuple[float, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Time Series
 
 ## What it does
 

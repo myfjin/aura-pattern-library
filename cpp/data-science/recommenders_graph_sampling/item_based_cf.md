@@ -1,8 +1,6 @@
 # item based cf
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Recommenders & Graph Sampling
-
-**Signature:** `(item_a: Dict[int, float], item_b: Dict[int, float], user_means: Dict[int, float]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Recommenders & Graph Sampling
 
 ## What it does
 

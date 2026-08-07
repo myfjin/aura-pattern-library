@@ -1,8 +1,6 @@
 # bm25 ranking
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Rankings & Information Retrieval
-
-**Signature:** `(query_terms: List[str], all_docs: List[List[str]], doc_idx: int, k1: float, b: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Rankings & Information Retrieval
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # instrumental variable lite
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Causal Inference & Experimentation
-
-**Signature:** `(x: List[float], y: List[float]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Causal Inference & Experimentation
 
 ## What it does
 

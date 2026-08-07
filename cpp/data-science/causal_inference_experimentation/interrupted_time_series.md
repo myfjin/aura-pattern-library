@@ -1,8 +1,6 @@
 # interrupted time series
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Causal Inference & Experimentation
-
-**Signature:** `(times: List[int], Y: List[float], cutoff: int) → Tuple[float, float, float, float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Causal Inference & Experimentation
 
 ## What it does
 

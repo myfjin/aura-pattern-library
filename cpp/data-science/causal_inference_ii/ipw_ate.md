@@ -1,8 +1,6 @@
 # ipw ate
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Causal Inference II
-
-**Signature:** `(t_vals: List[int], y_vals: List[float], propensity: List[float]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Causal Inference II
 
 ## What it does
 

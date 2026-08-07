@@ -1,8 +1,6 @@
 # meanfield vi gaussian
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Bayesian III — Approximate Inference
-
-**Signature:** `(data: List[float], mu0: ?, lam0: ?, a0: ?, b0: ?, max_iter: ?) → Tuple[float, float, List[float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Bayesian III — Approximate Inference
 
 ## What it does
 

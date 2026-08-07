@@ -1,8 +1,6 @@
 # bayesian network
 
-**Language:** Go · **Sphere:** programming · **Category:** Reasoning
-
-**Signature:** `() → BayesianNetwork`
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Reasoning
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # cusum changepoint
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Time Series
-
-**Signature:** `(series: List[float], target: float, k: float, h: float) → Tuple[List[float], List[int]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Time Series
 
 ## What it does
 

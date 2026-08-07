@@ -1,8 +1,6 @@
 # minimum detectable effect
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Experiments II
-
-**Signature:** `(n_per_arm: int, alpha: float, power: float, sigma: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Experiments II
 
 ## What it does
 

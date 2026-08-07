@@ -1,8 +1,6 @@
 # token bucket
 
-**Language:** Python · **Sphere:** rust · **Category:** performance
-
-**Signature:** `(now: i64) → ?`
+**Language:** Python · **Oracle sphere:** rust (this file is the Python twin) · **Category:** performance
 
 ## What it does
 

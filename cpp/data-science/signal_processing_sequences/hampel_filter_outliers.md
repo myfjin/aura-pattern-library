@@ -1,8 +1,6 @@
 # hampel filter outliers
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Signal Processing & Sequences
-
-**Signature:** `(signal: List[float], window_size: int, k: float) → List[float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Signal Processing & Sequences
 
 ## What it does
 

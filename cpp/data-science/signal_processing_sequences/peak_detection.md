@@ -1,8 +1,6 @@
 # peak detection
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Signal Processing & Sequences
-
-**Signature:** `(signal: List[float], prominence_threshold: float) → List[int]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Signal Processing & Sequences
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # tfidf vectorizer
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Text / NLP
-
-**Signature:** `(vec1: List[float], vec2: List[float]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Text / NLP
 
 ## What it does
 

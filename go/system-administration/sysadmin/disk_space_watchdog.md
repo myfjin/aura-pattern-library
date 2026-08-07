@@ -1,8 +1,6 @@
 # disk space watchdog
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 6 · Resource guards & quotas
-
-**Signature:** `(threshold_mb: int) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 6 · Resource guards & quotas
 
 ## What it does
 

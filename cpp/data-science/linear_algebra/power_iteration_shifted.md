@@ -1,8 +1,6 @@
 # power iteration shifted
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Linear Algebra
-
-**Signature:** `(A: list, shift: float, max_iter: int, tol: float) → Tuple[float, list]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Linear Algebra
 
 ## What it does
 

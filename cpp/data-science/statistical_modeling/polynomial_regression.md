@@ -1,8 +1,6 @@
 # polynomial regression
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Statistical Modeling
-
-**Signature:** `(A: List[List[float]], b: List[float]) → List[float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Statistical Modeling
 
 ## What it does
 

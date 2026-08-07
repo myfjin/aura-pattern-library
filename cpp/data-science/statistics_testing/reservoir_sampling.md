@@ -1,8 +1,6 @@
 # reservoir sampling
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Statistics & Testing
-
-**Signature:** `(stream: ?, k: int) → List`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Statistics & Testing
 
 ## What it does
 

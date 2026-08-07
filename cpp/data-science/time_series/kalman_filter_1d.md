@@ -1,8 +1,6 @@
 # kalman filter 1d
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Time Series
-
-**Signature:** `(observations: List[float], process_variance: float, measurement_variance: float, initial_state: float, initial_estimate_error: float) → Tuple[List[float], List[float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Time Series
 
 ## What it does
 

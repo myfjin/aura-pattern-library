@@ -1,8 +1,6 @@
 # ridge regression normal eq
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Core ML
-
-**Signature:** `(X: List[List[float]], y: List[float], lambda_reg: float) → List[float]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Core ML
 
 ## What it does
 

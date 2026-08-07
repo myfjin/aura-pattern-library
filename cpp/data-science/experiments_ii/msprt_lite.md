@@ -1,8 +1,6 @@
 # msprt lite
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Experiments II
-
-**Signature:** `(diff_gen: Callable[[], float], alpha: float, tau2: float, v: float, max_n: int) → bool`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Experiments II
 
 ## What it does
 

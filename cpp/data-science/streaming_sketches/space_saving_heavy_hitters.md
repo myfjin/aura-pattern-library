@@ -1,6 +1,6 @@
 # space saving heavy hitters
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Streaming & Sketches
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Streaming & Sketches
 
 ## What it does
 

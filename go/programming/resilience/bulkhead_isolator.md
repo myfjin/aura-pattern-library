@@ -1,6 +1,6 @@
 # bulkhead isolator
 
-**Language:** Go · **Sphere:** programming · **Category:** Resilience
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Resilience
 
 ## What it does
 

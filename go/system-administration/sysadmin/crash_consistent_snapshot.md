@@ -1,8 +1,6 @@
 # crash consistent snapshot
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 4 · State/DB durability
-
-**Signature:** `(db_path: str, snap_path: str) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 4 · State/DB durability
 
 ## What it does
 

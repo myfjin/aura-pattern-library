@@ -1,8 +1,6 @@
 # walk forward validation
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Time Series
-
-**Signature:** `(series: List[float], initial_window: int, forecast_func: Callable[[List[float]], List[float]]) → Tuple[List[float], List[float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Time Series
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # walk forward early stopping
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Composed Tools
-
-**Signature:** `(X: List[List[float]], r: List[float]) → Stump`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Composed Tools
 
 ## What it does
 

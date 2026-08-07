@@ -1,8 +1,6 @@
 # inverse transform sampling
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Information Theory & Probability
-
-**Signature:** `(u: float, rate: float) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Information Theory & Probability
 
 ## What it does
 

@@ -1,8 +1,6 @@
 # binary indexed tree
 
-**Language:** Go · **Sphere:** programming · **Category:** Data Structures
-
-**Signature:** `() → None`
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Data Structures
 
 ## What it does
 

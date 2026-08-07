@@ -1,8 +1,6 @@
 # pivot table
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Data Wrangling From Scratch
-
-**Signature:** `(records: List[Dict[str, Any]], row_key: str, col_key: str, val_key: str, agg_func: str) → Dict[Any, Dict[Any, float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Data Wrangling From Scratch
 
 ## What it does
 

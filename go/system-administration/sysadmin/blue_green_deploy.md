@@ -1,8 +1,6 @@
 # blue green deploy
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 12 · Deployment & rollback
-
-**Signature:** `(app_code: str) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 12 · Deployment & rollback
 
 ## What it does
 

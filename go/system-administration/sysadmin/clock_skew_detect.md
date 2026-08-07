@@ -1,8 +1,6 @@
 # clock skew detect
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 11 · Time, clock & correctness
-
-**Signature:** `(wall_time: float) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 11 · Time, clock & correctness
 
 ## What it does
 

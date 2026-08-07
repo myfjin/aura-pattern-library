@@ -1,8 +1,6 @@
 # zipf law fit
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Text / NLP II
-
-**Signature:** `(word_frequencies: List[int]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Text / NLP II
 
 ## What it does
 

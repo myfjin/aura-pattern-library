@@ -1,8 +1,6 @@
 # deploy idempotency
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 12 · Deployment & rollback
-
-**Signature:** `(version: str, skip_if_current: bool) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 12 · Deployment & rollback
 
 ## What it does
 

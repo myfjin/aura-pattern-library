@@ -1,8 +1,6 @@
 # great circle waypoints
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Geospatial & Spatial
-
-**Signature:** `(lat1: float, lon1: float, lat2: float, lon2: float, n_waypoints: int) → List[Tuple[float, float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Geospatial & Spatial
 
 ## What it does
 

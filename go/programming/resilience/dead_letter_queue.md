@@ -1,8 +1,6 @@
 # dead letter queue
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 7 · Scheduling & jobs
-
-**Signature:** `(job_id: str, callback: Callable) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 7 · Scheduling & jobs
 
 ## What it does
 

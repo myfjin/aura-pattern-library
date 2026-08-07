@@ -1,6 +1,6 @@
 # async task queue
 
-**Language:** Go · **Sphere:** programming · **Category:** Async
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Async
 
 ## What it does
 

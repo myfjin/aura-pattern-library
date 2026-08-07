@@ -1,8 +1,6 @@
 # g counter crdt
 
-**Language:** Go · **Sphere:** programming · **Category:** Distributed
-
-**Signature:** `() → None`
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Distributed
 
 ## What it does
 

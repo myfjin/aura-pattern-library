@@ -1,8 +1,6 @@
 # capability probe
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 17 · Packaging & environment
-
-**Signature:** `(test_dir: str) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 17 · Packaging & environment
 
 ## What it does
 

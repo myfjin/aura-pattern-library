@@ -1,8 +1,6 @@
 # cancellable task group
 
-**Language:** Go · **Sphere:** programming · **Category:** Async
-
-**Signature:** `(name: str, duration: float, token: CancellationToken) → str`
+**Language:** Go · **Oracle sphere:** programming (this file is the Go twin) · **Category:** Async
 
 ## What it does
 

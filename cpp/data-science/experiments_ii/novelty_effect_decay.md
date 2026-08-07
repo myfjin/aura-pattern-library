@@ -1,8 +1,6 @@
 # novelty effect decay
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Experiments II
-
-**Signature:** `(n_users: int, true_long_run_effect: float, novelty_boost: float, decay_rate: float) → List[List[float]]`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Experiments II
 
 ## What it does
 

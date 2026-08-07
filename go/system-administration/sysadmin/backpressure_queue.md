@@ -1,8 +1,6 @@
 # backpressure queue
 
-**Language:** Go · **Sphere:** system-administration · **Category:** Wave 6 · Resource guards & quotas
-
-**Signature:** `(max_size: int, timeout_sec: float) → ?`
+**Language:** Go · **Oracle sphere:** system-administration (this file is the Go twin) · **Category:** Wave 6 · Resource guards & quotas
 
 ## What it does
 

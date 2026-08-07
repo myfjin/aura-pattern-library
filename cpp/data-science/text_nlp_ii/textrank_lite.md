@@ -1,8 +1,6 @@
 # textrank lite
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Text / NLP II
-
-**Signature:** `(sent1: List[str], sent2: List[str]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Text / NLP II
 
 ## What it does
 

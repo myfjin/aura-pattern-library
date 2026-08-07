@@ -1,8 +1,6 @@
 # mean reciprocal rank
 
-**Language:** C++ · **Sphere:** data-science · **Category:** Rankings & Information Retrieval
-
-**Signature:** `(rankings: List[List[int]], relevant_sets: List[Set[int]]) → float`
+**Language:** C++ · **Oracle sphere:** data-science (this file is the C++ twin) · **Category:** Rankings & Information Retrieval
 
 ## What it does
 
