@@ -32,7 +32,15 @@ LANES = {"python": "*.py", "r": "*.R", "cpp": "*.cpp",
 SKIP_FN = re.compile(r"^(_aura_validate_|_?test_|main$|__)")
 # A matrix-shaped parameter, in any of the library's annotation dialects.
 MATRIX_ANN = re.compile(r"list\s*\[\s*list|List\s*\[\s*List|\[\]\[\]|Vec<\s*Vec|float\s*\*\s*\*", re.I)
-MATRIX_NAME = re.compile(r"^(X|A|mat|matrix|data|features|design)$", re.I)
+# ⛔ Single letters are matched CASE-SENSITIVELY (see matrix_named()). `X` and `A` are
+# conventional matrix names; `a` and `x` are conventional names for anything at all. Matching
+# them case-blind is what put `cosine(a: Dict, b: Dict)` into a linear-algebra robustness table.
+MATRIX_LETTER = re.compile(r"^[XA]$")                      # case-SENSITIVE, deliberately
+MATRIX_WORD = re.compile(r"^(mat|matrix|data|features|design)$", re.I)
+
+
+def matrix_named(name: str) -> bool:
+    return bool(MATRIX_LETTER.match(name) or MATRIX_WORD.match(name))
 
 DOC_ENTRY = re.compile(r"^\*\*Entry fn:\*\*\s*(.+)$", re.M)
 
@@ -44,10 +52,24 @@ VECTOR_NAME = re.compile(r"^(y|labels?|target|targets|values|samples?|obs|observ
 
 
 def param_role(name: str, ann) -> str:
-    """matrix | vector | other. `other` required => the prober cannot drive this function."""
-    if (ann and MATRIX_ANN.search(ann)) or MATRIX_NAME.match(name):
+    """matrix | vector | other. `other` required => the prober cannot drive this function.
+
+    ⛔ THE ANNOTATION IS AUTHORITATIVE. Names are a fallback used ONLY when a parameter is
+    unannotated. The first version matched names case-INSENSITIVELY against a set including the
+    single letter `A`, so `cosine(a: Dict[str, float], b: Dict[str, float])` in the text pattern
+    `cross_domain_query_expansion` had `a` classified as a MATRIX — and the pattern was published
+    in ROBUSTNESS.md under linear-algebra input classes it has nothing to do with. A one-letter
+    case-blind match is not evidence; a declared type is.
+    """
+    if ann:
+        if MATRIX_ANN.search(ann):
+            return "matrix"
+        if VECTOR_ANN.search(ann):
+            return "vector"
+        return "other"                      # annotated as something else => believe it
+    if matrix_named(name):
         return "matrix"
-    if (ann and VECTOR_ANN.search(ann)) or VECTOR_NAME.match(name):
+    if VECTOR_NAME.match(name):
         return "vector"
     return "other"
 
