@@ -1,5 +1,5 @@
 # AURA Pattern Library — Master Catalog (ID-keyed)
-_Generated 2026-07-11. **1035 patterns** (1035 unique IDs — a stem in two spheres is two patterns). Mark: **AURA Pattern Library** © **Reality Optimizer** (master 0). Key `a051daad9b472464…`. Run `library_verify.py`._
+_Generated 2026-08-29. **1035 patterns** (1024 unique IDs — a stem in two spheres is two patterns). Mark: **AURA Pattern Library** © **Reality Optimizer** (master 0). Key `a051daad9b472464…`. Run `library_verify.py`._
 
 | pattern ID | languages | category |
 |---|---|---|
@@ -1039,15 +1039,18 @@ _Generated 2026-07-11. **1035 patterns** (1035 unique IDs — a stem in two sphe
 | `zombie_reaper` | python | System Administration — Process Supervision |
 | `zscore_anomaly` | python | System Administration — Monitoring & Metrics |
 
-## Counts (2026-07-11)
+## Counts (2026-08-29)
 - **python/programming**: 99 · gate_ok 99 · authentic + unaltered
 - **python/data-science**: 377 · gate_ok 377 · authentic + unaltered
 - **python/system-administration**: 200 · gate_ok 200 · authentic + unaltered
 - **r**: 60 · gate_ok 60 · authentic + unaltered
 - **cpp/data-science**: 370 · g++ ∧ clang -pedantic + run · authentic + unaltered
 - **rust**: 200 · rustc -O -D warnings · authentic + unaltered
-- **go** (programming 35 + system-administration 58): 93 · go build + run + 3× determinism · authentic + unaltered
+- **go** (programming 45 + system-administration 58): 103 · go build + run + 3× determinism · authentic + unaltered
+- **javascript**: 91 · node (exit 0) · authentic + unaltered
 - **_quarantine**: 4 data-science (assert-linter REJECTs, excluded)
 
-**934 unique patterns · 1,399 signed files across five languages · 463 patterns in two or more languages.**
+**1,035 patterns (1,024 unique IDs) · 1,500 signed files across six languages · 466 patterns in two or more languages.**
 Every language twin is coupling-pinned to its Python/R source hash and carries the source's proven asserts.
+**JavaScript, like Python and R, is a source lane** — written directly in the language, no twins — which is why the
+two-or-more-languages count is unaffected by its 91 patterns.
