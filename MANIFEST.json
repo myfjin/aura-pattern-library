@@ -1,7 +1,7 @@
 {
   "library": "AURA Pattern Library",
   "owner": "Reality Optimizer",
-  "generated": "2026-08-04",
+  "generated": "2026-08-29",
   "signing_pubkey": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "languages": {
     "python/programming": {
@@ -67,16 +67,17 @@
   ],
   "total_shippable": 1500,
   "unique_ids": 1024,
-  "total_signed_files": 1399,
-  "multi_language_patterns": 463,
+  "total_signed_files": 1500,
+  "multi_language_patterns": 466,
   "languages_present": [
     "python",
     "cpp",
     "rust",
     "go",
-    "r"
+    "r",
+    "javascript"
   ],
-  "total_doc_files": 1409,
+  "total_doc_files": 1500,
   "docs_added": "2026-07-23 per-pattern detail docs (signed)",
   "docs_revisions": [
     "2026-07-26 constraint-render fix: hollow `assert False` markers no longer rendered as checkable constraints (114 lines / 69 cards; extractor tag honoured)"
