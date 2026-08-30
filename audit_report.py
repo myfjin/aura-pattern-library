@@ -96,6 +96,7 @@ sub_counts = collections.Counter()
 code_rows = collections.defaultdict(collections.Counter)     # (subclass, code) -> check ct
 code_lanes = collections.defaultdict(collections.Counter)    # (subclass, code) -> lane ct
 undisposed = 0
+with_u = sum(1 for r in recs if r.get("unverifiable_checks"))
 for r in recs:
     for u in (r.get("unverifiable_checks") or []):
         key = (u.get("subclass") or "UNCODED", u.get("reason_code") or "(none)")
@@ -106,6 +107,7 @@ for r in recs:
     if r["verdict"] == "UNVERIFIABLE" and r.get("disposition") is None:
         undisposed += 1
 
+hidden = with_u - sum(1 for r in recs if r["verdict"] == "UNVERIFIABLE")
 tax = header.get("unverifiable_taxonomy") or {}
 if code_rows:
     w("---")
@@ -119,7 +121,20 @@ if code_rows:
     w(f"**{undisposed} records are UNVERIFIABLE and undispositioned.** The tool exits 2 while")
     w("that is true, unless `--acknowledge-unverifiable` is passed.")
     w("")
-    w("| subclass | records | what it means | remedy |")
+    if hidden:
+        w(f"### ⚠️ …and {hidden} MORE records carry an unmeasured check without saying so")
+        w("")
+        w(f"{with_u} records have at least one `unverifiable` check, but only {undisposed} of")
+        w(f"them carry UNVERIFIABLE as their verdict. The other **{hidden} report as FLAG**,")
+        w("because FLAG outranks UNVERIFIABLE in the precedence — a record with a real finding")
+        w("AND an unmeasured half shows the finding and hides the hole.")
+        w("")
+        w("That is correct precedence (the finding is the more urgent fact) but it makes the")
+        w("verdict column understate how much was never measured. **Triage these from the")
+        w("reason-code table below, not from the verdict column** — the table counts checks,")
+        w("so it sees all of them.")
+        w("")
+    w("| subclass | records w/ ≥1 such check | what it means | remedy |")
     w("|---|---:|---|---|")
     for sc in sorted(sub_counts):
         meta = (tax.get("subclasses") or {}).get(sc, {})
