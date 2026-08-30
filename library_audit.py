@@ -243,9 +243,16 @@ DANGEROUS = {
         (r"createElement\s*\(\s*['\"]script", "dynamic <script> injection"),
         (r"createHash\(\s*['\"]md5", "md5"),
         (r"createHash\(\s*['\"]sha1", "sha1"),
+        # 4Q R18 F1: setTimeout/setInterval with a STRING argument parses and executes that
+        # string -- the eval class under a fourth spelling. A function argument is fine.
+        (r"\bset(?:Timeout|Interval)\s*\(\s*['\"]", "setTimeout(string) — eval-like"),
     ],
     "cpp": [
-        (r"\bsystem\s*\(", "system()"),
+        # 4Q R18 F2: too BROAD, the opposite of every round-16 finding. `\bsystem\s*\(`
+        # matched `hw.system(42)` -- a method on an object, not <cstdlib>'s system(). A call
+        # reached through `.` or `->` is BY CONSTRUCTION a member call and cannot be the C
+        # library function, so this is decidable lexically and needs no type resolution.
+        (r"(?<![.\w])(?<!->)system\s*\(", "system()"),
         (r"\bpopen\s*\(", "popen"),
         (r"\bexec[lv][pe]{0,2}\s*\(", "exec*"),
         (r"\bstrcpy\s*\(", "strcpy"),
@@ -258,6 +265,10 @@ DANGEROUS = {
         (r"\bs?scanf\s*\([^)]*%\s*(?:s|\[)", "unbounded scanf %s"),
         (r"\bMD5[_(]", "MD5"),
         (r"\bSHA1[_(]", "SHA1"),
+        # 4Q R18 F1: vsprintf is sprintf's variadic twin with the identical unbounded-write
+        # risk, and tmpnam returns a PREDICTABLE name -- the classic temp-file race.
+        (r"\bvs?printf\s*\(", "vsprintf"),
+        (r"\btmpnam\s*\(", "tmpnam — predictable temp name"),
     ],
     "go": [
         # ⛔ 6E R17 F1: same class -- "example.com/old/os/exec-wrapper" is a wrapper package,
@@ -268,11 +279,22 @@ DANGEROUS = {
         (r"syscall\.(?:Exec|ForkExec|StartProcess)\s*\(", "syscall raw exec"),
         (r"crypto/md5", "crypto/md5"),
         (r"crypto/sha1", "crypto/sha1"),
+        # 4Q R18 F1: the go table flagged weak HASHES and no weak CIPHERS. DES and RC4 are
+        # deprecated ciphers; a pattern demonstrating either is broken in the same way.
+        (r"crypto/des", "crypto/des — weak cipher"),
+        (r"crypto/rc4", "crypto/rc4 — weak cipher"),
         (r"unsafe\.", "unsafe"),
     ],
     "rust": [
         (r"\bunsafe\s*\{", "unsafe block"),
-        (r"std::process::Command", "process::Command"),
+        # 4Q R18 F1: the rule required the FULLY-QUALIFIED path, so `use std::process;` +
+        # `process::Command::new()` and `use std::process::*;` + `Command::new()` both walked
+        # past it. Same class as 6E's `from os import system` in python: an import alias is a
+        # second spelling of the same call. The bare form is admitted only when the file
+        # actually imports it, so an unrelated local `Command` type is not flagged.
+        (r"(?:std::)?process::Command", "process::Command"),
+        (r"use\s+std::process::\*\s*;[\s\S]*?\bCommand::new\s*\(",
+         "process::Command (glob-imported)"),
         # 6E R16 F4: libc::system is C system() over FFI -- the same primitive the cpp
         # table flags. It was caught ONLY when it happened to sit inside an unsafe block,
         # so 6E proved the miss by writing it outside one.
@@ -1673,6 +1695,51 @@ SELFTEST_CASES = [
      check_dangerous, "python", "from os import system\nsystem('ls')\n", "flag"),
     ("6E-R15 dangerous: os.execv is process execution too", check_dangerous, "python",
      "import os\nos.execv('/bin/ls', [])\n", "flag"),
+    # ⛔ 4Q ROUND 18 F1 — seven dangerous primitives absent from the tables. Each fixture is
+    # 4Q's, and each got a clean UNVERIFIABLE, which a reader mistakes for "nothing found".
+    ("R18-F1 js: setTimeout with a STRING argument parses and executes it — the eval class",
+     check_dangerous, "javascript", 'setTimeout("malicious_code()", 100);\n', "flag"),
+    ("R18-F1 js NEGATIVE ARM: setTimeout with a FUNCTION is the ordinary, safe use",
+     check_dangerous, "javascript", 'setTimeout(function(){ go(); }, 100);\n', "pass"),
+    ("R18-F1 cpp: vsprintf is sprintf's variadic twin, same unbounded write",
+     check_dangerous, "cpp", 'void f(char* b, const char* m, ...){ vsprintf(b, m, a); }\n',
+     "flag"),
+    ("R18-F1 cpp: tmpnam returns a PREDICTABLE name — the temp-file race", check_dangerous,
+     "cpp", 'char* f(){ return tmpnam(NULL); }\n', "flag"),
+    ("R18-F1 go: crypto/des is a weak CIPHER — the table had weak hashes and no ciphers",
+     check_dangerous, "go", 'import "crypto/des"\n', "flag"),
+    ("R18-F1 go: crypto/rc4 is the other deprecated cipher", check_dangerous, "go",
+     'import "crypto/rc4"\n', "flag"),
+    ("R18-F1 rust: `use std::process;` then process::Command::new — the rule demanded the "
+     "fully-qualified path, so an import alias walked straight past it", check_dangerous,
+     "rust", 'use std::process;\nfn r(){ process::Command::new("ls").output(); }\n', "flag"),
+    ("R18-F1 rust: a GLOB import leaves the call bare — Command::new with no path at all",
+     check_dangerous, "rust",
+     'use std::process::*;\nfn r(){ Command::new("ls").output(); }\n', "flag"),
+    ("R18-F1 rust NEGATIVE ARM: a local type named Command, with no std::process import, is "
+     "not process execution — the bare spelling must not become a keyword grep",
+     check_dangerous, "rust",
+     'struct Command;\nimpl Command { fn new() -> Self { Command } }\nfn f(){ Command::new(); }\n',
+     "pass"),
+    # ⛔ 4Q ROUND 18 F2 — the FIRST finding in the other direction. Every round-16 finding said
+    # the tables were too narrow; this one says a rule is too BROAD.
+    ("R18-F2 cpp: hw.system(42) is a METHOD on an object, not <cstdlib>'s system()",
+     check_dangerous, "cpp", 'int main(){ H hw; hw.system(42); }\n', "pass"),
+    # DECLARED LIMITATION, not a passing test dressed up. 4Q's original fixture also DECLARED
+    # the member (`void system(int m){}`), and a declaration is preceded by its return type,
+    # not by `.` or `->`, so it still flags. Distinguishing `void system(int)` from
+    # `return system(cmd)` needs to know a return type from a keyword -- that is parsing, and
+    # this rule is lexical. The CALL half is decidable and fixed; the DECLARATION half is not,
+    # and the honest record of that is a probe asserting today's real behaviour.
+    ("R18-F2 cpp LIMITATION: a class that DECLARES a member named system still flags — the "
+     "call is decidable from `.`/`->`, the declaration is not without a parser",
+     check_dangerous, "cpp",
+     'class H { public: void system(int m){} };\nint main(){ return 0; }\n', "flag"),
+    ("R18-F2 cpp: the same through a pointer — hw->system(42)", check_dangerous, "cpp",
+     'int main(){ H* hw = get(); hw->system(42); }\n', "pass"),
+    ("R18-F2 cpp POSITIVE ARM: a REAL system() call must still fire — narrowing a rule is "
+     "where a real finding gets lost", check_dangerous, "cpp",
+     'int main(){ system("ls"); return 0; }\n', "flag"),
     ("R17-F1 js: node:child_process is the modern spelling of the SAME import and must fire",
      check_dangerous, "javascript", "const cp = require('node:child_process');\n", "flag"),
     # ⛔ 6E ROUND 17 F1 — the restored-import leak. These are 6E's two MEASURED false
