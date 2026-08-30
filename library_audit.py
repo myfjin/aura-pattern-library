@@ -1464,6 +1464,118 @@ def coverage_for(checks):
     return "PARTIAL" if measured else "NONE"
 
 
+# ================================================================= the WAIVER mechanism
+# 6E, REPORT-6E-TRIAGE.md (2026-08-30): "WAIVE is an explicit, named, dated, instance-scoped
+# record that stays visible and auditably separate from clean; the pattern is not marked good,
+# it is marked ACCEPTED-WITH-REASON."
+#
+# ⛔ THE FAILURE THIS EXISTS TO PREVENT is a waiver that behaves like a pass. Five rules, all
+# mechanical:
+#   1. INSTANCE-SCOPED. Keyed (path, check, detail) -- never to a pattern's verdict -- so a
+#      waiver covers one finding on one file, not "this pattern is fine".
+#   2. STAYS LISTED. A waived finding keeps status `flag`. It is NEVER rewritten to pass and
+#      NEVER changes the finding axis, so it cannot vanish into NO_FINDING.
+#   3. THE REF IS MANDATORY AND ENFORCED. A waiver without a non-empty `ref` and `owner`
+#      RAISES at load. Without that it is a silent NO_FINDING wearing a different name.
+#   4. NOT THE BLANKET FLAG. Waivers are per-finding adjudication and do not ride
+#      --acknowledge-unverifiable, which is about COVERAGE.
+#   5. ROUND-TRIP VISIBLE. Re-running re-derives the waiver from the file; it reappears under
+#      WAIVED with its ref every sweep, so the decision is part of the record.
+#
+# ⛔ AND THE SIXTH, WHICH IS MINE: A WAIVER PINS THE FILE IT WAS GRANTED AGAINST.
+# 6E's rule 1 wants the raw flag back "if the code changes and a DIFFERENT unwrap appears".
+# The detail string cannot deliver that -- `dangerous_primitives` reports WHICH primitive, not
+# which site, so a second unwrap added to an already-waived file would be silently absorbed by
+# the existing waiver. So each waiver records the file's sha256 at the moment it was granted.
+# Any edit to that file makes the waiver STALE, the finding re-surfaces, and the stale waiver
+# is reported. It fails CLOSED: an unrelated typo fix also forces a re-waive, which is cheap.
+WAIVER_REQUIRED = ("path", "check", "detail", "file_sha256", "owner", "date", "ref")
+
+
+def _file_sha256(p):
+    import hashlib as _h
+    return _h.sha256(Path(p).read_bytes()).hexdigest()
+
+
+def load_waivers(path):
+    """Read and VALIDATE the waiver ledger. Raises on any waiver that could act as a pass."""
+    out = []
+    if not Path(path).exists():
+        return out
+    for _n, _line in enumerate(Path(path).read_text(encoding="utf-8").splitlines(), 1):
+        _line = _line.strip()
+        if not _line or _line.startswith("#"):
+            continue
+        try:
+            w = json.loads(_line)
+        except Exception as e:
+            raise ValueError("WAIVERS line %d is not JSON: %s" % (_n, e))
+        missing = [k for k in WAIVER_REQUIRED if not str(w.get(k) or "").strip()]
+        if missing:
+            raise ValueError(
+                "WAIVERS line %d is missing %r. A waiver without an owner, a date and a ref "
+                "is an accepted risk nobody signed -- that is a silent NO_FINDING wearing a "
+                "different name (6E). Refusing to load it." % (_n, missing))
+        out.append(w)
+    return out
+
+
+def apply_waivers(records, waivers, root):
+    """Attach waivers to the findings they name. Returns (applied, stale, orphan).
+
+    Never mutates a check's status: a waived finding is still a finding. It records the
+    adjudication beside it so a reader sees the finding AND the reason it was accepted.
+    """
+    index = {}
+    for w in waivers:
+        index.setdefault((w["path"], w["check"], w["detail"]), []).append(w)
+    applied, stale, matched = 0, [], set()
+    for r in records:
+        for c in r.get("checks", []):
+            if c.get("status") not in FINDING_STATUSES:
+                continue
+            key = (r.get("path"), c.get("name"), c.get("detail"))
+            for w in index.get(key, []):
+                matched.add(id(w))
+                try:
+                    live = _file_sha256(Path(root) / r["path"])
+                except Exception:
+                    live = None
+                if live != w["file_sha256"]:
+                    # The file moved under the waiver. The finding STANDS.
+                    stale.append({"waiver": w, "live_sha256": live})
+                    continue
+                c["waived"] = {"owner": w["owner"], "date": w["date"], "ref": w["ref"],
+                               "construct": w.get("construct")}
+                r.setdefault("waived_checks", []).append(c["name"])
+                r["disposition"] = "WAIVE"
+                r["disposition_ref"] = "%s (%s, %s)" % (w["ref"], w["owner"], w["date"])
+                applied += 1
+    orphan = [w for w in waivers if id(w) not in matched]
+    return applied, stale, orphan
+
+
+def axes_of(rec):
+    """Read the two axes off a record. They are NESTED under `axes` on purpose.
+
+    ⛔ 6E, REPORT-6E-2AXIS.md (2026-08-30), reader path 2 -- the sharper of his two findings.
+    When `finding` and `coverage` were top-level siblings, `finding` was a SEAM: any consumer
+    that read it and dropped `coverage` renders 1285 records as NO_FINDING, silently merging
+    the 556 that are FULLY measured with the 729 that are not. The old atomic UNVERIFIABLE
+    could not be split off a record that way, so making `finding` first-class REINTRODUCED the
+    exact failure the taxonomy exists to prevent -- "a silent NO_FINDING wearing a different
+    name" -- as a field name rather than as a verdict.
+
+    Nesting does not make a bad read impossible; it makes it LOUD. `jq '.finding'` now returns
+    null instead of a reassuring word, which is a detectable error rather than a wrong answer.
+    A consumer that reaches into `axes.finding` alone can still drop the gap, and that limit is
+    stated rather than papered over. `verdict` stays top-level and compound, so the cheapest
+    read of all is still the honest one.
+    """
+    a = rec.get("axes") or {}
+    return a.get("finding"), a.get("coverage")
+
+
 def coverage_exit_code(records, acknowledged):
     """Should this run be allowed to exit 0? Returns (code, the records that block it).
 
@@ -1476,7 +1588,7 @@ def coverage_exit_code(records, acknowledged):
     not go green while any record is less than FULLY covered, unless a human says out loud
     that they looked. It deliberately does NOT read `disposition`.
     """
-    blocking = [r for r in records if r.get("coverage") != "FULL"]
+    blocking = [r for r in records if axes_of(r)[1] != "FULL"]
     return (2 if blocking and not acknowledged else 0), blocking
 
 
@@ -1509,6 +1621,8 @@ def main():
                     help="run each python file N times and compare stdout (C10 dynamic half)")
     ap.add_argument("--timeout", type=int, default=120)
     ap.add_argument("--limit", type=int, default=0, help="audit only the first N files (smoke)")
+    ap.add_argument("--waivers", default=None,
+                    help="path to the waiver ledger (default: WAIVERS.jsonl beside the tool)")
     ap.add_argument("--acknowledge-unverifiable", action="store_true",
                     help="suppress the non-zero exit when UNVERIFIABLE records exist — use "
                          "only once they have actually been dispositioned")
@@ -1689,10 +1803,10 @@ def main():
                 "subtree": next((st for st in LV.SIGNED_SUBTREES
                                  if str(p.relative_to(ROOT)).startswith(st + "/")), None),
                 "verdict": v,
-                # both axes as first-class fields so a consumer never has to parse the
-                # compound string, and a filter on one axis cannot silently pick up the other
-                "finding": finding_for(checks),
-                "coverage": coverage_for(checks),
+                # ⛔ NESTED, NOT TOP-LEVEL -- see axes_of(). A top-level `finding` is a seam
+                # a consumer can read alone, which merges measured and unmeasured records.
+                "axes": {"finding": finding_for(checks),
+                         "coverage": coverage_for(checks)},
                 "checks": [{"name": n, "status": s, "detail": d} for n, s, d in checks],
                 "evidence": clip_evidence(
                     "; ".join(f"{n}: {d}" for n, s, d in nonpass)),
@@ -1760,14 +1874,42 @@ def main():
     header["run"]["per_role"] = dict(per_role)
     header["run"]["per_check"] = {k: dict(v) for k, v in check_counts.items()}
     header["run"]["elapsed_s"] = round(time.time() - t0, 1)
-    lines = open(args.out, encoding="utf-8").read().splitlines()
-    lines[0] = json.dumps(header)
-    open(args.out, "w", encoding="utf-8").write("\n".join(lines) + "\n")
+    # ---- waivers. Applied AFTER every verdict is computed, and deliberately WITHOUT the
+    # power to change one: a waived finding keeps status `flag` and keeps its place in the
+    # finding axis. All a waiver does is attach a named, dated, referenced adjudication to it.
+    _waivers = load_waivers(args.waivers or (ROOT / "WAIVERS.jsonl"))
+    _wapplied, _wstale, _worphan = apply_waivers(records, _waivers, ROOT)
+    header["run"]["waivers"] = {
+        "ledger": str(args.waivers or (ROOT / "WAIVERS.jsonl")),
+        "loaded": len(_waivers), "applied": _wapplied,
+        "stale": [{"path": x["waiver"]["path"], "check": x["waiver"]["check"],
+                   "waived_sha256": x["waiver"]["file_sha256"],
+                   "live_sha256": x["live_sha256"]} for x in _wstale],
+        "orphan": [{"path": w["path"], "check": w["check"]} for w in _worphan],
+        "⛔ semantics": "A waived finding is STILL A FINDING. It keeps status `flag`, it never "
+                       "becomes pass/NO_FINDING, and it is counted separately as ACCEPTED-"
+                       "WITH-REASON. A stale waiver (the file changed since it was granted) "
+                       "does NOT apply and the raw finding stands.",
+    }
+    # rewrite the whole file: the records were streamed before waivers could be attached
+    with open(args.out, "w", encoding="utf-8") as fh:
+        fh.write(json.dumps(header) + "\n")
+        for _r in records:
+            fh.write(json.dumps(_r) + "\n")
 
     print(f"\n{len(files)} pattern(s) audited in {time.time()-t0:.0f}s -> {args.out}")
     for v in VERDICTS:
         if counts.get(v):
             print(f"  {v:<14} {counts[v]}")
+    if _waivers or _wstale or _worphan:
+        print(f"\nwaivers: {len(_waivers)} loaded, {_wapplied} finding(s) accepted-with-reason"
+              f", {len(_wstale)} STALE, {len(_worphan)} orphan")
+        for _x in _wstale[:5]:
+            print(f"  ⛔ STALE (file changed since it was waived; the finding STANDS): "
+                  f"{_x['waiver']['path']} / {_x['waiver']['check']}")
+        for _w in _worphan[:5]:
+            print(f"  ⚠️  orphan (matches no finding — fixed, or a typo): "
+                  f"{_w['path']} / {_w['check']}")
     print("\nper check:")
     for name in sorted(check_counts):
         row = check_counts[name]
@@ -1801,7 +1943,7 @@ def main():
     # without moving the guard would have made the compiled lanes silently unverified, which
     # is precisely the failure 6E built the taxonomy to prevent.
     _code, _partial = coverage_exit_code(records, args.acknowledge_unverifiable)
-    _none = [r for r in records if r.get("coverage") == "NONE"]
+    _none = [r for r in records if axes_of(r)[1] == "NONE"]
     if _code:
         print(f"\n⛔ {len(_partial)} pattern(s) were only PARTIALLY MEASURED "
               f"({len(_none)} of them not measured at all).")
@@ -2656,8 +2798,8 @@ def self_test() -> int:
             _tup = [(c["name"], c["status"], c["detail"]) for c in _ch]
             return {"pattern_id": _pid, "path": f"python/{_pid}.py", "language": "python",
                     "verdict": _v if _v is not None else verdict_for(_tup),
-                    "finding": finding_for(_tup),
-                    "coverage": coverage_for(_tup), "disposition": _disp,
+                    "axes": {"finding": finding_for(_tup), "coverage": coverage_for(_tup)},
+                    "disposition": _disp,
                     "checks": _ch,
                     "unverifiable_checks": _unv,
                     "unverifiable_subclass": ["U2"],
@@ -2692,7 +2834,7 @@ def self_test() -> int:
         # zero, which is falsifiable: break coverage_for and this fails.
         extra.append(("RENDER Illia-4 NO record can hide an unmeasured check: every record "
                       "with an unverifiable check reports less than FULL coverage",
-                      all(_r["coverage"] != "FULL" for _r in _rows
+                      all(axes_of(_r)[1] != "FULL" for _r in _rows
                           if any(_c["status"] == "unverifiable" for _c in _r["checks"]))
                       and "No record hides an unmeasured check" in _rtxt))
         extra.append(("RENDER Illia-5 PARTIAL and NONE are reported as DIFFERENT facts, never "
@@ -2708,7 +2850,7 @@ def self_test() -> int:
         # which is exactly what a future regression in coverage_for would look like.
         _rows_h = [_mk("h1", None, _uc, _long, "fail"), _mk("h2", None, _uc, _long, "flag")]
         for _rh, _vh in zip(_rows_h, ("FAIL", "FLAG")):
-            _rh["coverage"] = "FULL"          # the lie under test
+            _rh["axes"]["coverage"] = "FULL"  # the lie under test
             _rh["verdict"] = _vh + "/FULL"
         _fh = Path(_rtd) / "hidden.jsonl"; _oh = Path(_rtd) / "hidden.md"
         _fh.write_text("\n".join([json.dumps(_hdr)] + [json.dumps(x) for x in _rows_h]),
@@ -2717,10 +2859,131 @@ def self_test() -> int:
                         str(_fh), str(_oh)], capture_output=True, text=True,
                        cwd=str(Path(__file__).parent))
         _htxt = _oh.read_text(encoding="utf-8") if _oh.exists() else ""
+        # ---- 6E REPORT-6E-2AXIS.md, both reader paths. These assert the FIX, not the shape.
+
+        # ---- WAIVERS, RENDERED. The mechanism is only half the guarantee: 6E's rule is that
+        # a waived finding stays VISIBLE with its evidence. A renderer that quietly dropped it
+        # would satisfy every unit probe above and still lose the finding.
+        _wv_hdr = json.loads(json.dumps(_hdr))
+        _wv_hdr["run"]["waivers"] = {
+            "ledger": "WAIVERS.jsonl", "loaded": 3, "applied": 1,
+            "stale": [{"path": "rust/stale.rs", "check": "dangerous_primitives",
+                       "waived_sha256": "a" * 64, "live_sha256": "b" * 64}],
+            "orphan": [{"path": "go/gone.go", "check": "determinism_markers"}]}
+        _wv_rec = {"pattern_id": "demo", "path": "rust/demo.rs", "language": "rust",
+                   "verdict": "FLAG/PARTIAL",
+                   "axes": {"finding": "FLAG", "coverage": "PARTIAL"},
+                   "disposition": "WAIVE",
+                   "disposition_ref": "REPORT-6E-TRIAGE.md#1 (6E, 2026-08-30)",
+                   "waived_checks": ["dangerous_primitives"],
+                   "checks": [{"name": "dangerous_primitives", "status": "flag",
+                               "detail": "UNWRAPEVIDENCE panics instead of handling",
+                               "waived": {"owner": "6E", "date": "2026-08-30",
+                                          "ref": "TRIAGEREF invariant guard",
+                                          "construct": "fixed-size slice"}}],
+                   "unverifiable_checks": None, "unverifiable_subclass": [],
+                   "checks_unmeasured": 0, "checks_skipped": 0, "needs_tool_fix": False,
+                   "census_mismatches": [], "toolchains_present": {}}
+        _wf = Path(_rtd) / "waived.jsonl"; _wo = Path(_rtd) / "waived.md"
+        _wf.write_text(json.dumps(_wv_hdr) + "\n" + json.dumps(_wv_rec) + "\n",
+                       encoding="utf-8")
+        subprocess.run([sys.executable, str(Path(__file__).with_name("audit_report.py")),
+                        str(_wf), str(_wo)], capture_output=True, text=True,
+                       cwd=str(Path(__file__).parent))
+        _wtxt = _wo.read_text(encoding="utf-8") if _wo.exists() else ""
+        # ⛔ THIS PROBE USED TO PASS FOR THE WRONG REASON. It asserted the evidence appeared
+        # ANYWHERE on the page -- and it does, in the triage queue -- so deleting the WAIVED
+        # table entirely left it green (the mutant scored KILLED-BY-OTHER). Scoped to the
+        # section it is actually about.
+        _wsec = _wtxt.split("### WAIVED")[1].split("\n## ")[0] if "### WAIVED" in _wtxt else ""
+        extra.append(("RENDER WAIVER the waived finding KEEPS ITS EVIDENCE **in the WAIVED "
+                      "section itself** — not merely somewhere on the page",
+                      "UNWRAPEVIDENCE" in _wsec))
+        extra.append(("RENDER WAIVER the reference is printed, so an accepted risk names who "
+                      "accepted it and why", "TRIAGEREF" in _wtxt and "6E" in _wtxt))
+        extra.append(("RENDER WAIVER the page says in words that a waived finding is STILL a "
+                      "finding, so the section cannot read as a clean bill",
+                      "still a finding" in _wtxt.lower()))
+        extra.append(("RENDER WAIVER a STALE waiver is surfaced as the finding STANDING, not "
+                      "hidden", "STALE" in _wtxt and "rust/stale.rs" in _wtxt))
+        extra.append(("RENDER WAIVER an ORPHAN waiver is surfaced (fixed pattern, or a typo "
+                      "that protects nothing)", "orphan" in _wtxt and "go/gone.go" in _wtxt))
+        extra.append(("RENDER WAIVER NEGATIVE ARM: with no waivers at all the section does "
+                      "NOT appear, so its presence means something",
+                      "Accepted with reason" not in _rtxt))
+
+        # ---- WAIVERS. The mechanism exists to stop a waiver behaving like a pass, so every
+        # probe here is aimed at that one failure.
+        _wroot = Path(_rtd) / "wlib"; (_wroot / "rust").mkdir(parents=True, exist_ok=True)
+        _wfile = _wroot / "rust" / "demo.rs"
+        _wfile.write_text("fn main(){ let _ = x.unwrap(); }", encoding="utf-8")
+        _wsha = _file_sha256(_wfile)
+        def _wrec():
+            return {"path": "rust/demo.rs",
+                    "axes": {"finding": "FLAG", "coverage": "PARTIAL"},
+                    "verdict": "FLAG/PARTIAL", "disposition": None, "disposition_ref": None,
+                    "checks": [{"name": "dangerous_primitives", "status": "flag",
+                                "detail": "unwrap() — panics instead of handling"},
+                               {"name": "determinism_markers", "status": "flag",
+                                "detail": "time.Now"},
+                               {"name": "hollow", "status": "pass", "detail": "ok"}]}
+        def _w(**kw):
+            base = {"path": "rust/demo.rs", "check": "dangerous_primitives",
+                    "detail": "unwrap() — panics instead of handling",
+                    "file_sha256": _wsha, "owner": "6E", "date": "2026-08-30",
+                    "ref": "REPORT-6E-TRIAGE.md#1 invariant guard"}
+            base.update(kw); return base
+        def _wload(rows):
+            _f = Path(_rtd) / "w.jsonl"
+            _f.write_text("\n".join(json.dumps(r) for r in rows), encoding="utf-8")
+            return load_waivers(_f)
+        for _missing in ("ref", "owner", "date", "file_sha256"):
+            extra.append((f"WAIVER a waiver with no `{_missing}` REFUSES TO LOAD — an accepted "
+                          f"risk nobody signed is a silent NO_FINDING under another name",
+                          _raises(lambda _m=_missing: _wload([_w(**{_m: ""})]), ValueError)))
+        _r_ok = [_wrec()]
+        _a, _st, _or = apply_waivers(_r_ok, _wload([_w()]), _wroot)
+        _wchk = _r_ok[0]["checks"][0]
+        extra.append(("WAIVER a valid waiver attaches owner/date/ref to the finding it names",
+                      _a == 1 and _wchk.get("waived", {}).get("owner") == "6E"
+                      and _r_ok[0]["disposition"] == "WAIVE"
+                      and "REPORT-6E-TRIAGE" in (_r_ok[0]["disposition_ref"] or "")))
+        extra.append(("WAIVER ⛔ THE CENTRAL ONE: a waived finding is STILL A FINDING — its "
+                      "status stays `flag`, and the finding axis does NOT go clean",
+                      _wchk["status"] == "flag"
+                      and axes_of(_r_ok[0])[0] == "FLAG"
+                      and verdict_for([(c["name"], c["status"], c["detail"])
+                                       for c in _r_ok[0]["checks"]]).startswith("FLAG")))
+        extra.append(("WAIVER is INSTANCE-SCOPED: waiving one check leaves the other finding "
+                      "on the same file untouched",
+                      "waived" not in _r_ok[0]["checks"][1]
+                      and _r_ok[0]["waived_checks"] == ["dangerous_primitives"]))
+        _r_st = [_wrec()]
+        _a2, _st2, _ = apply_waivers(_r_st, _wload([_w(file_sha256="0" * 64)]), _wroot)
+        extra.append(("WAIVER ⛔ a STALE waiver (the file changed since it was granted) does "
+                      "NOT apply and the raw finding STANDS — this is what stops a waiver "
+                      "absorbing a DIFFERENT construct added later",
+                      _a2 == 0 and len(_st2) == 1
+                      and "waived" not in _r_st[0]["checks"][0]
+                      and _r_st[0]["disposition"] is None))
+        _r_or = [_wrec()]
+        _a3, _, _or3 = apply_waivers(_r_or, _wload([_w(check="hollow")]), _wroot)
+        extra.append(("WAIVER an ORPHAN waiver (matches no finding) is reported, never "
+                      "silently ignored — it is a fixed pattern or a typo, and both matter",
+                      _a3 == 0 and len(_or3) == 1))
+        _r_np = [_wrec()]
+        apply_waivers(_r_np, _wload([_w(check="hollow", detail="ok")]), _wroot)
+        extra.append(("WAIVER NEGATIVE ARM: a waiver can never attach to a PASSING check, so "
+                      "it cannot be used to annotate something that was never a finding",
+                      "waived" not in _r_np[0]["checks"][2]))
+        extra.append(("WAIVER an absent ledger is empty, not an error (waivers are opt-in)",
+                      load_waivers(Path(_rtd) / "nope.jsonl") == []))
+
         # ⛔ THE EXIT-2 GUARD WAS UNPROBED AND A MUTANT PROVED IT (see coverage_exit_code).
-        _g_full = [{"coverage": "FULL"}, {"coverage": "FULL"}]
-        _g_part = [{"coverage": "FULL"}, {"coverage": "PARTIAL"}]
-        _g_none = [{"coverage": "NONE"}]
+        _ax = lambda c: {"axes": {"finding": "NO_FINDING", "coverage": c}}
+        _g_full = [_ax("FULL"), _ax("FULL")]
+        _g_part = [_ax("FULL"), _ax("PARTIAL")]
+        _g_none = [_ax("NONE")]
         extra.append(("EXIT-GUARD a partially-covered record forces exit 2",
                       coverage_exit_code(_g_part, False)[0] == 2))
         extra.append(("EXIT-GUARD an unmeasured record forces exit 2",
@@ -2744,9 +3007,23 @@ def self_test() -> int:
             capture_output=True, text=True, cwd=str(Path(__file__).parent))
         _e_recs = [json.loads(l) for l in
                    _eout.read_text(encoding="utf-8").splitlines()[1:]] if _eout.exists() else []
+        # ⛔ THESE MUST READ A REAL RECORD, NOT A FIXTURE. The first version asserted the
+        # shape of `_mk`, a self-test fixture that builds its own dict -- so a mutant that
+        # re-added the top-level `finding` to the PRODUCTION record builder in main() scored
+        # SURVIVED. A probe over a fixture measures the fixture. `_e_recs` above comes out of
+        # a real audit run, so it is the tool's own output being checked.
+        extra.append(("6E-2AXIS path 2: a REAL record has NO top-level `finding`/`coverage` "
+                      "key, so a consumer reading one alone gets null (a LOUD error) rather "
+                      "than a reassuring word that merges measured with unmeasured records",
+                      bool(_e_recs)
+                      and all("finding" not in r and "coverage" not in r for r in _e_recs)
+                      and all((r.get("axes") or {}).get("finding") for r in _e_recs)))
+        extra.append(("6E-2AXIS path 2: the compound verdict is still top-level on a REAL "
+                      "record, so the CHEAPEST read is the one carrying both halves",
+                      bool(_e_recs) and all("/" in (r.get("verdict") or "") for r in _e_recs)))
         extra.append(("EXIT-GUARD WIRING: a real all-FULL run exits 0 through main(), and "
                       "the fixture really is all-FULL (so this is not an empty-set pass)",
-                      bool(_e_recs) and all(r.get("coverage") == "FULL" for r in _e_recs)
+                      bool(_e_recs) and all(axes_of(r)[1] == "FULL" for r in _e_recs)
                       and _e_ok.returncode == 0))
         extra.append(("RENDER 6E-R11 an outranked record is named by its ACTUAL verdict "
                       "(FAIL is one of them), not asserted to all be FLAG — driven by a "
@@ -2886,8 +3163,8 @@ def self_test() -> int:
                    for i in range(extra_pass)]
             _tp = [(c["name"], c["status"], c.get("detail", "")) for c in ch]
             return {"pattern_id": _pid, "path": f"python/{_pid}.py", "language": "python",
-                    "verdict": verdict_for(_tp), "finding": finding_for(_tp),
-                    "coverage": coverage_for(_tp),
+                    "verdict": verdict_for(_tp),
+                    "axes": {"finding": finding_for(_tp), "coverage": coverage_for(_tp)},
                     "disposition": None, "checks": ch,
                     "unverifiable_checks": _uc, "unverifiable_subclass": ["U2"],
                     "checks_unmeasured": 1, "checks_skipped": 2, "needs_tool_fix": False,
@@ -2913,6 +3190,14 @@ def self_test() -> int:
         # produce. A second fixture with a different true span is what makes the assertion
         # discriminating: no constant can satisfy both.
         _t_span2 = _render("span2", [_erec("a", "skip", 5), _erec("b", "skip", 9)])
+        _head_txt = _render("cov_head", [_erec("a", "skip"), _erec("b", "skip", 3)])
+        _ix_cov = _head_txt.find("were NOT fully measured")
+        _ix_tbl = _head_txt.find("| **NO_FINDING**")
+        extra.append(("6E-2AXIS path 1: the COVERAGE tally is the headline and appears BEFORE "
+                      "the verdict table, so the gap is read first and NO_FINDING is what a "
+                      "reader must get past",
+                      _ix_cov != -1 and _ix_tbl != -1 and _ix_cov < _ix_tbl))
+
         extra.append(("RENDER 6E-R20 F1: partial coverage is explained as COVERAGE, and the "
                       "count of checks that DID run is derived from the records, not "
                       "hardcoded — two fixtures with DIFFERENT true spans (2-3 and 5-9) must "

@@ -63,6 +63,15 @@ lines = [l for l in src.read_text(encoding="utf-8").splitlines() if l.strip()]
 header = json.loads(lines[0])["run"]
 recs = [json.loads(l) for l in lines[1:]]
 
+def _axes(r):
+    """The two axes are NESTED (see library_audit.axes_of): a top-level `finding` was a seam a
+    consumer could read alone, merging measured records with unmeasured ones."""
+    a = r.get("axes") or {}
+    return a.get("finding"), a.get("coverage")
+
+def _finding(r): return _axes(r)[0]
+def _coverage(r): return _axes(r)[1]
+
 by_verdict = collections.Counter(r["verdict"] for r in recs)
 by_lane = collections.defaultdict(collections.Counter)
 check_status = collections.defaultdict(collections.Counter)
@@ -181,6 +190,22 @@ w("> and C1 (correctness), C3 (twin equivalence) and C11 (provenance) were never
 w("> any pattern. The disclosure was there per record, but a summary reader sees the headline")
 w("> word, not the footnote. The word now matches the measurement.")
 w("")
+# ⛔ 6E, REPORT-6E-2AXIS.md reader path 1: the compound verdict LEADS WITH THE REASSURING WORD.
+# "NO_FINDING/PARTIAL" puts NO_FINDING in token position 1 and the caution in position 2, so a
+# skimming reader registers clean and nothing forces the coverage half into view. Under the old
+# single word the headline WAS the caution. The fix is to make the coverage tally the first
+# thing on the page, so the gap is what you read first and NO_FINDING is what you read past.
+_cov_head = collections.Counter(_coverage(r) for r in recs)
+_not_full = sum(v for k, v in _cov_head.items() if k != "FULL")
+if recs:
+    w(f"> ## ⛔ {_not_full} of {len(recs)} patterns were NOT fully measured")
+    w("> ")
+    w(f"> Coverage: **{_cov_head.get('FULL', 0)} FULL · {_cov_head.get('PARTIAL', 0)} PARTIAL "
+      f"· {_cov_head.get('NONE', 0)} NONE**. Read this before any verdict below: a verdict of "
+      "`NO_FINDING` on a PARTIAL record means *nothing was found among the checks that could "
+      "run*, not that the pattern was fully checked. The finding half of a verdict is never "
+      "meaningful without the coverage half.")
+    w("")
 w("Two independent questions are asked about every pattern, and they are reported as two")
 w("axes rather than collapsed into one word.")
 w("")
@@ -197,10 +222,10 @@ w("> a verdict is now always `finding/coverage`, so neither half can be dropped 
 w("> or by a consumer that looks only at `verdict`.")
 w("")
 _FIND = [f for f in ("FAIL", "FLAG", "NO_FINDING", "SKIP")
-         if any(r.get("finding") == f for r in recs)]
+         if any(_finding(r) == f for r in recs)]
 _COV = [c for c in ("FULL", "PARTIAL", "NONE")
-        if any(r.get("coverage") == c for r in recs)]
-_grid = collections.Counter((r.get("finding"), r.get("coverage")) for r in recs)
+        if any(_coverage(r) == c for r in recs)]
+_grid = collections.Counter(_axes(r) for r in recs)
 w("| | " + " | ".join(f"coverage **{c}**" for c in _COV) + " | total |")
 w("|---|" + "---:|" * (len(_COV) + 1))
 for f in _FIND:
@@ -227,7 +252,7 @@ w("")
 # hardcoded span, because the profile is not uniform.
 # PARTIAL and NONE are different facts and must not be summed into one sentence: a
 # record where nothing could be measured is not "partially measured".
-_part = [r for r in recs if r.get("coverage") == "PARTIAL"]
+_part = [r for r in recs if _coverage(r) == "PARTIAL"]
 if _part:
     _ran, _cannot, _names = [], [], collections.Counter()
     for _r in _part:
@@ -239,7 +264,7 @@ if _part:
                 _names[_c.get("name")] += 1
     def _span(v):
         return f"{min(v)}" if min(v) == max(v) else f"{min(v)}-{max(v)}"
-    _clean = sum(1 for _r in _part if _r.get("finding") == "NO_FINDING")
+    _clean = sum(1 for _r in _part if _finding(_r) == "NO_FINDING")
     _uniform = len(set(_names.values())) == 1 and len(_names) > 0
     w(f"> **What PARTIAL coverage means here.** {len(_part)} records were only partially "
       f"measured. Each still had **{_span(_ran)} checks actually run**, and {_clean} of them "
@@ -249,7 +274,7 @@ if _part:
          f" — each needing an analyser this lane does not have." if _uniform else ".")
       + " PARTIAL is a statement about this tool's reach, not about the pattern.")
     w("")
-    _none = [r for r in recs if r.get("coverage") == "NONE"]
+    _none = [r for r in recs if _coverage(r) == "NONE"]
     w(f"> **Records where NOTHING could be measured: {len(_none)}.** That is the only state "
       f"in which the tool genuinely knows nothing about a pattern"
       + ("." if _none else ", and no pattern in this library is in it.")) 
@@ -270,13 +295,74 @@ if recs and not _ran_exec:
       "never executed — re-run with `--gate` to change that. The toolchain list below says "
       "what COULD have run, not what did.")
     w("")
+# ---- WAIVERS. 6E's rule: a waived finding stays LISTED, with its evidence intact and the
+# adjudication beside it. It is never merged into pass/NO_FINDING and is tallied separately,
+# so a reader always sees the finding AND the reason someone accepted it.
+# NOTE: `header` here is ALREADY the inner "run" object (see `header.get(
+# "unverifiable_taxonomy")` below) -- not the outer wrapper. Reaching through "run"
+# again silently yields {}, which renders "0 waivers loaded" beside real waived rows.
+_wv = header.get("waivers") or {}
+_waived_rows = [(r, c) for r in recs for c in r.get("checks", []) if c.get("waived")]
+_flag_recs = [r for r in recs if _finding(r) == "FLAG"]
+_flag_waived = [r for r in _flag_recs if r.get("waived_checks")]
+if _wv.get("loaded") or _waived_rows or _wv.get("stale") or _wv.get("orphan"):
+    w("## Accepted with reason (waivers)")
+    w("")
+    w(f"Ledger: `{_wv.get('ledger', '(none)')}` — {_wv.get('loaded', 0)} waiver(s) loaded, "
+      f"{_wv.get('applied', 0)} finding(s) accepted with reason.")
+    w("")
+    w("> ⛔ **A waived finding is still a finding.** Its check keeps status `flag`, its record "
+      "keeps a FLAG verdict, and it is counted here — separately from anything clean. A waiver "
+      "records that a named person accepted a risk on a named date for a stated reason. It is "
+      "not a statement that the pattern is good.")
+    w("")
+    w(f"Of {len(_flag_recs)} records carrying a finding, **{len(_flag_waived)} have at least "
+      f"one waived finding** and **{len(_flag_recs) - len(_flag_waived)} are still "
+      f"unadjudicated.**")
+    w("")
+    if _wv.get("stale"):
+        w(f"### ⛔ {len(_wv['stale'])} STALE waiver(s) — the finding STANDS")
+        w("")
+        w("The file changed after the waiver was granted, so the waiver does not apply. This is "
+          "deliberate: it is what stops a waiver silently absorbing a *different* construct "
+          "added to the same file later. Re-read the pattern and re-waive, or fix it.")
+        w("")
+        w("| pattern | check | waived against | now |")
+        w("|---|---|---|---|")
+        for _x in _wv["stale"]:
+            w(f"| `{cell(_x['path'], 60)}` | {cell(_x['check'], 30)} | "
+              f"`{(_x.get('waived_sha256') or '')[:12]}` | `{(_x.get('live_sha256') or 'missing')[:12]}` |")
+        w("")
+    if _wv.get("orphan"):
+        w(f"### ⚠️ {len(_wv['orphan'])} orphan waiver(s) — matched no finding")
+        w("")
+        w("Either the pattern was fixed (delete the waiver) or the waiver names the wrong "
+          "pattern/check (a typo that silently protects nothing).")
+        w("")
+        for _o in _wv["orphan"]:
+            w(f"- `{cell(_o['path'], 60)}` / {cell(_o['check'], 30)}")
+        w("")
+    if _waived_rows:
+        w("### WAIVED — every one, with its evidence and its reference")
+        w("")
+        # the ref IS the audit trail: truncating it loses the reason the risk was
+        # accepted, which is the only thing separating a waiver from a pass.
+        w("| pattern | check | evidence (unchanged) | accepted by | ref |")
+        w("|---|---|---|---|---|")
+        for _r, _c in _waived_rows:
+            _wd = _c["waived"]
+            w(f"| `{cell(_r['path'], 55)}` | {cell(_c['name'], 24)} | "
+              f"{cell(_c.get('detail') or '', 70)} | {cell(_wd.get('owner') or '', 12)} "
+              f"{cell(_wd.get('date') or '', 12)} | {cell(_wd.get('ref') or '', 200)} |")
+        w("")
+
 w("## By language")
 w("")
 _lane_f = collections.defaultdict(collections.Counter)
 _lane_c = collections.defaultdict(collections.Counter)
 for r in recs:
-    _lane_f[r["language"]][r.get("finding")] += 1
-    _lane_c[r["language"]][r.get("coverage")] += 1
+    _lane_f[r["language"]][_finding(r)] += 1
+    _lane_c[r["language"]][_coverage(r)] += 1
 w("| lane | " + " | ".join(_FIND) + " | " + " | ".join(f"cov {c}" for c in _COV) + " | total |")
 w("|---|" + "---:|" * (len(_FIND) + len(_COV) + 1))
 for lane in sorted(_lane_f):
@@ -336,7 +422,7 @@ for r in recs:
         code_lanes[key][r["language"]] += 1
     for sc in (r.get("unverifiable_subclass") or []):
         sub_counts[sc] += 1
-    if r.get("coverage") != "FULL" and r.get("disposition") is None:
+    if _coverage(r) != "FULL" and r.get("disposition") is None:
         undisposed += 1
 
 # ⛔ 4Q round 11 F1 and 6E renderer #3, found independently: the prose below used
@@ -344,7 +430,7 @@ for r in recs:
 # on a fresh run and diverge the moment a triage session sets a disposition -- and this
 # report exists to BE that triage session, so the divergence is the normal case, not the
 # edge case. The two counts are named apart now so the wrong one cannot be reached for.
-unv_verdict = sum(1 for r in recs if r.get("coverage") != "FULL")
+unv_verdict = sum(1 for r in recs if _coverage(r) != "FULL")
 # ⛔ `hidden` USED TO BE NON-ZERO AND IS NOW ZERO BY CONSTRUCTION -- this is the defect the
 # two-axis rewrite removed rather than documented. Under the old single-word verdict, FAIL and
 # FLAG outranked UNVERIFIABLE, so a record with a real finding AND an unmeasured half showed
@@ -355,7 +441,7 @@ unv_verdict = sum(1 for r in recs if r.get("coverage") != "FULL")
 hidden = with_u - unv_verdict
 hidden_by_verdict = collections.Counter(
     r["verdict"] for r in recs if r.get("unverifiable_checks")
-    and r.get("coverage") == "FULL")
+    and _coverage(r) == "FULL")
 tax = header.get("unverifiable_taxonomy") or {}
 if code_rows:
     w("---")

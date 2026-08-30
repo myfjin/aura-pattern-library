@@ -1,0 +1,30 @@
+# AURA Pattern Library — WAIVER LEDGER
+#
+# A waiver records that a NAMED person ACCEPTED A RISK on a NAMED date for a STATED reason.
+# It is NOT a statement that the pattern is good, and it never turns a finding into a pass:
+# the waived check keeps status `flag`, the record keeps its FLAG verdict, and the finding
+# stays listed under "Accepted with reason" in AUDIT-REPORT.md with its evidence intact.
+#
+# Design: 6E, REPORT-6E-TRIAGE.md (2026-08-30), "The waiver mechanism".
+#
+# One JSON object per line. Lines starting with # are comments. EVERY key below is REQUIRED
+# and a waiver missing any of them REFUSES TO LOAD (the tool raises) -- an accepted risk that
+# nobody signed is a silent NO_FINDING wearing a different name.
+#
+#   path         pattern path relative to the library root, exactly as it appears in the sweep
+#   check        the check name, e.g. dangerous_primitives / determinism_markers
+#   detail       the finding's detail string, matched EXACTLY (this is what scopes the waiver
+#                to ONE finding rather than to the whole pattern)
+#   file_sha256  sha256 of the pattern file AT THE MOMENT THE WAIVER IS GRANTED. Any edit to
+#                the file makes the waiver STALE: it stops applying, the raw finding comes
+#                back, and the stale waiver is reported. This is what stops a waiver silently
+#                absorbing a DIFFERENT construct added to the same file later.
+#   owner        who accepted the risk
+#   date         ISO date they accepted it
+#   ref          WHY -- a reference someone else can check. Not "looks fine".
+#   construct    (optional) the specific construct waived, in words
+#
+# Get file_sha256 with:  shasum -a 256 <path>
+#
+# Example (commented out -- delete the leading # to make it real):
+# {"path": "rust/composed-systems/authenticated_message_channel.rs", "check": "dangerous_primitives", "detail": "unwrap() — panics instead of handling", "file_sha256": "PUT_THE_REAL_SHA_HERE", "owner": "6E", "date": "2026-08-30", "ref": "REPORT-6E-TRIAGE.md #1 — invariant guard: the panic branch is unreachable in the demonstrated context", "construct": "unwrap on a fixed-size slice / provably non-empty container"}
