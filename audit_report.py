@@ -187,11 +187,53 @@ MEAN = {"NO_FINDING": "no defect found among the classes this tool CAN check —
                       "'correct': C1/C3/C11 were never assessed",
         "FAIL": "a decidable check is RED",
         "FLAG": "needs judgement; evidence attached", "SKIP": "nothing applicable ran",
-        "UNVERIFIABLE": "the tool could not measure it"}
+        "UNVERIFIABLE": "AT LEAST ONE check could not run — see the line below the table, "
+                        "which says how much DID run"}
 for v in ("FAIL", "FLAG", "UNVERIFIABLE", "NO_FINDING", "SKIP"):
     if by_verdict.get(v):
         w(f"| **{v}** | {by_verdict[v]} | {MEAN[v]} |")
 w("")
+# ⛔ 6E ROUND 20, the closing honesty pass. Every NUMBER on this page traces to the JSONL, but
+# the one-line gloss "the tool could not measure it" UNDERSTATES these records badly. One
+# unverifiable check outranks six passes, so a reader meeting "N UNVERIFIABLE" beside an exit-2
+# concludes the patterns were largely unexamined. The opposite is true, and the page never said
+# so. Derived here per record -- never a hardcoded "7 of 13", because the profile is not
+# uniform (measured: 646 records ran 7 checks clean, 29 ran 6).
+_unv_recs = [r for r in recs if r.get("verdict") == "UNVERIFIABLE"]
+if _unv_recs:
+    _ran, _cannot = [], []
+    for _r in _unv_recs:
+        _st = [c.get("status") for c in _r.get("checks", [])]
+        _ran.append(sum(1 for x in _st if x in ("pass", "flag", "fail")))
+        _cannot.append(sum(1 for x in _st if x == "unverifiable"))
+    _lo, _hi = min(_ran), max(_ran)
+    _span = f"{_lo}" if _lo == _hi else f"{_lo}-{_hi}"
+    _clean = sum(1 for _r in _unv_recs
+                 if not any(c.get("status") in ("flag", "fail") for c in _r.get("checks", [])))
+    w(f"> **What UNVERIFIABLE does NOT mean.** These {len(_unv_recs)} records were not left "
+      f"unexamined. Each had **{_span} checks actually run**, and "
+      f"{'all ' if _clean == len(_unv_recs) else ''}{_clean} of them came back with **no "
+      f"finding on every check that ran**. What could not run is "
+      f"{min(_cannot) if min(_cannot) == max(_cannot) else f'{min(_cannot)}-{max(_cannot)}'} "
+      f"checks per record, and it is the SAME checks every "
+      f"time — the ones needing an analyser this lane does not have. The verdict is a "
+      f"statement about COVERAGE, not about the pattern.")
+    w("")
+# ⛔ 6E ROUND 20, finding 2. `gate` and `determinism_repeat` are the only checks that RUN a
+# file. When they are skipped, nothing was executed at all and every verdict on this page is
+# static. That was disclosed in a small "not requested this run" box while the C1 section
+# narrated the gate as if in play, next to "toolchains: all yes" -- so a reader could infer
+# the NO_FINDING patterns had been executed. Derived from the records, never assumed.
+_exec_checks = ("gate", "determinism_repeat")
+_ran_exec = sum(1 for r in recs for c in r.get("checks", [])
+                if c.get("name") in _exec_checks and c.get("status") != "skip")
+if recs and not _ran_exec:
+    w("> **NOTHING WAS EXECUTED IN THIS RUN.** `gate` and `determinism_repeat` are the only "
+      "checks that run a file, and both were skipped for every record. Every verdict above "
+      "is STATIC analysis. A pattern reported as having no finding was never compiled and "
+      "never executed — re-run with `--gate` to change that. The toolchain list below says "
+      "what COULD have run, not what did.")
+    w("")
 w("## By language")
 w("")
 w("| lane | " + " | ".join(("FAIL", "FLAG", "UNVERIFIABLE", "NO_FINDING", "SKIP")) + " | total |")
