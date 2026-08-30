@@ -13,6 +13,29 @@ from pathlib import Path
 # one source of truth for truncation marking (6E renderer pass)
 from library_audit import clip_evidence
 
+
+def cell(value, limit=200):
+    """⛔ EVERY data-derived string reaches the page through here.
+
+    4Q round 12 inventoried all 14 text-to-page paths and found two more unclipped after I
+    had fixed the two 6E named — the tool-defects table (a raw Python `repr()` of a list of
+    dicts, 260+ chars in one table cell) and the census mismatches. Patching those two would
+    have left the same class open in the taxonomy and judgement-class rows, which are also
+    header-derived. So this is the funnel, not four more patches: a value that is not a
+    string is FORMATTED rather than repr'd, and everything is clipped with the marker.
+    """
+    if isinstance(value, (list, tuple)):
+        parts = []
+        for v in value:
+            if isinstance(v, dict):
+                parts.append(" ".join(f"{k}={v[k]!s}" for k in sorted(v)))
+            else:
+                parts.append(str(v))
+        value = " · ".join(parts) if parts else "(none)"
+    elif not isinstance(value, str):
+        value = str(value)
+    return clip_evidence(value.replace("|", "\\|").replace("\n", " "), limit)
+
 src = Path(sys.argv[1] if len(sys.argv) > 1 else "AUDIT-RESULTS.jsonl")
 out = Path(sys.argv[2] if len(sys.argv) > 2 else "AUDIT-REPORT.md")
 
@@ -64,7 +87,7 @@ elif _defects:
     w("| pattern | unclaimed checks |")
     w("|---|---|")
     for r in _defects[:40]:
-        w(f"| `{r['path']}` | {r.get('unclaimed_checks')} |")
+        w(f"| `{r['path']}` | {cell(r.get('unclaimed_checks') or [])} |")
     if len(_defects) > 40:
         w(f"| … | {len(_defects) - 40} more |")
     w("")
@@ -164,12 +187,12 @@ if header.get("census_mismatches"):
     w("## ⛔ Census")
     w("")
     for m in header["census_mismatches"]:
-        w(f"- {m}")
+        w(f"- {cell(m, 300)}")
     w("")
 w("## Judgement-only classes (stated once, not flagged per pattern)")
 w("")
 for k, v in (header.get("judgement_only_classes") or {}).items():
-    w(f"- **{k}** — {v}")
+    w(f"- **{cell(k, 80)}** — {cell(v, 400)}")
 w("")
 w("## Not requested this run")
 w("")
@@ -246,9 +269,9 @@ if code_rows:
     w("|---|---:|---|---|")
     for sc in sorted(sub_counts):
         meta = (tax.get("subclasses") or {}).get(sc, {})
-        w(f"| **{sc} {meta.get('name','?')}** | {sub_counts[sc]} | "
+        w(f"| **{cell(sc, 20)} {cell(meta.get('name','?'), 60)}** | {sub_counts[sc]} | "
           f"{'the tool is the gap' if sc=='U1' else 'the environment/data is the gap' if sc=='U2' else 'the FILE blocked measurement'} "
-          f"| {meta.get('remedy','?')} |")
+          f"| {cell(meta.get('remedy','?'), 200)} |")
     w("")
     w("## By reason code")
     w("")
