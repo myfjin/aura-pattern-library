@@ -1941,6 +1941,39 @@ def self_test() -> int:
                         str(_rp2), str(_rout2)], capture_output=True, text=True,
                        cwd=str(Path(__file__).parent))
         _rtxt2 = _rout2.read_text(encoding="utf-8") if _rout2.exists() else ""
+        # ⛔ 4Q round 12: he inventoried all 14 text-to-page paths and found two more
+        # unclipped AFTER I had fixed the two 6E named. Patching instances was losing to
+        # this class three times running, so the probe is now an INVARIANT over the whole
+        # page: plant an absurd string in every data-derived slot and assert nothing
+        # escapes. A future slot added without the funnel fails here, unnamed and unimagined.
+        _huge = "Z" * 4000
+        _rp3 = Path(_rtd) / "huge.jsonl"
+        _h3 = json.loads(json.dumps(_hdr))
+        _h3["run"]["census_mismatches"] = [_huge]
+        _h3["run"]["judgement_only_classes"] = {_huge: _huge}
+        _h3["run"]["unverifiable_taxonomy"] = {"U1": {"name": _huge, "remedy": _huge,
+                                                      "meaning": _huge}}
+        _r3 = _mk("z", "UNVERIFIABLE", None, _uc, _huge)
+        _r3["needs_tool_fix"] = True
+        _r3["unclaimed_checks"] = [{"name": _huge, "status": "unverifiable",
+                                    "reason_code": None, "subclass": None}] * 3
+        _r3["census_mismatches"] = [_huge]
+        _rp3.write_text(json.dumps(_h3) + "\n" + json.dumps(_r3) + "\n", encoding="utf-8")
+        _rout3 = Path(_rtd) / "out3.md"
+        _rr3 = subprocess.run(
+            [sys.executable, str(Path(__file__).with_name("audit_report.py")),
+             str(_rp3), str(_rout3)], capture_output=True, text=True,
+            cwd=str(Path(__file__).parent))
+        _t3 = _rout3.read_text(encoding="utf-8") if _rout3.exists() else ""
+        _over = [ln[:60] for ln in _t3.splitlines() if len(ln) > 700]
+        extra.append(("RENDER 4Q-R12 NO data-derived value reaches the page unclipped — an "
+                      "absurd string planted in EVERY slot (tool defects, census, judgement "
+                      "classes, taxonomy name+remedy, detail) and no line escapes: %r"
+                      % (_over[:2],), bool(_t3) and not _over))
+        extra.append(("RENDER 4Q-R12 the tool-defects cell is FORMATTED, never a raw python "
+                      "repr of a list of dicts",
+                      "[{'name'" not in _t3 and "TRUNCATED" in _t3))
+
         extra.append(("RENDER 6E-R10 a pre-routing JSONL reports UNKNOWN, never zero, and "
                       "quotes no coverage number at all",
                       "UNKNOWN, not zero" in _rtxt2
