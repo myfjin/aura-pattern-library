@@ -78,9 +78,13 @@ L = []
 w = L.append
 w("# AURA Pattern Library — full audit")
 w("")
-w(f"**{header['total_patterns']} patterns** · run {header['run_date']} on `{header['host']}` "
-  f"· {header.get('elapsed_s','?')}s")
-w(f"· `library_verify.py` md5 `{header['library_verify_md5']}`")
+# ⛔ 6E round 14: the SIXTH thing. These four were emitted raw AND the page probe never
+# seeded them, so all five grammar invariants were blind to the slot — a hostile `host`
+# turns document line 2 into an unclosed fence and swallows the report. Same class as the
+# round-13 comment: a guarantee that covers only what its author remembered.
+w(f"**{cell(header['total_patterns'], 20)} patterns** · run {cell(header['run_date'], 40)} "
+  f"on `{cell(header['host'], 60)}` · {cell(header.get('elapsed_s', '?'), 20)}s")
+w(f"· `library_verify.py` md5 `{cell(header['library_verify_md5'], 40)}`")
 w("")
 # ⛔ 6E design review 3: an unowned record is a defect in the TOOL (a dropped reason code or
 # a missing routing rule), not a triage item. It goes FIRST and it cannot be scrolled past.

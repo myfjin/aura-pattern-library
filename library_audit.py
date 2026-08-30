@@ -1959,6 +1959,26 @@ def self_test() -> int:
         _huge = "Z" * 4000
         _nasty = "``` <img src=x onerror=y> a\\|b \r\n c |d| \\"
         _rp3 = Path(_rtd) / "huge.jsonl"
+        # ⛔ 6E round 14 found the SIXTH slot -- the header metadata line -- and the reason
+        # it was invisible was NOT that the renderer missed it: the probe never SEEDED it.
+        # "Plant a hostile value in every slot" was a promise kept only for the slots I
+        # remembered to name, which is the same overclaim as the round-13 comment one level
+        # up. So the seeding is structural now: _poison walks the whole fixture and replaces
+        # EVERY string leaf and EVERY dict key, so a field added tomorrow is seeded tomorrow
+        # without anyone remembering it. Only the values the renderer looks UP by are spared.
+        # KEYS are schema -- the tool writes them and the renderer looks records up by
+        # them; poisoning those tests nothing and just breaks the reader. VALUES are data,
+        # and data is what arrives hostile. `verdict` and `status` are spared because the
+        # renderer looks up BY them, so poisoning those would test a crash, not an escape.
+        _KEEP = {"verdict", "status"}
+        def _poison(obj, key=None):
+            if isinstance(obj, dict):
+                return {k: _poison(v, k) for k, v in obj.items()}
+            if isinstance(obj, list):
+                return [_poison(v, key) for v in obj]
+            if isinstance(obj, str) and key not in _KEEP:
+                return _nasty + obj
+            return obj
         _h3 = json.loads(json.dumps(_hdr))
         _h3["run"]["census_mismatches"] = [_huge, _nasty]
         _h3["run"]["judgement_only_classes"] = {_nasty: _huge, "k2": _nasty}
@@ -1966,6 +1986,11 @@ def self_test() -> int:
                                                       "meaning": _nasty}}
         _h3["run"]["analyser_coverage"] = {"per_check": {_nasty: [_nasty]}}
         _h3["run"]["checks_not_requested"] = [_nasty]
+        # every remaining header string -- host, run_date, library_verify_md5, and anything
+        # a later version adds -- gets the hostile value without being named here.
+        for _k, _v in list(_h3["run"].items()):
+            if isinstance(_v, str):
+                _h3["run"][_k] = _nasty + _v
         _r3 = _mk("z", "UNVERIFIABLE", None, _uc, _huge)
         _r3["path"] = "python/" + _nasty + ".py"
         _r3["language"] = _nasty
@@ -1973,7 +1998,7 @@ def self_test() -> int:
         _r3["unclaimed_checks"] = [{"name": _nasty, "status": "unverifiable",
                                     "reason_code": None, "subclass": None}] * 3
         _r3["census_mismatches"] = [_nasty]
-        _r4 = _mk("y", "FLAG", None, _uc, _nasty)
+        _r4 = _poison(_mk("y", "FLAG", None, _uc, _nasty))
         _r4["checks"].append({"name": _nasty, "status": "flag", "detail": _nasty})
         _rp3.write_text("\n".join([json.dumps(_h3), json.dumps(_r3), json.dumps(_r4)]),
                         encoding="utf-8")
