@@ -20,7 +20,6 @@ import urllib.error
 import json
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -487,4 +486,8 @@ def _live_server_check():
 
 
 if __name__ == "__main__":
+    # NOTE: logging.basicConfig() configures the ROOT logger, which belongs to the
+    # application, not to a library. Calling it at import time silently reconfigures
+    # logging for anything that imports this pattern, so it lives under __main__.
+    logging.basicConfig(level=logging.INFO)
     main()

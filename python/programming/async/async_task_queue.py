@@ -20,7 +20,6 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple
 from collections import defaultdict
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 
@@ -386,4 +385,8 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
+    # NOTE: logging.basicConfig() configures the ROOT logger, which belongs to the
+    # application, not to a library. Calling it at import time silently reconfigures
+    # logging for anything that imports this pattern, so it lives under __main__.
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     asyncio.run(main())
