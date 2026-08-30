@@ -1871,6 +1871,81 @@ def self_test() -> int:
                   "disagree with the router, and that raises)",
                   _raises(lambda: triage_fields([("a", "fail", "[PARSE_FAIL] x")], {"U3"}),
                           KeyError)))
+    # ---- THE RENDERER. Eleven rounds of attack went into this module and the renderer had
+    # none, and BOTH agents' round-11 findings were in it -- it is what a human actually
+    # reads. Fixture: two UNVERIFIABLE records (one dispositioned, one not), one FAIL and
+    # one FLAG that each also carry an unverifiable check, and one over-long detail. Every
+    # assertion below FAILED against the renderer as it stood before this round.
+    with tempfile.TemporaryDirectory() as _rtd:
+        _rp = Path(_rtd) / "fixture.jsonl"
+        _hdr = {"run": {"total_patterns": 4, "run_date": "2026-08-30", "host": "fixture",
+                        "elapsed_s": 1, "library_verify_md5": "x", "toolchains_present": {},
+                        "census_mismatches": []}}
+        _long = "L" * 400
+        def _mk(_pid, _v, _disp, _unv, _det=""):
+            return {"pattern_id": _pid, "path": f"python/{_pid}.py", "language": "python",
+                    "verdict": _v, "disposition": _disp,
+                    "checks": [{"name": "deps", "status": "unverifiable",
+                                "detail": "[NO_STDLIB_LIST] x"}]
+                               + ([{"name": "hollow", "status": "flag", "detail": _det}]
+                                  if _det else []),
+                    "unverifiable_checks": _unv,
+                    "unverifiable_subclass": ["U2"],
+                    "checks_unmeasured": 1, "checks_skipped": 0, "needs_tool_fix": False,
+                    "census_mismatches": [], "toolchains_present": {}}
+        _uc = [{"name": "deps", "reason_code": "NO_STDLIB_LIST", "subclass": "U2"}]
+        _rows = [_mk("a", "UNVERIFIABLE", None, _uc), _mk("b", "UNVERIFIABLE", "WAIVE", _uc),
+                 _mk("c", "FAIL", None, _uc, _long), _mk("d", "FLAG", None, _uc, _long)]
+        _rp.write_text("\n".join([json.dumps(_hdr)] + [json.dumps(r) for r in _rows]),
+                       encoding="utf-8")
+        _rout = Path(_rtd) / "out.md"
+        _rr = subprocess.run([sys.executable, str(Path(__file__).with_name("audit_report.py")),
+                              str(_rp), str(_rout)], capture_output=True, text=True,
+                             cwd=str(Path(__file__).parent))
+        _rtxt = _rout.read_text(encoding="utf-8") if _rout.exists() else _rr.stderr
+        extra.append(("RENDER the renderer runs at all on a synthetic record set",
+                      _rout.exists() and _rr.returncode == 0))
+        # 4Q R11 F1 / 6E #3: it printed the UNDISPOSITIONED count (1) where it meant the
+        # count carrying the verdict (2). Equal on a fresh run, wrong the moment a triage
+        # session sets one disposition -- and this report IS that triage session.
+        extra.append(("RENDER 4Q-R11-F1 the UNVERIFIABLE-verdict count is the verdict count "
+                      "(2), not the undispositioned count (1)",
+                      "2 records carry the UNVERIFIABLE verdict" in _rtxt
+                      and "1 are still undispositioned" in _rtxt))
+        extra.append(("RENDER 4Q-R11-F1 the three counts ADD UP: 2 with the verdict + 2 "
+                      "outranked == 4 with an unverifiable check",
+                      "4 records have at least one" in _rtxt
+                      and "but only 2 of" in _rtxt))
+        # 6E #4: it asserted the outranked records "report as FLAG". FAIL outranks too, and
+        # the shipped sweep is a --gate run, which is exactly how a FAIL lands here.
+        extra.append(("RENDER 6E-R11 the outranked records are named by their ACTUAL "
+                      "verdicts (FAIL is one of them), not asserted to all be FLAG",
+                      "**FAIL** (1)" in _rtxt and "**FLAG** (1)" in _rtxt))
+        # 6E #2: exit 2 keys on the UNVERIFIABLE count and never reads `disposition`.
+        extra.append(("RENDER 6E-R11 the exit-2 sentence does not promise that "
+                      "dispositioning clears it",
+                      "does not read `disposition` at all" in _rtxt))
+        # 6E #1: Ver's finding 7, live in the renderer -- a hard cut with no marker.
+        extra.append(("RENDER 6E-R11 an over-long detail is cut WITH a truncation marker, "
+                      "not silently (Ver finding 7, in the renderer this time)",
+                      "TRUNCATED" in _rtxt and _long not in _rtxt))
+        # 6E round 10, guarded: a record that never carried the field is not a clean record.
+        _rp2 = Path(_rtd) / "pre.jsonl"
+        for _r in _rows:
+            for _k in ("checks_unmeasured", "checks_skipped", "needs_tool_fix"):
+                _r.pop(_k, None)
+        _rp2.write_text("\n".join([json.dumps(_hdr)] + [json.dumps(r) for r in _rows]),
+                        encoding="utf-8")
+        _rout2 = Path(_rtd) / "out2.md"
+        subprocess.run([sys.executable, str(Path(__file__).with_name("audit_report.py")),
+                        str(_rp2), str(_rout2)], capture_output=True, text=True,
+                       cwd=str(Path(__file__).parent))
+        _rtxt2 = _rout2.read_text(encoding="utf-8") if _rout2.exists() else ""
+        extra.append(("RENDER 6E-R10 a pre-routing JSONL reports UNKNOWN, never zero, and "
+                      "quotes no coverage number at all",
+                      "UNKNOWN, not zero" in _rtxt2
+                      and "had EVERY check run" not in _rtxt2))
+
     _clean = triage_fields([("a", "pass", ""), ("b", "skip", "")], set())
     extra.append(("4Q-R7 a clean record needs NO routing (the invariant does not cry wolf)",
                   not _clean["needs_routing"] and not _clean["routed"]))
