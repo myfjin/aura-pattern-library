@@ -943,12 +943,25 @@ def triage_fields(checks, subclasses):
     `unverifiable` as well as `flag`, so a compiled-lane pattern whose only problem is a
     missing analyser was routed to a human reviewer. Building an analyser and reading a
     pattern are different work and belong in different fields."""
-    return {
-        "needs_human_judgement": any(c[1] in ("flag", "fail") for c in checks),
-        "needs_implementation": bool(set(subclasses) & {"U1", "U2"}),
+    subs = set(subclasses)
+    out = {
+        # U3 is PATHOLOGICAL -- the file blocked measurement, and deciding whether that is a
+        # defect or a documented edge case is human work, not tool work (4Q round 7, F1).
+        "needs_human_judgement": any(c[1] in ("flag", "fail") for c in checks)
+                                 or "U3" in subs,
+        "needs_implementation": bool(subs & {"U1", "U2"}),
         "checks_measured": sum(1 for c in checks if c[1] in ("pass", "fail", "flag")),
         "checks_unmeasured": sum(1 for c in checks if c[1] == "unverifiable"),
+        # O1: `skip` belonged to neither counter, so measured/(measured+unmeasured)
+        # overstated coverage. All three now sum to len(checks).
+        "checks_skipped": sum(1 for c in checks if c[1] == "skip"),
     }
+    # ⛔ THE INVARIANT, not just the U3 patch. Anything that is not a clean pass or a
+    # deliberate skip MUST reach someone. A future subclass added to REASON_SUBCLASS and
+    # forgotten here would silently route to nobody -- which is how U3 got lost.
+    out["routed"] = out["needs_human_judgement"] or out["needs_implementation"]
+    out["needs_routing"] = any(c[1] not in ("pass", "skip") for c in checks)
+    return out
 
 
 def clip_evidence(text, limit=1200):
@@ -1079,7 +1092,8 @@ def main():
                 "prove the algorithm is right. Every assert in a pattern is SELF-AUTHORED, so "
                 "a wrong pattern can assert its own wrongness and pass. `assert_nonvacuous` "
                 "only proves the asserts CAN fire, never that what they assert is correct. "
-                "A PASS in this file means 'no defect among the CHECKED classes' — it does "
+                "A NO_FINDING verdict in this file means 'no defect among the CHECKED "
+                  "classes' — it does "
                 "NOT mean the pattern is correct. Closing C1 needs a reference oracle.",
             "C11_provenance": "no provenance record exists anywhere in the library; applies to "
                               "ALL patterns, so it is stated once here rather than flagged "
@@ -1184,7 +1198,8 @@ def main():
                 "unassessed_classes": ["C1_semantic_incorrectness", "C3_twin_equivalence",
                                        "C11_provenance"],
                 "verdict_semantics": (
-                    "A PASS means no defect was found among the classes this tool CAN check. "
+                    "A NO_FINDING verdict means no defect was found among the classes this tool "
+                    "CAN check. "
                     "It does NOT mean the pattern is correct: C1 (algorithm correctness), "
                     "C3 (twin equivalence) and C11 (provenance) were never assessed for "
                     "this pattern."),
@@ -1203,7 +1218,7 @@ def main():
     header["run"]["near_duplicate_advisory"] = {
         "⛔ status": "ADVISORY ONLY — a near-duplicate no longer SETS a verdict. But "
                      "removing it from the verdict calculus CHANGED 93 records (91 "
-                     "FLAG->UNVERIFIABLE, 2 FLAG->PASS) — 6E measured this; the earlier "
+                     "FLAG->UNVERIFIABLE, 2 FLAG->NO_FINDING) — 6E measured this; the earlier "
                      "claim that it changed nothing was wrong.",
         "⛔ precision": "accuracy on 6E's 7 hand-verified pairs is 4/7, but PRECISION AMONG "
                         "THE SURVIVING FLAGS IS 0/14 — 6E read all 14 and every one is a "
@@ -1646,6 +1661,33 @@ def self_test() -> int:
     _tf2 = triage_fields([("a", "flag", ""), ("b", "pass", "")], set())
     extra.append(("Ver-5 a FLAGGED record needs a HUMAN, not implementation",
                   _tf2["needs_human_judgement"] and not _tf2["needs_implementation"]))
+    # 4Q round 7 F1: I enumerated the cases I had thought of, not every value of the enum.
+    # THE INVARIANT probe comes first because it is the one that generalises: every subclass,
+    # and every non-clean status, must reach somebody.
+    for _sub in sorted(SUBCLASS_REMEDY):
+        _tfx = triage_fields([("a", "pass", ""), ("b", "unverifiable", "")], {_sub})
+        extra.append((f"4Q-R7 a record whose only problem is {_sub} is ROUTED to someone, "
+                      f"never dropped (human={_tfx['needs_human_judgement']} "
+                      f"impl={_tfx['needs_implementation']})", _tfx["routed"]))
+    for _stat in ("fail", "flag", "unverifiable"):
+        _tfy = triage_fields([("a", "pass", ""), ("b", _stat, "")], {"U3"})
+        extra.append((f"4Q-R7 a record carrying a {_stat} check needs routing AND gets it",
+                      _tfy["needs_routing"] and _tfy["routed"]))
+    _clean = triage_fields([("a", "pass", ""), ("b", "skip", "")], set())
+    extra.append(("4Q-R7 a clean record needs NO routing (the invariant does not cry wolf)",
+                  not _clean["needs_routing"] and not _clean["routed"]))
+    _mix = [("a", "pass", ""), ("b", "skip", ""), ("c", "unverifiable", ""), ("d", "flag", "")]
+    _tfm = triage_fields(_mix, {"U1"})
+    extra.append(("4Q-R7-O1 measured + unmeasured + skipped == every check, so the coverage "
+                  "ratio cannot overstate itself",
+                  _tfm["checks_measured"] + _tfm["checks_unmeasured"]
+                  + _tfm["checks_skipped"] == len(_mix)))
+    _needle = "A " + "PASS"
+    _selfsrc = Path(__file__).read_text(encoding="utf-8")
+    extra.append((f"Ver-1 no user-facing prose still says {_needle!r} after the rename "
+                  "(needle built at runtime so this probe cannot match its own source)",
+                  _needle not in _selfsrc))
+
     _tf3 = triage_fields([("a", "flag", ""), ("b", "unverifiable", "")], {"U1"})
     extra.append(("Ver-5 a record that is BOTH needs both, not one or the other",
                   _tf3["needs_human_judgement"] and _tf3["needs_implementation"]))
