@@ -102,6 +102,14 @@ REASON_SUBCLASS = {
     "NO_ASSERT_GRAMMAR": "U1", "NON_PYTHON_AST":  "U1", "NO_DOC_SLOT":      "U1",
     "NO_REPEAT_RUNNER": "U1",
     "NO_STDLIB_LIST":   "U2", "NO_TOOLCHAIN":     "U2", "NO_INDEX":         "U2",
+    # ⛔ 6E conformance 3: PARSE_FAIL is tagged with this code but EMITTED with status
+    # "fail" (check_hollow, check_assert_nonvacuous, check_doc_behavior) -- `_u()` only
+    # tags the string, it does not set the status. So the claim test takes the
+    # FINDING_STATUSES branch and this U3 never routes. The subclass is the TAXONOMY answer
+    # ("the file itself blocked measurement"); the ROUTING answer is needs_review, whose
+    # disposition set includes REJECT and is the right one for a malformed file. Documented
+    # and locked by a probe, not vestigial by accident. (Measured: 0 of the 1500 records
+    # carry a PARSE_FAIL check — the class is real but unexercised by this library.)
     "PARSE_FAIL":       "U3", "HANG":             "U3", "REPEAT_ERROR":     "U3",
 }
 SUBCLASS_REMEDY = {
@@ -1853,6 +1861,16 @@ def self_test() -> int:
     extra.append(("4Q-R9-F2 severity order: every finding status beats SKIP",
                   all(verdict_for([("a", _s, ""), ("b", "skip", "")]) != "SKIP"
                       for _s in STATUS_VERDICT)))
+    _pf = triage_fields([("a", "fail", "[PARSE_FAIL] broken")], set())
+    extra.append(("6E-C3 PARSE_FAIL is declared U3 but EMITTED as fail, so it routes to "
+                  "REVIEW, not pathology triage -- documented, not accidental",
+                  _pf["needs_review"] and not _pf["needs_pathology_triage"]
+                  and not _pf["needs_tool_fix"]))
+    extra.append(("6E-C3 a finding-status check carrying a reason code does NOT leak that "
+                  "code into the derived subclasses (a caller that thought it did would "
+                  "disagree with the router, and that raises)",
+                  _raises(lambda: triage_fields([("a", "fail", "[PARSE_FAIL] x")], {"U3"}),
+                          KeyError)))
     _clean = triage_fields([("a", "pass", ""), ("b", "skip", "")], set())
     extra.append(("4Q-R7 a clean record needs NO routing (the invariant does not cry wolf)",
                   not _clean["needs_routing"] and not _clean["routed"]))

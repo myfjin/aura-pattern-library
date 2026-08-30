@@ -87,11 +87,27 @@ for _f, _what in () if not _has_routing else (
     w(f"| `{_f}` | {_what} | {sum(1 for r in recs if r.get(_f))} |")
 w("")
 if any("unverified" in r for r in recs):
-    _fully = sum(1 for r in recs if r.get("unverified", "").startswith("0/"))
-    w("Stated as how much could NOT be measured, never as how much passed: "
-      f"{_fully} of {len(recs)} records have `unverified: 0/n` — every check ran. The rest")
-    w("carry an `unverified` figure beside the verdict: the verdict is about the pattern,")
-    w("the coverage is about the tool, and they are orthogonal.")
+    # ⛔ 6E conformance 3: this said "every check ran" for every record with
+    # `unverified: 0/n`. `unverified` counts UNMEASURED checks only — a SKIPPED check is
+    # not unverifiable — and all 676 such records also carried 3 skipped checks, so the
+    # sentence was false for every one of them. The counts are now derived so the prose
+    # cannot overstate: a record only reaches the first bucket if NOTHING was left out.
+    _none_run = sum(1 for r in recs
+                    if r.get("checks_unmeasured") == 0 and r.get("checks_skipped") == 0)
+    _skipped_only = sum(1 for r in recs
+                        if r.get("checks_unmeasured") == 0 and r.get("checks_skipped", 0) > 0)
+    w("Stated as how much could NOT be measured, never as how much passed. `unverified: 1/8`")
+    w("cannot be misread as a pass; `measured: 7/8` can.")
+    w("")
+    w(f"- **{_none_run} of {len(recs)}** records had EVERY check run — nothing unverifiable,")
+    w("  nothing skipped.")
+    w(f"- **{_skipped_only}** more have nothing unverifiable but at least one check SKIPPED.")
+    w("  A skipped check is not an unverifiable one, and it is not a measured one either —")
+    w("  reading `unverified: 0/n` as \"fully checked\" is the mistake this line exists to")
+    w("  prevent.")
+    w(f"- the remaining **{len(recs) - _none_run - _skipped_only}** carry a non-zero")
+    w("  `unverified` figure beside the verdict. The verdict is about the pattern, the")
+    w("  coverage is about the tool, and they are orthogonal.")
     w("")
 w("## Verdicts")
 w("")
