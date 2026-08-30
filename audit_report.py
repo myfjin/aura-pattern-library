@@ -38,23 +38,31 @@ w(f"· `library_verify.py` md5 `{header['library_verify_md5']}`")
 w("")
 w("## Verdicts")
 w("")
+w("> **`NO_FINDING` was called `PASS` until Ver's honesty pass on 2026-08-30.** The word PASS")
+w("> told a reader the pattern was good; the tool only ever measured the classes it can check,")
+w("> and C1 (correctness), C3 (twin equivalence) and C11 (provenance) were never assessed for")
+w("> any pattern. The disclosure was there per record, but a summary reader sees the headline")
+w("> word, not the footnote. The word now matches the measurement.")
+w("")
 w("| verdict | count | meaning |")
 w("|---|---:|---|")
-MEAN = {"PASS": "every decidable check green", "FAIL": "a decidable check is RED",
+MEAN = {"NO_FINDING": "no defect found among the classes this tool CAN check — NOT "
+                      "'correct': C1/C3/C11 were never assessed",
+        "FAIL": "a decidable check is RED",
         "FLAG": "needs judgement; evidence attached", "SKIP": "nothing applicable ran",
         "UNVERIFIABLE": "the tool could not measure it"}
-for v in ("FAIL", "FLAG", "UNVERIFIABLE", "PASS", "SKIP"):
+for v in ("FAIL", "FLAG", "UNVERIFIABLE", "NO_FINDING", "SKIP"):
     if by_verdict.get(v):
         w(f"| **{v}** | {by_verdict[v]} | {MEAN[v]} |")
 w("")
 w("## By language")
 w("")
-w("| lane | " + " | ".join(("FAIL", "FLAG", "UNVERIFIABLE", "PASS", "SKIP")) + " | total |")
+w("| lane | " + " | ".join(("FAIL", "FLAG", "UNVERIFIABLE", "NO_FINDING", "SKIP")) + " | total |")
 w("|---|" + "---:|" * 6)
 for lane in sorted(by_lane):
     c = by_lane[lane]
     w(f"| {lane} | " + " | ".join(str(c.get(v, 0)) for v in
-      ("FAIL", "FLAG", "UNVERIFIABLE", "PASS", "SKIP")) + f" | {sum(c.values())} |")
+      ("FAIL", "FLAG", "UNVERIFIABLE", "NO_FINDING", "SKIP")) + f" | {sum(c.values())} |")
 w("")
 w("### ⚠️ Read the UNVERIFIABLE column before the PASS column")
 w("")
