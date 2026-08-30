@@ -210,6 +210,18 @@ DANGEROUS = {
         (r"\bhashlib\.md5\s*\(", "hashlib.md5"),
         (r"\bhashlib\.sha1\s*\(", "hashlib.sha1"),
         (r"\bos\.popen\s*\(", "os.popen"),
+        # ⛔ 6E round 15: the table enumerated SPELLINGS, not primitives. os.system and
+        # os.popen were flagged while subprocess.Popen/call/run — the canonical process
+        # execution API — passed outright, and `from os import system; system(...)` walked
+        # past the dotted regex entirely. Every one of these is the same primitive under a
+        # different name, in the check whose whole mandate is surfacing weak primitives in
+        # a SECURITY library. Measured false NO_FINDINGs, not hypotheticals.
+        (r"\bsubprocess\.(?:Popen|call|check_call|check_output|run)\s*\(",
+         "subprocess process execution"),
+        (r"^\s*from\s+os\s+import\s+[^\n]*\b(?:system|popen)\b",
+         "os.system/os.popen imported under a bare name"),
+        (r"\bos\.exec[lv][pe]{0,2}\s*\(", "os.exec*"),
+        (r"\bos\.spawn[lv][pe]{0,2}\s*\(", "os.spawn*"),
         (r"\binput\s*\(", "input() — blocks a non-interactive gate"),
     ],
     "javascript": [
@@ -468,6 +480,49 @@ def strip_noncode(text: str, lane: str, keep_strings: bool = False):
                           (i + 2 < n and text[i + 2] == "'")
                 if not is_char:
                     out.append(c); i += 1; prev_sig = "'"; continue
+            # ⛔ 6E round 15, finding 3: a JS template literal is not a plain string. The
+            # generic scanner below treats ` as an ordinary quote, so a backtick inside an
+            # interpolation -- `a ${'b`c'} d` -- CLOSED the template early and re-parsed the
+            # remainder, blanking real code. 6E measured a false pass: eval('1') after such
+            # a template became `eval( )`. And the naive fix (blank the whole template) would
+            # create the OPPOSITE false pass, because ${eval(x)} is code that runs. So the
+            # literal halves are blanked and the interpolations are kept AS CODE.
+            if lane == "javascript" and c == "`":
+                j, depth, seg = i + 1, 0, [" "]
+                while j < n:
+                    ch = text[j]
+                    if ch == "\\":
+                        seg.append("  " if depth == 0 else text[j:j + 2])
+                        j += 2
+                        continue
+                    if depth == 0:
+                        if ch == "$" and j + 1 < n and text[j + 1] == "{":
+                            depth = 1; seg.append("  "); j += 2; continue
+                        if ch == "`":
+                            seg.append(" "); j += 1; break
+                        seg.append("\n" if ch == "\n" else " "); j += 1; continue
+                    # inside ${...}: real code, but its own strings must not be scanned for
+                    # braces or the depth count walks off.
+                    if ch in "'\"`":
+                        q2, k = ch, j + 1
+                        while k < n:
+                            if text[k] == "\\":
+                                k += 2; continue
+                            if text[k] == q2:
+                                k += 1; break
+                            k += 1
+                        seg.append("".join(" " if x != "\n" else "\n"
+                                           for x in text[j:k]))
+                        j = k; continue
+                    if ch == "{":
+                        depth += 1
+                    elif ch == "}":
+                        depth -= 1
+                        if depth == 0:
+                            seg.append(" "); j += 1; continue
+                    seg.append(ch); j += 1
+                out.append(text[i:j] if keep_strings else "".join(seg))
+                i = j; prev_sig = "`"; continue
             if c in quotes:
                 q, j = c, i + 1
                 while j < n:
@@ -677,8 +732,24 @@ def check_importable(text, lane, tree):
             if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))]
     side = []
     for n in tree.body:
-        if isinstance(n, (ast.Import, ast.ImportFrom, ast.FunctionDef, ast.AsyncFunctionDef,
-                          ast.ClassDef, ast.Assign, ast.AnnAssign, ast.Pass)):
+        # ⛔ 6E round 15: a DECORATOR is a module-level call that runs at import — the
+        # canonical import side effect (@app.route, @register). This loop skipped every
+        # FunctionDef and ClassDef whole, so a decorated def reported "no import side
+        # effects" while importing it populated a registry. The prose was not merely
+        # incomplete, it was FALSE, and the same effect written as a top-level
+        # registry.append(...) was flagged. Two spellings of one thing cannot get two
+        # verdicts.
+        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            for _dec in n.decorator_list:
+                # a bare @name is a lookup, not a call; @name(...) and @a.b(...) execute
+                if isinstance(_dec, ast.Call):
+                    side.append(_dec.lineno)
+                elif not isinstance(_dec, (ast.Name, ast.Attribute)):
+                    side.append(_dec.lineno)
+                else:
+                    side.append(_dec.lineno)   # @register still CALLS register(f)
+            continue
+        if isinstance(n, (ast.Import, ast.ImportFrom, ast.Assign, ast.AnnAssign, ast.Pass)):
             continue
         if isinstance(n, ast.Expr) and isinstance(n.value, ast.Constant):
             continue                      # docstring
@@ -693,7 +764,9 @@ def check_importable(text, lane, tree):
     if side:
         return ("importable", "flag",
                 f"module-level statements run on import at lines {side[:8]}")
-    return ("importable", "pass", f"{len(defs)} importable def(s), no import side effects")
+    return ("importable", "pass",
+            f"{len(defs)} importable def(s), no import side effects "
+            "(module-level statements AND decorators both checked — 6E round 15)")
 
 
 _STDLIB = getattr(sys, "stdlib_module_names", frozenset())
@@ -1371,7 +1444,13 @@ def main():
               "defect in THIS TOOL")
         print("   (a dropped reason code or a missing routing rule), not human triage work.")
         for _r in _td[:5]:
-            print(f"     {_r['path']}: {_r['unclaimed_checks']}")
+            # 4Q round 15 O1: the same raw-repr class as his round-12 F1, in the TOOL's
+            # console output rather than the renderer. The console is where a routing bug
+            # is read first.
+            _uc_txt = "; ".join(
+                "%s (%s/%s)" % (_c.get("name"), _c.get("reason_code"), _c.get("subclass"))
+                for _c in (_r.get("unclaimed_checks") or []))
+            print(f"     {_r['path']}: {clip_evidence(_uc_txt, 200)}")
         print("   No flag suppresses this. Fix the routing, then re-run.")
         return 3
     nu = counts.get("UNVERIFIABLE", 0)
@@ -1422,6 +1501,47 @@ SELFTEST_CASES = [
 
     ("dangerous: eval is flagged", check_dangerous, "python", "eval('1')\n", "flag"),
     ("dangerous: shell=True is flagged", check_dangerous, "python", "run(x, shell=True)\n", "flag"),
+    # ⛔ 6E round 15. Both classes below were FALSE PASSES and neither had a single probe:
+    # "a change that added or removed decorator handling would not move one of the 288".
+    ("6E-R15 importable: a DECORATED def runs register(f) at import — the canonical import "
+     "side effect, and it used to report 'no import side effects'",
+     check_importable, "python",
+     "registry = []\ndef register(f):\n    registry.append(f)\n    return f\n"
+     "@register\ndef hello():\n    return 1\n", "flag"),
+    ("6E-R15 importable: a decorated CLASS is the same class of side effect",
+     check_importable, "python",
+     "def reg(c):\n    return c\n@reg\nclass A:\n    pass\n", "flag"),
+    ("6E-R15 importable NEGATIVE ARM: an UNdecorated def is still clean, so the new rule "
+     "did not simply flag everything",
+     check_importable, "python", "def hello():\n    return 1\n", "pass"),
+    ("6E-R15 dangerous: subprocess.Popen is the same primitive as os.system",
+     check_dangerous, "python", "import subprocess\nsubprocess.Popen('ls')\n", "flag"),
+    ("6E-R15 dangerous: subprocess.run is flagged", check_dangerous, "python",
+     "subprocess.run(['ls'])\n", "flag"),
+    ("6E-R15 dangerous: subprocess.check_output is flagged", check_dangerous, "python",
+     "subprocess.check_output(['ls'])\n", "flag"),
+    ("6E-R15 dangerous: `from os import system` walked past the dotted regex",
+     check_dangerous, "python", "from os import system\nsystem('ls')\n", "flag"),
+    ("6E-R15 dangerous: os.execv is process execution too", check_dangerous, "python",
+     "import os\nos.execv('/bin/ls', [])\n", "flag"),
+    # 6E round 15, finding 3: the template-literal scanner. He reported it with an honest
+    # caveat that the blast radius was input-dependent; it reproduced, so it is fixed and
+    # probed. The third case is the arm that stops the fix becoming the opposite defect.
+    ("6E-R15 js: a backtick inside an interpolation does NOT close the template and blank "
+     "the real code after it", check_dangerous, "javascript",
+     # ⛔ SINGLE LINE ON PURPOSE. My first version of this probe put eval() on the next
+     # line and PASSED against the un-fixed scanner -- 6E's report said the blast radius is
+     # input-dependent and my fixture was the shape that survives. Measured: the two-line
+     # form does not discriminate, this one does.
+     "const t = `a ${'b`c'} d`; eval('1');\n", "flag"),
+    ("6E-R15 js: code INSIDE ${...} still runs, so it is still scanned", check_dangerous,
+     "javascript", "const x = `v=${eval(y)}`;\n", "flag"),
+    ("6E-R15 js NEGATIVE ARM: a bare `eval(` in the LITERAL half of a template is text, "
+     "not a call — the fix must not turn the template into a keyword grep", check_dangerous,
+     "javascript", "const s = `eval( is a word`;\n", "pass"),
+    ("6E-R15 dangerous NEGATIVE ARM: importing subprocess without calling it is NOT a "
+     "finding, so the new rules did not turn the check into a keyword grep",
+     check_dangerous, "python", "import subprocess\ndef f():\n    return 1\n", "pass"),
     ("dangerous: clean file passes", check_dangerous, "python", "import json\n", "pass"),
     ("dangerous: unknown lane is UNVERIFIABLE not pass", check_dangerous, "cobol", "eval(", "unverifiable"),
 
@@ -1966,14 +2086,19 @@ def self_test() -> int:
         # up. So the seeding is structural now: _poison walks the whole fixture and replaces
         # EVERY string leaf and EVERY dict key, so a field added tomorrow is seeded tomorrow
         # without anyone remembering it. Only the values the renderer looks UP by are spared.
-        # KEYS are schema -- the tool writes them and the renderer looks records up by
-        # them; poisoning those tests nothing and just breaks the reader. VALUES are data,
-        # and data is what arrives hostile. `verdict` and `status` are spared because the
-        # renderer looks up BY them, so poisoning those would test a crash, not an escape.
-        _KEEP = {"verdict", "status"}
+        # ⛔ 4Q round 15 found BOTH of my exemptions wider than their justification.
+        # "Keys are schema" is true of a RECORD's field names, which the renderer looks
+        # records up by -- and false of a map whose keys ARE the payload
+        # (toolchains_present, the coverage map). "verdict is a lookup" is true, and it is
+        # ALSO displayed. So: keys are poisoned unless they are known schema names, and a
+        # dedicated record below carries a hostile verdict into the one place a verdict is
+        # printed rather than indexed.
+        _KEEP = {"verdict", "status"} | set(_hdr["run"]) | set(_rows[0]) | {
+            "name", "detail", "reason_code", "subclass"}
         def _poison(obj, key=None):
             if isinstance(obj, dict):
-                return {k: _poison(v, k) for k, v in obj.items()}
+                return {(k if k in _KEEP else _nasty + str(k)): _poison(v, k)
+                        for k, v in obj.items()}
             if isinstance(obj, list):
                 return [_poison(v, key) for v in obj]
             if isinstance(obj, str) and key not in _KEEP:
@@ -1985,6 +2110,8 @@ def self_test() -> int:
         _h3["run"]["unverifiable_taxonomy"] = {"U1": {"name": _nasty, "remedy": _huge,
                                                       "meaning": _nasty}}
         _h3["run"]["analyser_coverage"] = {"per_check": {_nasty: [_nasty]}}
+        # 4Q R15 F2: the toolchain map's KEYS are the payload and reach the page raw.
+        _h3["run"]["toolchains_present"] = _poison({"gcc": True, "rustc": False})
         _h3["run"]["checks_not_requested"] = [_nasty]
         # every remaining header string -- host, run_date, library_verify_md5, and anything
         # a later version adds -- gets the hostile value without being named here.
@@ -2000,7 +2127,11 @@ def self_test() -> int:
         _r3["census_mismatches"] = [_nasty]
         _r4 = _poison(_mk("y", "FLAG", None, _uc, _nasty))
         _r4["checks"].append({"name": _nasty, "status": "flag", "detail": _nasty})
-        _rp3.write_text("\n".join([json.dumps(_h3), json.dumps(_r3), json.dumps(_r4)]),
+        # 4Q R15 F1: a verdict cannot be poisoned wholesale (the renderer indexes by it),
+        # so ONE record carries a hostile one into hidden_by_verdict, which PRINTS it.
+        _r5 = _mk("w", "FLAG" + _nasty, None, _uc, "x")
+        _rp3.write_text("\n".join([json.dumps(_h3), json.dumps(_r3),
+                                    json.dumps(_r4), json.dumps(_r5)]),
                         encoding="utf-8")
         _rout3 = Path(_rtd) / "out3.md"
         subprocess.run([sys.executable, str(Path(__file__).with_name("audit_report.py")),

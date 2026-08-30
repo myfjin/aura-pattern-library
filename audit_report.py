@@ -224,7 +224,10 @@ w("")
 for c in header.get("checks_not_requested") or ["(none)"]:
     w(f"- `{cell(c, 60)}`")
 w("")
-w("Toolchains: " + ", ".join(f"{k}={'yes' if v else '**MISSING**'}"
+# 4Q round 15 F2: dict KEYS can be data too. `_poison` left keys alone on the reasoning
+# that keys are schema — true for a record's fields, false for a map whose keys ARE the
+# payload. Same shape as F1: an exemption wider than the reason for it.
+w("Toolchains: " + ", ".join(f"{cell(k, 40)}={'yes' if v else '**MISSING**'}"
                              for k, v in header["toolchains_present"].items()))
 w("")
 # ---- the UNVERIFIABLE board. 6E: one undifferentiated bucket is useless for triage,
@@ -280,7 +283,8 @@ if code_rows:
         w("")
         w(f"{with_u} records have at least one `unverifiable` check, but only {unv_verdict} of")
         w(f"them carry UNVERIFIABLE as their verdict. The other **{hidden}** report as "
-          + ", ".join(f"**{v}** ({n})" for v, n in sorted(hidden_by_verdict.items()))
+          + ", ".join(f"**{cell(v, 30)}** ({n})"
+                       for v, n in sorted(hidden_by_verdict.items()))
           + ",")
         w("because both FAIL and FLAG outrank UNVERIFIABLE in the precedence — a record with a")
         w("real finding AND an unmeasured half shows the finding and hides the hole.")
