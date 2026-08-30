@@ -228,7 +228,11 @@ DANGEROUS = {
         (r"\beval\s*\(", "eval()"),
         # 4Q R16: `Function(...)` without `new` is the same code-from-string primitive.
         (r"\bnew\s+Function\s*\(|(?<![\w.])Function\s*\(\s*['\"]", "Function() from a string"),
-        (r"child_process", "child_process"),
+        # ⛔ 6E R17 F1 (mechanism corrected, defect real): a bare substring flagged any path
+        # that MENTIONS the module -- require("./docs/child_process_notes"). MEASURED against
+        # commit 2cba6d4: it flagged there too, so this is PRE-EXISTING, not a round-17
+        # regression. An import rule must match the WHOLE specifier, not a piece of one.
+        (r"['\"](?:node:)?child_process['\"]", "child_process"),
         # 6E R16 F5: .innerHTML= was one sink of a family. These all write attacker-
         # controlled markup or script into the DOM -- the exact XSS class the rule exists
         # to surface, under four other spellings.
@@ -256,7 +260,9 @@ DANGEROUS = {
         (r"\bSHA1[_(]", "SHA1"),
     ],
     "go": [
-        (r"os/exec", "os/exec"),
+        # ⛔ 6E R17 F1: same class -- "example.com/old/os/exec-wrapper" is a wrapper package,
+        # not os/exec. A Go import path IS a string literal, so anchor on the whole literal.
+        (r"['\"]os/exec['\"]", "os/exec"),
         # 6E R16 F2: os/exec is the WRAPPER. syscall.Exec/ForkExec is the raw primitive it
         # wraps -- the same relationship as os.system vs subprocess in python.
         (r"syscall\.(?:Exec|ForkExec|StartProcess)\s*\(", "syscall raw exec"),
@@ -665,10 +671,33 @@ def _text_check(text, lane, table, name, ok_detail, want_pats=False):
     lit, lit_ok = strip_noncode(text, lane, keep_strings=True)
     lit_ok = lit_ok and len(lit) == len(code)      # alignment is the premise; never assume it
 
+    # ⛔ 6E ROUND 17 F1 — the restored-import region makes the invariant VACUOUS. strip_noncode
+    # ends with `stripped + "\n" + _import_lines(text, lane)`, appending the ORIGINAL import /
+    # require lines (round-2 F5: a Go import path IS a string literal and is code). Both passes
+    # append the SAME text, so throughout that region code[i] == lit[i] unconditionally and
+    # `starts in code` is true of ANYTHING there. Bare-substring rules then fired on a path that
+    # merely MENTIONS the name -- 6E measured both live:
+    #     require('./docs/child_process_notes')   -> flag "child_process"
+    #     import "example.com/old/os/exec-wrapper" -> flag "os/exec"
+    # A false FINDING, the direction this tool has spent seventeen rounds refusing. The restore
+    # itself must stay; it is pass 2's extra reach over that region that must not. A genuine
+    # import still fires through `re.search(pat, code)`, because the restored lines are IN code.
+    #
+    # My negative arms could not have caught it: they are python-only, and python has no
+    # _IMPORT_LINE restore -- so the class is structurally invisible to every arm I wrote.
+    # I first "fixed" 6E's finding by excluding the restored-import region from pass 2. That
+    # guard was DECORATION and I am recording why rather than leaving it in to look thorough:
+    # pass 1 contains the restored lines IDENTICALLY, so any match there is already found by
+    # `re.search(pat, code)` and excluding it from pass 2 changes no verdict. The false
+    # positives were never about the two passes -- measured against commit 2cba6d4, both fired
+    # before round 17 existed. The defect was the RULES matching a bare substring of a path.
     def _starts_in_code(pat):
         for m in re.finditer(pat, lit):
             i = m.start()
-            if i < len(code) and code[i] == lit[i]:
+            # 4Q round 17: a blanked literal becomes SPACES, so a literal that CONTAINS a space
+            # has code[i] == lit[i] == " " and reads as code. No rule starts with \s today, so
+            # this was fragility rather than a defect -- closed here instead of left as a note.
+            if i < len(code) and code[i] == lit[i] and not lit[i].isspace():
                 return True
         return False
 
@@ -705,8 +734,19 @@ def check_determinism_markers(text, lane, tree):
     name, status, detail, pats = _text_check(text, lane, NONDET, "determinism_markers",
                                              "no random/time/network marker", want_pats=True)
     if status == "flag":
+        # ⛔ 4Q ROUND 17 F1 — I fixed the ENGINE and left a caller that bypasses it. SEEDED ran
+        # on pass 1 alone, and SEEDED's whole point is the seed VALUE: `random.seed("42")` is
+        # reproducible, but blanking the literal leaves `random.seed(    )` and `[^)\s]` cannot
+        # match spaces. So a seeded, reproducible pattern was reported as needing judgement --
+        # a false FLAG, the same dead-by-construction class one function over.
         code, ok = strip_noncode(text, lane)
-        if ok and SEEDED.search(code):
+        _slit, _sok = strip_noncode(text, lane, keep_strings=True)
+        _sok = _sok and len(_slit) == len(code)
+        _seeded = SEEDED.search(code) or (_sok and any(
+            m.start() < len(code) and code[m.start()] == _slit[m.start()]
+            and not _slit[m.start()].isspace()
+            for m in SEEDED.finditer(_slit)))
+        if ok and _seeded:
             # filter by PATTERN IDENTITY, never by substring of the human label
             left = [p for p in pats if p not in SEEDABLE_PATS]
             labels = sorted({l for pt, l in NONDET[lane] if pt in left})
@@ -1633,6 +1673,33 @@ SELFTEST_CASES = [
      check_dangerous, "python", "from os import system\nsystem('ls')\n", "flag"),
     ("6E-R15 dangerous: os.execv is process execution too", check_dangerous, "python",
      "import os\nos.execv('/bin/ls', [])\n", "flag"),
+    ("R17-F1 js: node:child_process is the modern spelling of the SAME import and must fire",
+     check_dangerous, "javascript", "const cp = require('node:child_process');\n", "flag"),
+    # ⛔ 6E ROUND 17 F1 — the restored-import leak. These are 6E's two MEASURED false
+    # positives, and they are in js and go ON PURPOSE: every arm I wrote for the two-pass
+    # engine was python, and python has no import restore, so the class could not be seen.
+    ("R17-F1 js: a require path that merely MENTIONS child_process is not an import of it",
+     check_dangerous, "javascript", "var a = require('./docs/child_process_notes');\n",
+     "pass"),
+    ("R17-F1 go: a wrapper package whose PATH contains os/exec is not os/exec",
+     check_dangerous, "go", 'import "example.com/old/os/exec-wrapper"\n', "pass"),
+    ("R17-F1 POSITIVE ARM js: a REAL require of child_process must still fire — the restore "
+     "exists so an import path counts as code, and pass 1 must still see it",
+     check_dangerous, "javascript", "var a = require('child_process');\n", "flag"),
+    ("R17-F1 POSITIVE ARM go: a REAL os/exec import must still fire", check_dangerous, "go",
+     'import "os/exec"\n', "flag"),
+    # ⛔ 4Q ROUND 17 F1 — SEEDED bypassed the two-pass engine.
+    ("R17-F1 4Q: random.seed(\"42\") IS reproducible — the seed value lives in a literal and "
+     "blanking it left random.seed(    ), so a seeded pattern was flagged for judgement",
+     check_determinism_markers, "python", 'import random\nrandom.seed("42")\nx=random.random()\n',
+     "pass"),
+    ("R17-F1 4Q NEGATIVE ARM: random.seed() with EMPTY parens seeds from OS entropy and is "
+     "NOT reproducible — the literal fix must not swallow this",
+     check_determinism_markers, "python", 'import random\nrandom.seed()\nx=random.random()\n',
+     "flag"),
+    ("R17 4Q: a literal CONTAINING a space blanks to spaces, so code[i]==lit[i]==\" \" reads "
+     "as code — no rule starts with whitespace today, and now none can exploit it",
+     check_dangerous, "python", 'x = "shell = True"\n', "pass"),
     # ⛔ ROUND 17. Six rules were DEAD BY CONSTRUCTION -- the engine stripped the string
     # literal their signal lived in. Four had shipped since round 1. Each probe below is a
     # file that contains the primitive in plain sight and was returned as a clean `pass`.
