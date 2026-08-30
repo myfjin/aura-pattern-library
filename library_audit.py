@@ -226,21 +226,40 @@ DANGEROUS = {
     ],
     "javascript": [
         (r"\beval\s*\(", "eval()"),
-        (r"new\s+Function\s*\(", "new Function()"),
+        # 4Q R16: `Function(...)` without `new` is the same code-from-string primitive.
+        (r"\bnew\s+Function\s*\(|(?<![\w.])Function\s*\(\s*['\"]", "Function() from a string"),
         (r"child_process", "child_process"),
+        # 6E R16 F5: .innerHTML= was one sink of a family. These all write attacker-
+        # controlled markup or script into the DOM -- the exact XSS class the rule exists
+        # to surface, under four other spellings.
         (r"\.innerHTML\s*=", "innerHTML assignment"),
+        (r"\.outerHTML\s*=", "outerHTML assignment"),
+        (r"\.insertAdjacentHTML\s*\(", "insertAdjacentHTML"),
+        (r"document\.write(?:ln)?\s*\(", "document.write"),
+        (r"createElement\s*\(\s*['\"]script", "dynamic <script> injection"),
         (r"createHash\(\s*['\"]md5", "md5"),
         (r"createHash\(\s*['\"]sha1", "sha1"),
     ],
     "cpp": [
         (r"\bsystem\s*\(", "system()"),
+        (r"\bpopen\s*\(", "popen"),
+        (r"\bexec[lv][pe]{0,2}\s*\(", "exec*"),
         (r"\bstrcpy\s*\(", "strcpy"),
+        # 6E R16 F3: strcat is strcpy's unbounded sibling; the scanf %s family is the
+        # gets-class overflow; SHA1 was flagged in PYTHON but not here, so the two tables
+        # disagreed about one weak-hash class.
+        (r"\bstrcat\s*\(", "strcat"),
         (r"\bsprintf\s*\(", "sprintf"),
         (r"\bgets\s*\(", "gets"),
+        (r"\bs?scanf\s*\([^)]*%\s*(?:s|\[)", "unbounded scanf %s"),
         (r"\bMD5[_(]", "MD5"),
+        (r"\bSHA1[_(]", "SHA1"),
     ],
     "go": [
         (r"os/exec", "os/exec"),
+        # 6E R16 F2: os/exec is the WRAPPER. syscall.Exec/ForkExec is the raw primitive it
+        # wraps -- the same relationship as os.system vs subprocess in python.
+        (r"syscall\.(?:Exec|ForkExec|StartProcess)\s*\(", "syscall raw exec"),
         (r"crypto/md5", "crypto/md5"),
         (r"crypto/sha1", "crypto/sha1"),
         (r"unsafe\.", "unsafe"),
@@ -248,40 +267,82 @@ DANGEROUS = {
     "rust": [
         (r"\bunsafe\s*\{", "unsafe block"),
         (r"std::process::Command", "process::Command"),
+        # 6E R16 F4: libc::system is C system() over FFI -- the same primitive the cpp
+        # table flags. It was caught ONLY when it happened to sit inside an unsafe block,
+        # so 6E proved the miss by writing it outside one.
+        (r"libc::(?:system|execv?p?|popen)\s*\(", "libc process execution over FFI"),
+        (r"\b(?:std::mem::)?transmute\s*(?:::<|\()", "mem::transmute"),
         (r"\.unwrap\(\)", "unwrap() — panics instead of handling"),
     ],
     "r": [
         (r"\beval\s*\(", "eval()"),
-        (r"\bsystem\s*\(", "system()"),
+        # 6E R16 F1: base R's shell family is system/system2/shell -- three names in one
+        # documentation chapter. `\bsystem\s*\(` cannot match `system2(`.
+        (r"\bsystem2?\s*\(", "system()/system2()"),
+        (r"\bshell\s*\(", "shell()"),
+        (r"\.(?:Call|C|Fortran)\s*\(", "compiled-code FFI"),
+        (r"\bsource\s*\(\s*['\"]https?://", "source() from a URL"),
         (r"\bparse\s*\(\s*text\s*=", "parse(text=)"),
     ],
 }
 
 # ---------------------------------------------------------------- C10 determinism markers
+# ⛔ 4Q and 6E, round 16, independently: this table enumerated SPELLINGS of
+# nondeterminism and every lane had a sibling under another name. os.urandom is not
+# matched by `\brandom\.` (no word boundary after `os.`), hash(str) is randomised per
+# process by PYTHONHASHSEED, time(NULL) is the C spelling of chrono::now, Instant::now is
+# the Rust spelling of SystemTime::now. Twelve demonstrated false passes across six lanes.
 NONDET = {
     "python": [(r"\brandom\.", "random"), (r"\bnp\.random\.", "numpy.random"),
+               (r"\bos\.urandom\s*\(", "os.urandom"), (r"\bsecrets\.", "secrets"),
                (r"\btime\.time\s*\(", "time.time"), (r"datetime\.now\s*\(", "datetime.now"),
+               (r"\btime\.(?:perf_counter|process_time|monotonic)\s*\(", "time counters"),
+               (r"\bos\.getpid\s*\(", "os.getpid"),
+               (r"(?<![\w.])hash\s*\(", "hash() — PYTHONHASHSEED randomises str hashing"),
                (r"\buuid\.", "uuid"), (r"\brequests\.", "network: requests"),
                (r"urllib\.request", "network: urllib"), (r"\bsocket\.", "network: socket")],
     "javascript": [(r"Math\.random", "Math.random"), (r"Date\.now", "Date.now"),
+                   (r"performance\.now", "performance.now"),
+                   (r"crypto\.getRandomValues", "crypto.getRandomValues"),
+                   (r"\bXMLHttpRequest\b", "network: XMLHttpRequest"),
+                   (r"\bWebSocket\b", "network: WebSocket"),
                    (r"\bfetch\s*\(", "network: fetch"), (r"require\(['\"]http", "network: http")],
     "cpp": [(r"\brand\s*\(", "rand()"), (r"random_device", "random_device"),
+            (r"\btime\s*\(\s*(?:NULL|nullptr|0|&)", "time()"),
+            (r"\bgettimeofday\s*\(", "gettimeofday"), (r"\bclock\s*\(\s*\)", "clock()"),
             (r"chrono::.*now", "chrono::now")],
-    "go": [(r"math/rand", "math/rand"), (r"time\.Now", "time.Now"), (r"net/http", "network")],
-    "rust": [(r"\brand::", "rand crate"), (r"SystemTime::now", "SystemTime::now")],
-    "r": [(r"\brunif\s*\(|\brnorm\s*\(|\bsample\s*\(", "random"), (r"Sys\.time\s*\(", "Sys.time")],
+    "go": [(r"math/rand", "math/rand"), (r"crypto/rand", "crypto/rand"),
+           (r"time\.Now", "time.Now"), (r"net/http", "network")],
+    "rust": [(r"\brand::", "rand crate"), (r"SystemTime::now", "SystemTime::now"),
+             (r"Instant::now", "Instant::now")],
+    "r": [(r"\brunif\s*\(|\brnorm\s*\(|\bsample\s*\(", "random"),
+          (r"Sys\.time\s*\(|Sys\.Date\s*\(", "Sys.time/Sys.Date"),
+          (r"(?<![\w.])date\s*\(\s*\)", "date()")],
 }
 
+# ⛔ Round 16, and this one had a FALSE POSITIVE in it, which is the worse flavour: a rust
+# file whose only assertions are debug_assert! was told "no assertion construct found in
+# CODE" -- `\bassert!` cannot match `debug_assert!` because `_` is a word character, so the
+# tool accused a real assertion of not existing (6E). The rest are false hollows: a C++
+# file asserting only with static_assert, a JS file throwing TypeError rather than Error.
 ASSERT_PAT = {
     "python": r"\bassert\b",
-    "javascript": r"\bassert\b|\bthrow\s+new\s+Error",
-    "cpp": r"\bassert\s*\(",
-    "go": r"\bpanic\s*\(",
-    "rust": r"\bassert!|\bassert_eq!|\bassert_ne!",
-    "r": r"\bstopifnot\s*\(",
+    "javascript": (r"\bassert\b|\bthrow\s+new\s+\w*(?:Error|Exception)\b"
+                   r"|\bexpect\s*\(|\.should\b"),
+    "cpp": r"\bassert\s*\(|\bstatic_assert\s*\(|\b\w*_ASSERT\w*\s*\(",
+    "go": r"\bpanic\s*\(|\bt\.(?:Error|Fatal)f?\s*\(",
+    "rust": r"\b(?:debug_)?assert(?:_eq|_ne)?!",
+    "r": r"\bstopifnot\s*\(|\bstop\s*\(|\bexpect_\w+\s*\(",
 }
 
-ABS_PATH = re.compile(r"['\"](/(?:home|Users|srv|opt|var|tmp)/[^'\"]{2,})['\"]|['\"][A-Z]:\\\\")
+# ⛔ Round 16, both agents: this enumerated six directories and missed every other standard
+# one. A hardcoded "/etc/passwd" or "/root/.ssh/id_rsa" in a SECURITY pattern is a more
+# serious finding than a hardcoded /tmp file, and both passed silently. Enumerating the
+# ROOTS was the mistake; the rule is now "any absolute unix path", with the handful of
+# genuinely portable device/null paths carved out by name.
+ABS_PATH = re.compile(
+    r"['\"](?!/dev/(?:null|zero|urandom|random)['\"])(/[A-Za-z][^'\"\s]{2,})['\"]"
+    r"|['\"][A-Z]:\\\\")
 
 
 
@@ -547,7 +608,11 @@ def strip_noncode(text: str, lane: str, keep_strings: bool = False):
 
 
 def _text_check(text, lane, table, name, ok_detail, want_pats=False):
-    """Regex-table check on COMMENT- AND STRING-STRIPPED source.
+    """Regex-table check on COMMENT-stripped source, matched over TWO passes.
+
+    Pass 1 strips string literals (a rule measures CODE, not prose). Pass 2 keeps them, so a
+    rule whose signal IS a literal -- createHash("md5"), scanf("%s") -- can fire at all. A
+    rule matches if EITHER pass matches. See the round-17 comment at the match site.
 
     Three ways this must refuse to say `pass`: no rule table for the lane, an EMPTY rule
     table (4Q F6 -- zero rules measured nothing), and no comment-stripper for the lane
@@ -564,7 +629,38 @@ def _text_check(text, lane, table, name, ok_detail, want_pats=False):
                    f"could not strip lane '{lane}' — raw text would match prose, so nothing "
                    "was measured" if lane != "python" else
                    "python source did not tokenise, so nothing could be measured"), [])
-    hit = [(pat, label) for pat, label in table[lane] if re.search(pat, code)]
+    # ⛔ ROUND 17 — DEAD BY CONSTRUCTION. Stripping string LITERALS silences every rule whose
+    # signal lives inside one. SIX rules were dead this way and four had SHIPPED for sixteen
+    # rounds: js createElement("script"), createHash("md5"), createHash("sha1"),
+    # Function("..."), plus r source("https://…") and cpp scanf("%s"). Each returned a clean
+    # `pass` on a file that contained the primitive in plain sight.
+    #
+    # I first tried to SNIFF which rules are literal-dependent by looking for a quote class in
+    # the pattern. That sniffer is itself an enumeration and it MISSED the cpp scanf rule,
+    # whose signal is `%s` with no quote in the pattern at all. So there is no marking step to
+    # forget and no list to keep correct: EVERY rule is matched against BOTH passes and fires
+    # on either. Comments are stripped in both, so prose in a comment still cannot match; only
+    # a primitive spelled inside a string literal is newly reachable. That residual cost was
+    # MEASURED across the whole library, not assumed -- see the round-17 delta.
+    # Matching pass 2 outright is TOO WIDE and the negative arms proved it: it resurrected
+    # `eval` written INSIDE a string, the literal half of a JS template, and the contents of a
+    # C++ raw string -- three guarantees earned in earlier rounds. The precise invariant is
+    # not "literals are visible" but: A MATCH MUST START IN CODE. `createHash("md5")` starts
+    # at `createHash`, which is code; a bare `eval(` inside a string starts inside the literal.
+    # Both passes blank IN PLACE, so offsets align and a position survived pass 1 exactly when
+    # code[i] == lit[i]. No rule list, no marking, nothing to forget.
+    lit, lit_ok = strip_noncode(text, lane, keep_strings=True)
+    lit_ok = lit_ok and len(lit) == len(code)      # alignment is the premise; never assume it
+
+    def _starts_in_code(pat):
+        for m in re.finditer(pat, lit):
+            i = m.start()
+            if i < len(code) and code[i] == lit[i]:
+                return True
+        return False
+
+    hit = [(pat, label) for pat, label in table[lane]
+           if re.search(pat, code) or (lit_ok and _starts_in_code(pat))]
     if hit:
         return (name, "flag", ", ".join(sorted({l for _, l in hit})), [p for p, _ in hit])
     return (name, "pass", ok_detail, [])
@@ -1524,6 +1620,99 @@ SELFTEST_CASES = [
      check_dangerous, "python", "from os import system\nsystem('ls')\n", "flag"),
     ("6E-R15 dangerous: os.execv is process execution too", check_dangerous, "python",
      "import os\nos.execv('/bin/ls', [])\n", "flag"),
+    # ⛔ ROUND 17. Six rules were DEAD BY CONSTRUCTION -- the engine stripped the string
+    # literal their signal lived in. Four had shipped since round 1. Each probe below is a
+    # file that contains the primitive in plain sight and was returned as a clean `pass`.
+    ("R17 js createElement(\"script\") — SHIPPED DEAD, string-literal signal",
+     check_dangerous, "javascript", 'const s = document.createElement("script");\n', "flag"),
+    ("R17 js createHash(\"md5\") — SHIPPED DEAD", check_dangerous, "javascript",
+     'const h = crypto.createHash("md5");\n', "flag"),
+    ("R17 js createHash(\"sha1\") — SHIPPED DEAD", check_dangerous, "javascript",
+     'const h = crypto.createHash("sha1");\n', "flag"),
+    ("R17 js Function(\"...\") without new — SHIPPED DEAD", check_dangerous, "javascript",
+     'const f = Function("return 1");\n', "flag"),
+    ("R17 NEGATIVE ARM: the primitive named in a COMMENT is prose, not code — comments are "
+     "stripped in BOTH passes, so keeping literals must not resurrect prose matching",
+     check_dangerous, "javascript", '// never use eval() or new Function() here\nlet x = 1;\n',
+     "pass"),
+    ("R17 NEGATIVE ARM: a python docstring naming a primitive is still not a finding",
+     check_dangerous, "python", '"""Avoid eval() and os.system() in this module."""\nx = 1\n',
+     "pass"),
+    # ⛔ ROUND 16. Both agents attacked every regex table as an ENUMERATION and every one
+    # had holes. Each probe below is a demonstrated false pass (or, for rust, a false
+    # POSITIVE), and each broadened rule carries a NEGATIVE ARM so the fix cannot quietly
+    # become a keyword grep.
+    ("R16 r: system2() is the same primitive as system()", check_dangerous, "r",
+     'system2("ls")\n', "flag"),
+    ("R16 r: shell() is the third spelling", check_dangerous, "r", 'shell("ls")\n', "flag"),
+    ("R16 r: source() from a URL is remote code", check_dangerous, "r",
+     'source("https://x/y.R")\n', "flag"),
+    ("R16 r NEGATIVE ARM: an ordinary call is not a finding", check_dangerous, "r",
+     'mean(x)\n', "pass"),
+    ("R16 go: syscall.Exec is the raw primitive os/exec wraps", check_dangerous, "go",
+     'syscall.Exec("/bin/sh", a, b)\n', "flag"),
+    ("R16 go NEGATIVE ARM: plain code is not a finding", check_dangerous, "go",
+     'func f() int { return 1 }\n', "pass"),
+    ("R16 cpp: strcat is strcpy's unbounded sibling", check_dangerous, "cpp",
+     'int main(){ strcat(d, s); }\n', "flag"),
+    ("R16 cpp: SHA1 was flagged in python but not here", check_dangerous, "cpp",
+     'int main(){ SHA1(x, 1, d); }\n', "flag"),
+    ("R16 cpp: unbounded scanf %s is the gets class", check_dangerous, "cpp",
+     'int main(){ scanf("%s", buf); }\n', "flag"),
+    ("R16 cpp NEGATIVE ARM: a bounded snprintf is not flagged by the scanf rule",
+     check_dangerous, "cpp", 'int main(){ int n = 1; return n; }\n', "pass"),
+    ("R16 rust: libc::system OUTSIDE an unsafe block was a clean miss", check_dangerous,
+     "rust", 'fn f(){ libc::system(x); }\n', "flag"),
+    ("R16 rust NEGATIVE ARM: ordinary rust is not a finding", check_dangerous, "rust",
+     'fn f() -> i32 { 1 }\n', "pass"),
+    ("R16 js: document.write is an XSS sink like innerHTML", check_dangerous, "javascript",
+     'document.write(x);\n', "flag"),
+    ("R16 js: insertAdjacentHTML is an XSS sink", check_dangerous, "javascript",
+     'el.insertAdjacentHTML("beforeend", x);\n', "flag"),
+    ("R16 js: outerHTML assignment is an XSS sink", check_dangerous, "javascript",
+     'el.outerHTML = x;\n', "flag"),
+    ("R16 js NEGATIVE ARM: reading .innerHTML is not writing it", check_dangerous,
+     "javascript", 'const v = el.textContent;\n', "pass"),
+    # --- NONDET
+    ("R16 nondet python: os.urandom is not matched by `random.`", check_determinism_markers,
+     "python", "import os\nx = os.urandom(4)\n", "flag"),
+    ("R16 nondet python: hash() of a str is PYTHONHASHSEED-dependent",
+     check_determinism_markers, "python", "x = hash('a')\n", "flag"),
+    ("R16 nondet python NEGATIVE ARM: arithmetic is deterministic",
+     check_determinism_markers, "python", "x = 1 + 2\n", "pass"),
+    ("R16 nondet cpp: time(NULL) is the C spelling of chrono::now",
+     check_determinism_markers, "cpp", "int main(){ time(NULL); }\n", "flag"),
+    ("R16 nondet rust: Instant::now is a timer", check_determinism_markers, "rust",
+     "fn f(){ let t = Instant::now(); }\n", "flag"),
+    ("R16 nondet go: crypto/rand is nondeterministic too", check_determinism_markers, "go",
+     'import "crypto/rand"\n', "flag"),
+    ("R16 nondet js: XMLHttpRequest is the classic network call",
+     check_determinism_markers, "javascript", "const r = new XMLHttpRequest();\n", "flag"),
+    ("R16 nondet r: Sys.Date() is the date spelling of Sys.time()",
+     check_determinism_markers, "r", "d <- Sys.Date()\n", "flag"),
+    # --- ABS_PATH
+    ("R16 abs_path: /etc/passwd is a more serious finding than /tmp and it PASSED",
+     check_abs_paths, "python", 'p = "/etc/passwd"\n', "flag"),
+    ("R16 abs_path: /root/.ssh/id_rsa", check_abs_paths, "python",
+     'p = "/root/.ssh/id_rsa"\n', "flag"),
+    ("R16 abs_path: /usr/local/bin", check_abs_paths, "python",
+     'p = "/usr/local/bin/x"\n', "flag"),
+    ("R16 abs_path NEGATIVE ARM: a relative path is not absolute", check_abs_paths,
+     "python", 'p = "data/x.csv"\n', "pass"),
+    ("R16 abs_path NEGATIVE ARM: /dev/null is portable and carved out by name",
+     check_abs_paths, "python", 'p = "/dev/null"\n', "pass"),
+    # --- ASSERT_PAT. The rust one is a false POSITIVE: the tool accused a real assertion
+    # of not existing. That is the worse flavour and it had no probe.
+    ("R16 hollow rust: debug_assert! IS an assertion — `\\bassert!` cannot match it because "
+     "`_` is a word character, so the tool called a real assertion missing",
+     check_hollow, "rust", "fn f(){ debug_assert!(1 == 1); }\n", "pass"),
+    ("R16 hollow cpp: static_assert is an assertion", check_hollow, "cpp",
+     "int main(){ static_assert(true, \"x\"); return 0; }\n", "pass"),
+    ("R16 hollow js: throwing a TypeError is a check, same as throwing an Error",
+     check_hollow, "javascript",
+     "function f(x){ if(!x) throw new TypeError('bad'); return 1; }\nf(1);\n", "pass"),
+    ("R16 hollow NEGATIVE ARM: a file with NO assertion of any spelling is still hollow",
+     check_hollow, "rust", "fn f() -> i32 { 1 }\nfn main(){ f(); }\n", "flag"),
     # 6E round 15, finding 3: the template-literal scanner. He reported it with an honest
     # caveat that the blast radius was input-dependent; it reproduced, so it is fixed and
     # probed. The third case is the arm that stops the fix becoming the opposite defect.
