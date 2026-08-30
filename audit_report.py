@@ -84,6 +84,14 @@ w("")
 # round-13 comment: a guarantee that covers only what its author remembered.
 w(f"**{cell(header['total_patterns'], 20)} patterns** · run {cell(header['run_date'], 40)} "
   f"on `{cell(header['host'], 60)}` · {cell(header.get('elapsed_s', '?'), 20)}s")
+# ⛔ PROVENANCE. The page named the VERIFIER's md5 and never the PRODUCER's, so a reader
+# could not tell which version of the audit tool made these verdicts -- and every round of
+# this red-team changed the tool. The run_id embeds the same md5, so the two cannot drift
+# apart silently. Both are read from the header, never recomputed here: a renderer that
+# hashes the tool would report the tool it is running BESIDE, not the one that ran.
+w(f"· produced by `{cell(header.get('tool', 'UNKNOWN'), 40)}` md5 "
+  f"`{cell(header.get('tool_md5', 'UNKNOWN — pre-provenance run'), 40)}` "
+  f"· run `{cell(header.get('run_id', 'UNKNOWN'), 40)}`")
 w(f"· `library_verify.py` md5 `{cell(header['library_verify_md5'], 40)}`")
 w("")
 # ⛔ 6E design review 3: an unowned record is a defect in the TOOL (a dropped reason code or

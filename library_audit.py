@@ -2353,6 +2353,33 @@ def self_test() -> int:
                        cwd=str(Path(__file__).parent))
         _t3 = _rout3.read_text(encoding="utf-8") if _rout3.exists() else ""
         _lines3 = _t3.splitlines()
+        # ⛔ PROVENANCE, BOTH ARMS. The page named only the VERIFIER's md5, so a reader could
+        # not tell which version of the tool produced the verdicts -- and every red-team round
+        # changed the tool. This fixture's header carries NO tool_md5 (it predates the field),
+        # so it is the NEGATIVE arm: the renderer must say UNKNOWN out loud rather than print
+        # a blank or, worse, hash whatever tool it happens to be running beside. Same shape as
+        # the _has_routing guard: a missing measurement is reported, never defaulted.
+        extra.append(("RENDER PROVENANCE negative arm: a header with no tool_md5 prints "
+                      "UNKNOWN, never a blank and never a fabricated hash",
+                      bool(_t3) and "UNKNOWN" in _t3
+                      and "md5 ``" not in _t3))
+        _rp6 = Path(_rtd) / "prov.jsonl"
+        _h6 = json.loads(json.dumps(_hdr))
+        _h6["run"]["tool"] = "library_audit.py"
+        _h6["run"]["tool_md5"] = "deadbeefdeadbeefdeadbeefdeadbeef"
+        _h6["run"]["run_id"] = "20260830T000000-deadbeef"
+        _rp6.write_text("\n".join([json.dumps(_h6),
+                                   json.dumps(_mk("p", "FLAG", None, _uc, "x"))]),
+                        encoding="utf-8")
+        _rout6 = Path(_rtd) / "out6.md"
+        subprocess.run([sys.executable, str(Path(__file__).with_name("audit_report.py")),
+                        str(_rp6), str(_rout6)], capture_output=True, text=True,
+                       cwd=str(Path(__file__).parent))
+        _t6 = _rout6.read_text(encoding="utf-8") if _rout6.exists() else ""
+        extra.append(("RENDER PROVENANCE positive arm: the page names the PRODUCING tool and "
+                      "its md5, so a report can be traced to the version that made it",
+                      "deadbeefdeadbeefdeadbeefdeadbeef" in _t6
+                      and "library_audit.py" in _t6))
         _over = [ln[:50] for ln in _lines3 if len(ln) > 700]
         extra.append(("RENDER 4Q-R12 no data-derived value reaches the page UNCLIPPED "
                       "(length arm): %r" % (_over[:2],), bool(_t3) and not _over))
