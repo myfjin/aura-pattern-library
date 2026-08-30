@@ -10,6 +10,9 @@ import json
 import sys
 from pathlib import Path
 
+# one source of truth for truncation marking (6E renderer pass)
+from library_audit import clip_evidence
+
 src = Path(sys.argv[1] if len(sys.argv) > 1 else "AUDIT-RESULTS.jsonl")
 out = Path(sys.argv[2] if len(sys.argv) > 2 else "AUDIT-REPORT.md")
 
@@ -92,10 +95,15 @@ if any("unverified" in r for r in recs):
     # not unverifiable — and all 676 such records also carried 3 skipped checks, so the
     # sentence was false for every one of them. The counts are now derived so the prose
     # cannot overstate: a record only reaches the first bucket if NOTHING was left out.
+    # ⛔ 4Q round 11 O1: NO DEFAULT on either .get() here, on purpose. A record that never
+    # carried the field must fall into NEITHER bucket -- adding `, 0` to make the two lines
+    # look consistent would count a pre-routing record as "every check ran", which is
+    # exactly the defect 6E found in round 10. Consistency here would be a regression.
     _none_run = sum(1 for r in recs
                     if r.get("checks_unmeasured") == 0 and r.get("checks_skipped") == 0)
     _skipped_only = sum(1 for r in recs
-                        if r.get("checks_unmeasured") == 0 and r.get("checks_skipped", 0) > 0)
+                        if r.get("checks_unmeasured") == 0
+                        and (r.get("checks_skipped") or 0) > 0)
     w("Stated as how much could NOT be measured, never as how much passed. `unverified: 1/8`")
     w("cannot be misread as a pass; `measured: 7/8` can.")
     w("")
@@ -188,7 +196,19 @@ for r in recs:
     if r["verdict"] == "UNVERIFIABLE" and r.get("disposition") is None:
         undisposed += 1
 
-hidden = with_u - sum(1 for r in recs if r["verdict"] == "UNVERIFIABLE")
+# ⛔ 4Q round 11 F1 and 6E renderer #3, found independently: the prose below used
+# `undisposed` where it meant "records carrying the UNVERIFIABLE verdict". They are equal
+# on a fresh run and diverge the moment a triage session sets a disposition -- and this
+# report exists to BE that triage session, so the divergence is the normal case, not the
+# edge case. The two counts are named apart now so the wrong one cannot be reached for.
+unv_verdict = sum(1 for r in recs if r["verdict"] == "UNVERIFIABLE")
+hidden = with_u - unv_verdict
+# 6E renderer #4: `hidden` is "has an unverifiable check but a higher-severity verdict",
+# and FAIL outranks UNVERIFIABLE too. Derived rather than asserted, because a --gate run
+# (which is how the shipped sweep is produced) can put a gate=fail beside deps=unverifiable.
+hidden_by_verdict = collections.Counter(
+    r["verdict"] for r in recs if r.get("unverifiable_checks")
+    and r["verdict"] != "UNVERIFIABLE")
 tax = header.get("unverifiable_taxonomy") or {}
 if code_rows:
     w("---")
@@ -199,16 +219,23 @@ if code_rows:
     w("and that is the point of the split: the triage session can be run without reopening a")
     w("single pattern file.")
     w("")
-    w(f"**{undisposed} records are UNVERIFIABLE and undispositioned.** The tool exits 2 while")
-    w("that is true, unless `--acknowledge-unverifiable` is passed.")
+    w(f"**{unv_verdict} records carry the UNVERIFIABLE verdict**, of which "
+      f"**{undisposed} are still undispositioned.**")
+    w("")
+    w("⛔ The tool exits 2 while ANY record carries the UNVERIFIABLE verdict, unless")
+    w("`--acknowledge-unverifiable` is passed. It does not read `disposition` at all —")
+    w("dispositioning every record does NOT clear the exit code, and an earlier draft of this")
+    w("sentence implied it did (6E, renderer pass).")
     w("")
     if hidden:
         w(f"### ⚠️ …and {hidden} MORE records carry an unmeasured check without saying so")
         w("")
-        w(f"{with_u} records have at least one `unverifiable` check, but only {undisposed} of")
-        w(f"them carry UNVERIFIABLE as their verdict. The other **{hidden} report as FLAG**,")
-        w("because FLAG outranks UNVERIFIABLE in the precedence — a record with a real finding")
-        w("AND an unmeasured half shows the finding and hides the hole.")
+        w(f"{with_u} records have at least one `unverifiable` check, but only {unv_verdict} of")
+        w(f"them carry UNVERIFIABLE as their verdict. The other **{hidden}** report as "
+          + ", ".join(f"**{v}** ({n})" for v, n in sorted(hidden_by_verdict.items()))
+          + ",")
+        w("because both FAIL and FLAG outrank UNVERIFIABLE in the precedence — a record with a")
+        w("real finding AND an unmeasured half shows the finding and hides the hole.")
         w("")
         w("That is correct precedence (the finding is the more urgent fact) but it makes the")
         w("verdict column understate how much was never measured. **Triage these from the")
@@ -265,7 +292,9 @@ w("---")
 w("")
 w("# The triage queue")
 w("")
-w("Ordered FAIL first, then FLAG, then UNVERIFIABLE. Every entry carries its evidence, so")
+w("Ordered FAIL first, then FLAG, then UNVERIFIABLE. Long details are cut with an explicit")
+w("truncation marker; the record's `checks` array in the JSONL always holds the full text.")
+w("Every entry carries its evidence, so")
 w("triage does not need to re-read the file.")
 w("")
 order = {"fail": 0, "flag": 1, "unverifiable": 2}
@@ -278,13 +307,21 @@ for (name, status) in sorted(issues, key=lambda k: (order[k[1]], -len(issues[k])
         w("Reasons:")
         w("")
         for d, n in det.most_common():
-            w(f"- ({n}×) {d}")
+            # The "Reasons" list is the SECOND place a detail reaches the page, and it was
+            # emitting the raw string uncut. Found by the renderer's own new fixture, not by
+            # either agent -- 6E named the triage-queue cut, and fixing only that would have
+            # left a 400-char reason dumped verbatim two sections above it.
+            w(f"- ({n}×) {clip_evidence(d, 150)}")
         w("")
     shown = items if len(items) <= 40 else items[:40]
     w("| pattern | evidence |")
     w("|---|---|")
     for path, detail in shown:
-        _d = detail[:150].replace("|", "\\|")
+        # ⛔ 6E renderer pass: this was a hard 150-char cut with NO marker, while the tool's
+        # own clip_evidence marks its truncations -- Ver's finding 7, live in the renderer,
+        # silently cutting the two hand-verified known_finding explanations on this sweep.
+        # The tool's function is imported rather than copied so the two cannot drift.
+        _d = clip_evidence(detail, 150).replace("|", "\\|")
         w(f"| `{path}` | {_d} |")
     if len(items) > len(shown):
         w(f"")
