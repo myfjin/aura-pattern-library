@@ -45,7 +45,12 @@ LANE_EXT = {"python": ".py", "cpp": ".cpp", "rust": ".rs", "go": ".go", "r": ".R
             "javascript": ".js"}
 EXT_LANE = {v: k for k, v in LANE_EXT.items()}
 
-VERDICTS = ("PASS", "FAIL", "FLAG", "UNVERIFIABLE", "SKIP")
+# ⛔ Ver honesty pass, 2026-08-30, finding 1: the clean verdict is NO_FINDING, not PASS.
+# "PASS" told a reader "this pattern is good"; the tool only ever measured the classes it can
+# check, and C1/C3/C11 were never assessed for ANY pattern. The disclosure existed per record
+# but a summary view shows the headline word, not the footnote. The word now matches the
+# measurement: no finding was made, which is not the same as nothing being wrong.
+VERDICTS = ("NO_FINDING", "FAIL", "FLAG", "UNVERIFIABLE", "SKIP")
 STATUSES = ("pass", "fail", "flag", "unverifiable", "skip")
 
 # ================================================================= UNVERIFIABLE taxonomy
@@ -110,6 +115,17 @@ def _u(code: str, detail: str) -> str:
     if code not in REASON_SUBCLASS:
         raise KeyError(f"unknown unverifiable reason code {code!r}")
     return f"[{code}] {detail}"
+
+
+def _strip_fail_reason(lane: str) -> str:
+    """Why did strip_noncode fail for this lane? Two very different causes wore one code.
+
+    ⛔ 4Q round 6. For python, `ok=False` can ONLY mean the source did not tokenise -- python
+    HAS a stripper. Reporting NO_STRIPPER (U1 "build an analyser") sent a triage session to
+    build tooling that already exists, when the real remedy is U3: the FILE is broken. For
+    every other lane, ok=False does mean no stripper exists.
+    """
+    return "PARSE_FAIL" if lane == "python" else "NO_STRIPPER"
 
 
 def reason_of(detail: str):
@@ -450,8 +466,10 @@ def _text_check(text, lane, table, name, ok_detail, want_pats=False):
     code, ok = strip_noncode(text, lane)
     if not ok:
         return (name, "unverifiable",
-                _u("NO_STRIPPER", f"no comment/string stripper for lane '{lane}' — "
-                   "scanning raw text would match prose, so nothing was measured"), [])
+                _u(_strip_fail_reason(lane),
+                   f"could not strip lane '{lane}' — raw text would match prose, so nothing "
+                   "was measured" if lane != "python" else
+                   "python source did not tokenise, so nothing could be measured"), [])
     hit = [(pat, label) for pat, label in table[lane] if re.search(pat, code)]
     if hit:
         return (name, "flag", ", ".join(sorted({l for _, l in hit})), [p for p, _ in hit])
@@ -502,8 +520,10 @@ def check_abs_paths(text, lane, tree):
     code, ok = strip_noncode(text, lane, keep_strings=True)
     if not ok:
         return ("hardcoded_abs_path", "unverifiable",
-                _u("NO_STRIPPER", f"no comment stripper for lane '{lane}' — a path in a "
-                   "comment would have counted as a hardcoded path"))
+                _u(_strip_fail_reason(lane),
+                   f"could not strip lane '{lane}' — a path in a comment would have counted "
+                   "as a hardcoded path" if lane != "python" else
+                   "python source did not tokenise, so no path could be measured"))
     text = code
     m = ABS_PATH.search(text)
     if m:
@@ -537,8 +557,10 @@ def check_hollow(text, lane, tree):
     code, ok = strip_noncode(text, lane)
     if not ok:
         return ("hollow", "unverifiable",
-                _u("NO_STRIPPER", f"no comment/string stripper for lane '{lane}' — an "
-                   "assertion inside a comment would have counted as one -- 4Q F3"))
+                _u(_strip_fail_reason(lane),
+                   f"could not strip lane '{lane}' — an assertion inside a comment would "
+                   "have counted as one -- 4Q F3" if lane != "python" else
+                   "python source did not tokenise, so no assertion could be measured"))
     n = len(re.findall(pat, code))
     if n == 0:
         return ("hollow", "flag", f"no assertion construct found in CODE (looked for /{pat}/)")
@@ -916,6 +938,25 @@ def index_parity(files):
 
 
 # ================================================================= driver
+def triage_fields(checks, subclasses):
+    """How this record should be ROUTED. Ver finding 5: `needs_judgement` was true for
+    `unverifiable` as well as `flag`, so a compiled-lane pattern whose only problem is a
+    missing analyser was routed to a human reviewer. Building an analyser and reading a
+    pattern are different work and belong in different fields."""
+    return {
+        "needs_human_judgement": any(c[1] in ("flag", "fail") for c in checks),
+        "needs_implementation": bool(set(subclasses) & {"U1", "U2"}),
+        "checks_measured": sum(1 for c in checks if c[1] in ("pass", "fail", "flag")),
+        "checks_unmeasured": sum(1 for c in checks if c[1] == "unverifiable"),
+    }
+
+
+def clip_evidence(text, limit=1200):
+    """Ver finding 7: truncating mid-sentence with no marker hides that anything was cut."""
+    mark = " …[TRUNCATED, see checks]"
+    return text if len(text) <= limit else text[:limit - len(mark)] + mark
+
+
 def verdict_for(checks):
     st = {c[1] for c in checks}
     if "fail" in st:
@@ -926,7 +967,7 @@ def verdict_for(checks):
         return "UNVERIFIABLE"
     if st <= {"skip"}:
         return "SKIP"
-    return "PASS"
+    return "NO_FINDING"
 
 
 TRIAGE_OWNER = {"known_finding": "6E", "deps": "tool", "hollow": "4Q", "assert_nonvacuous": "4Q",
@@ -1125,7 +1166,8 @@ def main():
                                  if str(p.relative_to(ROOT)).startswith(st + "/")), None),
                 "verdict": v,
                 "checks": [{"name": n, "status": s, "detail": d} for n, s, d in checks],
-                "evidence": "; ".join(f"{n}: {d}" for n, s, d in nonpass)[:1200],
+                "evidence": clip_evidence(
+                    "; ".join(f"{n}: {d}" for n, s, d in nonpass)),
                 "triage_owner": sorted({TRIAGE_OWNER.get(n, "6E") for n, s, _ in nonpass
                                         if s in ("fail", "flag")}) or None,
                 "unverifiable_checks": _unv or None,
@@ -1135,6 +1177,7 @@ def main():
                 # WAIVE additionally requires a disposition_ref (6E).
                 "disposition": None,
                 "disposition_ref": None,
+                **triage_fields(checks, _subs),
                 "needs_judgement": any(s in ("flag", "unverifiable") for _, s, _ in checks),
                 # 6E: PASS must never be read as "clean". These classes were never assessed
                 # for ANY pattern, so they are stated on every record, not just the flagged.
@@ -1376,7 +1419,8 @@ def self_test() -> int:
            ("flag beats unverifiable", [("a", "flag", ""), ("b", "unverifiable", "")], "FLAG"),
            ("unverifiable beats pass", [("a", "unverifiable", ""), ("b", "pass", "")],
             "UNVERIFIABLE"),
-           ("all pass is PASS", [("a", "pass", ""), ("b", "pass", "")], "PASS"),
+           ("all pass is NO_FINDING, never PASS (Ver finding 1)",
+            [("a", "pass", ""), ("b", "pass", "")], "NO_FINDING"),
            ("all skip is SKIP", [("a", "skip", "")], "SKIP")]
     print()
     for label, checks, expect in agg:
@@ -1515,7 +1559,7 @@ def self_test() -> int:
     _nd = duplicate_check("flag", "near-duplicate of x.py (jaccard 0.80)")
     extra.append(("6E: a near-duplicate ADVISORY does not change the verdict",
                   _nd[1] == "skip"
-                  and verdict_for([("gate", "pass", ""), _nd]) == "PASS"))
+                  and verdict_for([("gate", "pass", ""), _nd]) == "NO_FINDING"))
     _ex = duplicate_check("fail", "EXACT duplicate of x.py")
     extra.append(("an EXACT duplicate still fails the verdict",
                   _ex[1] == "fail"
@@ -1592,6 +1636,49 @@ def self_test() -> int:
                   not _js_regex_after_kw(_dot, 33)))
     extra.append(("4Q-S1 a bare `return` at the same window edge IS the keyword",
                   _js_regex_after_kw(";" + "return" + " " * 26 + "/x/", 33)))
+
+    # ---- Ver honesty pass. Every field it asked for gets a probe; a routing field nobody
+    # can test is a routing field nobody HAS tested.
+    _cm = [("a", "pass", ""), ("b", "unverifiable", ""), ("c", "unverifiable", "")]
+    _tf = triage_fields(_cm, {"U1"})
+    extra.append(("Ver-5 an UNVERIFIABLE-only record needs IMPLEMENTATION, not a human",
+                  _tf["needs_implementation"] and not _tf["needs_human_judgement"]))
+    _tf2 = triage_fields([("a", "flag", ""), ("b", "pass", "")], set())
+    extra.append(("Ver-5 a FLAGGED record needs a HUMAN, not implementation",
+                  _tf2["needs_human_judgement"] and not _tf2["needs_implementation"]))
+    _tf3 = triage_fields([("a", "flag", ""), ("b", "unverifiable", "")], {"U1"})
+    extra.append(("Ver-5 a record that is BOTH needs both, not one or the other",
+                  _tf3["needs_human_judgement"] and _tf3["needs_implementation"]))
+    extra.append(("Ver-6 the measured/unmeasured ratio is carried so a reader sees the gap "
+                  "WITHOUT the verdict going green",
+                  _tf["checks_measured"] == 1 and _tf["checks_unmeasured"] == 2))
+    extra.append(("Ver-6 a half-unmeasured record is still UNVERIFIABLE, never a PASS-shaped "
+                  "verdict (rejecting PASS_WITH_GAPS: it would soften the one signal 6E "
+                  "built the taxonomy to protect)",
+                  verdict_for(_cm) == "UNVERIFIABLE"))
+    extra.append(("Ver-1 an all-clean record is NO_FINDING, not PASS",
+                  verdict_for([("a", "pass", "")]) == "NO_FINDING"))
+    extra.append(("Ver-7 short evidence is untouched", clip_evidence("abc") == "abc"))
+    _long = clip_evidence("x" * 5000)
+    extra.append(("Ver-7 long evidence is MARKED as truncated, not silently cut",
+                  len(_long) <= 1200 and _long.endswith("…[TRUNCATED, see checks]")))
+
+    # 4Q round 6: a reason code that misnames its own cause misroutes the remedy.
+    _unparseable = "def f(:\n    return 1\n"
+    for _fn2, _nm in ((check_dangerous, "dangerous_primitives"),
+                      (check_determinism_markers, "determinism_markers"),
+                      (check_abs_paths, "hardcoded_abs_path"),
+                      (check_hollow, "hollow")):
+        _r = _fn2(_unparseable, "python", None)
+        _c2, _s2 = reason_of(_r[2])
+        extra.append((f"4Q-R6 unparseable PYTHON in {_nm} is U3 PARSE_FAIL (the FILE is "
+                      f"broken), never U1 NO_ANALYSER (python HAS an analyser) "
+                      f"— got {_r[1]}/{_c2}/{_s2}",
+                      _r[1] == "fail" or (_c2 == "PARSE_FAIL" and _s2 == "U3")))
+    _r = check_dangerous("x", "cobol", None)
+    _c2, _s2 = reason_of(_r[2])
+    extra.append(("4Q-R6 a genuinely unknown lane is still U1, not PARSE_FAIL "
+                  f"— got {_c2}/{_s2}", _s2 == "U1"))
 
     _hash = "#" + "return" + " " * 26 + "/foo/"
     extra.append(("4Q-S1 `#return` at the window edge is a PRIVATE FIELD, not the keyword",
