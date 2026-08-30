@@ -1946,33 +1946,87 @@ def self_test() -> int:
         # this class three times running, so the probe is now an INVARIANT over the whole
         # page: plant an absurd string in every data-derived slot and assert nothing
         # escapes. A future slot added without the funnel fails here, unnamed and unimagined.
+        # ⛔ THE PAGE-LEVEL INVARIANT. The first version of this planted a 4000-char
+        # string and asserted no line exceeded 700 -- a LENGTH invariant. 6E round 13 built
+        # a page proving length was never the grammar: a THREE-character ``` opens a fence
+        # that swallows the rest of the document, `<img src=x onerror=...>` arrived byte for
+        # byte, and a `\|` shifted a table column (4Q round 13, same hour, different route).
+        # Every one of those is far under every limit I had set. So the planted values are
+        # now HOSTILE AND SHORT as well as huge, and the assertions are about markdown
+        # grammar: no fence, no raw tag, and every table row carrying its header's column
+        # count. That last one holds for a slot nobody funnelled, which is the only kind
+        # that has ever bitten.
         _huge = "Z" * 4000
+        _nasty = "``` <img src=x onerror=y> a\\|b \r\n c |d| \\"
         _rp3 = Path(_rtd) / "huge.jsonl"
         _h3 = json.loads(json.dumps(_hdr))
-        _h3["run"]["census_mismatches"] = [_huge]
-        _h3["run"]["judgement_only_classes"] = {_huge: _huge}
-        _h3["run"]["unverifiable_taxonomy"] = {"U1": {"name": _huge, "remedy": _huge,
-                                                      "meaning": _huge}}
+        _h3["run"]["census_mismatches"] = [_huge, _nasty]
+        _h3["run"]["judgement_only_classes"] = {_nasty: _huge, "k2": _nasty}
+        _h3["run"]["unverifiable_taxonomy"] = {"U1": {"name": _nasty, "remedy": _huge,
+                                                      "meaning": _nasty}}
+        _h3["run"]["analyser_coverage"] = {"per_check": {_nasty: [_nasty]}}
+        _h3["run"]["checks_not_requested"] = [_nasty]
         _r3 = _mk("z", "UNVERIFIABLE", None, _uc, _huge)
+        _r3["path"] = "python/" + _nasty + ".py"
+        _r3["language"] = _nasty
         _r3["needs_tool_fix"] = True
-        _r3["unclaimed_checks"] = [{"name": _huge, "status": "unverifiable",
+        _r3["unclaimed_checks"] = [{"name": _nasty, "status": "unverifiable",
                                     "reason_code": None, "subclass": None}] * 3
-        _r3["census_mismatches"] = [_huge]
-        _rp3.write_text(json.dumps(_h3) + "\n" + json.dumps(_r3) + "\n", encoding="utf-8")
+        _r3["census_mismatches"] = [_nasty]
+        _r4 = _mk("y", "FLAG", None, _uc, _nasty)
+        _r4["checks"].append({"name": _nasty, "status": "flag", "detail": _nasty})
+        _rp3.write_text("\n".join([json.dumps(_h3), json.dumps(_r3), json.dumps(_r4)]),
+                        encoding="utf-8")
         _rout3 = Path(_rtd) / "out3.md"
-        _rr3 = subprocess.run(
-            [sys.executable, str(Path(__file__).with_name("audit_report.py")),
-             str(_rp3), str(_rout3)], capture_output=True, text=True,
-            cwd=str(Path(__file__).parent))
+        subprocess.run([sys.executable, str(Path(__file__).with_name("audit_report.py")),
+                        str(_rp3), str(_rout3)], capture_output=True, text=True,
+                       cwd=str(Path(__file__).parent))
         _t3 = _rout3.read_text(encoding="utf-8") if _rout3.exists() else ""
-        _over = [ln[:60] for ln in _t3.splitlines() if len(ln) > 700]
-        extra.append(("RENDER 4Q-R12 NO data-derived value reaches the page unclipped — an "
-                      "absurd string planted in EVERY slot (tool defects, census, judgement "
-                      "classes, taxonomy name+remedy, detail) and no line escapes: %r"
-                      % (_over[:2],), bool(_t3) and not _over))
+        _lines3 = _t3.splitlines()
+        _over = [ln[:50] for ln in _lines3 if len(ln) > 700]
+        extra.append(("RENDER 4Q-R12 no data-derived value reaches the page UNCLIPPED "
+                      "(length arm): %r" % (_over[:2],), bool(_t3) and not _over))
         extra.append(("RENDER 4Q-R12 the tool-defects cell is FORMATTED, never a raw python "
                       "repr of a list of dicts",
                       "[{'name'" not in _t3 and "TRUNCATED" in _t3))
+        # 6E R13 / 4Q R13 F2: the renderer emits NO fence of its own, so one in the output
+        # can only have come from data, and it swallows every section below it.
+        extra.append(("RENDER 6E-R13 a ``` planted in every slot NEVER opens a fence — the "
+                      "renderer writes no fences, so one in the page came from data and "
+                      "swallows the rest of the document", "```" not in _t3))
+        # 6E R13: uncontrolled inline HTML.
+        extra.append(("RENDER 6E-R13 no raw `<` survives to the page (an <img onerror=> "
+                      "arrived byte for byte before this)", "<" not in _t3))
+        extra.append(("RENDER 6E-R13 a raw carriage return never reaches the page",
+                      "\r" not in _t3))
+        # ⛔ 4Q R13 F1 + 6E R13: the COLUMN-COUNT invariant. This is the one that holds for
+        # a path nobody funnelled: every row of a table must carry its header's column
+        # count, so any live separator that arrives from data breaks it here.
+        def _cols(ln):
+            n, i = 0, 0
+            while i < len(ln):
+                if ln[i] == "\\":
+                    i += 2
+                    continue
+                if ln[i] == "|":
+                    n += 1
+                i += 1
+            return n
+        _bad_rows, _hdr_cols = [], None
+        for _ln in _lines3:
+            if _ln.startswith("|"):
+                if _hdr_cols is None:
+                    _hdr_cols = _cols(_ln)
+                elif set(_ln.replace("|", "").replace("-", "").replace(":", "")
+                         .strip()) == set():
+                    continue
+                elif _cols(_ln) != _hdr_cols:
+                    _bad_rows.append((_cols(_ln), _hdr_cols, _ln[:50]))
+            else:
+                _hdr_cols = None
+        extra.append(("RENDER 4Q-R13-F1 every table row carries its header's column count, "
+                      "so a live `|` arriving from data cannot silently move every number "
+                      "under the wrong heading: %r" % (_bad_rows[:2],), not _bad_rows))
 
         extra.append(("RENDER 6E-R10 a pre-routing JSONL reports UNKNOWN, never zero, and "
                       "quotes no coverage number at all",

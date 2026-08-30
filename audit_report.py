@@ -17,6 +17,13 @@ from library_audit import clip_evidence
 def cell(value, limit=200):
     """⛔ EVERY data-derived string reaches the page through here.
 
+    ⛔ THE COMMENT THAT USED TO BE HERE SAID "every data-derived string reaches the page
+    through here" AND IT WAS FALSE -- 6E round 13 found ELEVEN slots still emitting raw
+    (lane names, reason codes, the triage path, the disposition rows, analyser coverage).
+    An overclaiming comment is worse than none: it is the reason I stopped looking. Every
+    one of those now calls this, and the page-level probe asserts the grammar rather than
+    trusting this docstring.
+
     4Q round 12 inventoried all 14 text-to-page paths and found two more unclipped after I
     had fixed the two 6E named — the tool-defects table (a raw Python `repr()` of a list of
     dicts, 260+ chars in one table cell) and the census mismatches. Patching those two would
@@ -34,7 +41,20 @@ def cell(value, limit=200):
         value = " · ".join(parts) if parts else "(none)"
     elif not isinstance(value, str):
         value = str(value)
-    return clip_evidence(value.replace("|", "\\|").replace("\n", " "), limit)
+    # ⛔ ORDER MATTERS. 4Q round 13 F1: escaping `|` before `\` turns a value containing
+    # `\|` into `\\|` -- an escaped BACKSLASH followed by a live column separator, so the
+    # row silently gains a column and every count reads under the wrong heading.
+    value = value.replace("\\", "\\\\").replace("|", "\\|")
+    # ⛔ Length was never the whole grammar. 6E round 13 built a page to prove it: a
+    # THREE-character ``` opens a fence that swallows the rest of the document, and a
+    # <img src=x onerror=...> reached the page byte for byte -- both far under every limit
+    # I had set. A backtick that cannot start a fence, and no raw `<`, or the clip is
+    # cosmetic. (4Q read the HTML as cosmetic; escaping it costs one replace, so the
+    # disagreement does not need settling.)
+    value = value.replace("`", "\\`").replace("<", "&lt;")
+    for _ws in ("\r\n", "\r", "\n"):
+        value = value.replace(_ws, " ")
+    return clip_evidence(value, limit)
 
 src = Path(sys.argv[1] if len(sys.argv) > 1 else "AUDIT-RESULTS.jsonl")
 out = Path(sys.argv[2] if len(sys.argv) > 2 else "AUDIT-REPORT.md")
@@ -87,7 +107,7 @@ elif _defects:
     w("| pattern | unclaimed checks |")
     w("|---|---|")
     for r in _defects[:40]:
-        w(f"| `{r['path']}` | {cell(r.get('unclaimed_checks') or [])} |")
+        w(f"| `{cell(r['path'], 120)}` | {cell(r.get('unclaimed_checks') or [])} |")
     if len(_defects) > 40:
         w(f"| … | {len(_defects) - 40} more |")
     w("")
@@ -110,7 +130,8 @@ for _f, _what in () if not _has_routing else (
                   ("needs_pathology_triage", "decide: defect, or documented edge case? (U3)"),
                   ("needs_implementation", "build the analyser / provide the input (U1, U2)"),
                  ("needs_tool_fix", "⛔ fix THIS TOOL — nobody claimed the check")):
-    w(f"| `{_f}` | {_what} | {sum(1 for r in recs if r.get(_f))} |")
+    w(f"| `{cell(_f, 40)}` | {cell(_what, 120)} | "
+      f"{sum(1 for r in recs if r.get(_f))} |")
 w("")
 if any("unverified" in r for r in recs):
     # ⛔ 6E conformance 3: this said "every check ran" for every record with
@@ -165,7 +186,7 @@ w("| lane | " + " | ".join(("FAIL", "FLAG", "UNVERIFIABLE", "NO_FINDING", "SKIP"
 w("|---|" + "---:|" * 6)
 for lane in sorted(by_lane):
     c = by_lane[lane]
-    w(f"| {lane} | " + " | ".join(str(c.get(v, 0)) for v in
+    w(f"| {cell(lane, 40)} | " + " | ".join(str(c.get(v, 0)) for v in
       ("FAIL", "FLAG", "UNVERIFIABLE", "NO_FINDING", "SKIP")) + f" | {sum(c.values())} |")
 w("")
 w("### ⚠️ Read the UNVERIFIABLE column before the NO_FINDING column")
@@ -180,7 +201,7 @@ w("| check | pass | fail | flag | unverifiable | skip |")
 w("|---|---:|---:|---:|---:|---:|")
 for n in sorted(check_status):
     c = check_status[n]
-    w(f"| `{n}` | " + " | ".join(str(c.get(s, 0)) for s in
+    w(f"| `{cell(n, 40)}` | " + " | ".join(str(c.get(s, 0)) for s in
       ("pass", "fail", "flag", "unverifiable", "skip")) + " |")
 w("")
 if header.get("census_mismatches"):
@@ -197,7 +218,7 @@ w("")
 w("## Not requested this run")
 w("")
 for c in header.get("checks_not_requested") or ["(none)"]:
-    w(f"- `{c}`")
+    w(f"- `{cell(c, 60)}`")
 w("")
 w("Toolchains: " + ", ".join(f"{k}={'yes' if v else '**MISSING**'}"
                              for k, v in header["toolchains_present"].items()))
@@ -282,7 +303,8 @@ if code_rows:
         n = sum(code_rows[key].values())
         chk = ", ".join(f"`{c}`×{m}" for c, m in code_rows[key].most_common(4))
         lns = ", ".join(f"{l}×{m}" for l, m in code_lanes[key].most_common())
-        w(f"| {sc} | `{code}` | {n} | {chk} | {lns} |")
+        w(f"| {cell(sc, 20)} | `{cell(code, 40)}` | {n} | {cell(chk, 120)} | "
+          f"{cell(lns, 80)} |")
     w("")
     if tax.get("per_subclass_dispositions"):
         w("## Disposition vocabulary (closed set — no free text)")
@@ -290,7 +312,8 @@ if code_rows:
         w("| subclass | permitted dispositions |")
         w("|---|---|")
         for sc, ds in sorted(tax["per_subclass_dispositions"].items()):
-            w(f"| {sc} | " + ", ".join(f"`{d}`" for d in ds) + " |")
+            w(f"| {cell(sc, 20)} | "
+              + ", ".join(f"`{cell(d, 40)}`" for d in ds) + " |")
         w("")
         w("`WAIVE` additionally REQUIRES a `disposition_ref` — who waived it and why. Without")
         w("that it is a silent NO_FINDING wearing a different name.")
@@ -305,10 +328,11 @@ if code_rows:
         w("breaks a probe instead.")
         w("")
         lanes = sorted({l for v in cov.values() for l in v})
-        w("| check | " + " | ".join(lanes) + " |")
+        w("| check | " + " | ".join(cell(l, 30) for l in lanes) + " |")
         w("|---|" + "---|" * len(lanes))
         for c in sorted(cov):
-            w(f"| `{c}` | " + " | ".join("yes" if l in cov[c] else "—" for l in lanes) + " |")
+            w(f"| `{cell(c, 40)}` | "
+              + " | ".join("yes" if l in cov[c] else "—" for l in lanes) + " |")
         w("")
 
 w("---")
@@ -323,7 +347,7 @@ w("")
 order = {"fail": 0, "flag": 1, "unverifiable": 2}
 for (name, status) in sorted(issues, key=lambda k: (order[k[1]], -len(issues[k]))):
     items = issues[(name, status)]
-    w(f"## `{name}` — {status.upper()} × {len(items)}")
+    w(f"## `{cell(name, 60)}` — {cell(status.upper(), 20)} × {len(items)}")
     w("")
     det = collections.Counter(d for _, d in items)
     if len(det) <= 8:
@@ -334,7 +358,7 @@ for (name, status) in sorted(issues, key=lambda k: (order[k[1]], -len(issues[k])
             # emitting the raw string uncut. Found by the renderer's own new fixture, not by
             # either agent -- 6E named the triage-queue cut, and fixing only that would have
             # left a 400-char reason dumped verbatim two sections above it.
-            w(f"- ({n}×) {clip_evidence(d, 150)}")
+            w(f"- ({n}×) {cell(d, 150)}")
         w("")
     shown = items if len(items) <= 40 else items[:40]
     w("| pattern | evidence |")
@@ -344,8 +368,8 @@ for (name, status) in sorted(issues, key=lambda k: (order[k[1]], -len(issues[k])
         # own clip_evidence marks its truncations -- Ver's finding 7, live in the renderer,
         # silently cutting the two hand-verified known_finding explanations on this sweep.
         # The tool's function is imported rather than copied so the two cannot drift.
-        _d = clip_evidence(detail, 150).replace("|", "\\|")
-        w(f"| `{path}` | {_d} |")
+        _d = cell(detail, 150)
+        w(f"| `{cell(path, 120)}` | {_d} |")
     if len(items) > len(shown):
         w(f"")
         w(f"*… and {len(items) - len(shown)} more — see `{src.name}`.*")
