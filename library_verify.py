@@ -397,6 +397,164 @@ def divergence_fails(block, lanes, examples) -> list:
     return fails
 
 
+def census_mismatches(root, manifest) -> list:
+    """Recompute census fields from disk; return mismatches against the manifest dict.
+
+    Takes the manifest as a PARAMETER (not read from file) so the self-test can drive it
+    with synthetic dicts without touching the real MANIFEST.json. Compares six fields:
+    total_shippable, total_signed_files, unique_ids, multi_language_patterns,
+    languages_present, and per-subtree languages[<key>]["files"].
+    """
+    if not isinstance(manifest, dict):
+        return [f"manifest is not a dict (got {type(manifest).__name__})"]
+
+    LANE_EXT = {"python": ".py", "cpp": ".cpp", "rust": ".rs", "go": ".go", "r": ".R", "javascript": ".js"}
+    mismatches = []
+
+    # Count files and stems per lane on disk
+    lane_filecount = {}   # lane -> file count (not unique stems)
+    lane_stems = {}       # lane -> set of stems
+    for lane, ext in LANE_EXT.items():
+        lane_dir = root / lane
+        files = []
+        if lane_dir.exists():
+            for p in lane_dir.rglob("*"):
+                if p.suffix == ext and "__pycache__" not in p.parts:
+                    files.append(p)
+        lane_filecount[lane] = len(files)
+        lane_stems[lane] = {p.stem for p in files}
+
+    # total_shippable — count of pattern files across the 6 language lanes
+    disk_val = sum(lane_filecount.values())
+    if manifest.get("total_shippable") != disk_val:
+        mismatches.append(f"total_shippable: manifest={manifest.get('total_shippable')!r}, disk={disk_val}")
+
+    # total_signed_files — count of pattern files under the 8 SIGNED_SUBTREES
+    disk_val = 0
+    for st in SIGNED_SUBTREES:
+        sroot = root / st
+        if not sroot.exists():
+            continue
+        lane = st.split("/")[0]
+        ext = LANE_EXT.get(lane)
+        if ext is None:
+            continue
+        for p in sroot.rglob("*"):
+            if p.suffix == ext and "__pycache__" not in p.parts:
+                disk_val += 1
+    if manifest.get("total_signed_files") != disk_val:
+        mismatches.append(f"total_signed_files: manifest={manifest.get('total_signed_files')!r}, disk={disk_val}")
+
+    # unique_ids — distinct pattern basenames (stem, no extension)
+    all_stems = set()
+    for stems in lane_stems.values():
+        all_stems |= stems
+    disk_val = len(all_stems)
+    if manifest.get("unique_ids") != disk_val:
+        mismatches.append(f"unique_ids: manifest={manifest.get('unique_ids')!r}, disk={disk_val}")
+
+    # multi_language_patterns — basenames appearing in 2 or more languages
+    stem_langs = {}
+    for lane, stems in lane_stems.items():
+        for s in stems:
+            stem_langs[s] = stem_langs.get(s, 0) + 1
+    disk_val = sum(1 for c in stem_langs.values() if c >= 2)
+    if manifest.get("multi_language_patterns") != disk_val:
+        mismatches.append(f"multi_language_patterns: manifest={manifest.get('multi_language_patterns')!r}, disk={disk_val}")
+
+    # languages_present — the language lanes that hold at least one pattern file
+    disk_langs = sorted(lane for lane, n in lane_filecount.items() if n > 0)
+    _mfl = manifest.get("languages_present") or []
+    if isinstance(_mfl, (str, bytes)) or not isinstance(_mfl, (list, tuple, set, frozenset)):
+        mismatches.append(
+            f"languages_present: not a list of lanes (got {type(_mfl).__name__}: {_mfl!r})")
+        _mfl = []
+    elif not all(isinstance(_e, str) for _e in _mfl):
+        # A list of MIXED types is valid JSON, passes the container guard, and then crashes
+        # sorted() -- Python cannot order str against int/None/bytes/dict/bool.
+        mismatches.append(
+            f"languages_present: contains a non-string lane name ({_mfl!r})")
+        _mfl = []
+    mf_langs = sorted(_mfl)
+    if disk_langs != mf_langs:
+        mismatches.append(f"languages_present: manifest={mf_langs!r}, disk={disk_langs}")
+
+    # per-subtree files — derive the lane set from DISK (SIGNED_SUBTREES), not the manifest.
+    # A subtree with files on disk but NO entry in the manifest is a mismatch — that is how
+    # a deleted lane vanishes silently when the check only iterates manifest keys.
+    mf_langs_dict = manifest.get("languages") or {}
+    if not isinstance(mf_langs_dict, dict):
+        mismatches.append(f"languages: not a dict (got {type(mf_langs_dict).__name__})")
+        mf_langs_dict = {}
+
+    # First: every SIGNED_SUBTREE with files must have a manifest entry (exact key or sub-key).
+    for st in SIGNED_SUBTREES:
+        sroot = root / st
+        if not sroot.exists():
+            continue
+        lane = st.split("/")[0]
+        ext = LANE_EXT.get(lane)
+        if ext is None:
+            continue
+        disk_count = 0
+        for p in sroot.rglob("*"):
+            if p.suffix == ext and "__pycache__" not in p.parts:
+                disk_count += 1
+        if disk_count == 0:
+            continue
+        has_entry = st in mf_langs_dict or any(
+            isinstance(k, str) and k.startswith(st + "/") for k in mf_langs_dict)
+        if not has_entry:
+            mismatches.append(f"languages[{st}]: missing from manifest, disk has {disk_count} file(s)")
+
+    # Sum invariant — keying-independent. A SIGNED_SUBTREE may be split across several
+    # manifest keys (go -> go/programming + go/system-administration), so the presence test
+    # above is satisfied by a surviving sibling and a deleted entry hides. The declared counts
+    # must SUM to the disk total; no keying scheme can fool that.
+    if mf_langs_dict:
+        declared_sum = 0
+        for _k, _info in mf_langs_dict.items():
+            _v = _info.get("files") if isinstance(_info, dict) else _info
+            # bool is an int subclass but is never a valid count; str/bytes must not be
+            # coerced. Everything else defers to int(), so Decimal/Fraction are accepted the
+            # same way the per-subtree != comparison accepts them.
+            if isinstance(_v, (bool, str, bytes)):
+                mismatches.append(f"languages[{_k}].files: not a number ({_v!r})")
+                continue
+            try:
+                declared_sum += int(_v)
+            except (ValueError, OverflowError, TypeError):
+                mismatches.append(f"languages[{_k}].files: not a finite number ({_v!r})")
+        disk_total = sum(lane_filecount.values())
+        if declared_sum != disk_total:
+            mismatches.append(
+                f"languages[*].files sums to {declared_sum}, disk total is {disk_total}")
+
+    # Second: compare per-subtree file counts for every key the manifest does declare.
+    for subtree, info in mf_langs_dict.items():
+        if not isinstance(subtree, str):
+            mismatches.append(f"languages: non-string key {subtree!r}")
+            continue
+        lane = subtree.split("/")[0]
+        ext = LANE_EXT.get(lane)
+        if ext is None:
+            mismatches.append(f"languages[{subtree}]: unknown lane '{lane}'")
+            continue
+        sroot = root / subtree
+        if not sroot.is_dir():
+            mismatches.append(f"languages[{subtree}]: declares a path that is not a directory on disk")
+            continue
+        disk_count = 0
+        for p in sroot.rglob("*"):
+            if p.suffix == ext and "__pycache__" not in p.parts:
+                disk_count += 1
+        mf_count = info.get("files") if isinstance(info, dict) else info
+        if mf_count != disk_count:
+            mismatches.append(f"languages[{subtree}].files: manifest={mf_count!r}, disk={disk_count}")
+
+    return mismatches
+
+
 def run_checks(pub, gate=False, inject_all=frozenset(), inject_lang=None,
                quiet=False, probe=False) -> list:
     """The checks. Returns the failure list.
@@ -545,6 +703,17 @@ def run_checks(pub, gate=False, inject_all=frozenset(), inject_lang=None,
         f"input contract they do not ({', '.join(f'{k}:{v}' for k, v in sorted(dlanes.items()))})"
         f" — declared {(dblock or {}).get('declared')}")
 
+    # (j) census recomputation — manifest census fields must agree with disk
+    try:
+        _mf_census = json.loads((ROOT / "MANIFEST.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError) as e:
+        _mf_census = {}
+        fails.append(f"MANIFEST.json unreadable for census ({e})")
+    census_mm = census_mismatches(ROOT, _mf_census)
+    say(f"[census                ] {len(census_mm)} mismatch(es) against disk"
+        + (" — " + census_mm[0] if census_mm else " — OK"))
+    fails.extend(census_mm)
+
     return fails
 
 
@@ -649,6 +818,172 @@ def self_test(pub, deep=False) -> list:
         check("an internally inconsistent declaration is caught",
               any("internally inconsistent" in f for f in divergence_fails(
                   {"declared": 99, "lanes": {"cpp": 2, "go": 1, "rust": 0}}, lanes, examples)), None)
+
+    # --- census recomputation: non-vacuity probes -------------------------------------------
+    with tempfile.TemporaryDirectory() as td:
+        troot = Path(td)
+        for rel in (
+            "python/programming/foo.py", "python/programming/bar.py",
+            "python/data-science/baz.py", "python/system-administration/qux.py",
+            "cpp/foo.cpp", "rust/foo.rs", "go/foo.go", "r/foo.R", "javascript/foo.js",
+        ):
+            f = troot / rel
+            f.parent.mkdir(parents=True, exist_ok=True)
+            f.write_text("pass\n", encoding="utf-8")
+
+        correct = {
+            "total_shippable": 9, "total_signed_files": 9, "unique_ids": 4,
+            "multi_language_patterns": 1,
+            "languages_present": ["python", "cpp", "rust", "go", "r", "javascript"],
+            "languages": {
+                "python/programming": {"files": 2}, "python/data-science": {"files": 1},
+                "python/system-administration": {"files": 1}, "r": {"files": 1},
+                "cpp": {"files": 1}, "rust": {"files": 1}, "go": {"files": 1},
+                "javascript": {"files": 1},
+            },
+        }
+        check("census: a correct manifest produces NO mismatches (silent case)",
+              census_mismatches(troot, correct) == [], census_mismatches(troot, correct))
+
+        for field in ("total_shippable", "total_signed_files", "unique_ids", "multi_language_patterns"):
+            bad = dict(correct)
+            bad[field] = 999
+            check(f"census: wrong {field} is RED",
+                  any(field in m for m in census_mismatches(troot, bad)), None)
+
+        bad = dict(correct)
+        bad["languages_present"] = ["python", "cpp", "rust", "go", "r"]
+        check("census: languages_present missing a real lane is RED",
+              any("languages_present" in m for m in census_mismatches(troot, bad)), None)
+
+        bad = dict(correct)
+        bad["languages_present"] = correct["languages_present"] + ["cobol"]
+        check("census: languages_present listing a phantom lane is RED",
+              any("languages_present" in m for m in census_mismatches(troot, bad)), None)
+
+        bad = json.loads(json.dumps(correct))
+        bad["languages"]["cpp"]["files"] = 999
+        check("census: per-lane files mismatch is RED",
+              any("languages[cpp]" in m for m in census_mismatches(troot, bad)), None)
+
+        bad = json.loads(json.dumps(correct))
+        del bad["languages"]["javascript"]
+        check("census: a per-lane entry DELETED from the manifest is RED",
+              any("languages[javascript]" in m and "missing" in m
+                  for m in census_mismatches(troot, bad)), None)
+
+        # --- classes found by red-team rounds 3-5. Each one was a live defect; these probes
+        # exist so a future edit cannot silently reintroduce it. ---------------------------
+
+        bad = json.loads(json.dumps(correct))
+        bad["languages"]["python/nonexistent"] = {"files": 0}
+        check("census: a phantom directory entry with files=0 is RED",
+              any("python/nonexistent" in m for m in census_mismatches(troot, bad)), None)
+
+        bad = json.loads(json.dumps(correct))
+        bad["languages"]["javascript/foo.js"] = {"files": 0}
+        check("census: an entry naming a FILE (not a dir) with files=0 is RED",
+              any("javascript/foo.js" in m for m in census_mismatches(troot, bad)), None)
+
+        for label, val in (("string", "hello"), ("list", [1, 2]), ("int", 42), ("bool", True)):
+            bad = json.loads(json.dumps(correct))
+            bad["languages"] = val
+            check(f"census: languages as a truthy non-dict ({label}) is RED, not a crash",
+                  any("not a dict" in m for m in census_mismatches(troot, bad)), None)
+
+        bad = json.loads(json.dumps(correct))
+        bad["languages"][None] = {"files": 1}
+        check("census: a non-string key is RED, not a crash",
+              any("non-string key" in m for m in census_mismatches(troot, bad)), None)
+
+        for label, val in (("NaN", float("nan")), ("inf", float("inf"))):
+            bad = json.loads(json.dumps(correct))
+            bad["languages"]["cpp"] = {"files": val}
+            check(f"census: files={label} is RED, not a crash",
+                  any("finite" in m for m in census_mismatches(troot, bad)), None)
+
+        # Assert the SUM INVARIANT's own message, not merely that the result is RED: the
+        # per-subtree != comparison catches these independently, so an outcome-only probe
+        # keeps passing when the rejection it claims to protect is deleted.
+        for label, val, frag in (("str", "1", "not a number"),
+                                 ("bytes", b"1", "not a number"),
+                                 ("bool", True, "not a number"),
+                                 ("list", [1], "not a finite number"),
+                                 ("dict", {"n": 1}, "not a finite number")):
+            bad = json.loads(json.dumps(correct))
+            bad["languages"]["cpp"] = {"files": val}
+            check(f"census: files as {label} is rejected BY THE SUM INVARIANT ({frag})",
+                  any(frag in m for m in census_mismatches(troot, bad)),
+                  census_mismatches(troot, bad))
+
+        check("census: a non-dict manifest is RED, not a crash",
+              any("manifest is not a dict" in m for m in census_mismatches(troot, None)), None)
+
+        for label, val in (("True", True), ("int", 42), ("float", 1.0)):
+            bad = json.loads(json.dumps(correct))
+            bad["languages_present"] = val
+            check(f"census: languages_present as a truthy non-iterable ({label}) is RED, "
+                  "not a crash",
+                  any("languages_present" in m for m in census_mismatches(troot, bad)), None)
+
+        bad = json.loads(json.dumps(correct))
+        bad["languages_present"] = "python"
+        check("census: languages_present as a bare string is RED",
+              any("languages_present" in m for m in census_mismatches(troot, bad)), None)
+
+        bad = json.loads(json.dumps(correct))
+        bad["languages_present"] = tuple(correct["languages_present"])
+        check("census: languages_present as a tuple with correct content is SILENT",
+              census_mismatches(troot, bad) == [], census_mismatches(troot, bad))
+
+        for label, val in (("int", ["javascript", 1]), ("None", [None, "javascript"]),
+                           ("dict", [{"k": 1}, "javascript"]), ("bytes", [b"js", "javascript"]),
+                           ("bool", [True, "javascript"]), ("all ints", [1, 2, 3])):
+            bad = json.loads(json.dumps(correct))
+            bad["languages_present"] = val
+            check(f"census: languages_present with a non-string element ({label}) is RED, "
+                  "not a sorted() crash",
+                  any("non-string lane name" in m for m in census_mismatches(troot, bad)),
+                  census_mismatches(troot, bad))
+
+        bad = json.loads(json.dumps(correct))
+        bad["languages"] = {k: v["files"] for k, v in correct["languages"].items()}
+        check("census: bare-int entries with correct values are SILENT",
+              census_mismatches(troot, bad) == [], census_mismatches(troot, bad))
+
+        from decimal import Decimal
+        from fractions import Fraction
+        for label, val in (("Decimal", Decimal(1)), ("Fraction", Fraction(1, 1))):
+            bad = json.loads(json.dumps(correct))
+            bad["languages"]["cpp"] = {"files": val}
+            check(f"census: files as {label} with a correct value is SILENT",
+                  census_mismatches(troot, bad) == [], census_mismatches(troot, bad))
+
+        # A SIGNED_SUBTREE may be split across several manifest keys ("go" ->
+        # go/programming + go/system-administration). Deleting one leaves the sibling, which
+        # satisfies the presence check -- only the sum invariant catches it. The main fixture
+        # declares a single "go", so this class needs its own tree.
+        with tempfile.TemporaryDirectory() as td2:
+            sroot = Path(td2)
+            for rel in ("go/programming/a.go", "go/system-administration/b.go"):
+                f = sroot / rel
+                f.parent.mkdir(parents=True, exist_ok=True)
+                f.write_text("pass\n", encoding="utf-8")
+            split_ok = {
+                "total_shippable": 2, "total_signed_files": 2, "unique_ids": 2,
+                "multi_language_patterns": 0, "languages_present": ["go"],
+                "languages": {"go/programming": {"files": 1},
+                              "go/system-administration": {"files": 1}},
+            }
+            check("census: a split-subtree fixture is SILENT when correct",
+                  census_mismatches(sroot, split_ok) == [],
+                  census_mismatches(sroot, split_ok))
+            bad = json.loads(json.dumps(split_ok))
+            del bad["languages"]["go/programming"]
+            check("census: deleting ONE key of a split subtree is RED (sibling hides it "
+                  "from the presence check; the sum invariant catches it)",
+                  any("sums to 1," in m for m in census_mismatches(sroot, bad)),
+                  census_mismatches(sroot, bad))
 
     # --- (1)(3) the gate: orphan reaping + the inconclusive outcome ---------------------------
     if deep:
