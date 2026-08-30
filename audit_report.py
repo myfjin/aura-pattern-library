@@ -36,6 +36,63 @@ w(f"**{header['total_patterns']} patterns** · run {header['run_date']} on `{hea
   f"· {header.get('elapsed_s','?')}s")
 w(f"· `library_verify.py` md5 `{header['library_verify_md5']}`")
 w("")
+# ⛔ 6E design review 3: an unowned record is a defect in the TOOL (a dropped reason code or
+# a missing routing rule), not a triage item. It goes FIRST and it cannot be scrolled past.
+_has_routing = any("needs_tool_fix" in r for r in recs)
+_defects = [r for r in recs if r.get("needs_tool_fix")]
+if not _has_routing:
+    # ⛔ A record that never carried the field is not a record with the field set to False.
+    # Printing "0 tool defects" for a pre-routing run would be absence of evidence read as
+    # evidence of absence -- on the exact claim this section exists to make loud.
+    w("## ⚠️ This run PREDATES the routing model")
+    w("")
+    w("No record in this JSONL carries `needs_tool_fix`, so the number of unowned records is")
+    w("**UNKNOWN, not zero**, and the lane table below would be zeros for the same reason.")
+    w("Re-run the audit with the current tool before quoting anything about routing.")
+    w("")
+elif _defects:
+    w("## ⛔ TOOL DEFECTS — read before anything else")
+    w("")
+    w(f"**{len(_defects)} record(s) carry a check that NO ROUTING RULE CLAIMED.** That is a")
+    w("defect in the audit tool, not work for a human reviewer: a human cannot fix a dropped")
+    w("reason code or a missing routing rule. Every number below this line is suspect until")
+    w("these are fixed and the run is repeated.")
+    w("")
+    w("| pattern | unclaimed checks |")
+    w("|---|---|")
+    for r in _defects[:40]:
+        w(f"| `{r['path']}` | {r.get('unclaimed_checks')} |")
+    if len(_defects) > 40:
+        w(f"| … | {len(_defects) - 40} more |")
+    w("")
+else:
+    w("> **0 tool defects.** Every non-clean check on every record was claimed by a named")
+    w("> routing rule — no record fell through to an unowned lane. A run with any unowned")
+    w("> record exits 3 and no flag suppresses it.")
+    w("")
+
+w("## Who the work belongs to")
+w("")
+w("Ver's finding 5, and 6E's design review 3: `needs_judgement` used to mean three different")
+w("asks of three different people. It is three fields now, and a tool defect is never")
+w("counted as human work.")
+w("")
+w("| lane | what is asked | records |")
+w("|---|---|---|")
+for _f, _what in () if not _has_routing else (
+                 ("needs_review", "read the pattern — a check FAILED or was FLAGGED"),
+                  ("needs_pathology_triage", "decide: defect, or documented edge case? (U3)"),
+                  ("needs_implementation", "build the analyser / provide the input (U1, U2)"),
+                 ("needs_tool_fix", "⛔ fix THIS TOOL — nobody claimed the check")):
+    w(f"| `{_f}` | {_what} | {sum(1 for r in recs if r.get(_f))} |")
+w("")
+if any("unverified" in r for r in recs):
+    _fully = sum(1 for r in recs if r.get("unverified", "").startswith("0/"))
+    w("Stated as how much could NOT be measured, never as how much passed: "
+      f"{_fully} of {len(recs)} records have `unverified: 0/n` — every check ran. The rest")
+    w("carry an `unverified` figure beside the verdict: the verdict is about the pattern,")
+    w("the coverage is about the tool, and they are orthogonal.")
+    w("")
 w("## Verdicts")
 w("")
 w("> **`NO_FINDING` was called `PASS` until Ver's honesty pass on 2026-08-30.** The word PASS")
