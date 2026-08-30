@@ -340,8 +340,21 @@ ASSERT_PAT = {
 # serious finding than a hardcoded /tmp file, and both passed silently. Enumerating the
 # ROOTS was the mistake; the rule is now "any absolute unix path", with the handful of
 # genuinely portable device/null paths carved out by name.
+# ⛔ ROUND 17 — MEASURED, then CORRECTED. Round 16 rewrote this to match ANY quoted "/word",
+# because the old list (/home|Users|srv|opt|var|tmp) was missing /etc, /usr, /bin, /dev and
+# more -- `"/etc/passwd"` returned a clean pass. That hole was real. The rewrite's cure was
+# worse: swept over the library it added 32 flags of which SIXTEEN were false -- HTTP route
+# templates and URL components, not filesystem paths at all:
+#     "/user/{id}"  "/api/users"  "/health"  "/index.html"  "/path"  "/users"
+# A URL path is not a hardcoded filesystem path and this check's harm is non-portability of
+# a FILESYSTEM path. So the closed set stays a closed set -- it is the filesystem hierarchy,
+# which is finite and stable, unlike a list of dangerous primitives -- but it is now COMPLETE
+# rather than the six roots someone happened to think of. Under-flags a rootless literal like
+# "/durable.bin"; that is the conservative direction and it is declared, not hidden.
+_FS_ROOT = (r"home|Users|srv|opt|var|tmp|etc|usr|bin|sbin|lib|lib64|dev|proc|sys|run|root"
+            r"|mnt|media|boot|private|Applications|Library|System|Volumes")
 ABS_PATH = re.compile(
-    r"['\"](?!/dev/(?:null|zero|urandom|random)['\"])(/[A-Za-z][^'\"\s]{2,})['\"]"
+    r"['\"](?!/dev/(?:null|zero|urandom|random)['\"])(/(?:" + _FS_ROOT + r")(?:/[^'\"]*)?)['\"]"
     r"|['\"][A-Z]:\\\\")
 
 
@@ -1697,6 +1710,18 @@ SELFTEST_CASES = [
      'p = "/root/.ssh/id_rsa"\n', "flag"),
     ("R16 abs_path: /usr/local/bin", check_abs_paths, "python",
      'p = "/usr/local/bin/x"\n', "flag"),
+    # These five negative arms are not invented: they are the FALSE POSITIVES the round-16
+    # rewrite produced on the real library, measured before this fix.
+    ("R17 abs_path NEGATIVE ARM: an HTTP route template is not a filesystem path",
+     check_abs_paths, "python", 'ROUTE = "/user/{id}"\n', "pass"),
+    ("R17 abs_path NEGATIVE ARM: a URL path is not a filesystem path", check_abs_paths,
+     "python", 'r.get("/api/users")\n', "pass"),
+    ("R17 abs_path NEGATIVE ARM: a health endpoint is not a filesystem path",
+     check_abs_paths, "python", 'app.route("/health")\n', "pass"),
+    ("R17 abs_path NEGATIVE ARM: a URL document path is not a filesystem path",
+     check_abs_paths, "python", 'req = "GET /index.html"\n', "pass"),
+    ("R17 abs_path: /dev/sda1 is a real hardcoded device and must NOT be swallowed by the "
+     "/dev/null carve-out", check_abs_paths, "python", 'd = "/dev/sda1"\n', "flag"),
     ("R16 abs_path NEGATIVE ARM: a relative path is not absolute", check_abs_paths,
      "python", 'p = "data/x.csv"\n', "pass"),
     ("R16 abs_path NEGATIVE ARM: /dev/null is portable and carved out by name",
