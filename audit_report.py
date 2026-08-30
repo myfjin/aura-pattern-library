@@ -211,7 +211,8 @@ for (name, status) in sorted(issues, key=lambda k: (order[k[1]], -len(issues[k])
     w("| pattern | evidence |")
     w("|---|---|")
     for path, detail in shown:
-        w(f"| `{path}` | {detail[:150].replace('|', '\\|')} |")
+        _d = detail[:150].replace("|", "\\|")
+        w(f"| `{path}` | {_d} |")
     if len(items) > len(shown):
         w(f"")
         w(f"*… and {len(items) - len(shown)} more — see `{src.name}`.*")

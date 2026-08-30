@@ -1792,7 +1792,16 @@ def self_test() -> int:
         if not _mod.exists():
             _stale.append((_mod.name, "MISSING — cannot be checked, so it is not clean"))
             continue
-        for _n in ast.walk(ast.parse(_mod.read_text(encoding="utf-8"))):
+        try:
+            _tree = ast.parse(_mod.read_text(encoding="utf-8"))
+        except SyntaxError as _e:
+            # MEASURED on .8: audit_report.py used a backslash inside an f-string, legal on
+            # 3.12 and a SyntaxError on 3.10, so this probe took the WHOLE self-test down on
+            # the machine the crew runs it on. A check that could not run is not a pass.
+            _stale.append((_mod.name, "UNPARSEABLE by this interpreter (%s) — the check did "
+                                      "NOT run, so it cannot report clean" % _e))
+            continue
+        for _n in ast.walk(_tree):
             if (isinstance(_n, ast.Constant) and isinstance(_n.value, str)
                     and re.search(r"\b" + _P + r"\b", _n.value)
                     and "NO_FINDING" not in _n.value):
