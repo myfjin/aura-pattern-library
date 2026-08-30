@@ -41,7 +41,12 @@ def is_structural(line, lang):
     s = line.strip()
     if not s:
         return True
-    if s.startswith("#!") and lang != "r":
+    # ⛔ 4Q R20 F1: R was EXCLUDED here because R comments start with `#`, so `#!` could in
+    # principle be a comment. But `#!/usr/bin/Rscript` is an interpreter directive, and the
+    # `#` handler below read it as the description -- returning "!/usr/bin/Rscript", or
+    # PREPENDING it to a real description on the next line. A shebang is only meaningful on
+    # the first line, so keying on position rather than on language is exact for every lane.
+    if s.startswith("#!"):
         return True
     if lang == "rust" and (s.startswith("#![") or s.startswith("use ") or s.startswith("extern ")):
         return True
@@ -55,6 +60,15 @@ def is_structural(line, lang):
     # actually lives. Without this the tag would be read as the description — or, since the
     # `//` branch does not list javascript, no description would be found at all.
     if lang == "javascript" and s.startswith("// @forge-family"):
+        return True
+    # ⛔ 4Q R20 F2 (second half): every other lane skips its import form, javascript did not,
+    # so the scan BROKE at `import {x} from "y"` before it could reach the /* */ block below.
+    # A documented file read as undocumented. Deliberately limited to the import idioms and
+    # "use strict" -- skipping arbitrary `const` would let the ruler walk past real code and
+    # adopt some unrelated comment further down as the description, which is the worse error.
+    if lang == "javascript" and (
+            s.startswith(("import ", "export ")) or s in ('"use strict";', "'use strict';")
+            or re.match(r"(?:const|let|var)\s+[\w{},\s]+=\s*require\s*\(", s)):
         return True
     return False
 
@@ -109,14 +123,16 @@ def extract_claim_text(text, lang):
                     break
                 i += 1
             return " ".join(" ".join(buf).split())
-        if (lang in ("cpp", "go", "rust") and s.startswith("//")) or (lang == "r" and s.startswith("#")):
+        if (lang in ("cpp", "go", "rust", "javascript") and s.startswith("//")) \
+                or (lang == "r" and s.startswith("#")):
             while i < n:
                 cur = lines[i]
                 cs = cur.strip()
                 if is_watermark(cur):
                     i += 1
                     continue
-                if (lang in ("cpp", "go", "rust") and cs.startswith("//")) or (lang == "r" and cs.startswith("#")):
+                if (lang in ("cpp", "go", "rust", "javascript") and cs.startswith("//")) \
+                        or (lang == "r" and cs.startswith("#")):
                     block.append(cs.lstrip("/#").strip() if lang != "r" else cs.lstrip("#").strip())
                     i += 1
                 else:

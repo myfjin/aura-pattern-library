@@ -995,6 +995,24 @@ def check_doc_behavior(text, lane, tree):
                    "measured-and-wrong, not unmeasurable (6E 2026-08-30)"))
         d = ast.get_docstring(tree)
         if not d:
+            # ⛔ 4Q R20 O2: the python branch uses ast.get_docstring and the INDEX uses the
+            # ruler, which has a fallback for a string literal that is not the first statement.
+            # Two methods, so they CAN disagree -- 0 files have that shape today (the 35 that
+            # did were relocated in 95ebea9), but the fallback is kept because the shape is
+            # easy to reintroduce and silent when it happens. Rather than pick one method, the
+            # divergence is now REPORTED: a description a human can see and every docstring-
+            # reading tool cannot is a more useful finding than a bare "no docstring".
+            try:
+                import build_patterns_index as _BPI
+                _seen = _BPI.extract_claim_text(text, "python")
+            except Exception:
+                _seen = ""
+            if _seen:
+                return ("doc_behavior", "fail",
+                        "a description is present but is NOT the module docstring — put an "
+                        "import above it and __doc__ is None, so a human sees it and every "
+                        "docstring-reading tool sees nothing (35 files were in this shape "
+                        "until 95ebea9)")
             return ("doc_behavior", "fail", "no module docstring — nothing states what it does")
         return ("doc_behavior", "skip",
                 f"docstring present ({len(d)} chars); code-vs-claim is judgement (6E C7), "
@@ -1722,6 +1740,39 @@ SELFTEST_CASES = [
      check_dangerous, "python", "from os import system\nsystem('ls')\n", "flag"),
     ("6E-R15 dangerous: os.execv is process execution too", check_dangerous, "python",
      "import os\nos.execv('/bin/ls', [])\n", "flag"),
+    # ⛔ 4Q ROUND 20 — the frozen ruler's own two defects, found by attacking the round-19 work.
+    ("R20-F1 r: `#!/usr/bin/Rscript` is an interpreter directive, not a description — R was "
+     "excluded from the shebang skip, so the # handler read the shebang as the claim",
+     check_doc_behavior, "r", "#!/usr/bin/Rscript\nx <- 1\n", "fail"),
+    ("R20-F1 r POSITIVE ARM: a real description BELOW a shebang must survive, not be "
+     "prefixed with the shebang text", check_doc_behavior, "r",
+     "#!/usr/bin/Rscript\n# Computes a SHA-256 hash.\nf <- function(x) x\n", "skip"),
+    ("R20-F2 js: a description written in // comments had no route to a claim at all — "
+     "javascript was absent from the // branch", check_doc_behavior, "javascript",
+     "// AES encryption pattern\n// Usage: encrypt(text, key)\nfunction encrypt(){}\n", "skip"),
+    ("R20-F2 js: the scan BROKE at an import before it could reach the /* */ block below",
+     check_doc_behavior, "javascript",
+     'import { c } from "crypto";\n/* AES pattern */\nfunction e(){}\n', "skip"),
+    ("R20-F2 js: the same for the require idiom", check_doc_behavior, "javascript",
+     'const fs = require("fs");\n/* Reads a file. */\nfunction f(){}\n', "skip"),
+    ("R20-F2 js NEGATIVE ARM: skipping imports must not make the ruler walk past real code "
+     "and adopt some unrelated comment — a file with no description still fails",
+     check_doc_behavior, "javascript", "function f(){ return 1; }\n", "fail"),
+    ("R20-O2 py: a description that is NOT the module docstring is reported AS SUCH — the "
+     "audit and the index use different methods here, so the divergence is surfaced",
+     check_doc_behavior, "python", 'import os\n"""Real description."""\ndef f(): pass\n',
+     "fail"),
+    # ⛔ 4Q R20 O1, DECLARED LIMITATION. Scoping rust `.unwrap()` to Option/Result needs type
+    # resolution -- a parser, not a regex. Unlike cpp system(), where `.`/`->` decides it
+    # lexically, nothing in the text distinguishes a custom unwrap() from Option::unwrap().
+    # Over-flagging is the safe direction here (the verdict is `flag`, meaning judgement, and
+    # on this library every hit is a real Option/Result unwrap), and under-flagging would lose
+    # real panics. Recorded as a probe asserting today's behaviour, not left to be rediscovered.
+    ("R20-O1 rust LIMITATION: a CUSTOM unwrap() that never panics is still flagged — telling "
+     "it from Option::unwrap() needs type resolution, which a regex cannot do",
+     check_dangerous, "rust",
+     "struct S;\nimpl S { fn unwrap(&self) -> i32 { 42 } }\nfn main(){ let x = S.unwrap(); }\n",
+     "flag"),
     # ⛔ 4Q ROUND 18 F1 — seven dangerous primitives absent from the tables. Each fixture is
     # 4Q's, and each got a clean UNVERIFIABLE, which a reader mistakes for "nothing found".
     ("R18-F1 js: setTimeout with a STRING argument parses and executes it — the eval class",
@@ -2551,6 +2602,59 @@ def self_test() -> int:
                       "UNKNOWN, never a blank and never a fabricated hash",
                       bool(_t3) and "UNKNOWN" in _t3
                       and "md5 ``" not in _t3))
+        # ⛔ 4Q R20 O2. SELFTEST_CASES compares STATUS only, and both branches return `fail`,
+        # so a status probe cannot tell the informative message from the bare one -- the
+        # mutation harness proved it by gutting the branch and surviving. The distinction IS
+        # the detail, so the probe has to read the detail.
+        _d_hidden = check_doc_behavior('import os\n"""Real description."""\ndef f(): pass\n',
+                                       "python", ast.parse(
+            'import os\n"""Real description."""\ndef f(): pass\n'))[2]
+        _d_none = check_doc_behavior("import os\ndef f(): pass\n", "python",
+                                     ast.parse("import os\ndef f(): pass\n"))[2]
+        extra.append(("R20-O2 a description that is NOT the module docstring is reported as "
+                      "such, not as a bare 'no docstring' — a human sees it and every "
+                      "docstring-reading tool does not",
+                      "NOT the module docstring" in _d_hidden))
+        extra.append(("R20-O2 NEGATIVE ARM: a file with NO description anywhere still gets "
+                      "the plain message, so the informative one cannot become the default",
+                      "NOT the module docstring" not in _d_none))
+        # ⛔ 6E ROUND 20, both findings, both arms. The page's numbers were all exact; what
+        # misled was the GLOSS. These probes fix the wording in place so it cannot drift back.
+        def _erec(_pid, gate_status, extra_pass=2):
+            ch = [{"name": "deps", "status": "unverifiable", "detail": "[NO_STDLIB_LIST] x"},
+                  {"name": "gate", "status": gate_status, "detail": "g"},
+                  {"name": "determinism_repeat", "status": gate_status, "detail": "d"}]
+            ch += [{"name": f"c{i}", "status": "pass", "detail": "ok"}
+                   for i in range(extra_pass)]
+            return {"pattern_id": _pid, "path": f"python/{_pid}.py", "language": "python",
+                    "verdict": "UNVERIFIABLE", "disposition": None, "checks": ch,
+                    "unverifiable_checks": _uc, "unverifiable_subclass": ["U2"],
+                    "checks_unmeasured": 1, "checks_skipped": 2, "needs_tool_fix": False,
+                    "census_mismatches": [], "toolchains_present": {}}
+        def _render(_name, _rows_in):
+            _f = Path(_rtd) / (_name + ".jsonl"); _o = Path(_rtd) / (_name + ".md")
+            _f.write_text("\n".join([json.dumps(_hdr)] + [json.dumps(x) for x in _rows_in]),
+                          encoding="utf-8")
+            subprocess.run([sys.executable, str(Path(__file__).with_name("audit_report.py")),
+                            str(_f), str(_o)], capture_output=True, text=True,
+                           cwd=str(Path(__file__).parent))
+            return _o.read_text(encoding="utf-8") if _o.exists() else ""
+        _t_noexec = _render("noexec", [_erec("a", "skip"), _erec("b", "skip", 3)])
+        _t_exec   = _render("exec",   [_erec("a", "pass"), _erec("b", "pass", 3)])
+        extra.append(("RENDER 6E-R20 F2: when NOTHING was executed the page says so — gate "
+                      "and determinism_repeat skipped on every record",
+                      "NOTHING WAS EXECUTED" in _t_noexec))
+        extra.append(("RENDER 6E-R20 F2 NEGATIVE ARM: when the gate DID run, the banner must "
+                      "NOT appear — a false 'nothing executed' is its own lie",
+                      bool(_t_exec) and "NOTHING WAS EXECUTED" not in _t_exec))
+        extra.append(("RENDER 6E-R20 F1: UNVERIFIABLE is explained as COVERAGE, and the "
+                      "count of checks that DID run is derived from the records, not "
+                      "hardcoded — these two fixtures ran 2 and 3, so a span must print",
+                      "What UNVERIFIABLE does NOT mean" in _t_noexec
+                      and "2-3 checks actually run" in _t_noexec))
+        extra.append(("RENDER 6E-R20 F1: the one-line gloss no longer says only 'could not "
+                      "measure it', which outranked six passes and read as unexamined",
+                      "the tool could not measure it" not in _t_noexec))
         _rp6 = Path(_rtd) / "prov.jsonl"
         _h6 = json.loads(json.dumps(_hdr))
         _h6["run"]["tool"] = "library_audit.py"
