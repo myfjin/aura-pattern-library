@@ -48,6 +48,78 @@ EXT_LANE = {v: k for k, v in LANE_EXT.items()}
 VERDICTS = ("PASS", "FAIL", "FLAG", "UNVERIFIABLE", "SKIP")
 STATUSES = ("pass", "fail", "flag", "unverifiable", "skip")
 
+# ================================================================= UNVERIFIABLE taxonomy
+# 6E, 2026-08-30: UNVERIFIABLE as ONE bucket is useless for triage -- "the tool has no R
+# analyser" and "this twin has no source" do not have the same remedy. Every unverifiable
+# return therefore names a REASON CODE, and each code maps to a subclass that names its own
+# remedy. The code is emitted as a "[CODE] " prefix by _u(); the prefix is a typed constant
+# at the return site, not prose to be grepped, and a self-test probe asserts that EVERY
+# unverifiable detail in the whole run carries one.
+#   U1 NO ANALYSER        -> the tool is the gap             -> TOOL_WORK
+#   U2 MISSING PREREQUISITE -> environment/data is the gap   -> PROVISION
+#   U3 PATHOLOGICAL       -> the FILE blocked measurement    -> INVESTIGATE
+# 6E's fourth class ("shape the check cannot decide") is deliberately NOT here: that is
+# already `skip` or `unassessed_classes`, and folding it in would make every documented
+# python pattern UNVERIFIABLE.
+REASON_SUBCLASS = {
+    "NO_RULE_TABLE":    "U1", "EMPTY_RULE_TABLE": "U1", "NO_STRIPPER":      "U1",
+    "NO_ASSERT_GRAMMAR": "U1", "NON_PYTHON_AST":  "U1", "NO_DOC_SLOT":      "U1",
+    "NO_REPEAT_RUNNER": "U1",
+    "NO_STDLIB_LIST":   "U2", "NO_TOOLCHAIN":     "U2", "NO_INDEX":         "U2",
+    "PARSE_FAIL":       "U3", "HANG":             "U3", "REPEAT_ERROR":     "U3",
+}
+SUBCLASS_REMEDY = {
+    "U1": ("NO_ANALYSER", "tool work: build the analyser for this check x lane"),
+    "U2": ("MISSING_PREREQUISITE", "environment/data work: provide the prerequisite"),
+    "U3": ("PATHOLOGICAL", "investigate the file: defect (fix/quarantine) or documented"),
+}
+# Closed set. A triage session assigns one of these; WAIVE additionally REQUIRES a
+# disposition_ref, or it is a silent pass wearing another name (6E).
+DISPOSITIONS = ("FIX", "QUARANTINE", "ACCEPT", "REJECT", "TOOL_WORK", "PROVISION",
+                "WAIVE", "ESCALATE")
+SUBCLASS_DISPOSITIONS = {
+    "U1": ("TOOL_WORK", "WAIVE", "ESCALATE"),
+    "U2": ("PROVISION", "WAIVE", "ESCALATE"),
+    "U3": ("FIX", "QUARANTINE", "ACCEPT", "ESCALATE"),
+}
+
+
+LANES = ("python", "cpp", "go", "rust", "r", "javascript")
+
+# 6E's structural guard against THE trap. U1 (no analyser) is the subclass most likely to be
+# quietly converted to PASS by a well-meaning edit -- and exit-2 cannot catch that, because a
+# record turned `pass` LEAVES the unverifiable bucket and the forcing function goes blind.
+# So the coverage is DECLARED here and asserted cell by cell in the self-test: a cell with no
+# analyser must return `unverifiable` with a U1 code, and a cell WITH one must not. Adding a
+# fallback that returns `pass` when it found nothing to measure breaks a probe, loudly.
+ANALYSER_COVERAGE = {
+    "hollow":               LANES,          # ASSERT_PAT + stripper for all six
+    "dangerous_primitives": LANES,          # DANGEROUS  + stripper for all six
+    "determinism_markers":  LANES,          # NONDET     + stripper for all six
+    "hardcoded_abs_path":   LANES,          # stripper for all six
+    "assert_nonvacuous":    ("python",),    # python AST only
+    "importable":           ("python",),    # python AST only
+    "deps":                 ("python",),    # python AST only
+    "doc_behavior":         ("python",),    # the description slot differs per language
+}
+
+
+def _u(code: str, detail: str) -> str:
+    """Tag an unverifiable detail with its reason code. Raises on an unknown code, so a new
+    unverifiable path cannot enter the tool without declaring which remedy it needs."""
+    if code not in REASON_SUBCLASS:
+        raise KeyError(f"unknown unverifiable reason code {code!r}")
+    return f"[{code}] {detail}"
+
+
+def reason_of(detail: str):
+    """(code, subclass) for an unverifiable detail, or (None, None) if it carries no code."""
+    if detail.startswith("["):
+        c = detail[1:detail.index("]")] if "]" in detail else ""
+        if c in REASON_SUBCLASS:
+            return c, REASON_SUBCLASS[c]
+    return None, None
+
 
 def _norm_source(text: str, lane: str) -> str:
     """Strip the AURA watermark block and normalise whitespace, so duplicate detection sees
@@ -61,7 +133,7 @@ def _norm_source(text: str, lane: str) -> str:
             continue
         # Only a COMMENT/mark line carrying AE1. is watermark. A line of real code that
         # merely mentions AE1. must survive, or two different patterns collide -- 4Q D2.
-        if "AE1." in s and re.match(r'^\s*(#|//|/\*|\*|--|;)', s):
+        if "AE1." in s and re.match(r'^\s*(#|//|/\*|--|;)', s):
             continue
         if re.match(r'^\s*(static\s+const\s+char\s*\*)?\s*_?[aA]ura_?[mM]ark\s*[:=]', s):
             continue
@@ -155,6 +227,23 @@ _IMPORT_LINE = {
 }
 
 
+# A regex literal is also legal directly after these keywords, where `prev_sig` is the last
+# LETTER of the keyword and so never matched the operator set (4Q round 3, F3).
+_JS_RE_KW = re.compile(
+    r"(?:^|[^\w$.])(return|typeof|case|delete|void|instanceof|in|of|new|do|else|yield|await)"
+    r"\s*$")
+
+
+def _js_regex_after_kw(text: str, i: int) -> bool:
+    lo = max(0, i - 32)
+    m = _JS_RE_KW.search(text[lo:i])
+    if not m:
+        return False
+    if m.start(1) == 0 and lo > 0 and (text[lo - 1].isalnum() or text[lo - 1] in "_$."):
+        return False                 # the window cut a longer identifier in half
+    return True
+
+
 def _import_lines(text: str, lane: str) -> str:
     """Import/include lines put back after stripping. In Go an import path IS a string
     literal (`import "os/exec"`), so blanking strings would delete the dependency the rule
@@ -177,16 +266,52 @@ def _import_lines(text: str, lane: str) -> str:
                 continue
         if pat.match(ln):
             keep.append(ln)
-    return "\n".join(keep)
+    # ⛔ Strip comments from the RESTORED lines too. Restoring the original line undid the
+    # comment blanking for exactly those lines -- `import "fmt" // uses crypto/md5` would
+    # have been flagged for a primitive that lives only in a comment (4Q round 2, F3).
+    # ⛔ Scan, do not `find`. A blind find() cut at a `//` inside the import path itself
+    # (`import "http://x/exec"` -> `import "http:`, F5) and never saw `/* */` at all, so
+    # `#include <cstdlib> /* uses system() */` leaked `system()` as code (F2).
+    tok = "#" if lane == "r" else "//"
+    out = []
+    for ln in keep:
+        buf, k, m, q = [], 0, len(ln), ""
+        while k < m:
+            ch = ln[k]
+            if q:
+                if ch == "\\":
+                    buf.append(ln[k:k + 2]); k += 2; continue
+                if ch == q:
+                    q = ""
+                buf.append(ch); k += 1; continue
+            if ch in "\"'`":
+                q = ch; buf.append(ch); k += 1; continue
+            if ln.startswith(tok, k):
+                break                       # line comment, outside any string
+            if lane != "r" and ln.startswith("/*", k):
+                e = ln.find("*/", k + 2)
+                if e == -1:
+                    break
+                k = e + 2; continue          # block comment, dropped
+            buf.append(ch); k += 1
+        out.append("".join(buf))
+    return "\n".join(out)
 
 
-def strip_noncode(text: str, lane: str):
-    """Remove comments and string literals so a regex table measures CODE, not prose.
+def strip_noncode(text: str, lane: str, keep_strings: bool = False):
+    """Remove comments (and, unless keep_strings, string literals) so a regex table measures
+    CODE, not prose. Returns (stripped_text, ok); ok=False means no stripper exists for the
+    lane and the caller MUST report `unverifiable`.
 
-    Returns (stripped_text, ok). ok=False means no stripper exists for this lane, and the
-    caller MUST report `unverifiable` rather than scanning raw text -- 4Q F3/F5, measured:
-    `ar_yule_walker.R` was flagged for `system()` that lived in the comment
-    "as linear system (Rgamma = gamma_acov)".
+    ⛔ FOUR LANGUAGE TRAPS, all measured. A defect here silences EVERY regex check at once:
+      - RUST LIFETIMES. `&'static str` is not a string. Treating that `'` as a quote opened
+        a "string" that ran to the next `'` dozens of lines later. MEASURED on the shipping
+        library: url_authority_parser.rs lost 17 of 17 asserts and 6 of 6 unwrap() calls,
+        and `dangerous_primitives` returned a false `pass` (4Q round 2, F1).
+      - C++ RAW STRINGS. `R"(...)"` may contain bare quotes; naive scanning closes early and
+        leaks the remainder as code (F2).
+      - JS REGEX LITERALS. `/['"]/` contains quotes that are not string delimiters (F4).
+      - GO IMPORT PATHS ARE STRING LITERALS, so they are restored afterwards (round 2, F5).
     """
     if lane == "python":
         import io, tokenize
@@ -194,12 +319,11 @@ def strip_noncode(text: str, lane: str):
             lines = text.splitlines(keepends=True)
             spans = []
             for tok in tokenize.generate_tokens(io.StringIO(text).readline):
-                if tok.type in (tokenize.COMMENT, tokenize.STRING):
+                if tok.type == tokenize.COMMENT or (
+                        tok.type == tokenize.STRING and not keep_strings):
                     spans.append((tok.start, tok.end))
-            # ⛔ BLANK THE SPANS IN PLACE. Joining tokens with spaces turned
-            # `random.shuffle` into `random . shuffle` and silenced every regex that spans
-            # a token boundary (`\brandom\.`, `os.system(`, `shell=True`). The self-test
-            # caught it; do not "simplify" this back into a token join.
+            # Blank the spans IN PLACE. Joining tokens with spaces turned `random.shuffle`
+            # into `random . shuffle` and silenced every regex spanning a token boundary.
             for (sr, sc), (er, ec) in spans:
                 for row in range(sr, er + 1):
                     if row - 1 >= len(lines):
@@ -220,10 +344,9 @@ def strip_noncode(text: str, lane: str):
         block = lane != "r"
         quotes = "'\"" + ("`" if lane in ("go", "javascript") else "")
         out, i, n = [], 0, len(text)
+        prev_sig = ""                    # last significant char, for JS regex detection
         while i < n:
             c = text[i]
-            if c == "\\" and i + 1 < n:
-                out.append("  "); i += 2; continue
             if text.startswith(line_tok, i):
                 while i < n and text[i] != "\n":
                     out.append(" "); i += 1
@@ -232,17 +355,82 @@ def strip_noncode(text: str, lane: str):
                 j = text.find("*/", i + 2)
                 j = n if j == -1 else j + 2
                 out.append(" " * (j - i)); i = j; continue
+            # C++ raw string: R"delim( ... )delim"
+            if lane == "cpp" and c == "R" and i + 1 < n and text[i + 1] == '"':
+                op = text.find("(", i + 2)
+                if op != -1:
+                    delim = text[i + 2:op]
+                    close = ")" + delim + '"'
+                    j = text.find(close, op + 1)
+                    j = n if j == -1 else j + len(close)
+                    seg = text[i:j]
+                    out.append(seg if keep_strings else
+                               "".join(ch if ch == "\n" else " " for ch in seg))
+                    i = j; prev_sig = '"'; continue
+            # JS regex literal: /.../ in a position where a value is expected
+            if lane == "javascript" and c == "/" and (
+                    prev_sig in "=(,:[!&|?{};+*%~^" or _js_regex_after_kw(text, i)):
+                j, ok_r, cls = i + 1, False, False
+                while j < n:
+                    if text[j] == "\\":
+                        j += 2; continue
+                    if text[j] == "[":
+                        cls = True
+                    elif text[j] == "]":
+                        cls = False
+                    elif text[j] == "/" and not cls:
+                        ok_r = True; j += 1; break
+                    elif text[j] == "\n":
+                        break
+                    j += 1
+                if ok_r:
+                    seg = text[i:j]
+                    out.append(seg if keep_strings else " " * len(seg))
+                    i = j; prev_sig = "/"; continue
+            # Rust raw string: r"..." / r#"..."# / r##"..."##. The `r` and `#`s are code
+            # and the opening `"` looked like a normal string, so content holding a bare
+            # quote closed early and leaked the remainder as code (4Q round 3, F1).
+            if lane == "rust" and c in "rb":
+                _st = i                     # literal start, INCLUDING a `b` byte prefix
+                _rp = i + 1 if (c == "b" and i + 1 < n and text[i + 1] == "r") else i
+                if text[_rp] == "r" and not (
+                        _st and (text[_st - 1].isalnum() or text[_st - 1] == "_")):
+                    k = _rp + 1
+                    while k < n and text[k] == "#":
+                        k += 1
+                    if k < n and text[k] == '"':
+                        close = '"' + "#" * (k - _rp - 1)
+                        j = text.find(close, k + 1)
+                        j = n if j == -1 else j + len(close)
+                        seg = text[_st:j]
+                        out.append(seg if keep_strings else
+                                   "".join(ch if ch == "\n" else " " for ch in seg))
+                        i = j; prev_sig = '"'; continue
+            # Rust lifetime: `&'a`, `<'static>` -- NOT a character literal, NOT a string.
+            # A char literal is 'X' or '\X' or '\u{..}'; anything else after ' is a lifetime.
+            if lane == "rust" and c == "'":
+                is_char = (i + 1 < n and text[i + 1] == "\\") or \
+                          (i + 2 < n and text[i + 2] == "'")
+                if not is_char:
+                    out.append(c); i += 1; prev_sig = "'"; continue
             if c in quotes:
-                q, i = c, i + 1
-                out.append(" ")
-                while i < n:
-                    if text[i] == "\\":
-                        i += 2; out.append("  "); continue
-                    if text[i] == q:
-                        i += 1; out.append(" "); break
-                    out.append(" " if text[i] != "\n" else "\n"); i += 1
-                continue
-            out.append(c); i += 1
+                q, j = c, i + 1
+                while j < n:
+                    if text[j] == "\\":
+                        j += 2; continue
+                    if text[j] == q:
+                        j += 1; break
+                    if text[j] == "\n" and q != "`":
+                        break            # unterminated -- do not eat the rest of the file
+                    j += 1
+                seg = text[i:j]
+                out.append(seg if keep_strings else
+                           "".join(ch if ch == "\n" else " " for ch in seg))
+                i = j; prev_sig = q; continue
+            out.append(c)
+            if not c.isspace():
+                prev_sig = c
+            i += 1
         stripped = "".join(out)
         return stripped + "\n" + _import_lines(text, lane), True
     return text, False
@@ -255,15 +443,15 @@ def _text_check(text, lane, table, name, ok_detail, want_pats=False):
     table (4Q F6 -- zero rules measured nothing), and no comment-stripper for the lane
     (4Q F3/F5 -- scanning raw text measures prose)."""
     if lane not in table:
-        return (name, "unverifiable", f"no {name} rule table for lane '{lane}'", [])
+        return (name, "unverifiable", _u("NO_RULE_TABLE", f"no {name} rule table for lane '{lane}'"), [])
     if not table[lane]:
-        return (name, "unverifiable", f"{name} rule table for lane '{lane}' is EMPTY — "
-                                      "zero rules measured nothing", [])
+        return (name, "unverifiable", _u("EMPTY_RULE_TABLE", f"{name} rule table for lane "
+                    f"'{lane}' is EMPTY — zero rules measured nothing"), [])
     code, ok = strip_noncode(text, lane)
     if not ok:
         return (name, "unverifiable",
-                f"no comment/string stripper for lane '{lane}' — scanning raw text would "
-                "match prose, so nothing was measured", [])
+                _u("NO_STRIPPER", f"no comment/string stripper for lane '{lane}' — "
+                   "scanning raw text would match prose, so nothing was measured"), [])
     hit = [(pat, label) for pat, label in table[lane] if re.search(pat, code)]
     if hit:
         return (name, "flag", ", ".join(sorted({l for _, l in hit})), [p for p, _ in hit])
@@ -309,6 +497,14 @@ def check_determinism_markers(text, lane, tree):
 
 
 def check_abs_paths(text, lane, tree):
+    # This check intentionally looks for paths inside STRING LITERALS, so it keeps strings
+    # -- but a quoted path inside a COMMENT is prose, not a hardcoded path (4Q round 2, F5).
+    code, ok = strip_noncode(text, lane, keep_strings=True)
+    if not ok:
+        return ("hardcoded_abs_path", "unverifiable",
+                _u("NO_STRIPPER", f"no comment stripper for lane '{lane}' — a path in a "
+                   "comment would have counted as a hardcoded path"))
+    text = code
     m = ABS_PATH.search(text)
     if m:
         return ("hardcoded_abs_path", "flag", f"literal absolute path {m.group(0)[:60]}")
@@ -320,7 +516,9 @@ def check_hollow(text, lane, tree):
     presence of ANY assertion construct, which is weaker, so they are flagged not failed."""
     if lane == "python":
         if tree is None:
-            return ("hollow", "unverifiable", "python source did not parse")
+            return ("hollow", "fail",
+                _u("PARSE_FAIL", "python source did not parse — a malformed file is "
+                   "measured-and-wrong, not unmeasurable (6E 2026-08-30)"))
         asserts = [n for n in ast.walk(tree) if isinstance(n, ast.Assert)]
         calls = [n for n in ast.walk(tree) if isinstance(n, ast.Call)]
         defs = [n for n in ast.walk(tree)
@@ -334,12 +532,13 @@ def check_hollow(text, lane, tree):
         return ("hollow", "pass", f"{len(asserts)} assert(s), {len(defs)} def(s)")
     pat = ASSERT_PAT.get(lane)
     if pat is None:
-        return ("hollow", "unverifiable", f"no assertion grammar for lane '{lane}'")
+        return ("hollow", "unverifiable",
+                _u("NO_ASSERT_GRAMMAR", f"no assertion grammar for lane '{lane}'"))
     code, ok = strip_noncode(text, lane)
     if not ok:
         return ("hollow", "unverifiable",
-                f"no comment/string stripper for lane '{lane}' — an assertion inside a "
-                "comment would have counted as one -- 4Q F3")
+                _u("NO_STRIPPER", f"no comment/string stripper for lane '{lane}' — an "
+                   "assertion inside a comment would have counted as one -- 4Q F3"))
     n = len(re.findall(pat, code))
     if n == 0:
         return ("hollow", "flag", f"no assertion construct found in CODE (looked for /{pat}/)")
@@ -351,9 +550,11 @@ def check_assert_nonvacuous(text, lane, tree):
     whose test contains no Name/Call/Attribute/Subscript is comparing literals to literals."""
     if lane != "python":
         return ("assert_nonvacuous", "unverifiable",
-                f"decidable on the python AST only; lane is '{lane}'")
+                _u("NON_PYTHON_AST", f"decidable on the python AST only; lane is '{lane}'"))
     if tree is None:
-        return ("assert_nonvacuous", "unverifiable", "python source did not parse")
+        return ("assert_nonvacuous", "fail",
+                _u("PARSE_FAIL", "python source did not parse — a malformed file is "
+                   "measured-and-wrong, not unmeasurable (6E 2026-08-30)"))
     asserts = [n for n in ast.walk(tree) if isinstance(n, ast.Assert)]
     if not asserts:
         return ("assert_nonvacuous", "skip", "no asserts — reported by the hollow check")
@@ -406,9 +607,11 @@ def check_importable(text, lane, tree):
     """C5 — usable as a library, not just runnable as a script. Python-decidable."""
     if lane != "python":
         return ("importable", "unverifiable",
-                f"decidable on the python AST only; lane is '{lane}'")
+                _u("NON_PYTHON_AST", f"decidable on the python AST only; lane is '{lane}'"))
     if tree is None:
-        return ("importable", "unverifiable", "python source did not parse")
+        return ("importable", "fail",
+                _u("PARSE_FAIL", "python source did not parse — a malformed file is "
+                   "measured-and-wrong, not unmeasurable (6E 2026-08-30)"))
     defs = [n for n in tree.body
             if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))]
     side = []
@@ -440,11 +643,15 @@ def check_deps(text, lane, tree):
     There is no dependency manifest in the library, so ANY third-party import is a flag."""
     if lane != "python":
         return ("deps", "unverifiable",
-                f"import classification implemented for python only; lane is '{lane}'")
+                _u("NON_PYTHON_AST", f"import classification implemented for python "
+                   f"only; lane is '{lane}'"))
     if tree is None:
-        return ("deps", "unverifiable", "python source did not parse")
+        return ("deps", "fail",
+                _u("PARSE_FAIL", "python source did not parse — a malformed file is "
+                   "measured-and-wrong, not unmeasurable (6E 2026-08-30)"))
     if not _STDLIB:
-        return ("deps", "unverifiable", "sys.stdlib_module_names unavailable on this python")
+        return ("deps", "unverifiable",
+                _u("NO_STDLIB_LIST", "sys.stdlib_module_names unavailable on this python"))
     typing_only = set()
     for n in ast.walk(tree):
         if isinstance(n, ast.If):
@@ -475,7 +682,9 @@ def check_doc_behavior(text, lane, tree):
     """C7 — judgement-only (6E). Report whether there is even a description to judge."""
     if lane == "python":
         if tree is None:
-            return ("doc_behavior", "unverifiable", "python source did not parse")
+            return ("doc_behavior", "fail",
+                _u("PARSE_FAIL", "python source did not parse — a malformed file is "
+                   "measured-and-wrong, not unmeasurable (6E 2026-08-30)"))
         d = ast.get_docstring(tree)
         if not d:
             return ("doc_behavior", "fail", "no module docstring — nothing states what it does")
@@ -483,16 +692,21 @@ def check_doc_behavior(text, lane, tree):
                 f"docstring present ({len(d)} chars); code-vs-claim is judgement (6E C7), "
                 "not tool-decidable")
     return ("doc_behavior", "unverifiable",
-            f"description slot differs per language; not implemented for '{lane}'")
+            _u("NO_DOC_SLOT", f"description slot differs per language; not implemented "
+               f"for '{lane}'"))
 
 
+# ⛔ KEYED BY (stem, LANE), NOT BY STEM. 6E verified these by reading the PYTHON files;
+# `atomic_snapshot` and `cow_backup` each also exist in Go, and a stem-only key handed the
+# Go twins a finding nobody had checked -- 2 live false positives (4Q round 3, F4). Their
+# Go similarity is 0.51 against 0.65 for Python: a different pair of files, unexamined.
 KNOWN_FINDINGS = {
-    "atomic_snapshot": ("flag", "6E verified BY READING (2026-08-30): a genuine SEMANTIC "
+    ("atomic_snapshot", "python"): ("flag", "6E verified BY READING (2026-08-30): a genuine SEMANTIC "
                         "duplicate of cow_backup — both are temp-write + atomic-rename. No "
                         "shingle statistic can find this (containment 0.87 sits inside the "
                         "false-positive range 0.81-0.94), so it is recorded here rather "
                         "than lost to a silent PASS."),
-    "cow_backup": ("flag", "6E verified BY READING (2026-08-30): a genuine SEMANTIC "
+    ("cow_backup", "python"): ("flag", "6E verified BY READING (2026-08-30): a genuine SEMANTIC "
                    "duplicate of atomic_snapshot — both are temp-write + atomic-rename. "
                    "Recorded because the detector cannot derive it."),
 }
@@ -501,7 +715,7 @@ KNOWN_FINDINGS = {
 def check_known_findings(text, lane, tree, stem=None):
     """Findings a human or model verified by READING, which the tool cannot derive itself.
     Without this, a defect somebody already confirmed silently becomes a PASS."""
-    hit = KNOWN_FINDINGS.get(stem)
+    hit = KNOWN_FINDINGS.get((stem, lane))
     if hit:
         return ("known_finding", hit[0], hit[1])
     return ("known_finding", "pass", "no hand-verified finding recorded for this pattern")
@@ -520,13 +734,17 @@ def run_gate_twice(p: Path, repeat: int, timeout: int):
     kind, detail = LV.gate_outcome(v)
     status = {"pass": "pass", "fail": "fail", "skip": "unverifiable",
               "inconclusive": "unverifiable"}[kind]
-    gate = ("gate", status, detail or f"verdict {v!r}")
+    _gd = detail or f"verdict {v!r}"
+    if status == "unverifiable":       # a missing toolchain and a HANG are different remedies
+        _gd = _u("NO_TOOLCHAIN" if kind == "skip" else "HANG", _gd)
+    gate = ("gate", status, _gd)
     if repeat < 2:
         return gate, ("determinism_repeat", "skip",
                       f"not requested (--repeat {repeat}); only the static marker scan ran")
     if p.suffix != ".py":
         return gate, ("determinism_repeat", "unverifiable",
-                      "repeat-run comparison implemented for python only")
+                      _u("NO_REPEAT_RUNNER",
+                         "repeat-run comparison implemented for python only"))
     if status != "pass":
         return gate, ("determinism_repeat", "skip", "gate did not pass; nothing to compare")
     outs = []
@@ -536,7 +754,8 @@ def run_gate_twice(p: Path, repeat: int, timeout: int):
                                timeout=timeout, start_new_session=True)
             outs.append(r.stdout)
         except Exception as e:
-            return gate, ("determinism_repeat", "unverifiable", f"repeat run failed: {e}")
+            return gate, ("determinism_repeat", "unverifiable",
+                          _u("REPEAT_ERROR", f"repeat run failed: {e}"))
     if len(set(outs)) > 1:
         return gate, ("determinism_repeat", "fail",
                       f"{repeat} runs produced {len(set(outs))} different outputs")
@@ -688,8 +907,10 @@ def index_parity(files):
     txt = idx.read_text(encoding="utf-8", errors="replace")
     present = set()
     for p in files:
-        rel = str(p.relative_to(ROOT))
-        if rel in txt or p.name in txt:
+        # FULL RELATIVE PATH ONLY. `p.name in txt` was a substring match: "sha256.rs" is a
+        # substring of "hmac_sha256.rs", so a missing file could be covered by a different
+        # file's entry -- a false pass, and the library has three such collisions (4Q D3).
+        if str(p.relative_to(ROOT)) in txt:
             present.add(p)
     return present, None
 
@@ -763,9 +984,14 @@ def main():
     roles = role_index(files, lane_of, mf)
 
     import shutil as _sh
+    _self_md5 = hashlib.md5(Path(__file__).read_bytes()).hexdigest()
+    _run_started = datetime.now(timezone.utc).isoformat()
+    RUN_ID = f"{_run_started[:19].replace(':', '').replace('-', '')}-{_self_md5[:8]}"
     header = {"run": {
         "tool": "library_audit.py",
-        "run_date": datetime.now(timezone.utc).isoformat(),
+        "run_id": RUN_ID,
+        "tool_md5": _self_md5,
+        "run_date": _run_started,
         "host": subprocess.run(["hostname"], capture_output=True, text=True).stdout.strip(),
         "root": str(ROOT),
         "manifest_sha256": hashlib.sha256(mf_bytes).hexdigest() if mf_bytes else None,
@@ -779,6 +1005,19 @@ def main():
             "On .8 ONLY: total_signed_files / multi_language_patterns / languages_present. "
             ".8's MANIFEST.json is 7 commits behind .5's corrected one. On .5 the census is "
             "GREEN and ANY mismatch here is real."],
+        "analyser_coverage": {k: list(v) for k, v in ANALYSER_COVERAGE.items()},
+        "unverifiable_taxonomy": {
+            "subclasses": {k: {"name": v[0], "remedy": v[1]}
+                           for k, v in SUBCLASS_REMEDY.items()},
+            "reason_codes": REASON_SUBCLASS,
+            "dispositions": list(DISPOSITIONS),
+            "per_subclass_dispositions": {k: list(v)
+                                          for k, v in SUBCLASS_DISPOSITIONS.items()},
+            "source": "6E, REPORT-6E-TRIAGE-TAXONOMY.md, 2026-08-30",
+            "note": "PARSE_FAIL is a FAIL, not UNVERIFIABLE (a malformed file is "
+                    "measured-and-wrong). STRUCTURAL GUARD ONLY: all 676 python files parse, "
+                    "so it changes zero records today.",
+        },
         "coverage_gaps": {
             "python_only_checks": ["assert_nonvacuous", "importable", "deps", "doc_behavior",
                                    "determinism_repeat"],
@@ -842,7 +1081,7 @@ def main():
             if st_ == "flag":
                 near_dup_advisory.append({"path": str(p.relative_to(ROOT)), "detail": dt_})
             if present is None:
-                checks.append(("index_parity", "unverifiable", idx_err))
+                checks.append(("index_parity", "unverifiable", _u("NO_INDEX", idx_err)))
             elif p in present:
                 checks.append(("index_parity", "pass", "listed in PATTERNS_INDEX.md"))
             else:
@@ -862,8 +1101,21 @@ def main():
                 check_counts[name][status] += 1
             nonpass = [(n, s, d) for n, s, d in checks if s in ("fail", "flag", "unverifiable")]
             role, source_id, multi_src = roles.get(p, ("unknown", None, False))
+            # 6E section 3: the triage session must be possible WITHOUT reopening the
+            # file. That needs the unverifiable checks grouped, each with a machine-readable
+            # reason code and subclass, and the remedy pre-derived. `detail` is prose and
+            # must never be the triage key.
+            _unv, _subs = [], set()
+            for _n, _st, _d in checks:
+                if _st != "unverifiable":
+                    continue
+                _c, _sub = reason_of(_d)
+                _unv.append({"name": _n, "reason_code": _c, "subclass": _sub})
+                if _sub:
+                    _subs.add(_sub)
             rec = {
                 "pattern_id": p.stem,
+                "run_id": RUN_ID,
                 "role": role,
                 "source_id": source_id,
                 "multi_source": multi_src,
@@ -876,6 +1128,13 @@ def main():
                 "evidence": "; ".join(f"{n}: {d}" for n, s, d in nonpass)[:1200],
                 "triage_owner": sorted({TRIAGE_OWNER.get(n, "6E") for n, s, _ in nonpass
                                         if s in ("fail", "flag")}) or None,
+                "unverifiable_checks": _unv or None,
+                "unverifiable_subclass": sorted(_subs) or None,
+                "remedy": sorted({SUBCLASS_REMEDY[x][1] for x in _subs}) or None,
+                # Filled by a triage session, never by this tool. One of DISPOSITIONS, and
+                # WAIVE additionally requires a disposition_ref (6E).
+                "disposition": None,
+                "disposition_ref": None,
                 "needs_judgement": any(s in ("flag", "unverifiable") for _, s, _ in checks),
                 # 6E: PASS must never be read as "clean". These classes were never assessed
                 # for ANY pattern, so they are stated on every record, not just the flagged.
@@ -1059,6 +1318,32 @@ SELFTEST_CASES = [
      "package main\nvar p = \"/home/au/x\"\n", "flag"),
     ("F8 hollow: a non-python lane with NO assertion is flagged", check_hollow, "cpp",
      "int main(){ return 0; }\n", "flag"),
+    # ---- 4Q round 2. F1 was LIVE: 38 assertions and 6 unwrap() hidden across 3 shipping
+    # rust files, and `dangerous` returned a false `pass`. -----------------------------
+    ("F1 rust: a &'static LIFETIME is not a string opener", check_hollow, "rust",
+     "fn parse(d: &'static str) -> bool { assert!(!d.is_empty()); true }\n", "pass"),
+    ("F1 rust: a lifetime does not swallow the code after it", check_dangerous, "rust",
+     "fn f(d: &'static str) { let x: u8 = d.parse().unwrap(); }\n", "flag"),
+    ("F1 rust: a real CHAR literal is still a literal", check_dangerous, "rust",
+     "fn f() { let c = '@'; let s = \"unwrap()\"; }\n", "pass"),
+    ("F1 rust: an escaped char literal is still a literal", check_dangerous, "rust",
+     "fn f() { let c = '\\n'; let s = \"unwrap()\"; }\n", "pass"),
+    ("F2 cpp: a RAW STRING with embedded quotes does not leak as code", check_dangerous,
+     "cpp", 'const char* x = R"("system(1)")";\nint main(){return 0;}\n', "pass"),
+    ("F2 cpp: real code after a raw string is still seen", check_dangerous, "cpp",
+     'const char* x = R"(hi)";\nint main(){ system("ls"); }\n', "flag"),
+    # Single line ON PURPOSE: the string scanner stops at a newline, so a two-line fixture
+    # could not detect the regex handling being removed -- the mutant SURVIVED it.
+    ("F4 js: a REGEX LITERAL containing quotes does not swallow the REST OF ITS LINE",
+     check_dangerous, "javascript", "var x = /['\"]/g; var y = eval('1');\n", "flag"),
+    ("F3 go: a dangerous name in an IMPORT-LINE COMMENT is not a finding", check_dangerous,
+     "go", 'package main\nimport "fmt" // uses crypto/md5 for hashing\n', "pass"),
+    ("F3 go: a real dangerous import is still a finding", check_dangerous, "go",
+     'package main\nimport "crypto/md5"\n', "flag"),
+    ("F5 abs_path: a quoted path inside a COMMENT is not a hardcoded path", check_abs_paths,
+     "python", '# the config is at "/home/au/x"\nx = 1\n', "pass"),
+    ("F5 abs_path: a quoted path in real CODE still is", check_abs_paths, "python",
+     'p = "/home/au/x"\n', "flag"),
     ("F8 assert: `assert False` outside try/except is still a marker",
      check_assert_nonvacuous, "python", "x = 1\nassert False, 'unreachable'\n", "pass"),
 ]
@@ -1066,6 +1351,7 @@ SELFTEST_CASES = [
 
 def self_test() -> int:
     fails = []
+    nprobe = [0]          # counted, never computed -- see D1 (4Q round 3)
     print("library_audit self-test — both arms of every check\n")
     for label, fn, lane, src, expect in SELFTEST_CASES:
         tree = None
@@ -1079,6 +1365,7 @@ def self_test() -> int:
         except Exception as e:
             status, detail = f"CRASH:{type(e).__name__}", str(e)
         ok = (status == expect)
+        nprobe[0] += 1
         if not ok:
             fails.append(label)
         print(f"  {'ok  ' if ok else 'FAIL'}  {label}\n"
@@ -1095,6 +1382,7 @@ def self_test() -> int:
     for label, checks, expect in agg:
         got = verdict_for(checks)
         ok = got == expect
+        nprobe[0] += 1
         if not ok:
             fails.append("verdict: " + label)
         print(f"  {'ok  ' if ok else 'FAIL'}  verdict: {label} -> {got}")
@@ -1120,6 +1408,7 @@ def self_test() -> int:
                              and dm[d / "a.py"][0] == "fail"),
                             ("duplicate: the distinct file is NOT accused",
                              dm.get(d / "c.py", ("skip", ""))[0] in ("skip", "pass"))):
+            nprobe[0] += 1
             if not cond:
                 fails.append(label)
             print(f"  {'ok  ' if cond else 'FAIL'}  {label}")
@@ -1135,6 +1424,26 @@ def self_test() -> int:
               st == "unverifiable")]
 
     # 4Q D2 -- a CODE line mentioning AE1. must survive normalisation
+    # Behavioural, not a grep of my own source: an index that lists ONLY hmac_sha256.rs
+    # must not make sha256.rs count as present. Both names really exist in the library.
+    with tempfile.TemporaryDirectory() as td:
+        r2 = Path(td)
+        (r2 / "rust").mkdir()
+        a2 = r2 / "rust" / "sha256.rs"
+        b2 = r2 / "rust" / "hmac_sha256.rs"
+        a2.write_text("x", encoding="utf-8")
+        b2.write_text("x", encoding="utf-8")
+        (r2 / "PATTERNS_INDEX.md").write_text("- rust/hmac_sha256.rs\n", encoding="utf-8")
+        _k, ROOT = ROOT, r2
+        try:
+            pres, _err = index_parity([a2, b2])
+        finally:
+            ROOT = _k
+        extra.append(("4Q D3: a name that is a SUBSTRING of a listed file is not counted "
+                      "present", b2 in pres and a2 not in pres))
+    _d2b = _norm_source("*ptr = AE1.value\n# △ AURA Pattern Library AE1.abc\n", "cpp")
+    extra.append(("4Q D2: a *-prefixed CODE line containing AE1. survives",
+                  "AE1.value" in _d2b and "AURA Pattern Library" not in _d2b))
     _d2 = _norm_source("cipher = AE1.encrypt(data)\n# △ AURA Pattern Library AE1.abc\n",
                        "python")
     extra.append(("D2: _norm_source keeps a CODE line containing AE1. but drops the mark",
@@ -1261,6 +1570,155 @@ def self_test() -> int:
         finally:
             DF_FRACTION = _keep
 
+    # ---- 4Q round 3. Each was a live or demonstrated defect; both arms, always.
+    _rs = 'fn main() { let s = r#"a "unwrap()" b"#; let v: Vec<i32> = w.unwrap(); }'
+    _rst = strip_noncode(_rs, "rust")[0]
+    extra.append(("F1 rust raw string r#\"..\"# with embedded quotes does not leak as code",
+                  _rst.count("unwrap") == 1))
+    extra.append(("F1 the REAL unwrap() beside it still survives", "w.unwrap()" in _rst))
+    _rst2 = strip_noncode('fn f() { let s = r"plain unsafe"; unsafe { g(); } }', "rust")[0]
+    extra.append(("F1 rust plain raw string r\"..\" is stripped, real unsafe survives",
+                  _rst2.count("unsafe") == 1))
+
+    _br = 'fn main() { let s = br#"a "unwrap()" b"#; let v = w.unwrap(); }'
+    extra.append(("4Q-S2 rust BYTE raw string br#\"..\"# does not leak as code",
+                  strip_noncode(_br, "rust")[0].count("unwrap") == 1))
+    extra.append(("4Q-S2 br\"..\" without # delimiters is still stripped",
+                  strip_noncode('fn f() { let s = br"x unsafe"; unsafe { g(); } }',
+                                "rust")[0].count("unsafe") == 1))
+    _dot = "." + "return" + " " * 26 + "/x/"
+    extra.append(("4Q-S1 `.return` at the 32-char window edge is a PROPERTY ACCESS, not the "
+                  "keyword — the boundary guard must reject it",
+                  not _js_regex_after_kw(_dot, 33)))
+    extra.append(("4Q-S1 a bare `return` at the same window edge IS the keyword",
+                  _js_regex_after_kw(";" + "return" + " " * 26 + "/x/", 33)))
+
+    _cpp = '#include <cstdlib> /* uses system() */\nint main(){ return 0; }\n'
+    extra.append(("F2 a /* */ comment on a restored #include line does not leak",
+                  "system(" not in strip_noncode(_cpp, "cpp")[0]))
+    extra.append(("F2 the #include itself is still restored",
+                  "cstdlib" in strip_noncode(_cpp, "cpp")[0]))
+
+    _js = "function f() { return /['\"]/g; eval('1'); }\n"
+    extra.append(("F3 a JS regex after `return` does not swallow the code after it",
+                  "eval(" in strip_noncode(_js, "javascript")[0]))
+    extra.append(("F3 a JS DIVISION after an identifier is still not read as a regex",
+                  "eval(" in strip_noncode("var r = a / b; eval('1');\n", "javascript")[0]))
+
+    _go = 'package main\nimport "http://example.com/exec"\n'
+    extra.append(("F5 an import path containing // is not truncated at it",
+                  "exec" in strip_noncode(_go, "go")[0]))
+    extra.append(("F5 a REAL // comment on an import line is still stripped",
+                  "crypto/md5" not in
+                  strip_noncode('package main\nimport "fmt" // crypto/md5\n', "go")[0]))
+
+    extra.append(("F4 a KNOWN_FINDING flags the LANE it was verified in",
+                  check_known_findings("", "python", None,
+                                       stem="atomic_snapshot")[1] == "flag"))
+    extra.append(("F4 it does NOT flag the same stem in an unverified lane",
+                  check_known_findings("", "go", None,
+                                       stem="atomic_snapshot")[1] == "pass"))
+
+    # ---- 6E: the EXHAUSTIVE (check x lane) matrix. Every cell, every run.
+    _SAMPLE = {
+        "python": "def f(x):\n    return x\n\n\nassert f(1) == 1\n",
+        "cpp": "#include <cassert>\nint main(){ assert(1 == 1); return 0; }\n",
+        "go": "package main\n\nimport \"fmt\"\n\nfunc main(){ fmt.Print(1) }\n",
+        "rust": "fn main() { assert!(1 == 1); }\n",
+        "r": "stopifnot(1 == 1)\n",
+        "javascript": "if (1 !== 1) { throw new Error(\"x\"); }\n",
+        "cobol": "IDENTIFICATION DIVISION.\n",      # a lane the tool has never heard of
+    }
+    # Positive samples: each must trip the check it is aimed at. A dirty sample carries a
+    # dangerous primitive, a nondeterminism marker AND an absolute path, so one sample serves
+    # the three all-lane checks; `hollow` needs the opposite (a file with no assertion), and
+    # the python-only checks each need their own defect.
+    _DIRTY = {
+        "python": 'import random\nx = random.random()\neval("1")\np = "/home/u/f"\n',
+        "cpp": '#include <cstdlib>\nint main(){ system("x"); rand();\n'
+               '  const char* p = "/home/u/f"; return 0; }\n',
+        "go": 'package main\n\nimport (\n\t"os/exec"\n\t"math/rand"\n)\n\n'
+              'func main(){ p := "/home/u/f"; _ = p }\n',
+        "rust": 'fn main() { unsafe { g(); } let x = rand::random::<u8>();\n'
+                '  let p = "/home/u/f"; }\n',
+        "r": 'x <- runif(1)\nsystem("ls")\np <- "/home/u/f"\n',
+        "javascript": 'eval("1");\nconst x = Math.random();\nconst p = "/home/u/f";\n',
+    }
+    _NOASSERT = {
+        "python": "def f():\n    return 1\n",
+        "cpp": "int main(){ return 0; }\n",
+        "go": "package main\n\nfunc main(){ }\n",
+        "rust": "fn main() { }\n",
+        "r": "f <- function(x) x\n",
+        "javascript": "function f(){ return 1; }\n",
+    }
+    _PY_POSITIVE = {"assert_nonvacuous": "assert 1 == 1\n", "importable": "print(1)\n",
+                    "deps": "import numpy\n", "doc_behavior": "x = 1\n"}
+    _byname = {f.__name__: f for f in FILE_CHECKS}
+    _cells = _gaps = 0
+    for _cname, _lanes in sorted(ANALYSER_COVERAGE.items()):
+        _fn = next(f for f in FILE_CHECKS if f(_SAMPLE["python"], "python",
+                                               ast.parse(_SAMPLE["python"]))[0] == _cname)
+        for _lane in list(LANES) + ["cobol"]:
+            _cells += 1
+            _tree = ast.parse(_SAMPLE[_lane]) if _lane == "python" else None
+            try:
+                _n, _st, _d = _fn(_SAMPLE[_lane], _lane, _tree)
+            except Exception as _e:
+                extra.append((f"MATRIX {_cname} x {_lane}: CRASHED ({type(_e).__name__})",
+                              False))
+                continue
+            _code, _sub = reason_of(_d) if _st == "unverifiable" else (None, None)
+            if _lane in _lanes:
+                extra.append((f"MATRIX {_cname} x {_lane}: an analyser is declared, so it "
+                              f"must NOT report U1 no-analyser (got {_st}/{_code})",
+                              not (_st == "unverifiable" and _sub == "U1")))
+                # POSITIVE ARM (6E conformance pass, 2026-08-30). The clean arm above only
+                # says the cell is not U1 -- and `pass` is not U1 either, so a cell that
+                # measures NOTHING sailed through it. 10 of 28 covered cells had no probe
+                # that could tell "analysed and found nothing" from "did not analyse".
+                # Feed each covered cell something it MUST catch.
+                if _cname == "hollow":
+                    _pos = _NOASSERT[_lane]
+                elif _cname in _PY_POSITIVE:
+                    _pos = _PY_POSITIVE[_cname]
+                else:
+                    _pos = _DIRTY[_lane]
+                _pt = ast.parse(_pos) if _lane == "python" else None
+                try:
+                    _, _pst, _pd = _fn(_pos, _lane, _pt)
+                except Exception as _e:
+                    _pst, _pd = f"CRASH:{type(_e).__name__}", str(_e)
+                extra.append((f"MATRIX+ {_cname} x {_lane}: the analyser must actually "
+                              f"MEASURE — a sample it should catch must not come back pass "
+                              f"(got {_pst}: {_pd[:60]})", _pst in ("flag", "fail")))
+            else:
+                _gaps += 1
+                extra.append((f"MATRIX {_cname} x {_lane}: NO analyser declared, so it must "
+                              f"be unverifiable/U1 and never pass (got {_st}/{_code})",
+                              _st == "unverifiable" and _sub == "U1"))
+    extra.append((f"MATRIX is exhaustive: {_cells} cells covered "
+                  f"({len(ANALYSER_COVERAGE)} checks x {len(LANES) + 1} lanes), "
+                  f"{_gaps} of them declared analyser-less",
+                  _cells == len(ANALYSER_COVERAGE) * (len(LANES) + 1) and _gaps > 0))
+
+    # every unverifiable detail in the tool must carry a reason code -- prose is not a key
+    extra.append(("every unverifiable return carries a [REASON_CODE]",
+                  all(reason_of(_u(_c, "x"))[0] == _c for _c in REASON_SUBCLASS)))
+    try:
+        _u("NOT_A_REAL_CODE", "x"); _bad = True
+    except KeyError:
+        _bad = False
+    extra.append(("_u REFUSES an undeclared reason code (a new unverifiable path cannot "
+                  "enter without naming its remedy)", not _bad))
+    extra.append(("an untagged detail yields no subclass, so it cannot be silently triaged",
+                  reason_of("plain prose") == (None, None)))
+    extra.append(("every subclass has a remedy and a disposition set",
+                  set(SUBCLASS_REMEDY) == set(SUBCLASS_DISPOSITIONS)
+                  == set(REASON_SUBCLASS.values())))
+    extra.append(("every per-subclass disposition is in the closed DISPOSITIONS set",
+                  all(d in DISPOSITIONS for v in SUBCLASS_DISPOSITIONS.values() for d in v)))
+
     _off, _on = _df_arm(1.0), _df_arm(0.10)
     extra.append((f"DF filter NEGATIVE ARM: without it, harness-sharing files ARE falsely "
                   f"linked ({_off}/20)", _off >= 15))
@@ -1268,11 +1726,12 @@ def self_test() -> int:
 
     print()
     for label, cond in extra:
+        nprobe[0] += 1
         if not cond:
             fails.append(label)
         print(f"  {'ok  ' if cond else 'FAIL'}  {label}")
 
-    print(f"\n{len(SELFTEST_CASES) + len(agg) + 2 + len(extra)} probe(s), {len(fails)} failure(s)")
+    print(f"\n{nprobe[0]} probe(s), {len(fails)} failure(s)")
     for f in fails:
         print("   FAILED:", f)
     return 1 if fails else 0
