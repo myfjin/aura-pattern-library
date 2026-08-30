@@ -144,7 +144,10 @@ ANALYSER_COVERAGE = {
     "assert_nonvacuous":    ("python",),    # python AST only
     "importable":           ("python",),    # python AST only
     "deps":                 ("python",),    # python AST only
-    "doc_behavior":         ("python",),    # the description slot differs per language
+    # ROUND 19: the description SLOT differs per language, but it is a lexical fact in each,
+    # and build_patterns_index's frozen ruler already reads all six for PATTERNS_INDEX.md.
+    # This was one of the four U1 sources that made every non-python pattern UNVERIFIABLE.
+    "doc_behavior":         LANES,
 }
 
 
@@ -996,9 +999,33 @@ def check_doc_behavior(text, lane, tree):
         return ("doc_behavior", "skip",
                 f"docstring present ({len(d)} chars); code-vs-claim is judgement (6E C7), "
                 "not tool-decidable")
-    return ("doc_behavior", "unverifiable",
-            _u("NO_DOC_SLOT", f"description slot differs per language; not implemented "
-               f"for '{lane}'"))
+    # ⛔ ROUND 19 — 824 patterns used to get NO_DOC_SLOT here, one of the four U1 sources that
+    # made every non-python pattern UNVERIFIABLE. 6E's round-18 design answer: this check only
+    # asks "is there a description to judge?", which is a LEXICAL fact per language, needing no
+    # parser. It does not need writing either -- `build_patterns_index.extract_claim` is the
+    # FROZEN RULER that already reads descriptions out of these exact files for
+    # PATTERNS_INDEX.md, in all six languages. Growing a second description-finder here would
+    # have produced two definitions of "has a description" that drift; this asks the same
+    # question the index asks, so the audit and the index cannot disagree by construction.
+    # A lane outside the six has no description slot DEFINED, so it stays U1 -- the coverage
+    # matrix caught me answering `fail` for a cobol fixture, which would have claimed the file
+    # has no description when the truth is that nobody has said where one would live.
+    if lane not in LANES:
+        return ("doc_behavior", "unverifiable",
+                _u("NO_DOC_SLOT", f"no description slot is defined for lane '{lane}'"))
+    try:
+        import build_patterns_index as _BPI
+        claim = _BPI.extract_claim_text(text, lane)
+    except Exception as _e:                       # never let a helper import fake a measurement
+        return ("doc_behavior", "unverifiable",
+                _u("NO_DOC_SLOT", f"the frozen ruler could not be applied to '{lane}': {_e}"))
+    if not claim:
+        return ("doc_behavior", "fail",
+                "no description in this language's slot — nothing states what it does "
+                "(same ruler PATTERNS_INDEX.md uses)")
+    return ("doc_behavior", "skip",
+            f"description present ({len(claim)} chars); code-vs-claim is judgement (6E C7), "
+            "not tool-decidable")
 
 
 # ⛔ KEYED BY (stem, LANE), NOT BY STEM. 6E verified these by reading the PYTHON files;
@@ -1907,7 +1934,34 @@ SELFTEST_CASES = [
     ("doc: missing module docstring is a FAIL", check_doc_behavior, "python", "x = 1\n", "fail"),
     ("doc: present docstring is SKIP (judgement, not decidable)", check_doc_behavior, "python",
      "'''does a thing.'''\nx = 1\n", "skip"),
-    ("doc: non-python is UNVERIFIABLE not pass", check_doc_behavior, "cpp", "// x", "unverifiable"),
+    # ⛔ ROUND 19 — this slot held `("doc: non-python is UNVERIFIABLE not pass", ... "cpp",
+    # "// x", "unverifiable")`, a probe that asserted the LIMITATION. It passed for sixteen
+    # rounds and defended nothing except the gap itself. Both arms, every lane, now:
+    ("R19 doc cpp: the description is the /* */ block after the watermark", check_doc_behavior,
+     "cpp", 'static const char *_aura_mark = "AE1.x";\n/* Computes a rolling hash. */\n'
+     '#include <cstdio>\n', "skip"),
+    ("R19 doc cpp NEGATIVE ARM: includes alone are structural, not a description",
+     check_doc_behavior, "cpp", '#include <cstdio>\nint main(){ return 0; }\n', "fail"),
+    ("R19 doc go: the // block after the imports, before the watermark", check_doc_behavior,
+     "go", 'package main\n\nimport "fmt"\n\n// Counts distinct items.\nfunc main(){}\n',
+     "skip"),
+    ("R19 doc go NEGATIVE ARM: package and import lines are structural", check_doc_behavior,
+     "go", 'package main\n\nimport "fmt"\n\nfunc main(){ fmt.Println(1) }\n', "fail"),
+    ("R19 doc rust: the // block after the use lines", check_doc_behavior, "rust",
+     'use std::io;\n// Parses a URL authority.\nfn f(){}\n', "skip"),
+    ("R19 doc rust NEGATIVE ARM: use lines are structural", check_doc_behavior, "rust",
+     'use std::io;\nfn f(){}\n', "fail"),
+    ("R19 doc r: the # block at the top", check_doc_behavior, "r",
+     '# Fits a linear model.\nf <- function(x) x\n', "skip"),
+    ("R19 doc r NEGATIVE ARM: no comment block at all", check_doc_behavior, "r",
+     'f <- function(x) x\n', "fail"),
+    ("R19 doc js: the leading /** */ JSDoc block", check_doc_behavior, "javascript",
+     '/** Debounces a callback. */\nfunction d(){}\n', "skip"),
+    ("R19 doc js NEGATIVE ARM: a @forge-family TAG is provenance, not a description",
+     check_doc_behavior, "javascript", '// @forge-family debounce\nfunction d(){}\n', "fail"),
+    ("R19 doc: a lane with NO slot defined stays U1 — answering `fail` there would claim the "
+     "file has no description when the truth is nobody has said where one lives",
+     check_doc_behavior, "cobol", "       IDENTIFICATION DIVISION.\n", "unverifiable"),
 
     # ---- 4Q round-1 findings F1-F7: every one gets a probe so it cannot come back -------
     ("F1 determinism: bare random.seed() is NOT reproducible", check_determinism_markers,

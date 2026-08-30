@@ -60,7 +60,16 @@ def is_structural(line, lang):
 
 
 def extract_claim(path, lang):
-    text = open(path, encoding="utf-8", errors="replace").read()
+    return extract_claim_text(open(path, encoding="utf-8", errors="replace").read(), lang)
+
+
+def extract_claim_text(text, lang):
+    """THE FROZEN RULER, taking source text instead of a path.
+
+    Split out so `library_audit.check_doc_behavior` can ask the SAME question the index asks,
+    rather than growing a second description-finder that would drift from this one. There is
+    exactly one definition of 'this file has a description' and it lives here.
+    """
     if lang == "python":
         try:
             tree = ast.parse(text)
