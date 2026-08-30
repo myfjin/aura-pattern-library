@@ -230,7 +230,7 @@ _IMPORT_LINE = {
 # A regex literal is also legal directly after these keywords, where `prev_sig` is the last
 # LETTER of the keyword and so never matched the operator set (4Q round 3, F3).
 _JS_RE_KW = re.compile(
-    r"(?:^|[^\w$.])(return|typeof|case|delete|void|instanceof|in|of|new|do|else|yield|await)"
+    r"(?:^|[^\w$.#])(return|typeof|case|delete|void|instanceof|in|of|new|do|else|yield|await)"
     r"\s*$")
 
 
@@ -239,7 +239,7 @@ def _js_regex_after_kw(text: str, i: int) -> bool:
     m = _JS_RE_KW.search(text[lo:i])
     if not m:
         return False
-    if m.start(1) == 0 and lo > 0 and (text[lo - 1].isalnum() or text[lo - 1] in "_$."):
+    if m.start(1) == 0 and lo > 0 and (text[lo - 1].isalnum() or text[lo - 1] in "_$.#"):
         return False                 # the window cut a longer identifier in half
     return True
 
@@ -1592,6 +1592,16 @@ def self_test() -> int:
                   not _js_regex_after_kw(_dot, 33)))
     extra.append(("4Q-S1 a bare `return` at the same window edge IS the keyword",
                   _js_regex_after_kw(";" + "return" + " " * 26 + "/x/", 33)))
+
+    _hash = "#" + "return" + " " * 26 + "/foo/"
+    extra.append(("4Q-S1 `#return` at the window edge is a PRIVATE FIELD, not the keyword",
+                  not _js_regex_after_kw(_hash, 33)))
+    extra.append(("4Q-S1 `#return` INSIDE the window is also not the keyword",
+                  not _js_regex_after_kw("x.#return /foo/", 10)))
+    extra.append(("4Q-S1 the private field does not swallow the code after it",
+                  "eval(" in strip_noncode(
+                      "#" + "return" + " " * 26 + "/foo; eval('1'); /bar/ x",
+                      "javascript")[0]))
 
     _cpp = '#include <cstdlib> /* uses system() */\nint main(){ return 0; }\n'
     extra.append(("F2 a /* */ comment on a restored #include line does not leak",
