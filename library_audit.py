@@ -53,6 +53,37 @@ EXT_LANE = {v: k for k, v in LANE_EXT.items()}
 VERDICTS = ("NO_FINDING", "FAIL", "FLAG", "UNVERIFIABLE", "SKIP")
 STATUSES = ("pass", "fail", "flag", "unverifiable", "skip")
 
+# ⛔ 4Q round 8, F1: THREE places each hardcoded their own idea of which statuses are clean
+# (`triage_fields`, the invariant probe loop, `verdict_for`). That is the exact shape of the
+# round-7 U3 bug: a value added to the enum and forgotten in one consumer routes a real
+# finding to nobody. There is now ONE partition; every consumer derives from it, and a
+# status that belongs to no part cannot reach runtime -- the import fails.
+CLEAN_STATUSES = ("pass", "skip")            # nothing found, nothing to route
+FINDING_STATUSES = ("fail", "flag")          # a human must read the pattern
+UNMEASURED_STATUSES = ("unverifiable",)      # the tool could not look at all
+# a second, orthogonal partition: what the coverage counters divide the checks into
+MEASURED_STATUSES = ("pass", "fail", "flag")
+SKIPPED_STATUSES = ("skip",)
+# severity order -- first match wins in verdict_for
+STATUS_VERDICT = {"fail": "FAIL", "flag": "FLAG", "unverifiable": "UNVERIFIABLE"}
+
+def _partition_check():
+    for name, parts in (
+        ("routing", (CLEAN_STATUSES, FINDING_STATUSES, UNMEASURED_STATUSES)),
+        ("coverage", (MEASURED_STATUSES, UNMEASURED_STATUSES, SKIPPED_STATUSES)),
+    ):
+        seen = [x for part in parts for x in part]
+        if sorted(seen) != sorted(set(seen)) or set(seen) != set(STATUSES):
+            raise KeyError(
+                "STATUSES and the %s partition disagree (%r vs %r). A status must belong to "
+                "exactly one part of every partition, or a consumer will silently drop it."
+                % (name, sorted(set(STATUSES)), sorted(seen)))
+    if set(STATUS_VERDICT) | set(CLEAN_STATUSES) != set(STATUSES):
+        raise KeyError("every status needs a verdict or must be declared clean; missing %r"
+                       % sorted(set(STATUSES) - set(STATUS_VERDICT) - set(CLEAN_STATUSES)))
+
+_partition_check()
+
 # ================================================================= UNVERIFIABLE taxonomy
 # 6E, 2026-08-30: UNVERIFIABLE as ONE bucket is useless for triage -- "the tool has no R
 # analyser" and "this twin has no source" do not have the same remedy. Every unverifiable
@@ -727,7 +758,7 @@ KNOWN_FINDINGS = {
                         "duplicate of cow_backup — both are temp-write + atomic-rename. No "
                         "shingle statistic can find this (containment 0.87 sits inside the "
                         "false-positive range 0.81-0.94), so it is recorded here rather "
-                        "than lost to a silent PASS."),
+                        "than lost to a silent NO_FINDING."),
     ("cow_backup", "python"): ("flag", "6E verified BY READING (2026-08-30): a genuine SEMANTIC "
                    "duplicate of atomic_snapshot — both are temp-write + atomic-rename. "
                    "Recorded because the detector cannot derive it."),
@@ -736,7 +767,7 @@ KNOWN_FINDINGS = {
 
 def check_known_findings(text, lane, tree, stem=None):
     """Findings a human or model verified by READING, which the tool cannot derive itself.
-    Without this, a defect somebody already confirmed silently becomes a PASS."""
+    Without this, a defect somebody already confirmed silently becomes a NO_FINDING."""
     hit = KNOWN_FINDINGS.get((stem, lane))
     if hit:
         return ("known_finding", hit[0], hit[1])
@@ -938,29 +969,55 @@ def index_parity(files):
 
 
 # ================================================================= driver
+def _raises(fn, exc):
+    """A probe helper: did this call fail LOUDLY, the way it is supposed to?"""
+    try:
+        fn()
+    except exc:
+        return True
+    except Exception:
+        return False
+    return False
+
+
 def triage_fields(checks, subclasses):
     """How this record should be ROUTED. Ver finding 5: `needs_judgement` was true for
     `unverifiable` as well as `flag`, so a compiled-lane pattern whose only problem is a
     missing analyser was routed to a human reviewer. Building an analyser and reading a
     pattern are different work and belong in different fields."""
     subs = set(subclasses)
+    unknown = {c[1] for c in checks} - set(STATUSES)
+    if unknown:
+        # 4Q round 8, attack 3: an undeclared status escaped every counter and every
+        # routing rule at once. Loud beats silent.
+        raise KeyError("triage_fields: undeclared status %r -- add it to STATUSES and to "
+                       "both partitions" % sorted(unknown))
     out = {
         # U3 is PATHOLOGICAL -- the file blocked measurement, and deciding whether that is a
         # defect or a documented edge case is human work, not tool work (4Q round 7, F1).
-        "needs_human_judgement": any(c[1] in ("flag", "fail") for c in checks)
+        "needs_human_judgement": any(c[1] in FINDING_STATUSES for c in checks)
                                  or "U3" in subs,
         "needs_implementation": bool(subs & {"U1", "U2"}),
-        "checks_measured": sum(1 for c in checks if c[1] in ("pass", "fail", "flag")),
-        "checks_unmeasured": sum(1 for c in checks if c[1] == "unverifiable"),
+        "checks_measured": sum(1 for c in checks if c[1] in MEASURED_STATUSES),
+        "checks_unmeasured": sum(1 for c in checks if c[1] in UNMEASURED_STATUSES),
         # O1: `skip` belonged to neither counter, so measured/(measured+unmeasured)
         # overstated coverage. All three now sum to len(checks).
-        "checks_skipped": sum(1 for c in checks if c[1] == "skip"),
+        "checks_skipped": sum(1 for c in checks if c[1] in SKIPPED_STATUSES),
     }
     # ⛔ THE INVARIANT, not just the U3 patch. Anything that is not a clean pass or a
     # deliberate skip MUST reach someone. A future subclass added to REASON_SUBCLASS and
     # forgotten here would silently route to nobody -- which is how U3 got lost.
+    out["needs_routing"] = any(c[1] not in CLEAN_STATUSES for c in checks)
+    # ⛔ 4Q round 8, O1: an `unverifiable` check whose detail carries no reason code yields
+    # no subclass, so neither rule above claims it and the record reaches NOBODY. The
+    # invariant is now ENFORCED rather than merely asserted: an unowned record falls to a
+    # human, and says so, so the gap is visible instead of silent.
+    out["unowned_fallback"] = bool(
+        out["needs_routing"]
+        and not (out["needs_human_judgement"] or out["needs_implementation"]))
+    if out["unowned_fallback"]:
+        out["needs_human_judgement"] = True
     out["routed"] = out["needs_human_judgement"] or out["needs_implementation"]
-    out["needs_routing"] = any(c[1] not in ("pass", "skip") for c in checks)
     return out
 
 
@@ -971,14 +1028,17 @@ def clip_evidence(text, limit=1200):
 
 
 def verdict_for(checks):
+    # 4Q round 8, attack 5: this hardcoded the same status list a third time, so a new
+    # status fell through to the CLEAN verdict -- the worst possible default.
     st = {c[1] for c in checks}
-    if "fail" in st:
-        return "FAIL"
-    if "flag" in st:
-        return "FLAG"
-    if "unverifiable" in st:
-        return "UNVERIFIABLE"
-    if st <= {"skip"}:
+    unknown = st - set(STATUSES)
+    if unknown:
+        raise KeyError("verdict_for: undeclared status %r -- add it to STATUSES and to "
+                       "STATUS_VERDICT or CLEAN_STATUSES" % sorted(unknown))
+    for _s, _v in STATUS_VERDICT.items():        # insertion order == severity order
+        if _s in st:
+            return _v
+    if st <= set(SKIPPED_STATUSES):
         return "SKIP"
     return "NO_FINDING"
 
@@ -1077,7 +1137,7 @@ def main():
                                    "determinism_repeat"],
             "consequence": "A compiled-lane file (cpp/rust/go) aggregates to UNVERIFIABLE "
                            "because those AST checks cannot run on it — NOT because anything "
-                           "was found. It fails closed (never a false PASS), but the compiled "
+                           "was found. It fails closed (never a false NO_FINDING), but the compiled "
                            "lanes get materially less scrutiny than python.",
             "⛔ rule": "UNVERIFIABLE IS A FINDING, NOT A TOOL FOOTNOTE. If it is triaged as "
                        "'just a limitation', the compiled lanes are silently unverified and "
@@ -1669,10 +1729,47 @@ def self_test() -> int:
         extra.append((f"4Q-R7 a record whose only problem is {_sub} is ROUTED to someone, "
                       f"never dropped (human={_tfx['needs_human_judgement']} "
                       f"impl={_tfx['needs_implementation']})", _tfx["routed"]))
-    for _stat in ("fail", "flag", "unverifiable"):
+        # ⛔ and routed BY ITS OWN RULE. Without this clause the unowned backstop absorbs a
+        # deleted subclass rule and every probe above still passes -- measured: the
+        # mutation harness reported SURVIVED for "U3 dropped from routing".
+        extra.append((f"4Q-R8 {_sub} is claimed by its OWN routing rule, not swept up by "
+                      "the unowned backstop (which would hide the rule's removal)",
+                      not _tfx["unowned_fallback"]))
+    # 4Q round 8 F1: this loop used to hardcode the three non-clean statuses -- the same
+    # shape as the bug it exists to prevent. It is now derived from STATUSES, so a status
+    # added tomorrow is tested tomorrow.
+    for _stat in STATUSES:
+        if _stat in CLEAN_STATUSES:
+            continue
         _tfy = triage_fields([("a", "pass", ""), ("b", _stat, "")], {"U3"})
-        extra.append((f"4Q-R7 a record carrying a {_stat} check needs routing AND gets it",
+        extra.append((f"4Q-R8 a record carrying a {_stat} check needs routing AND gets it "
+                      "(loop derived from STATUSES, not hand-listed)",
                       _tfy["needs_routing"] and _tfy["routed"]))
+        _bare = triage_fields([("a", "pass", ""), ("b", _stat, "")], set())
+        extra.append((f"4Q-R8-O1 a {_stat} check with NO subclass at all still reaches a "
+                      "human (the unowned backstop), never nobody",
+                      _bare["routed"] and _bare["needs_human_judgement"]))
+    extra.append(("4Q-R8 the routing partition covers STATUSES exactly, so no status can "
+                  "belong to none of them",
+                  sorted(CLEAN_STATUSES + FINDING_STATUSES + UNMEASURED_STATUSES)
+                  == sorted(STATUSES)))
+    extra.append(("4Q-R8 the coverage partition covers STATUSES exactly",
+                  sorted(MEASURED_STATUSES + UNMEASURED_STATUSES + SKIPPED_STATUSES)
+                  == sorted(STATUSES)))
+    extra.append(("4Q-R8 a clean record does NOT trip the unowned backstop (it would route "
+                  "every pattern in the library to a human)",
+                  not triage_fields([("a", "pass", "")], set())["unowned_fallback"]))
+    extra.append(("4Q-R8 an undeclared status RAISES in triage_fields instead of escaping "
+                  "every counter",
+                  _raises(lambda: triage_fields([("a", "warn", "")], set()), KeyError)))
+    extra.append(("4Q-R8 an undeclared status RAISES in verdict_for instead of falling "
+                  "through to the clean verdict",
+                  _raises(lambda: verdict_for([("a", "warn", "")]), KeyError)))
+    extra.append(("4Q-R8 an unverifiable check with a U1 subclass still routes to "
+                  "IMPLEMENTATION, not to a human (the backstop did not swallow Ver-5)",
+                  triage_fields([("a", "unverifiable", "")], {"U1"})["needs_implementation"]
+                  and not triage_fields([("a", "unverifiable", "")],
+                                        {"U1"})["needs_human_judgement"]))
     _clean = triage_fields([("a", "pass", ""), ("b", "skip", "")], set())
     extra.append(("4Q-R7 a clean record needs NO routing (the invariant does not cry wolf)",
                   not _clean["needs_routing"] and not _clean["routed"]))
@@ -1682,11 +1779,19 @@ def self_test() -> int:
                   "ratio cannot overstate itself",
                   _tfm["checks_measured"] + _tfm["checks_unmeasured"]
                   + _tfm["checks_skipped"] == len(_mix)))
-    _needle = "A " + "PASS"
+    # 4Q round 8 F2: one hand-written needle ("A PASS") caught one phrasing and missed
+    # three others ("silent PASS", "becomes a PASS", "false PASS"). A needle is a guess.
+    # This walks EVERY string literal the module can emit -- comments are excluded by the
+    # parser, and a literal that discusses the rename must name the new verdict.
+    _P = "PA" + "SS"
     _selfsrc = Path(__file__).read_text(encoding="utf-8")
-    extra.append((f"Ver-1 no user-facing prose still says {_needle!r} after the rename "
-                  "(needle built at runtime so this probe cannot match its own source)",
-                  _needle not in _selfsrc))
+    _stale = sorted({(n.lineno, n.value[:70]) for n in ast.walk(ast.parse(_selfsrc))
+                     if isinstance(n, ast.Constant) and isinstance(n.value, str)
+                     and re.search(r"\b" + _P + r"\b", n.value)
+                     and "NO_FINDING" not in n.value})
+    extra.append(("Ver-1/4Q-R8-F2 NO string literal in this module still uses the old "
+                  "verdict name (ast walk over every literal, not one hand-written "
+                  "needle): %r" % (_stale[:3],), not _stale))
 
     _tf3 = triage_fields([("a", "flag", ""), ("b", "unverifiable", "")], {"U1"})
     extra.append(("Ver-5 a record that is BOTH needs both, not one or the other",
@@ -1694,8 +1799,8 @@ def self_test() -> int:
     extra.append(("Ver-6 the measured/unmeasured ratio is carried so a reader sees the gap "
                   "WITHOUT the verdict going green",
                   _tf["checks_measured"] == 1 and _tf["checks_unmeasured"] == 2))
-    extra.append(("Ver-6 a half-unmeasured record is still UNVERIFIABLE, never a PASS-shaped "
-                  "verdict (rejecting PASS_WITH_GAPS: it would soften the one signal 6E "
+    extra.append(("Ver-6 a half-unmeasured record is still UNVERIFIABLE, never a NO_FINDING "
+                  "(rejecting PASS_WITH_GAPS: it would soften the one signal 6E "
                   "built the taxonomy to protect)",
                   verdict_for(_cm) == "UNVERIFIABLE"))
     extra.append(("Ver-1 an all-clean record is NO_FINDING, not PASS",
