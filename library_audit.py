@@ -50,7 +50,19 @@ EXT_LANE = {v: k for k, v in LANE_EXT.items()}
 # check, and C1/C3/C11 were never assessed for ANY pattern. The disclosure existed per record
 # but a summary view shows the headline word, not the footnote. The word now matches the
 # measurement: no finding was made, which is not the same as nothing being wrong.
-VERDICTS = ("NO_FINDING", "FAIL", "FLAG", "UNVERIFIABLE", "SKIP")
+# ⛔ 2026-08-30, Illia: "UNVERIFIABLE" as a RECORD verdict described the TOOL, not the
+# pattern. All 729 of them ran 6-7 checks CLEAN and were unverifiable only on the three
+# python-AST checks; a clean cpp file read as UNVERIFIABLE while an identical python file
+# read as NO_FINDING. One enum was carrying two orthogonal facts -- WAS ANYTHING FOUND and
+# HOW MUCH OF THE SUITE RAN -- so no single word could be honest. They are now two axes and
+# the verdict is their COMPOUND. This does NOT reopen PASS_WITH_GAPS (Ver's ruling stands):
+# a partially-measured record never renders as a bare "NO_FINDING", because the coverage
+# half is part of the verdict string itself and cannot be dropped by a consumer that reads
+# only `verdict`.
+FINDINGS = ("NO_FINDING", "FAIL", "FLAG", "SKIP")
+COVERAGES = ("FULL", "PARTIAL", "NONE")
+# NONE coverage means nothing at all could be measured -- the ONLY honest use of the word.
+VERDICTS = tuple("%s/%s" % (f, c) for f in FINDINGS for c in COVERAGES)
 STATUSES = ("pass", "fail", "flag", "unverifiable", "skip")
 
 # ⛔ 4Q round 8, F1: THREE places each hardcoded their own idea of which statuses are clean
@@ -65,7 +77,9 @@ UNMEASURED_STATUSES = ("unverifiable",)      # the tool could not look at all
 MEASURED_STATUSES = ("pass", "fail", "flag")
 SKIPPED_STATUSES = ("skip",)
 # severity order -- first match wins in verdict_for
-STATUS_VERDICT = {"fail": "FAIL", "flag": "FLAG", "unverifiable": "UNVERIFIABLE"}
+# severity order for the FINDING axis only. `unverifiable` is deliberately absent: it is
+# a coverage fact, not a finding, and routing it here is what produced the wrong label.
+STATUS_VERDICT = {"fail": "FAIL", "flag": "FLAG"}
 
 def _partition_check():
     for name, parts in (
@@ -78,9 +92,11 @@ def _partition_check():
                 "STATUSES and the %s partition disagree (%r vs %r). A status must belong to "
                 "exactly one part of every partition, or a consumer will silently drop it."
                 % (name, sorted(set(STATUSES)), sorted(seen)))
-    if set(STATUS_VERDICT) | set(CLEAN_STATUSES) != set(STATUSES):
-        raise KeyError("every status needs a verdict or must be declared clean; missing %r"
-                       % sorted(set(STATUSES) - set(STATUS_VERDICT) - set(CLEAN_STATUSES)))
+    _declared = set(STATUS_VERDICT) | set(CLEAN_STATUSES) | set(UNMEASURED_STATUSES)
+    if _declared != set(STATUSES):
+        raise KeyError("every status needs a finding verdict, or must be declared clean, or "
+                       "must be declared unmeasured; missing %r"
+                       % sorted(set(STATUSES) - _declared))
 
 _partition_check()
 
@@ -1405,20 +1421,76 @@ def clip_evidence(text, limit=1200):
     return text if len(text) <= limit else text[:limit - len(mark)] + mark
 
 
-def verdict_for(checks):
+def _statuses_of(checks):
     # 4Q round 8, attack 5: this hardcoded the same status list a third time, so a new
     # status fell through to the CLEAN verdict -- the worst possible default.
     st = {c[1] for c in checks}
     unknown = st - set(STATUSES)
     if unknown:
-        raise KeyError("verdict_for: undeclared status %r -- add it to STATUSES and to "
-                       "STATUS_VERDICT or CLEAN_STATUSES" % sorted(unknown))
+        raise KeyError("undeclared status %r -- add it to STATUSES and to STATUS_VERDICT, "
+                       "CLEAN_STATUSES or UNMEASURED_STATUSES" % sorted(unknown))
+    return st
+
+
+def finding_for(checks):
+    """The FINDING axis: was anything actually found among the checks that RAN?
+
+    Never returns a coverage answer. A check that could not run contributes NOTHING here --
+    that is the whole point of the split. It cannot manufacture a finding, and it cannot
+    hide one either, because the coverage axis is reported alongside it and is mandatory.
+    """
+    st = _statuses_of(checks)
     for _s, _v in STATUS_VERDICT.items():        # insertion order == severity order
         if _s in st:
             return _v
     if st <= set(SKIPPED_STATUSES):
         return "SKIP"
     return "NO_FINDING"
+
+
+def coverage_for(checks):
+    """The COVERAGE axis: how much of the suite could actually look at this file?
+
+    FULL    every check that was requested returned a measurement.
+    PARTIAL at least one check ran and at least one could not.
+    NONE    nothing could be measured -- the only state that deserves the word
+            UNVERIFIABLE, and the only one where the tool truly knows nothing.
+    """
+    st = _statuses_of(checks)
+    unmeasured = st & set(UNMEASURED_STATUSES)
+    measured = st & set(MEASURED_STATUSES)
+    if not unmeasured:
+        return "FULL"
+    return "PARTIAL" if measured else "NONE"
+
+
+def coverage_exit_code(records, acknowledged):
+    """Should this run be allowed to exit 0? Returns (code, the records that block it).
+
+    ⛔ EXTRACTED BECAUSE A MUTANT SURVIVED. Disarming this guard while it lived inline in
+    `main()` changed no probe: I had only ever checked the exit code BY HAND. That is the
+    same defect Ver found in `triage_fields` -- a decision computed inline in main() is a
+    decision no probe can reach -- and it recurred here because a hand-run FEELS like a test.
+
+    6E's rule is what this enforces: a coverage gap is a FINDING, not a footnote. A run must
+    not go green while any record is less than FULLY covered, unless a human says out loud
+    that they looked. It deliberately does NOT read `disposition`.
+    """
+    blocking = [r for r in records if r.get("coverage") != "FULL"]
+    return (2 if blocking and not acknowledged else 0), blocking
+
+
+def verdict_for(checks):
+    """The COMPOUND verdict -- always both axes, never one word.
+
+    ⛔ WHY IT IS COMPOUND AND NOT A CHOICE BETWEEN THE TWO. A single word had to lie in one
+    direction or the other: "UNVERIFIABLE" told the reader nothing was measured when 7 checks
+    had run clean, and a bare "NO_FINDING" would have told them the suite was complete when
+    3 checks never ran. Ver rejected PASS_WITH_GAPS for the second reason and was right; the
+    fix is not to pick the other lie but to stop emitting a single word. A consumer reading
+    only `verdict` still cannot miss the gap -- it is inside the string.
+    """
+    return "%s/%s" % (finding_for(checks), coverage_for(checks))
 
 
 TRIAGE_OWNER = {"known_finding": "6E", "deps": "tool", "hollow": "4Q", "assert_nonvacuous": "4Q",
@@ -1617,6 +1689,10 @@ def main():
                 "subtree": next((st for st in LV.SIGNED_SUBTREES
                                  if str(p.relative_to(ROOT)).startswith(st + "/")), None),
                 "verdict": v,
+                # both axes as first-class fields so a consumer never has to parse the
+                # compound string, and a filter on one axis cannot silently pick up the other
+                "finding": finding_for(checks),
+                "coverage": coverage_for(checks),
                 "checks": [{"name": n, "status": s, "detail": d} for n, s, d in checks],
                 "evidence": clip_evidence(
                     "; ".join(f"{n}: {d}" for n, s, d in nonpass)),
@@ -1718,14 +1794,24 @@ def main():
             print(f"     {_r['path']}: {clip_evidence(_uc_txt, 200)}")
         print("   No flag suppresses this. Fix the routing, then re-run.")
         return 3
-    nu = counts.get("UNVERIFIABLE", 0)
-    if nu and not args.acknowledge_unverifiable:
-        print(f"\n⛔ {nu} pattern(s) are UNVERIFIABLE — the tool COULD NOT MEASURE them.")
-        print("   That is a FINDING, not a footnote. See run.coverage_gaps for which checks")
-        print("   could not run and why. Re-run with --acknowledge-unverifiable once they")
-        print("   have been dispositioned.")
-        return 2
-    return 0
+    # ⛔ THE GUARD MOVED, IT DID NOT GO AWAY. 6E's rule was "UNVERIFIABLE IS A FINDING, NOT A
+    # TOOL FOOTNOTE" -- a run must not go green while the compiled lanes are under-measured.
+    # That rule was attached to a VERDICT WORD; the word was wrong, the rule was not. It is
+    # now attached to the COVERAGE AXIS, which is the thing it was always about. Relabelling
+    # without moving the guard would have made the compiled lanes silently unverified, which
+    # is precisely the failure 6E built the taxonomy to prevent.
+    _code, _partial = coverage_exit_code(records, args.acknowledge_unverifiable)
+    _none = [r for r in records if r.get("coverage") == "NONE"]
+    if _code:
+        print(f"\n⛔ {len(_partial)} pattern(s) were only PARTIALLY MEASURED "
+              f"({len(_none)} of them not measured at all).")
+        print("   Their verdict reads e.g. NO_FINDING/PARTIAL: nothing was found among the")
+        print("   checks that RAN, and some checks could not run at all. That gap is a")
+        print("   FINDING about this tool's lane coverage, not a footnote. See")
+        print("   run.coverage_gaps for which checks could not run and why. Re-run with")
+        print("   --acknowledge-unverifiable once they have been dispositioned.")
+        return _code
+    return _code
 
 
 
@@ -2203,13 +2289,22 @@ def self_test() -> int:
               f"          expect={expect} got={status}" + (f"  ({detail})" if not ok else ""))
 
     # verdict aggregation is itself a decision rule and must be proven
-    agg = [("fail beats flag", [("a", "fail", ""), ("b", "flag", "")], "FAIL"),
-           ("flag beats unverifiable", [("a", "flag", ""), ("b", "unverifiable", "")], "FLAG"),
-           ("unverifiable beats pass", [("a", "unverifiable", ""), ("b", "pass", "")],
-            "UNVERIFIABLE"),
+    # ⛔ "unverifiable beats pass" USED TO LIVE HERE and it encoded the defect Illia caught:
+    # an unmeasured check OUTRANKED a clean measurement, so one missing analyser relabelled a
+    # file that had passed everything else. Severity is now the FINDING axis only, and an
+    # unmeasured check moves the COVERAGE axis instead of overriding what was measured.
+    agg = [("fail beats flag", [("a", "fail", ""), ("b", "flag", "")], "FAIL/FULL"),
+           ("flag outranks nothing-found on the FINDING axis, and an unmeasured check "
+            "shows up on the COVERAGE axis instead of erasing it",
+            [("a", "flag", ""), ("b", "unverifiable", "")], "FLAG/PARTIAL"),
+           ("an unmeasured check NO LONGER outranks a clean measurement (Illia 2026-08-30) "
+            "-- it reports as partially-covered, not as unmeasured",
+            [("a", "unverifiable", ""), ("b", "pass", "")], "NO_FINDING/PARTIAL"),
+           ("nothing measured at all is the ONLY state that means unmeasured",
+            [("a", "unverifiable", ""), ("b", "unverifiable", "")], "NO_FINDING/NONE"),
            ("all pass is NO_FINDING, never PASS (Ver finding 1)",
-            [("a", "pass", ""), ("b", "pass", "")], "NO_FINDING"),
-           ("all skip is SKIP", [("a", "skip", "")], "SKIP")]
+            [("a", "pass", ""), ("b", "pass", "")], "NO_FINDING/FULL"),
+           ("all skip is SKIP", [("a", "skip", "")], "SKIP/FULL")]
     print()
     for label, checks, expect in agg:
         got = verdict_for(checks)
@@ -2281,7 +2376,7 @@ def self_test() -> int:
     extra.append(("D2: _norm_source keeps a CODE line containing AE1. but drops the mark",
                   "AE1.encrypt" in _d2 and "AURA Pattern Library" not in _d2))
     extra.append(("verdict: flag + pass is FLAG",
-                  verdict_for([("a", "flag", ""), ("b", "pass", "")]) == "FLAG"))
+                  verdict_for([("a", "flag", ""), ("b", "pass", "")]) == "FLAG/FULL"))
 
     # 6E -- a RENAMED copy-paste must still be caught (literal tokens missed it), and a
     # sub-floor file must be SKIPped, never passed as "no near-duplicate exists".
@@ -2347,11 +2442,11 @@ def self_test() -> int:
     _nd = duplicate_check("flag", "near-duplicate of x.py (jaccard 0.80)")
     extra.append(("6E: a near-duplicate ADVISORY does not change the verdict",
                   _nd[1] == "skip"
-                  and verdict_for([("gate", "pass", ""), _nd]) == "NO_FINDING"))
+                  and verdict_for([("gate", "pass", ""), _nd]) == "NO_FINDING/FULL"))
     _ex = duplicate_check("fail", "EXACT duplicate of x.py")
     extra.append(("an EXACT duplicate still fails the verdict",
                   _ex[1] == "fail"
-                  and verdict_for([("gate", "pass", ""), _ex]) == "FAIL"))
+                  and verdict_for([("gate", "pass", ""), _ex]) == "FAIL/FULL"))
 
     # The DF filter needs a fixture where it can actually DO something, and BOTH ARMS
     # measured. The first version used repetitive generated code, which collapses under
@@ -2514,12 +2609,13 @@ def self_test() -> int:
     # 4Q round 9 F2: STATUS_VERDICT relies on insertion order for SEVERITY, and only the
     # membership was tested. The ordering itself is a design decision; assert it.
     extra.append(("4Q-R9-F2 severity order: fail beats flag AND unverifiable",
-                  verdict_for([("a", "fail", ""), ("b", "flag", "")]) == "FAIL"
-                  and verdict_for([("a", "fail", ""), ("b", "unverifiable", "")]) == "FAIL"))
+                  verdict_for([("a", "fail", ""), ("b", "flag", "")]) == "FAIL/FULL"
+                  and verdict_for([("a", "fail", ""), ("b", "unverifiable", "")])
+                  == "FAIL/PARTIAL"))
     extra.append(("4Q-R9-F2 severity order: flag beats unverifiable",
-                  verdict_for([("a", "flag", ""), ("b", "unverifiable", "")]) == "FLAG"))
+                  verdict_for([("a", "flag", ""), ("b", "unverifiable", "")]) == "FLAG/PARTIAL"))
     extra.append(("4Q-R9-F2 severity order: every finding status beats SKIP",
-                  all(verdict_for([("a", _s, ""), ("b", "skip", "")]) != "SKIP"
+                  all(not verdict_for([("a", _s, ""), ("b", "skip", "")]).startswith("SKIP")
                       for _s in STATUS_VERDICT)))
     _pf = triage_fields([("a", "fail", "[PARSE_FAIL] broken")], set())
     extra.append(("6E-C3 PARSE_FAIL is declared U3 but EMITTED as fail, so it routes to "
@@ -2542,20 +2638,37 @@ def self_test() -> int:
                         "elapsed_s": 1, "library_verify_md5": "x", "toolchains_present": {},
                         "census_mismatches": []}}
         _long = "L" * 400
-        def _mk(_pid, _v, _disp, _unv, _det=""):
+        # ⛔ THE FIXTURE DERIVES ITS OWN VERDICT FROM ITS OWN CHECKS. The previous version
+        # passed the verdict word in by hand, so a record could claim FAIL while carrying a
+        # flag check -- a fixture that cannot be inconsistent with the production rule is
+        # worth more than one that merely asserts what I typed.
+        # `_v` overrides the derived verdict and exists ONLY for the adversarial fixtures:
+        # the verdict is a closed enum now, so a hostile verdict string can no longer arrive
+        # by derivation -- but the renderer still INDEXES by it, and retiring the injection
+        # probe because the happy path stopped producing bad values would be removing a guard
+        # for the reason it is passing.
+        def _mk(_pid, _disp, _unv, _det="", _st="flag", _extra=0, _v=None):
+            _ch = [{"name": "deps", "status": "unverifiable", "detail": "[NO_STDLIB_LIST] x"}]
+            if _det:
+                _ch.append({"name": "hollow", "status": _st, "detail": _det})
+            for _i in range(_extra):
+                _ch.append({"name": f"x{_i}", "status": "pass", "detail": ""})
+            _tup = [(c["name"], c["status"], c["detail"]) for c in _ch]
             return {"pattern_id": _pid, "path": f"python/{_pid}.py", "language": "python",
-                    "verdict": _v, "disposition": _disp,
-                    "checks": [{"name": "deps", "status": "unverifiable",
-                                "detail": "[NO_STDLIB_LIST] x"}]
-                               + ([{"name": "hollow", "status": "flag", "detail": _det}]
-                                  if _det else []),
+                    "verdict": _v if _v is not None else verdict_for(_tup),
+                    "finding": finding_for(_tup),
+                    "coverage": coverage_for(_tup), "disposition": _disp,
+                    "checks": _ch,
                     "unverifiable_checks": _unv,
                     "unverifiable_subclass": ["U2"],
                     "checks_unmeasured": 1, "checks_skipped": 0, "needs_tool_fix": False,
                     "census_mismatches": [], "toolchains_present": {}}
         _uc = [{"name": "deps", "reason_code": "NO_STDLIB_LIST", "subclass": "U2"}]
-        _rows = [_mk("a", "UNVERIFIABLE", None, _uc), _mk("b", "UNVERIFIABLE", "WAIVE", _uc),
-                 _mk("c", "FAIL", None, _uc, _long), _mk("d", "FLAG", None, _uc, _long)]
+        # a,b measure NOTHING (coverage NONE); c,d measure 1 and 2 (coverage PARTIAL, and the
+        # differing counts force the "checks actually run" figure to print as a SPAN, which is
+        # what proves it is derived per record rather than hardcoded.
+        _rows = [_mk("a", None, _uc), _mk("b", "WAIVE", _uc),
+                 _mk("c", None, _uc, _long, "fail"), _mk("d", None, _uc, _long, "flag", 1)]
         _rp.write_text("\n".join([json.dumps(_hdr)] + [json.dumps(r) for r in _rows]),
                        encoding="utf-8")
         _rout = Path(_rtd) / "out.md"
@@ -2568,19 +2681,77 @@ def self_test() -> int:
         # 4Q R11 F1 / 6E #3: it printed the UNDISPOSITIONED count (1) where it meant the
         # count carrying the verdict (2). Equal on a fresh run, wrong the moment a triage
         # session sets one disposition -- and this report IS that triage session.
-        extra.append(("RENDER 4Q-R11-F1 the UNVERIFIABLE-verdict count is the verdict count "
-                      "(2), not the undispositioned count (1)",
-                      "2 records carry the UNVERIFIABLE verdict" in _rtxt
-                      and "1 are still undispositioned" in _rtxt))
-        extra.append(("RENDER 4Q-R11-F1 the three counts ADD UP: 2 with the verdict + 2 "
-                      "outranked == 4 with an unverifiable check",
-                      "4 records have at least one" in _rtxt
-                      and "but only 2 of" in _rtxt))
+        extra.append(("RENDER 4Q-R11-F1 the printed count is the COVERAGE count (4), not the "
+                      "undispositioned count (3) -- they diverge the moment a triage session "
+                      "sets one disposition, which is what this report IS",
+                      "4 records are not FULLY covered" in _rtxt
+                      and "3 are still undispositioned" in _rtxt))
+        # ⛔ THE OLD PROBE HERE COUNTED THE RECORDS THAT HID THEIR OWN COVERAGE GAP. That gap
+        # is now unhideable by construction, so asserting the old arithmetic would be
+        # asserting a bug still exists. The replacement asserts the INVARIANT that makes it
+        # zero, which is falsifiable: break coverage_for and this fails.
+        extra.append(("RENDER Illia-4 NO record can hide an unmeasured check: every record "
+                      "with an unverifiable check reports less than FULL coverage",
+                      all(_r["coverage"] != "FULL" for _r in _rows
+                          if any(_c["status"] == "unverifiable" for _c in _r["checks"]))
+                      and "No record hides an unmeasured check" in _rtxt))
+        extra.append(("RENDER Illia-5 PARTIAL and NONE are reported as DIFFERENT facts, never "
+                      "summed into one 'partially measured' sentence",
+                      "2 records were only partially measured" in _rtxt
+                      and "NOTHING could be measured: 2" in _rtxt))
         # 6E #4: it asserted the outranked records "report as FLAG". FAIL outranks too, and
         # the shipped sweep is a --gate run, which is exactly how a FAIL lands here.
-        extra.append(("RENDER 6E-R11 the outranked records are named by their ACTUAL "
-                      "verdicts (FAIL is one of them), not asserted to all be FLAG",
-                      "**FAIL** (1)" in _rtxt and "**FLAG** (1)" in _rtxt))
+        # ⛔ CONSISTENT DATA CAN NO LONGER PRODUCE AN OUTRANKED RECORD -- coverage is its own
+        # axis. The renderer's branch for one still exists, and a branch that no fixture can
+        # reach is a branch nobody is testing, so this drives it with a record that is
+        # deliberately INCONSISTENT (an unverifiable check while claiming FULL coverage),
+        # which is exactly what a future regression in coverage_for would look like.
+        _rows_h = [_mk("h1", None, _uc, _long, "fail"), _mk("h2", None, _uc, _long, "flag")]
+        for _rh, _vh in zip(_rows_h, ("FAIL", "FLAG")):
+            _rh["coverage"] = "FULL"          # the lie under test
+            _rh["verdict"] = _vh + "/FULL"
+        _fh = Path(_rtd) / "hidden.jsonl"; _oh = Path(_rtd) / "hidden.md"
+        _fh.write_text("\n".join([json.dumps(_hdr)] + [json.dumps(x) for x in _rows_h]),
+                       encoding="utf-8")
+        subprocess.run([sys.executable, str(Path(__file__).with_name("audit_report.py")),
+                        str(_fh), str(_oh)], capture_output=True, text=True,
+                       cwd=str(Path(__file__).parent))
+        _htxt = _oh.read_text(encoding="utf-8") if _oh.exists() else ""
+        # ⛔ THE EXIT-2 GUARD WAS UNPROBED AND A MUTANT PROVED IT (see coverage_exit_code).
+        _g_full = [{"coverage": "FULL"}, {"coverage": "FULL"}]
+        _g_part = [{"coverage": "FULL"}, {"coverage": "PARTIAL"}]
+        _g_none = [{"coverage": "NONE"}]
+        extra.append(("EXIT-GUARD a partially-covered record forces exit 2",
+                      coverage_exit_code(_g_part, False)[0] == 2))
+        extra.append(("EXIT-GUARD an unmeasured record forces exit 2",
+                      coverage_exit_code(_g_none, False)[0] == 2))
+        extra.append(("EXIT-GUARD NEGATIVE ARM: an all-FULL run exits 0, so the 2 above is "
+                      "the guard firing and not a constant",
+                      coverage_exit_code(_g_full, False)[0] == 0))
+        extra.append(("EXIT-GUARD acknowledging clears it, and names the SAME blocking "
+                      "records either way (the flag suppresses the exit, not the evidence)",
+                      coverage_exit_code(_g_part, True)[0] == 0
+                      and coverage_exit_code(_g_part, True)[1]
+                      == coverage_exit_code(_g_part, False)[1]))
+        extra.append(("EXIT-GUARD a record MISSING the coverage field blocks too -- an "
+                      "absent axis is not a FULL one", coverage_exit_code([{}], False)[0] == 2))
+        # WIRING ARM: main() must actually honour it. Cheap because the first files audited
+        # are python, which is the only fully-covered lane -- so this proves an all-FULL real
+        # run exits 0 through the real argv path.
+        _eout = Path(_rtd) / "exitcode.jsonl"
+        _e_ok = subprocess.run(
+            [sys.executable, str(Path(__file__)), "--limit", "3", "--out", str(_eout)],
+            capture_output=True, text=True, cwd=str(Path(__file__).parent))
+        _e_recs = [json.loads(l) for l in
+                   _eout.read_text(encoding="utf-8").splitlines()[1:]] if _eout.exists() else []
+        extra.append(("EXIT-GUARD WIRING: a real all-FULL run exits 0 through main(), and "
+                      "the fixture really is all-FULL (so this is not an empty-set pass)",
+                      bool(_e_recs) and all(r.get("coverage") == "FULL" for r in _e_recs)
+                      and _e_ok.returncode == 0))
+        extra.append(("RENDER 6E-R11 an outranked record is named by its ACTUAL verdict "
+                      "(FAIL is one of them), not asserted to all be FLAG — driven by a "
+                      "record whose coverage contradicts its own checks",
+                      "**FAIL/FULL** (1)" in _htxt and "**FLAG/FULL** (1)" in _htxt))
         # 6E #2: exit 2 keys on the UNVERIFIABLE count and never reads `disposition`.
         extra.append(("RENDER 6E-R11 the exit-2 sentence does not promise that "
                       "dispositioning clears it",
@@ -2658,18 +2829,18 @@ def self_test() -> int:
         for _k, _v in list(_h3["run"].items()):
             if isinstance(_v, str):
                 _h3["run"][_k] = _nasty + _v
-        _r3 = _mk("z", "UNVERIFIABLE", None, _uc, _huge)
+        _r3 = _mk("z", None, _uc, _huge, _v="UNVERIFIABLE")
         _r3["path"] = "python/" + _nasty + ".py"
         _r3["language"] = _nasty
         _r3["needs_tool_fix"] = True
         _r3["unclaimed_checks"] = [{"name": _nasty, "status": "unverifiable",
                                     "reason_code": None, "subclass": None}] * 3
         _r3["census_mismatches"] = [_nasty]
-        _r4 = _poison(_mk("y", "FLAG", None, _uc, _nasty))
+        _r4 = _poison(_mk("y", None, _uc, _nasty, _v="FLAG"))
         _r4["checks"].append({"name": _nasty, "status": "flag", "detail": _nasty})
         # 4Q R15 F1: a verdict cannot be poisoned wholesale (the renderer indexes by it),
         # so ONE record carries a hostile one into hidden_by_verdict, which PRINTS it.
-        _r5 = _mk("w", "FLAG" + _nasty, None, _uc, "x")
+        _r5 = _mk("w", None, _uc, "x", _v="FLAG" + _nasty)
         _rp3.write_text("\n".join([json.dumps(_h3), json.dumps(_r3),
                                     json.dumps(_r4), json.dumps(_r5)]),
                         encoding="utf-8")
@@ -2713,8 +2884,11 @@ def self_test() -> int:
                   {"name": "determinism_repeat", "status": gate_status, "detail": "d"}]
             ch += [{"name": f"c{i}", "status": "pass", "detail": "ok"}
                    for i in range(extra_pass)]
+            _tp = [(c["name"], c["status"], c.get("detail", "")) for c in ch]
             return {"pattern_id": _pid, "path": f"python/{_pid}.py", "language": "python",
-                    "verdict": "UNVERIFIABLE", "disposition": None, "checks": ch,
+                    "verdict": verdict_for(_tp), "finding": finding_for(_tp),
+                    "coverage": coverage_for(_tp),
+                    "disposition": None, "checks": ch,
                     "unverifiable_checks": _uc, "unverifiable_subclass": ["U2"],
                     "checks_unmeasured": 1, "checks_skipped": 2, "needs_tool_fix": False,
                     "census_mismatches": [], "toolchains_present": {}}
@@ -2734,11 +2908,18 @@ def self_test() -> int:
         extra.append(("RENDER 6E-R20 F2 NEGATIVE ARM: when the gate DID run, the banner must "
                       "NOT appear — a false 'nothing executed' is its own lie",
                       bool(_t_exec) and "NOTHING WAS EXECUTED" not in _t_exec))
-        extra.append(("RENDER 6E-R20 F1: UNVERIFIABLE is explained as COVERAGE, and the "
+        # ⛔ ONE FIXTURE COULD NOT TELL DERIVED FROM CONSTANT. A mutant that hardcoded the
+        # span to "2-3" SURVIVED, because 2-3 is exactly what this fixture's records really
+        # produce. A second fixture with a different true span is what makes the assertion
+        # discriminating: no constant can satisfy both.
+        _t_span2 = _render("span2", [_erec("a", "skip", 5), _erec("b", "skip", 9)])
+        extra.append(("RENDER 6E-R20 F1: partial coverage is explained as COVERAGE, and the "
                       "count of checks that DID run is derived from the records, not "
-                      "hardcoded — these two fixtures ran 2 and 3, so a span must print",
-                      "What UNVERIFIABLE does NOT mean" in _t_noexec
-                      and "2-3 checks actually run" in _t_noexec))
+                      "hardcoded — two fixtures with DIFFERENT true spans (2-3 and 5-9) must "
+                      "each print their own, which no constant can do",
+                      "What PARTIAL coverage means here" in _t_noexec
+                      and "2-3 checks actually run" in _t_noexec
+                      and "5-9 checks actually run" in _t_span2))
         extra.append(("RENDER 6E-R20 F1: the one-line gloss no longer says only 'could not "
                       "measure it', which outranked six passes and read as unexamined",
                       "the tool could not measure it" not in _t_noexec))
@@ -2748,7 +2929,7 @@ def self_test() -> int:
         _h6["run"]["tool_md5"] = "deadbeefdeadbeefdeadbeefdeadbeef"
         _h6["run"]["run_id"] = "20260830T000000-deadbeef"
         _rp6.write_text("\n".join([json.dumps(_h6),
-                                   json.dumps(_mk("p", "FLAG", None, _uc, "x"))]),
+                                   json.dumps(_mk("p", None, _uc, "x", _v="FLAG"))]),
                         encoding="utf-8")
         _rout6 = Path(_rtd) / "out6.md"
         subprocess.run([sys.executable, str(Path(__file__).with_name("audit_report.py")),
@@ -2826,7 +3007,7 @@ def self_test() -> int:
                   _tfm["unverified"] == "1/4"
                   and _tfm["unverified"].split("/")[0] == str(_tfm["checks_unmeasured"])))
     extra.append(("6E-D3-Q3 the coverage axis does NOT move the verdict (rejecting "
-                  "PASS_WITH_GAPS a second time)", verdict_for(_mix) == "FLAG"))
+                  "PASS_WITH_GAPS a second time)", verdict_for(_mix).startswith("FLAG")))
     # 4Q round 8 F2: one hand-written needle ("A PASS") caught one phrasing and missed
     # three others ("silent PASS", "becomes a PASS", "false PASS"). A needle is a guess.
     # This walks EVERY string literal the module can emit -- comments are excluded by the
@@ -2865,12 +3046,37 @@ def self_test() -> int:
     extra.append(("Ver-6 the measured/unmeasured ratio is carried so a reader sees the gap "
                   "WITHOUT the verdict going green",
                   _tf["checks_measured"] == 1 and _tf["checks_unmeasured"] == 2))
-    extra.append(("Ver-6 a half-unmeasured record is still UNVERIFIABLE, never a NO_FINDING "
+    # ⛔ VER-6 KEPT ITS TEETH THROUGH THE TWO-AXIS REWRITE. Ver's ruling was that a
+    # half-unmeasured record must never READ AS a clean NO_FINDING. It used to assert the
+    # word UNVERIFIABLE; that word was the wrong fix (it claimed nothing was measured when
+    # 7 checks had run clean). The RULING is unchanged and is asserted directly: the verdict
+    # of a half-unmeasured record is not the bare clean verdict, and it still carries the gap.
+    extra.append(("Ver-6 a half-unmeasured record NEVER reads as a clean NO_FINDING "
                   "(rejecting PASS_WITH_GAPS: it would soften the one signal 6E "
                   "built the taxonomy to protect)",
-                  verdict_for(_cm) == "UNVERIFIABLE"))
+                  verdict_for(_cm) != "NO_FINDING/FULL"
+                  and verdict_for(_cm).endswith("/PARTIAL")
+                  and coverage_for(_cm) == "PARTIAL"))
+    extra.append(("Ver-6b the gap is inside the verdict STRING, so a consumer that reads "
+                  "only `verdict` cannot drop it",
+                  "PARTIAL" in verdict_for(_cm)))
     extra.append(("Ver-1 an all-clean record is NO_FINDING, not PASS",
-                  verdict_for([("a", "pass", "")]) == "NO_FINDING"))
+                  verdict_for([("a", "pass", "")]) == "NO_FINDING/FULL"))
+    # Illia 2026-08-30: the defect that started the rewrite. A file clean on everything the
+    # tool CAN run must not be labelled with a word meaning "nothing was measured".
+    _clean_partial = [("hollow", "pass", ""), ("dangerous_primitives", "pass", ""),
+                      ("deps", "unverifiable", _U1D)]
+    extra.append(("ILLIA-1 a non-python file that is CLEAN on every check that ran is not "
+                  "called UNVERIFIABLE -- it is NO_FINDING/PARTIAL",
+                  verdict_for(_clean_partial) == "NO_FINDING/PARTIAL"))
+    extra.append(("ILLIA-2 UNVERIFIABLE-as-coverage is reserved for a record where NOTHING "
+                  "was measured, and nothing else",
+                  coverage_for([("deps", "unverifiable", _U1D)]) == "NONE"
+                  and coverage_for(_clean_partial) == "PARTIAL"))
+    extra.append(("ILLIA-3 the finding axis is INDEPENDENT of coverage: identical findings "
+                  "with different coverage differ only in the coverage half",
+                  finding_for(_clean_partial) == finding_for([("hollow", "pass", "")])
+                  == "NO_FINDING"))
     extra.append(("Ver-7 short evidence is untouched", clip_evidence("abc") == "abc"))
     _long = clip_evidence("x" * 5000)
     extra.append(("Ver-7 long evidence is MARKED as truncated, not silently cut",

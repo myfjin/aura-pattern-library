@@ -181,43 +181,79 @@ w("> and C1 (correctness), C3 (twin equivalence) and C11 (provenance) were never
 w("> any pattern. The disclosure was there per record, but a summary reader sees the headline")
 w("> word, not the footnote. The word now matches the measurement.")
 w("")
-w("| verdict | count | meaning |")
-w("|---|---:|---|")
+w("Two independent questions are asked about every pattern, and they are reported as two")
+w("axes rather than collapsed into one word.")
+w("")
+w("- **finding** — was anything found among the checks that RAN? (`NO_FINDING` / `FLAG` / `FAIL`)")
+w("- **coverage** — how much of the suite could look at this file at all? (`FULL` / `PARTIAL` / `NONE`)")
+w("")
+w("> ⛔ **Why this is two axes and not one word.** Until 2026-08-30 a single verdict carried")
+w("> both, and it could only be honest about one of them. A clean cpp pattern was labelled")
+w("> `UNVERIFIABLE` — which reads as *nothing was measured* — when in fact 7 checks had run")
+w("> and all 7 were clean; an identical python pattern was labelled `NO_FINDING`. The word")
+w("> was describing THIS TOOL's lane coverage, not the pattern. Collapsing the other way")
+w("> (`PASS_WITH_GAPS`) was rejected because it hides the gap. The fix is to stop collapsing:")
+w("> a verdict is now always `finding/coverage`, so neither half can be dropped by a reader")
+w("> or by a consumer that looks only at `verdict`.")
+w("")
+_FIND = [f for f in ("FAIL", "FLAG", "NO_FINDING", "SKIP")
+         if any(r.get("finding") == f for r in recs)]
+_COV = [c for c in ("FULL", "PARTIAL", "NONE")
+        if any(r.get("coverage") == c for r in recs)]
+_grid = collections.Counter((r.get("finding"), r.get("coverage")) for r in recs)
+w("| | " + " | ".join(f"coverage **{c}**" for c in _COV) + " | total |")
+w("|---|" + "---:|" * (len(_COV) + 1))
+for f in _FIND:
+    _row = [_grid.get((f, c), 0) for c in _COV]
+    w(f"| **{f}** | " + " | ".join(str(x) for x in _row) + f" | {sum(_row)} |")
+w("| **total** | " + " | ".join(
+    str(sum(_grid.get((f, c), 0) for f in _FIND)) for c in _COV) + f" | {len(recs)} |")
+w("")
 MEAN = {"NO_FINDING": "no defect found among the classes this tool CAN check — NOT "
                       "'correct': C1/C3/C11 were never assessed",
         "FAIL": "a decidable check is RED",
-        "FLAG": "needs judgement; evidence attached", "SKIP": "nothing applicable ran",
-        "UNVERIFIABLE": "AT LEAST ONE check could not run — see the line below the table, "
-                        "which says how much DID run"}
-for v in ("FAIL", "FLAG", "UNVERIFIABLE", "NO_FINDING", "SKIP"):
-    if by_verdict.get(v):
-        w(f"| **{v}** | {by_verdict[v]} | {MEAN[v]} |")
+        "FLAG": "needs judgement; evidence attached", "SKIP": "nothing applicable ran"}
+COVMEAN = {"FULL": "every requested check returned a measurement",
+           "PARTIAL": "at least one check ran AND at least one could not",
+           "NONE": "nothing could be measured — the only state that means 'unverifiable'"}
+w("| axis value | meaning |")
+w("|---|---|")
+for f in _FIND:
+    w(f"| finding **{f}** | {MEAN[f]} |")
+for c in _COV:
+    w(f"| coverage **{c}** | {COVMEAN[c]} |")
 w("")
-# ⛔ 6E ROUND 20, the closing honesty pass. Every NUMBER on this page traces to the JSONL, but
-# the one-line gloss "the tool could not measure it" UNDERSTATES these records badly. One
-# unverifiable check outranks six passes, so a reader meeting "N UNVERIFIABLE" beside an exit-2
-# concludes the patterns were largely unexamined. The opposite is true, and the page never said
-# so. Derived here per record -- never a hardcoded "7 of 13", because the profile is not
-# uniform (measured: 646 records ran 7 checks clean, 29 ran 6).
-_unv_recs = [r for r in recs if r.get("verdict") == "UNVERIFIABLE"]
-if _unv_recs:
-    _ran, _cannot = [], []
-    for _r in _unv_recs:
+# The coverage gap is stated as a POSITIVE fact about what ran, derived per record -- never a
+# hardcoded span, because the profile is not uniform.
+# PARTIAL and NONE are different facts and must not be summed into one sentence: a
+# record where nothing could be measured is not "partially measured".
+_part = [r for r in recs if r.get("coverage") == "PARTIAL"]
+if _part:
+    _ran, _cannot, _names = [], [], collections.Counter()
+    for _r in _part:
         _st = [c.get("status") for c in _r.get("checks", [])]
         _ran.append(sum(1 for x in _st if x in ("pass", "flag", "fail")))
         _cannot.append(sum(1 for x in _st if x == "unverifiable"))
-    _lo, _hi = min(_ran), max(_ran)
-    _span = f"{_lo}" if _lo == _hi else f"{_lo}-{_hi}"
-    _clean = sum(1 for _r in _unv_recs
-                 if not any(c.get("status") in ("flag", "fail") for c in _r.get("checks", [])))
-    w(f"> **What UNVERIFIABLE does NOT mean.** These {len(_unv_recs)} records were not left "
-      f"unexamined. Each had **{_span} checks actually run**, and "
-      f"{'all ' if _clean == len(_unv_recs) else ''}{_clean} of them came back with **no "
-      f"finding on every check that ran**. What could not run is "
-      f"{min(_cannot) if min(_cannot) == max(_cannot) else f'{min(_cannot)}-{max(_cannot)}'} "
-      f"checks per record, and it is the SAME checks every "
-      f"time — the ones needing an analyser this lane does not have. The verdict is a "
-      f"statement about COVERAGE, not about the pattern.")
+        for _c in _r.get("checks", []):
+            if _c.get("status") == "unverifiable":
+                _names[_c.get("name")] += 1
+    def _span(v):
+        return f"{min(v)}" if min(v) == max(v) else f"{min(v)}-{max(v)}"
+    _clean = sum(1 for _r in _part if _r.get("finding") == "NO_FINDING")
+    _uniform = len(set(_names.values())) == 1 and len(_names) > 0
+    w(f"> **What PARTIAL coverage means here.** {len(_part)} records were only partially "
+      f"measured. Each still had **{_span(_ran)} checks actually run**, and {_clean} of them "
+      f"came back with no finding on every check that ran. What could not run is "
+      f"**{_span(_cannot)} checks** per record"
+      + (f", and it is the SAME checks every time — {', '.join(f'`{k}`' for k in sorted(_names))}"
+         f" — each needing an analyser this lane does not have." if _uniform else ".")
+      + " PARTIAL is a statement about this tool's reach, not about the pattern.")
+    w("")
+    _none = [r for r in recs if r.get("coverage") == "NONE"]
+    w(f"> **Records where NOTHING could be measured: {len(_none)}.** That is the only state "
+      f"in which the tool genuinely knows nothing about a pattern"
+      + ("." if _none else ", and no pattern in this library is in it.")) 
+    w("")
     w("")
 # ⛔ 6E ROUND 20, finding 2. `gate` and `determinism_repeat` are the only checks that RUN a
 # file. When they are skipped, nothing was executed at all and every verdict on this page is
@@ -236,18 +272,24 @@ if recs and not _ran_exec:
     w("")
 w("## By language")
 w("")
-w("| lane | " + " | ".join(("FAIL", "FLAG", "UNVERIFIABLE", "NO_FINDING", "SKIP")) + " | total |")
-w("|---|" + "---:|" * 6)
-for lane in sorted(by_lane):
-    c = by_lane[lane]
-    w(f"| {cell(lane, 40)} | " + " | ".join(str(c.get(v, 0)) for v in
-      ("FAIL", "FLAG", "UNVERIFIABLE", "NO_FINDING", "SKIP")) + f" | {sum(c.values())} |")
+_lane_f = collections.defaultdict(collections.Counter)
+_lane_c = collections.defaultdict(collections.Counter)
+for r in recs:
+    _lane_f[r["language"]][r.get("finding")] += 1
+    _lane_c[r["language"]][r.get("coverage")] += 1
+w("| lane | " + " | ".join(_FIND) + " | " + " | ".join(f"cov {c}" for c in _COV) + " | total |")
+w("|---|" + "---:|" * (len(_FIND) + len(_COV) + 1))
+for lane in sorted(_lane_f):
+    _cf, _cc = _lane_f[lane], _lane_c[lane]
+    w(f"| {cell(lane, 40)} | " + " | ".join(str(_cf.get(v, 0)) for v in _FIND)
+      + " | " + " | ".join(str(_cc.get(v, 0)) for v in _COV)
+      + f" | {sum(_cf.values())} |")
 w("")
-w("### ⚠️ Read the UNVERIFIABLE column before the NO_FINDING column")
+w("### ⚠️ Read the coverage columns before the finding columns")
 w("")
 w("Most checks are AST-based and implemented for python only. A non-python lane scoring few")
 w("FLAGs is not evidence that it is clean — it is evidence that fewer checks could run on it.")
-w("The per-check table below shows exactly which.")
+w("The coverage columns say exactly how many; the per-check table below says which.")
 w("")
 w("## Per check")
 w("")
@@ -294,7 +336,7 @@ for r in recs:
         code_lanes[key][r["language"]] += 1
     for sc in (r.get("unverifiable_subclass") or []):
         sub_counts[sc] += 1
-    if r["verdict"] == "UNVERIFIABLE" and r.get("disposition") is None:
+    if r.get("coverage") != "FULL" and r.get("disposition") is None:
         undisposed += 1
 
 # ⛔ 4Q round 11 F1 and 6E renderer #3, found independently: the prose below used
@@ -302,32 +344,45 @@ for r in recs:
 # on a fresh run and diverge the moment a triage session sets a disposition -- and this
 # report exists to BE that triage session, so the divergence is the normal case, not the
 # edge case. The two counts are named apart now so the wrong one cannot be reached for.
-unv_verdict = sum(1 for r in recs if r["verdict"] == "UNVERIFIABLE")
+unv_verdict = sum(1 for r in recs if r.get("coverage") != "FULL")
+# ⛔ `hidden` USED TO BE NON-ZERO AND IS NOW ZERO BY CONSTRUCTION -- this is the defect the
+# two-axis rewrite removed rather than documented. Under the old single-word verdict, FAIL and
+# FLAG outranked UNVERIFIABLE, so a record with a real finding AND an unmeasured half showed
+# the finding and HID the hole: 95 records did exactly that, and the exit-2 guard counted 729
+# when 824 records actually had an unmeasured check. Coverage is now its own axis and cannot
+# be outranked by anything. It is still DERIVED, not asserted to be zero, so that a future
+# regression shows up here instead of being assumed away.
 hidden = with_u - unv_verdict
-# 6E renderer #4: `hidden` is "has an unverifiable check but a higher-severity verdict",
-# and FAIL outranks UNVERIFIABLE too. Derived rather than asserted, because a --gate run
-# (which is how the shipped sweep is produced) can put a gate=fail beside deps=unverifiable.
 hidden_by_verdict = collections.Counter(
     r["verdict"] for r in recs if r.get("unverifiable_checks")
-    and r["verdict"] != "UNVERIFIABLE")
+    and r.get("coverage") == "FULL")
 tax = header.get("unverifiable_taxonomy") or {}
 if code_rows:
     w("---")
     w("")
-    w("# The UNVERIFIABLE board — sorted by REMEDY")
+    w("# The COVERAGE board — sorted by REMEDY")
     w("")
-    w("UNVERIFIABLE is not one problem. Each subclass below names a different kind of work,")
-    w("and that is the point of the split: the triage session can be run without reopening a")
-    w("single pattern file.")
+    w("An unmeasured check is not one problem. Each subclass below names a different kind of")
+    w("work, and that is the point of the split: the triage session can be run without")
+    w("reopening a single pattern file.")
     w("")
-    w(f"**{unv_verdict} records carry the UNVERIFIABLE verdict**, of which "
+    w(f"**{unv_verdict} records are not FULLY covered**, of which "
       f"**{undisposed} are still undispositioned.**")
     w("")
-    w("⛔ The tool exits 2 while ANY record carries the UNVERIFIABLE verdict, unless")
+    w("⛔ The tool exits 2 while ANY record has less than FULL coverage, unless")
     w("`--acknowledge-unverifiable` is passed. It does not read `disposition` at all —")
     w("dispositioning every record does NOT clear the exit code, and an earlier draft of this")
     w("sentence implied it did (6E, renderer pass).")
     w("")
+    if not hidden:
+        w("### ✅ No record hides an unmeasured check")
+        w("")
+        w(f"All {with_u} records with at least one `unverifiable` check say so in their")
+        w("verdict, because coverage is its own axis and nothing can outrank it. Under the")
+        w("previous single-word verdict this was **not** true: FAIL and FLAG outranked")
+        w("UNVERIFIABLE, so 95 records showed a finding and hid the hole, and the exit-2 guard")
+        w("undercounted the gap by the same 95.")
+        w("")
     if hidden:
         w(f"### ⚠️ …and {hidden} MORE records carry an unmeasured check without saying so")
         w("")
