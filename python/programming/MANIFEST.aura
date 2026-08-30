@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-08-07",
+  "created": "2026-08-30",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -37,8 +37,8 @@
     },
     {
       "path": "architecture/event_bus.py",
-      "sha256": "3ebb51aa7d360206b9ddb3f091ad205f878d8b483aeb5f25de1e9bfc1c360e96",
-      "bytes": 12057
+      "sha256": "5f75f137f17e56f078c488cbd02643901460eca248263f361465416275bb7124",
+      "bytes": 12311
     },
     {
       "path": "architecture/event_sourcing_store.md",
@@ -77,8 +77,8 @@
     },
     {
       "path": "architecture/saga_coordinator.py",
-      "sha256": "a931ee90bb2ffcd7cb540a834fbda499aa71a4da5c5b28dfac9325ee1b32f600",
-      "bytes": 13954
+      "sha256": "ad551f327d7f37277c5fcc70d8bcfc4666f36958c8cabccb133b774480d83aa8",
+      "bytes": 14208
     },
     {
       "path": "architecture/state_machine.md",
@@ -102,8 +102,8 @@
     },
     {
       "path": "async/async_task_queue.py",
-      "sha256": "f125830c12d89aa3b781fcce8d62e097ce8ee9a19ee61374bafc9e245458252b",
-      "bytes": 18421
+      "sha256": "093d070922cb0bb0e5f306b0823c31742e9b763e1aca83bd2fb5fe5b0aa702ff",
+      "bytes": 18675
     },
     {
       "path": "async/cancellable_task_group.md",
@@ -657,8 +657,8 @@
     },
     {
       "path": "networking/connection_pool_health_checks.py",
-      "sha256": "8200ffe50e602a185d78eb73e3bf60135440feaa8f63e0f9aca0b8ce5fb0f8ad",
-      "bytes": 18627
+      "sha256": "1e3046f3dbf5e05d0afc778b8b72809b7be50d5269634129ffbe0e9c3d949b8a",
+      "bytes": 18881
     },
     {
       "path": "networking/dns_cache.md",
@@ -677,8 +677,8 @@
     },
     {
       "path": "networking/http_retry_client.py",
-      "sha256": "68c4efd0ba1f47f274bc374d9f83abaf09a7eb5daa8043ea972fb0b5afcc56c6",
-      "bytes": 20273
+      "sha256": "ad7f9a3370d09ba8a3733633f01ecf49530a278d344f5b5295f98bdde63f0a63",
+      "bytes": 20527
     },
     {
       "path": "networking/http_router.md",
@@ -1007,8 +1007,8 @@
     },
     {
       "path": "resilience/dead_letter_queue.py",
-      "sha256": "a558859e1a39302b10097a0292f0c16c993e3590df8ff66bf0cfa771420037db",
-      "bytes": 17716
+      "sha256": "8e9b3c0fe99eaadce48efe30c7f4bec4cf2ce7d8f8e5c60a6b93a5cb92751379",
+      "bytes": 17970
     },
     {
       "path": "resilience/timeout_guard.md",
