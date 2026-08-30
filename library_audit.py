@@ -136,6 +136,18 @@ LANES = ("python", "cpp", "go", "rust", "r", "javascript")
 # So the coverage is DECLARED here and asserted cell by cell in the self-test: a cell with no
 # analyser must return `unverifiable` with a U1 code, and a cell WITH one must not. Adding a
 # fallback that returns `pass` when it found nothing to measure breaks a probe, loudly.
+# Decorators that transform the decorated object and touch NOTHING else. Everything not
+# here is treated as a possible import side effect, which is the safe direction: `@register`
+# and `@app.route` must keep flagging. See the adjudication note in check_importable.
+PURE_DECORATORS = frozenset((
+    "dataclass", "contextmanager", "asynccontextmanager", "property", "staticmethod",
+    "classmethod", "abstractmethod", "abstractproperty", "cached_property", "wraps",
+    "lru_cache", "cache", "total_ordering", "singledispatch", "singledispatchmethod",
+    "override", "final", "runtime_checkable", "no_type_check", "setter", "getter",
+    "deleter",
+))
+
+
 ANALYSER_COVERAGE = {
     "hollow":               LANES,          # ASSERT_PAT + stripper for all six
     "dangerous_primitives": LANES,          # DANGEROUS  + stripper for all six
@@ -329,7 +341,10 @@ NONDET = {
                (r"\btime\.time\s*\(", "time.time"), (r"datetime\.now\s*\(", "datetime.now"),
                (r"\btime\.(?:perf_counter|process_time|monotonic)\s*\(", "time counters"),
                (r"\bos\.getpid\s*\(", "os.getpid"),
-               (r"(?<![\w.])hash\s*\(", "hash() — PYTHONHASHSEED randomises str hashing"),
+                       # ⛔ TRIAGE, 6E: this matched `def hash(self, item, max_value)` -- a pattern that
+        # DEFINES a hash method was accused of depending on PYTHONHASHSEED. 1 of the 12
+        # hash() flags (bloom_filter.py) was this; the other 11 are genuine builtin calls.
+        (r"(?<![\w.])(?<!def[ \t])hash\s*\(", "hash() — PYTHONHASHSEED randomises str hashing"),
                (r"\buuid\.", "uuid"), (r"\brequests\.", "network: requests"),
                (r"urllib\.request", "network: urllib"), (r"\bsocket\.", "network: socket")],
     "javascript": [(r"Math\.random", "Math.random"), (r"Date\.now", "Date.now"),
@@ -361,7 +376,14 @@ ASSERT_PAT = {
     "javascript": (r"\bassert\b|\bthrow\s+new\s+\w*(?:Error|Exception)\b"
                    r"|\bexpect\s*\(|\.should\b"),
     "cpp": r"\bassert\s*\(|\bstatic_assert\s*\(|\b\w*_ASSERT\w*\s*\(",
-    "go": r"\bpanic\s*\(|\bt\.(?:Error|Fatal)f?\s*\(",
+    # ⛔ TRIAGE, 4Q: this flagged 86 of 93 go patterns as `hollow` and was WRONG on all 86.
+    # Go has no assert statement. For a main-package program the canonical assertion is
+    # `if cond { fmt.Fprintf(os.Stderr, ...); os.Exit(1) }`. MEASURED over the 86: os.Exit
+    # non-zero 86/86, an `if` 86/86, panic 1/86, t.Error 0/86 — the table enumerated two
+    # spellings and missed the one in use. `os.Exit(0)` is deliberately NOT an assertion:
+    # a successful exit states nothing. log.Fatal* is included because it IS os.Exit(1).
+    "go": (r"\bpanic\s*\(|\bt\.(?:Error|Fatal)f?\s*\(|\bos\.Exit\s*\(\s*[1-9]"
+           r"|\blog\.Fatal(?:f|ln)?\s*\("),
     "rust": r"\b(?:debug_)?assert(?:_eq|_ne)?!",
     "r": r"\bstopifnot\s*\(|\bstop\s*\(|\bexpect_\w+\s*\(",
 }
@@ -914,14 +936,41 @@ def check_importable(text, lane, tree):
         # registry.append(...) was flagged. Two spellings of one thing cannot get two
         # verdicts.
         if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            # ⛔ TRIAGE, 4Q. Round 15 made EVERY decorator an import side effect. True for
+            # `@app.route(...)` and `@atexit.register`; FALSE for `@dataclass`, which is a
+            # pure transformer. It flagged 34 patterns on nothing but `@dataclass` /
+            # `@contextmanager` -- a real fix that opened a wider false hole, invisible until
+            # somebody read the FLAG set BY SHAPE instead of counting it.
+            #
+            # 4Q's discriminator is structural, so there is no name list to keep correct:
+            #   Name            @dataclass              pure: takes the object, returns one
+            #   Call(Name)      @dataclass(frozen=True) pure, just configured
+            #   Attribute       @atexit.register        references an EXTERNAL object
+            #   Call(Attribute) @app.route("/x")        calls a method ON an external object
+            # DECLARED COST (4Q): `@functools.lru_cache(...)` is Call(Attribute) and pure, so
+            # it still flags. Separating a module from an instance needs import tracking. The
+            # verdict is `flag` (judgement), not `fail`, and the shape needs no maintenance.
+            # ⛔ I OVERRULED 4Q'S DISCRIMINATOR AND 6E'S OWN PROBES ARE WHY. 4Q proposed
+            # "bare Name = pure": `@dataclass` is a Name, so skip it. But `@register` is ALSO
+            # a bare Name and it genuinely CALLS register(f) at import -- 6E's round-15
+            # finding, with two probes that failed the moment I applied the shape rule.
+            # EVERY decorator executes; `dataclass(cls)` returns a new class and touches
+            # nothing, `register(f)` appends to a registry. The AST shape cannot tell them
+            # apart, so the discriminator is not shape -- it is WHICH TRANSFORMER.
+            #
+            # That makes this an enumeration, and 6E drew the line in round 18: a bounded
+            # EXTERNAL fact (like `sys.stdlib_module_names`) is the legitimate kind; a table
+            # of spellings someone thought of is not. These are the stdlib's pure decorators.
+            # DECLARED COST: a user-defined decorator that happens to be named `dataclass`
+            # would be wrongly cleared. Unlike a spelling table, this list has an external
+            # authority to check it against.
             for _dec in n.decorator_list:
-                # a bare @name is a lookup, not a call; @name(...) and @a.b(...) execute
-                if isinstance(_dec, ast.Call):
-                    side.append(_dec.lineno)
-                elif not isinstance(_dec, (ast.Name, ast.Attribute)):
-                    side.append(_dec.lineno)
-                else:
-                    side.append(_dec.lineno)   # @register still CALLS register(f)
+                _base = _dec.func if isinstance(_dec, ast.Call) else _dec
+                _nm = (_base.id if isinstance(_base, ast.Name)
+                       else _base.attr if isinstance(_base, ast.Attribute) else None)
+                if _nm in PURE_DECORATORS:
+                    continue
+                side.append(_dec.lineno)
             continue
         if isinstance(n, (ast.Import, ast.ImportFrom, ast.Assign, ast.AnnAssign, ast.Pass)):
             continue
@@ -1740,6 +1789,44 @@ SELFTEST_CASES = [
      check_dangerous, "python", "from os import system\nsystem('ls')\n", "flag"),
     ("6E-R15 dangerous: os.execv is process execution too", check_dangerous, "python",
      "import os\nos.execv('/bin/ls', [])\n", "flag"),
+    # ⛔ TRIAGE SESSION — three classes that made the tool lie about the LIBRARY, not about a
+    # fixture. All three survived twenty red-team rounds because no probe used the idiom the
+    # library actually uses. Found by decomposing the 281 FLAGs by shape instead of counting.
+    ("TRIAGE-A go: `if x != y { fmt.Print; os.Exit(1) }` IS the assertion for a main-package "
+     "program — go has no assert statement, and this flagged 86 of 93 go patterns",
+     check_hollow, "go",
+     'package main\nimport ("fmt"; "os")\nfunc main(){ x := 1\nif x != 1 { '
+     'fmt.Println("bad"); os.Exit(1) } }\n', "pass"),
+    ("TRIAGE-A go: log.Fatal IS os.Exit(1) and states the same guarantee", check_hollow, "go",
+     'package main\nimport ("log")\nfunc main(){ x := 1\nif x != 1 { log.Fatal("bad") } }\n',
+     "pass"),
+    ("TRIAGE-A go NEGATIVE ARM: os.Exit(0) is a SUCCESSFUL exit and states nothing — the "
+     "rule must not become `any os.Exit passes`", check_hollow, "go",
+     'package main\nimport "os"\nfunc main(){ os.Exit(0) }\n', "flag"),
+    ("TRIAGE-A go NEGATIVE ARM: a program that verifies nothing is still hollow",
+     check_hollow, "go",
+     'package main\nimport "fmt"\nfunc main(){ fmt.Println("hi") }\n', "flag"),
+    ("TRIAGE-B py: the dataclass decorator is a PURE transformer — it returns a new class "
+     "and touches nothing, and it flagged 34 patterns as import side effects",
+     check_importable, "python",
+     "from dataclasses import dataclass\n@dataclass\nclass E:\n    x: int = 1\n", "pass"),
+    ("TRIAGE-B py: the same when configured", check_importable, "python",
+     "from dataclasses import dataclass\n@dataclass(frozen=True)\nclass E:\n    x: int = 1\n",
+     "pass"),
+    ("TRIAGE-B py NEGATIVE ARM: a bare @register is ALSO a bare Name and it genuinely calls "
+     "register(f) at import — this is why 4Q's shape rule was overruled", check_importable,
+     "python", "from r import register\n@register\ndef f(): pass\n", "flag"),
+    ("TRIAGE-B py NEGATIVE ARM: a route decorator mutates an external object", check_importable,
+     "python", "from a import app\n@app.route('/x')\ndef f(): pass\n", "flag"),
+    ("TRIAGE-B py NEGATIVE ARM: logging.basicConfig at module level reconfigures the ROOT "
+     "logger of whatever application imports the pattern — 6 patterns really do this",
+     check_importable, "python",
+     "import logging\nlogging.basicConfig(level=logging.INFO)\ndef f(): pass\n", "flag"),
+    ("TRIAGE-C py: a pattern that DEFINES a hash method was accused of depending on "
+     "PYTHONHASHSEED", check_determinism_markers, "python",
+     "class B:\n    def hash(self, item, n):\n        return 1\n", "pass"),
+    ("TRIAGE-C py NEGATIVE ARM: a genuine builtin hash() call is still nondeterministic "
+     "across runs", check_determinism_markers, "python", "x = hash('abc')\n", "flag"),
     # ⛔ 4Q ROUND 20 — the frozen ruler's own two defects, found by attacking the round-19 work.
     ("R20-F1 r: `#!/usr/bin/Rscript` is an interpreter directive, not a description — R was "
      "excluded from the shebang skip, so the # handler read the shebang as the claim",
