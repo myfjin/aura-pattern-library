@@ -64,7 +64,7 @@ for lane in sorted(by_lane):
     w(f"| {lane} | " + " | ".join(str(c.get(v, 0)) for v in
       ("FAIL", "FLAG", "UNVERIFIABLE", "NO_FINDING", "SKIP")) + f" | {sum(c.values())} |")
 w("")
-w("### ⚠️ Read the UNVERIFIABLE column before the PASS column")
+w("### ⚠️ Read the UNVERIFIABLE column before the NO_FINDING column")
 w("")
 w("Most checks are AST-based and implemented for python only. A non-python lane scoring few")
 w("FLAGs is not evidence that it is clean — it is evidence that fewer checks could run on it.")
@@ -170,7 +170,7 @@ if code_rows:
             w(f"| {sc} | " + ", ".join(f"`{d}`" for d in ds) + " |")
         w("")
         w("`WAIVE` additionally REQUIRES a `disposition_ref` — who waived it and why. Without")
-        w("that it is a silent PASS wearing a different name.")
+        w("that it is a silent NO_FINDING wearing a different name.")
         w("")
     cov = header.get("analyser_coverage") or {}
     if cov:

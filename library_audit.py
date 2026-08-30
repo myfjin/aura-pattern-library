@@ -1783,15 +1783,24 @@ def self_test() -> int:
     # three others ("silent PASS", "becomes a PASS", "false PASS"). A needle is a guess.
     # This walks EVERY string literal the module can emit -- comments are excluded by the
     # parser, and a literal that discusses the rename must name the new verdict.
+    # ...and it must walk the RENDERER too. The reader never opens this module; they read
+    # what audit_report.py prints. Scoping the probe to my own file left two stale
+    # user-facing strings alive, including a column heading (found while briefing 4Q R9).
     _P = "PA" + "SS"
-    _selfsrc = Path(__file__).read_text(encoding="utf-8")
-    _stale = sorted({(n.lineno, n.value[:70]) for n in ast.walk(ast.parse(_selfsrc))
-                     if isinstance(n, ast.Constant) and isinstance(n.value, str)
-                     and re.search(r"\b" + _P + r"\b", n.value)
-                     and "NO_FINDING" not in n.value})
-    extra.append(("Ver-1/4Q-R8-F2 NO string literal in this module still uses the old "
-                  "verdict name (ast walk over every literal, not one hand-written "
-                  "needle): %r" % (_stale[:3],), not _stale))
+    _stale = []
+    for _mod in (Path(__file__), Path(__file__).with_name("audit_report.py")):
+        if not _mod.exists():
+            _stale.append((_mod.name, "MISSING — cannot be checked, so it is not clean"))
+            continue
+        for _n in ast.walk(ast.parse(_mod.read_text(encoding="utf-8"))):
+            if (isinstance(_n, ast.Constant) and isinstance(_n.value, str)
+                    and re.search(r"\b" + _P + r"\b", _n.value)
+                    and "NO_FINDING" not in _n.value):
+                _stale.append((_mod.name, _n.lineno, _n.value[:60]))
+    _stale.sort()
+    extra.append(("Ver-1/4Q-R8-F2 NO string literal in the audit layer OR its renderer "
+                  "still uses the old verdict name (ast walk over every literal in both "
+                  "modules, not one hand-written needle): %r" % (_stale[:3],), not _stale))
 
     _tf3 = triage_fields([("a", "flag", ""), ("b", "unverifiable", "")], {"U1"})
     extra.append(("Ver-5 a record that is BOTH needs both, not one or the other",
