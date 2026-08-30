@@ -981,43 +981,75 @@ def _raises(fn, exc):
 
 
 def triage_fields(checks, subclasses):
-    """How this record should be ROUTED. Ver finding 5: `needs_judgement` was true for
-    `unverifiable` as well as `flag`, so a compiled-lane pattern whose only problem is a
-    missing analyser was routed to a human reviewer. Building an analyser and reading a
-    pattern are different work and belong in different fields."""
-    subs = set(subclasses)
+    """How this record should be ROUTED.
+
+    6E design review 3 (2026-08-30) rewrote this, and the correction was to the DESTINATION,
+    not the mechanism. My round-7 fix sent an unclaimed record to a human. 6E: an unclaimed
+    record is not thin evidence about a pattern, it is a DROPPED REASON CODE or a MISSING
+    ROUTING RULE -- a defect in this tool. A human cannot fix either. That is Ver's finding 5
+    one level deeper, and I wrote it twelve hours after quoting Ver's finding 5 at 4Q.
+
+    Two changes follow:
+
+    * the claim test is PER CHECK, not per record, so `which rule claimed this` is answerable
+      for each check instead of being a single boolean for the whole file;
+    * the three things `needs_human_judgement` used to mean are three fields. It survives
+      only as the union of the two that really are human work, and NEVER includes a tool
+      defect, so an old consumer cannot count one as human work.
+    """
     unknown = {c[1] for c in checks} - set(STATUSES)
     if unknown:
-        # 4Q round 8, attack 3: an undeclared status escaped every counter and every
-        # routing rule at once. Loud beats silent.
         raise KeyError("triage_fields: undeclared status %r -- add it to STATUSES and to "
                        "both partitions" % sorted(unknown))
+
+    review = pathology = impl = False
+    unclaimed, derived = [], set()
+    for _n, _st, _d in checks:
+        if _st in CLEAN_STATUSES:
+            continue
+        if _st in FINDING_STATUSES:
+            review = True                      # R1: read the pattern, it may be broken
+            continue
+        _c, _sub = reason_of(_d)
+        if _sub:
+            derived.add(_sub)
+        if _sub in ("U1", "U2"):
+            impl = True                        # R2: build the analyser / provide the input
+        elif _sub == "U3":
+            pathology = True                   # R3: defect or documented edge case?
+        else:
+            # No rule claims this check. It is a tool defect and it is NAMED, so the reader
+            # can tell "the U1 rule claimed this" from "nothing claimed it".
+            unclaimed.append({"name": _n, "status": _st,
+                              "reason_code": _c, "subclass": _sub})
+    if derived != set(subclasses):
+        # The caller and the router disagreeing about the same record is itself a defect.
+        raise KeyError("triage_fields: caller passed subclasses %r but the check details "
+                       "yield %r" % (sorted(subclasses), sorted(derived)))
+
     out = {
-        # U3 is PATHOLOGICAL -- the file blocked measurement, and deciding whether that is a
-        # defect or a documented edge case is human work, not tool work (4Q round 7, F1).
-        "needs_human_judgement": any(c[1] in FINDING_STATUSES for c in checks)
-                                 or "U3" in subs,
-        "needs_implementation": bool(subs & {"U1", "U2"}),
+        "needs_review": review,
+        "needs_pathology_triage": pathology,
+        "needs_implementation": impl,
+        # ⛔ NOT human work. Routes to whoever maintains this tool.
+        "needs_tool_fix": bool(unclaimed),
+        "unclaimed_checks": unclaimed or None,
+        # derived union, kept for consumers of the old name. Deliberately EXCLUDES
+        # needs_tool_fix: a tool defect must never be counted as human triage.
+        "needs_human_judgement": review or pathology,
+        "unowned_fallback": bool(unclaimed),
         "checks_measured": sum(1 for c in checks if c[1] in MEASURED_STATUSES),
         "checks_unmeasured": sum(1 for c in checks if c[1] in UNMEASURED_STATUSES),
-        # O1: `skip` belonged to neither counter, so measured/(measured+unmeasured)
-        # overstated coverage. All three now sum to len(checks).
         "checks_skipped": sum(1 for c in checks if c[1] in SKIPPED_STATUSES),
     }
-    # ⛔ THE INVARIANT, not just the U3 patch. Anything that is not a clean pass or a
-    # deliberate skip MUST reach someone. A future subclass added to REASON_SUBCLASS and
-    # forgotten here would silently route to nobody -- which is how U3 got lost.
+    # 6E question 3: the verdict is about the PATTERN, the coverage is about the TOOL, and
+    # they are orthogonal. Stated as how much could NOT be measured -- "unverified 1/8"
+    # cannot be misread as a pass, where "measured 7/8" can. Same numbers, opposite reading.
+    out["unverified"] = "%d/%d" % (out["checks_unmeasured"], len(checks))
+    # ⛔ THE INVARIANT. Anything that is not a clean pass or a deliberate skip MUST reach
+    # someone -- and now every one of them reaches a NAMED someone.
     out["needs_routing"] = any(c[1] not in CLEAN_STATUSES for c in checks)
-    # ⛔ 4Q round 8, O1: an `unverifiable` check whose detail carries no reason code yields
-    # no subclass, so neither rule above claims it and the record reaches NOBODY. The
-    # invariant is now ENFORCED rather than merely asserted: an unowned record falls to a
-    # human, and says so, so the gap is visible instead of silent.
-    out["unowned_fallback"] = bool(
-        out["needs_routing"]
-        and not (out["needs_human_judgement"] or out["needs_implementation"]))
-    if out["unowned_fallback"]:
-        out["needs_human_judgement"] = True
-    out["routed"] = out["needs_human_judgement"] or out["needs_implementation"]
+    out["routed"] = review or pathology or impl or out["needs_tool_fix"]
     return out
 
 
@@ -1252,7 +1284,6 @@ def main():
                 "disposition": None,
                 "disposition_ref": None,
                 **triage_fields(checks, _subs),
-                "needs_judgement": any(s in ("flag", "unverifiable") for _, s, _ in checks),
                 # 6E: PASS must never be read as "clean". These classes were never assessed
                 # for ANY pattern, so they are stated on every record, not just the flagged.
                 "unassessed_classes": ["C1_semantic_incorrectness", "C3_twin_equivalence",
@@ -1321,6 +1352,20 @@ def main():
         print(f"  {name:<22} " + "  ".join(f"{s}={row[s]}" for s in STATUSES if row.get(s)))
     # A header field cannot force anyone to act on UNVERIFIABLE (6E). This can: a run with
     # unmeasured patterns cannot exit 0 until someone says out loud that they looked.
+    # ⛔ 6E: an unowned record means THIS TOOL's routing is broken, so a green run must be
+    # impossible while one exists. --acknowledge-unverifiable exists so an honest
+    # UNVERIFIABLE does not redden the run; if a tool defect rode the same exit code, that
+    # flag would silence it too and the loud error would be one flag away from the comfort
+    # blanket it replaced. Tool defects are UNACKNOWLEDGEABLE, and they are checked FIRST.
+    _td = [r for r in records if r.get("needs_tool_fix")]
+    if _td:
+        print(f"\n⛔ {len(_td)} record(s) carry a check NO ROUTING RULE CLAIMED. That is a "
+              "defect in THIS TOOL")
+        print("   (a dropped reason code or a missing routing rule), not human triage work.")
+        for _r in _td[:5]:
+            print(f"     {_r['path']}: {_r['unclaimed_checks']}")
+        print("   No flag suppresses this. Fix the routing, then re-run.")
+        return 3
     nu = counts.get("UNVERIFIABLE", 0)
     if nu and not args.acknowledge_unverifiable:
         print(f"\n⛔ {nu} pattern(s) are UNVERIFIABLE — the tool COULD NOT MEASURE them.")
@@ -1714,41 +1759,74 @@ def self_test() -> int:
 
     # ---- Ver honesty pass. Every field it asked for gets a probe; a routing field nobody
     # can test is a routing field nobody HAS tested.
-    _cm = [("a", "pass", ""), ("b", "unverifiable", ""), ("c", "unverifiable", "")]
+    # ---- routing. Every probe here names WHICH rule claimed the check, because a probe
+    # that only asks "did somebody get it?" passes even after the rule is deleted -- 4Q
+    # round 9 F1 found exactly that hole in the flag/fail lane after I had closed it in the
+    # subclass lane. Details carry real reason codes now: a check whose detail has no code
+    # is a TOOL DEFECT by construction, so a probe cannot pass an empty one by accident.
+    _U1D, _U3D = "[NO_RULE_TABLE] x", "[HANG] x"
+    _cm = [("a", "pass", ""), ("b", "unverifiable", _U1D), ("c", "unverifiable", _U1D)]
     _tf = triage_fields(_cm, {"U1"})
     extra.append(("Ver-5 an UNVERIFIABLE-only record needs IMPLEMENTATION, not a human",
-                  _tf["needs_implementation"] and not _tf["needs_human_judgement"]))
+                  _tf["needs_implementation"] and not _tf["needs_human_judgement"]
+                  and not _tf["needs_tool_fix"]))
     _tf2 = triage_fields([("a", "flag", ""), ("b", "pass", "")], set())
-    extra.append(("Ver-5 a FLAGGED record needs a HUMAN, not implementation",
-                  _tf2["needs_human_judgement"] and not _tf2["needs_implementation"]))
+    extra.append(("Ver-5/4Q-R9-F1 a FLAGGED record needs a human BY THE FINDING RULE, not by "
+                  "the tool-defect lane absorbing it (the hole 4Q found in round 9)",
+                  _tf2["needs_review"] and _tf2["needs_human_judgement"]
+                  and not _tf2["needs_implementation"] and not _tf2["needs_tool_fix"]))
     # 4Q round 7 F1: I enumerated the cases I had thought of, not every value of the enum.
-    # THE INVARIANT probe comes first because it is the one that generalises: every subclass,
-    # and every non-clean status, must reach somebody.
-    for _sub in sorted(SUBCLASS_REMEDY):
-        _tfx = triage_fields([("a", "pass", ""), ("b", "unverifiable", "")], {_sub})
-        extra.append((f"4Q-R7 a record whose only problem is {_sub} is ROUTED to someone, "
-                      f"never dropped (human={_tfx['needs_human_judgement']} "
-                      f"impl={_tfx['needs_implementation']})", _tfx["routed"]))
-        # ⛔ and routed BY ITS OWN RULE. Without this clause the unowned backstop absorbs a
-        # deleted subclass rule and every probe above still passes -- measured: the
-        # mutation harness reported SURVIVED for "U3 dropped from routing".
-        extra.append((f"4Q-R8 {_sub} is claimed by its OWN routing rule, not swept up by "
-                      "the unowned backstop (which would hide the rule's removal)",
-                      not _tfx["unowned_fallback"]))
+    # The loop runs over every REASON CODE, not every subclass -- strictly more exhaustive,
+    # and it exercises the code->subclass mapping the router now depends on.
+    for _code, _sub in sorted(REASON_SUBCLASS.items()):
+        _tfx = triage_fields([("a", "pass", ""), ("b", "unverifiable", f"[{_code}] x")],
+                             {_sub})
+        extra.append((f"4Q-R7 a record whose only problem is {_code}/{_sub} is ROUTED to "
+                      f"someone (impl={_tfx['needs_implementation']} "
+                      f"pathology={_tfx['needs_pathology_triage']})", _tfx["routed"]))
+        # ⛔ and routed BY ITS OWN RULE. Without this clause a deleted subclass rule is
+        # absorbed by the tool-defect lane and every probe above still passes -- measured:
+        # the mutation harness reported SURVIVED for "U3 dropped from routing".
+        extra.append((f"4Q-R8 {_code}/{_sub} is claimed by its OWN routing rule, never by "
+                      "the tool-defect lane (which would hide the rule's removal)",
+                      not _tfx["needs_tool_fix"]))
+        extra.append((f"6E-D3 {_code}/{_sub} goes to exactly ONE of the three lanes, so the "
+                      "824-record triage session cannot double-count it",
+                      [_tfx["needs_review"], _tfx["needs_pathology_triage"],
+                       _tfx["needs_implementation"]].count(True) == 1))
     # 4Q round 8 F1: this loop used to hardcode the three non-clean statuses -- the same
-    # shape as the bug it exists to prevent. It is now derived from STATUSES, so a status
-    # added tomorrow is tested tomorrow.
+    # shape as the bug it exists to prevent. Derived from STATUSES, so a status added
+    # tomorrow is tested tomorrow.
     for _stat in STATUSES:
         if _stat in CLEAN_STATUSES:
             continue
-        _tfy = triage_fields([("a", "pass", ""), ("b", _stat, "")], {"U3"})
+        _d = _U3D if _stat in UNMEASURED_STATUSES else ""
+        _tfy = triage_fields([("a", "pass", ""), ("b", _stat, _d)],
+                             {"U3"} if _d else set())
         extra.append((f"4Q-R8 a record carrying a {_stat} check needs routing AND gets it "
                       "(loop derived from STATUSES, not hand-listed)",
                       _tfy["needs_routing"] and _tfy["routed"]))
-        _bare = triage_fields([("a", "pass", ""), ("b", _stat, "")], set())
-        extra.append((f"4Q-R8-O1 a {_stat} check with NO subclass at all still reaches a "
-                      "human (the unowned backstop), never nobody",
-                      _bare["routed"] and _bare["needs_human_judgement"]))
+        extra.append((f"4Q-R9-F1 a {_stat} check is claimed by a NAMED rule, never by the "
+                      "tool-defect lane", not _tfy["needs_tool_fix"]))
+    # 6E design review 3, Q1: an unverifiable check carrying NO reason code is a dropped
+    # code or a missing rule -- a defect in THIS TOOL. It used to be routed to a human, who
+    # can fix neither. It now routes to the tool-builder and NAMES the check.
+    _bare = triage_fields([("a", "pass", ""), ("b", "unverifiable", "no code here")], set())
+    extra.append(("6E-D3-Q1 an unverifiable check with NO reason code is a TOOL DEFECT, not "
+                  "human triage work",
+                  _bare["needs_tool_fix"] and not _bare["needs_human_judgement"]
+                  and not _bare["needs_implementation"] and _bare["routed"]))
+    extra.append(("6E-D3-Q1 the tool defect NAMES the check and its missing subclass, so a "
+                  "reader can tell it from a rule-claimed record",
+                  _bare["unclaimed_checks"] == [{"name": "b", "status": "unverifiable",
+                                                 "reason_code": None, "subclass": None}]))
+    extra.append(("6E-D3-Q2 needs_human_judgement EXCLUDES a tool defect, so an old consumer "
+                  "cannot count one as human work",
+                  not _bare["needs_human_judgement"]))
+    extra.append(("6E-D3-Q1 a caller whose subclasses disagree with the check details RAISES "
+                  "-- the two disagreeing about one record is itself a defect",
+                  _raises(lambda: triage_fields([("a", "unverifiable", _U1D)], {"U3"}),
+                          KeyError)))
     extra.append(("4Q-R8 the routing partition covers STATUSES exactly, so no status can "
                   "belong to none of them",
                   sorted(CLEAN_STATUSES + FINDING_STATUSES + UNMEASURED_STATUSES)
@@ -1756,29 +1834,43 @@ def self_test() -> int:
     extra.append(("4Q-R8 the coverage partition covers STATUSES exactly",
                   sorted(MEASURED_STATUSES + UNMEASURED_STATUSES + SKIPPED_STATUSES)
                   == sorted(STATUSES)))
-    extra.append(("4Q-R8 a clean record does NOT trip the unowned backstop (it would route "
-                  "every pattern in the library to a human)",
-                  not triage_fields([("a", "pass", "")], set())["unowned_fallback"]))
+    extra.append(("4Q-R8 a clean record raises no tool defect (it would route every pattern "
+                  "in the library to the tool-builder)",
+                  not triage_fields([("a", "pass", "")], set())["needs_tool_fix"]))
     extra.append(("4Q-R8 an undeclared status RAISES in triage_fields instead of escaping "
                   "every counter",
                   _raises(lambda: triage_fields([("a", "warn", "")], set()), KeyError)))
     extra.append(("4Q-R8 an undeclared status RAISES in verdict_for instead of falling "
                   "through to the clean verdict",
                   _raises(lambda: verdict_for([("a", "warn", "")]), KeyError)))
-    extra.append(("4Q-R8 an unverifiable check with a U1 subclass still routes to "
-                  "IMPLEMENTATION, not to a human (the backstop did not swallow Ver-5)",
-                  triage_fields([("a", "unverifiable", "")], {"U1"})["needs_implementation"]
-                  and not triage_fields([("a", "unverifiable", "")],
-                                        {"U1"})["needs_human_judgement"]))
+    # 4Q round 9 F2: STATUS_VERDICT relies on insertion order for SEVERITY, and only the
+    # membership was tested. The ordering itself is a design decision; assert it.
+    extra.append(("4Q-R9-F2 severity order: fail beats flag AND unverifiable",
+                  verdict_for([("a", "fail", ""), ("b", "flag", "")]) == "FAIL"
+                  and verdict_for([("a", "fail", ""), ("b", "unverifiable", "")]) == "FAIL"))
+    extra.append(("4Q-R9-F2 severity order: flag beats unverifiable",
+                  verdict_for([("a", "flag", ""), ("b", "unverifiable", "")]) == "FLAG"))
+    extra.append(("4Q-R9-F2 severity order: every finding status beats SKIP",
+                  all(verdict_for([("a", _s, ""), ("b", "skip", "")]) != "SKIP"
+                      for _s in STATUS_VERDICT)))
     _clean = triage_fields([("a", "pass", ""), ("b", "skip", "")], set())
     extra.append(("4Q-R7 a clean record needs NO routing (the invariant does not cry wolf)",
                   not _clean["needs_routing"] and not _clean["routed"]))
-    _mix = [("a", "pass", ""), ("b", "skip", ""), ("c", "unverifiable", ""), ("d", "flag", "")]
+    _mix = [("a", "pass", ""), ("b", "skip", ""), ("c", "unverifiable", _U1D),
+            ("d", "flag", "")]
     _tfm = triage_fields(_mix, {"U1"})
     extra.append(("4Q-R7-O1 measured + unmeasured + skipped == every check, so the coverage "
                   "ratio cannot overstate itself",
                   _tfm["checks_measured"] + _tfm["checks_unmeasured"]
                   + _tfm["checks_skipped"] == len(_mix)))
+    # 6E design review 3, Q3: stated as how much could NOT be measured. "unverified 1/4"
+    # cannot be misread as a pass; "measured 3/4" can.
+    extra.append(("6E-D3-Q3 the coverage axis is stated as UNVERIFIED, so it cannot be read "
+                  "as a pass, and it matches the counters",
+                  _tfm["unverified"] == "1/4"
+                  and _tfm["unverified"].split("/")[0] == str(_tfm["checks_unmeasured"])))
+    extra.append(("6E-D3-Q3 the coverage axis does NOT move the verdict (rejecting "
+                  "PASS_WITH_GAPS a second time)", verdict_for(_mix) == "FLAG"))
     # 4Q round 8 F2: one hand-written needle ("A PASS") caught one phrasing and missed
     # three others ("silent PASS", "becomes a PASS", "false PASS"). A needle is a guess.
     # This walks EVERY string literal the module can emit -- comments are excluded by the
@@ -1811,7 +1903,7 @@ def self_test() -> int:
                   "still uses the old verdict name (ast walk over every literal in both "
                   "modules, not one hand-written needle): %r" % (_stale[:3],), not _stale))
 
-    _tf3 = triage_fields([("a", "flag", ""), ("b", "unverifiable", "")], {"U1"})
+    _tf3 = triage_fields([("a", "flag", ""), ("b", "unverifiable", _U1D)], {"U1"})
     extra.append(("Ver-5 a record that is BOTH needs both, not one or the other",
                   _tf3["needs_human_judgement"] and _tf3["needs_implementation"]))
     extra.append(("Ver-6 the measured/unmeasured ratio is carried so a reader sees the gap "
