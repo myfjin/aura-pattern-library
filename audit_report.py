@@ -90,6 +90,81 @@ w("")
 w("Toolchains: " + ", ".join(f"{k}={'yes' if v else '**MISSING**'}"
                              for k, v in header["toolchains_present"].items()))
 w("")
+# ---- the UNVERIFIABLE board. 6E: one undifferentiated bucket is useless for triage,
+# because "no R analyser" and "this twin has no source" do not have the same remedy.
+sub_counts = collections.Counter()
+code_rows = collections.defaultdict(collections.Counter)     # (subclass, code) -> check ct
+code_lanes = collections.defaultdict(collections.Counter)    # (subclass, code) -> lane ct
+undisposed = 0
+for r in recs:
+    for u in (r.get("unverifiable_checks") or []):
+        key = (u.get("subclass") or "UNCODED", u.get("reason_code") or "(none)")
+        code_rows[key][u["name"]] += 1
+        code_lanes[key][r["language"]] += 1
+    for sc in (r.get("unverifiable_subclass") or []):
+        sub_counts[sc] += 1
+    if r["verdict"] == "UNVERIFIABLE" and r.get("disposition") is None:
+        undisposed += 1
+
+tax = header.get("unverifiable_taxonomy") or {}
+if code_rows:
+    w("---")
+    w("")
+    w("# The UNVERIFIABLE board — sorted by REMEDY")
+    w("")
+    w("UNVERIFIABLE is not one problem. Each subclass below names a different kind of work,")
+    w("and that is the point of the split: the triage session can be run without reopening a")
+    w("single pattern file.")
+    w("")
+    w(f"**{undisposed} records are UNVERIFIABLE and undispositioned.** The tool exits 2 while")
+    w("that is true, unless `--acknowledge-unverifiable` is passed.")
+    w("")
+    w("| subclass | records | what it means | remedy |")
+    w("|---|---:|---|---|")
+    for sc in sorted(sub_counts):
+        meta = (tax.get("subclasses") or {}).get(sc, {})
+        w(f"| **{sc} {meta.get('name','?')}** | {sub_counts[sc]} | "
+          f"{'the tool is the gap' if sc=='U1' else 'the environment/data is the gap' if sc=='U2' else 'the FILE blocked measurement'} "
+          f"| {meta.get('remedy','?')} |")
+    w("")
+    w("## By reason code")
+    w("")
+    w("| subclass | reason code | occurrences | checks affected | lanes |")
+    w("|---|---|---:|---|---|")
+    for key in sorted(code_rows, key=lambda k: (k[0], -sum(code_rows[k].values()))):
+        sc, code = key
+        n = sum(code_rows[key].values())
+        chk = ", ".join(f"`{c}`×{m}" for c, m in code_rows[key].most_common(4))
+        lns = ", ".join(f"{l}×{m}" for l, m in code_lanes[key].most_common())
+        w(f"| {sc} | `{code}` | {n} | {chk} | {lns} |")
+    w("")
+    if tax.get("per_subclass_dispositions"):
+        w("## Disposition vocabulary (closed set — no free text)")
+        w("")
+        w("| subclass | permitted dispositions |")
+        w("|---|---|")
+        for sc, ds in sorted(tax["per_subclass_dispositions"].items()):
+            w(f"| {sc} | " + ", ".join(f"`{d}`" for d in ds) + " |")
+        w("")
+        w("`WAIVE` additionally REQUIRES a `disposition_ref` — who waived it and why. Without")
+        w("that it is a silent PASS wearing a different name.")
+        w("")
+    cov = header.get("analyser_coverage") or {}
+    if cov:
+        w("## Analyser coverage — which check can run on which lane")
+        w("")
+        w("A future edit that adds a `pass`-returning fallback for a missing analyser would")
+        w("empty the U1 bucket silently, and the exit-2 forcing function cannot see that")
+        w("happen. This table is asserted cell by cell in the self-test, so such an edit")
+        w("breaks a probe instead.")
+        w("")
+        lanes = sorted({l for v in cov.values() for l in v})
+        w("| check | " + " | ".join(lanes) + " |")
+        w("|---|" + "---|" * len(lanes))
+        for c in sorted(cov):
+            w(f"| `{c}` | " + " | ".join("yes" if l in cov[c] else "—" for l in lanes) + " |")
+        w("")
+
 w("---")
 w("")
 w("# The triage queue")
