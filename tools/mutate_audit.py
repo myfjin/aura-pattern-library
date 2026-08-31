@@ -508,7 +508,7 @@ MUTANTS = [
 ]
 def run():
     r = subprocess.run([PY_, P, "--self-test"], capture_output=True, text=True,
-                       cwd="/Users/s_dio/aura-pattern-library")
+                       cwd=ROOT)
     out = r.stdout + r.stderr
     fails = [l.strip() for l in out.splitlines() if l.strip().startswith("FAILED:")]
     broken = ("Traceback" in out or "SyntaxError" in out
@@ -520,7 +520,7 @@ def count_oracle():
     INDEPENDENT count of the probe lines actually printed -- an arithmetic guess drifted
     off by 2 and nobody noticed (4Q round 3)."""
     r = subprocess.run([PY_, P, "--self-test"], capture_output=True, text=True,
-                       cwd="/Users/s_dio/aura-pattern-library")
+                       cwd=ROOT)
     out = r.stdout + r.stderr
     lines = sum(1 for l in out.splitlines()
                 if l.startswith("  ok  ") or l.startswith("  FAIL  "))
