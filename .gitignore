@@ -13,3 +13,6 @@ __pycache__/
 
 # run artifacts of demo patterns
 demo_logs/
+
+# renderer writes its report into the CURRENT directory; the canonical copy lives in ~/aura-docs
+AUDIT-REPORT.md
