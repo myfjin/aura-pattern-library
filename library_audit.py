@@ -169,9 +169,9 @@ ANALYSER_COVERAGE = {
     "dangerous_primitives": LANES,          # DANGEROUS  + stripper for all six
     "determinism_markers":  LANES,          # NONDET     + stripper for all six
     "hardcoded_abs_path":   LANES,          # stripper for all six
-    "assert_nonvacuous":    ("python",),    # python AST only
+    "assert_nonvacuous":    LANES,          # python AST + a literal-only rule per lane
     "importable":           ("python",),    # python AST only
-    "deps":                 ("python",),    # python AST only
+    "deps":                 LANES,          # python AST + a lexical rule per lane
     # ROUND 19: the description SLOT differs per language, but it is a lexical fact in each,
     # and build_patterns_index's frozen ruler already reads all six for PATTERNS_INDEX.md.
     # This was one of the four U1 sources that made every non-python pattern UNVERIFIABLE.
@@ -873,12 +873,147 @@ def check_hollow(text, lane, tree):
     return ("hollow", "pass", f"{n} assertion construct(s) in code")
 
 
+# ============================================ C4 for the five non-python lanes
+# ⛔ WHAT THIS CAN AND CANNOT DECIDE. The python arm walks an AST and knows an assert's test
+# contains no Name/Call/Attribute/Subscript. Outside python there is no AST here, so the rule
+# is deliberately NARROWER: an assertion is judged ONLY when its tested expression is
+# LITERAL-ONLY (numbers, strings, true/false, operators — no identifier, no call). Anything
+# else is counted live and nothing is claimed about it. That direction is the safe one: the
+# expensive error is a FALSE accusation against a good pattern, and a literal-only expression
+# cannot be a real test. A `pass` therefore means "no literal-only assertion that can never
+# fire was found", which is a measurement, not a fallback.
+_LIT_TOKEN = re.compile(r"""
+      "(?:[^"\\]|\\.)*"                      # double-quoted string
+    | '(?:[^'\\]|\\.)*'                      # single-quoted string
+    | \b\d+(?:\.\d+)?(?:[uUlLfF]+)?\b        # numeric literal, C/Rust suffixes allowed
+    | \b(?:true|false|TRUE|FALSE|True|False)\b
+    | [-+*/%()<>=!&|^~,\s]                   # operators, punctuation, whitespace
+""", re.X)
+_C4_NORM = (("!==", "!="), ("===", "=="), ("&&", " and "), ("||", " or "))
+# The call/macro heads that carry a tested expression, per lane.
+_C4_HEAD = {
+    "cpp":  re.compile(r"\b(?:assert|static_assert|\w*_ASSERT\w*)\s*(?=\()"),
+    "rust": re.compile(r"\b(?:debug_)?assert(_eq|_ne)?!\s*(?=[\(\[])"),
+    "r":    re.compile(r"\bstopifnot\s*(?=\()"),
+    "javascript": re.compile(r"\b(?:assert|console\.assert)\s*(?=\()"),
+}
+# go and js also spell an assertion as `if <cond> { ...exit/throw... }` (see ASSERT_PAT's go
+# note: os.Exit(1) is the canonical go assertion and there is no assert statement).
+_C4_IF = {
+    "go": (re.compile(r"\bif\s+([^{\n]+?)\s*\{"),
+           re.compile(r"\bos\.Exit\s*\(\s*[1-9]|\bpanic\s*\(|\blog\.Fatal")),
+    "javascript": (re.compile(r"\bif\s*\(([^{\n]+?)\)\s*\{"),
+                   re.compile(r"\bthrow\s+new\s+\w*(?:Error|Exception)")),
+}
+
+
+def _c4_literal_only(expr: str) -> bool:
+    return expr.strip() != "" and not _LIT_TOKEN.sub("", expr).strip()
+
+
+def _c4_fold(expr: str):
+    """True/False if the literal-only expression folds; None if it cannot be evaluated."""
+    e = expr
+    for a, b in _C4_NORM:
+        e = e.replace(a, b)
+    e = re.sub(r"\b(?:true|TRUE)\b", "True", e)
+    e = re.sub(r"\b(?:false|FALSE)\b", "False", e)
+    e = re.sub(r"(?<=\d)[uUlLfF]+\b", "", e)          # 1u / 2L / 3.0f
+    e = re.sub(r"!(?!=)", " not ", e)
+    try:
+        return bool(eval(compile(ast.parse(e.strip(), mode="eval"), "<a>", "eval"),
+                         {"__builtins__": {}}, {}))
+    except Exception:
+        return None
+
+
+def _c4_args_at(text: str, open_idx: int):
+    """Split the argument list starting at text[open_idx]=='(' on TOP-LEVEL commas."""
+    depth, i, start, args = 0, open_idx, open_idx + 1, []
+    while i < len(text):
+        c = text[i]
+        if c in "\"'":
+            q, i = c, i + 1
+            while i < len(text) and text[i] != q:
+                i += 2 if text[i] == "\\" else 1
+        elif c == "(":
+            depth += 1
+        elif c == ")":
+            depth -= 1
+            if depth == 0:
+                args.append(text[start:i])
+                return args, i
+        elif c == "," and depth == 1:
+            args.append(text[start:i]); start = i + 1
+        i += 1
+    return None, -1
+
+
+def _c4_sites(code: str, lane: str):
+    """Every assertion site as (expression, POLARITY).
+
+    ⛔ THE POLARITY INVERTS THE VERDICT — reversing it would call every good guard vacuous
+    and every vacuous one good:
+      "assert"  `assert(E)` / `stopifnot(E)` — PASSES when E is true, so it can never fire
+                when E folds TRUE.
+      "guard"   `if (E) { throw / os.Exit(1) }` — FIRES when E is true, so it can never fire
+                when E folds FALSE.
+    """
+    out = []
+    head = _C4_HEAD.get(lane)
+    if head:
+        for m in head.finditer(code):
+            args, _ = _c4_args_at(code, m.end())
+            if not args:
+                continue
+            if lane == "rust" and m.group(1) in ("_eq", "_ne") and len(args) >= 2:
+                out.append((f"({args[0]}) {'==' if m.group(1) == '_eq' else '!='} ({args[1]})",
+                            "assert"))
+            else:
+                out.append((args[0], "assert"))
+    pair = _C4_IF.get(lane)
+    if pair:
+        ifpat, bodypat = pair
+        for m in ifpat.finditer(code):
+            if bodypat.search(code[m.end():m.end() + 300]):
+                out.append((m.group(1), "guard"))
+    return out
+
+
+def _assert_nonvacuous_lexical(text, lane):
+    code, ok = strip_noncode(text, lane, keep_strings=True)
+    if not ok:
+        return ("assert_nonvacuous", "unverifiable",
+                _u(_strip_fail_reason(lane),
+                   f"could not strip lane '{lane}' — an assertion inside a COMMENT would "
+                   "count, so nothing was measured"))
+    sites = _c4_sites(code, lane)
+    if not sites:
+        return ("assert_nonvacuous", "skip", "no asserts — reported by the hollow check")
+    dead, markers, live = [], [], 0
+    for expr, pol in sites:
+        if not _c4_literal_only(expr):
+            live += 1; continue
+        val = _c4_fold(expr)
+        if val is None:
+            live += 1; continue
+        vacuous = (val is True) if pol == "assert" else (val is False)
+        (dead if vacuous else markers).append(expr.strip()[:60])
+    if dead:
+        return ("assert_nonvacuous", "fail" if not live else "flag",
+                f"{len(dead)} assertion(s) that can never fire: {sorted(dead)}"
+                + ("" if live else " — and there are no live assertions at all"))
+    if not live and not markers:
+        return ("assert_nonvacuous", "fail", "no assert can fire")
+    return ("assert_nonvacuous", "pass",
+            f"{live} live assert(s), {len(markers)} failure-path marker(s)")
+
+
 def check_assert_nonvacuous(text, lane, tree):
     """C4 — an assert that cannot fail is decoration. Decidable on the python AST: an assert
     whose test contains no Name/Call/Attribute/Subscript is comparing literals to literals."""
     if lane != "python":
-        return ("assert_nonvacuous", "unverifiable",
-                _u("NON_PYTHON_AST", f"decidable on the python AST only; lane is '{lane}'"))
+        return _assert_nonvacuous_lexical(text, lane)
     if tree is None:
         return ("assert_nonvacuous", "fail",
                 _u("PARSE_FAIL", "python source did not parse — a malformed file is "
@@ -1011,13 +1146,133 @@ def check_importable(text, lane, tree):
 _STDLIB = getattr(sys, "stdlib_module_names", frozenset())
 
 
+# ================================================== C6 for the five non-python lanes
+# ⛔ WHY A LEXICAL SCAN IS HONEST HERE. The python arm walks an AST; these walk regexes over
+# COMMENT-STRIPPED-BUT-STRING-KEPT source, because in go/js/R the import target IS a string
+# literal — stripping literals (the default) deletes the very thing being measured.
+#
+# ⛔ WHAT EACH RULE CAN AND CANNOT DECIDE — stated so a `pass` is never read as more than it is:
+#   go     EXACT. The language defines it: a first path segment containing "." is a remote
+#          module path; everything else is the standard library.
+#   rust   `use X::…` / `extern crate X` only. A bare path call (`rand::random()`) with no
+#          `use` is NOT counted — conservative, so this under-reports rather than invents.
+#   cpp    angle-bracket includes against the C++17 + C standard header set. `#include "x"`
+#          is local by definition and is not counted.
+#   js     require()/import specifiers; "./" and "../" are local, "node:" is builtin.
+#   r      library()/require()/requireNamespace() and `pkg::` namespacing.
+_CPP_STD_HEADERS = frozenset("""
+algorithm any array atomic bitset charconv chrono codecvt complex condition_variable deque
+exception execution filesystem forward_list fstream functional future initializer_list iomanip
+ios iosfwd iostream istream iterator limits list locale map memory memory_resource mutex new
+numeric optional ostream queue random ratio regex scoped_allocator set shared_mutex sstream
+stack stdexcept streambuf string string_view strstream system_error thread tuple type_traits
+typeindex typeinfo unordered_map unordered_set utility valarray variant vector version
+cassert cctype cerrno cfenv cfloat cinttypes climits clocale cmath csetjmp csignal cstdarg
+cstddef cstdint cstdio cstdlib cstring ctime cuchar cwchar cwctype cstdalign cstdbool
+assert.h ctype.h errno.h fenv.h float.h inttypes.h limits.h locale.h math.h setjmp.h signal.h
+stdarg.h stddef.h stdint.h stdio.h stdlib.h string.h time.h wchar.h wctype.h
+unistd.h sys/wait.h sys/types.h sys/stat.h sys/mman.h fcntl.h pthread.h dlfcn.h sys/time.h
+""".split())
+_NODE_BUILTINS = frozenset("""
+assert async_hooks buffer child_process cluster console constants crypto dgram diagnostics_channel
+dns domain events fs http http2 https inspector module net os path perf_hooks process punycode
+querystring readline repl stream string_decoder timers tls trace_events tty url util v8 vm
+worker_threads zlib
+""".split())
+_R_BASE_PKGS = frozenset("""
+base compiler datasets grDevices graphics grid methods parallel splines stats stats4 tcltk
+tools utils
+""".split())
+_RUST_LOCAL_ROOTS = frozenset({"std", "core", "alloc", "crate", "self", "super"})
+
+
+def _deps_cpp(code):
+    hs = set(re.findall(r"#\s*include\s*<([^>]+)>", code))
+    return hs, {h for h in hs if h not in _CPP_STD_HEADERS}
+
+
+def _deps_go(code):
+    paths = set()
+    for m in re.finditer(r"import\s*\(([^)]*)\)", code, re.S):
+        paths |= set(re.findall(r'"([^"]+)"', m.group(1)))
+    paths |= set(re.findall(r'import\s+(?:[\w.]+\s+)?"([^"]+)"', code))
+    return paths, {p for p in paths if "." in p.split("/")[0]}
+
+
+def _deps_rust(code):
+    cs = set(re.findall(r"\buse\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:::|;)", code))
+    cs |= set(re.findall(r"\bextern\s+crate\s+([A-Za-z_][A-Za-z0-9_]*)", code))
+    return cs, {c for c in cs if c not in _RUST_LOCAL_ROOTS}
+
+
+# ⛔ MEASURED against an EXTERNAL oracle, 2026-09-02: 978 real .js files across 426 npm
+# packages, scoring this rule's third-party set against each package's OWN package.json
+# `dependencies`. Agreement 726, false negatives 0. But 32 of the 56 disagreements were
+# junk this rule INVENTED, in three classes my own fixtures could never have produced:
+#   18  `from '${rawId}'` — a `from '...'` sitting inside a TEMPLATE LITERAL error message
+#    8  `from ', path.call(print$1, '` — the word `from` inside ordinary quoted prose
+#    6  `#minpath` — Node SUBPATH IMPORTS, which resolve to a LOCAL file, not a package
+# The cure is not a tighter `from` regex (the text is genuinely ambiguous) but a shape test:
+# a string that CANNOT be an npm specifier is not a dependency. Re-scored after: agreement
+# 726 (unchanged), noise 56 -> 24, false negatives still 0. The remaining 24 are real
+# packages npm HOISTED to a parent node_modules — an undeclared dependency is a true finding.
+_NPM_SPECIFIER = re.compile(r"^(?:@[a-z0-9][\w.-]*/)?[a-z0-9][\w.-]*(?:/[\w.@-]+)*$", re.I)
+
+
+def _deps_js(code):
+    ms = set(re.findall(r"""require\s*\(\s*["']([^"']+)["']""", code))
+    ms |= set(re.findall(r"""\bfrom\s+["']([^"']+)["']""", code))
+    ms |= set(re.findall(r"""\bimport\s+["']([^"']+)["']""", code))
+    third = set()
+    for m in ms:
+        if m.startswith((".", "/")):           # relative or absolute -> a local file
+            continue
+        # ⛔ A Node SUBPATH import ("#minpath") needs no clause of its own: _NPM_SPECIFIER
+        # rejects a leading "#" already. MEASURED 2026-09-02 — a mutant deleting an explicit
+        # "#" test SURVIVED, because the shape test below subsumed it. Two mechanisms for
+        # one job means neither can be shown to work; the explicit clause is gone and the
+        # subpath probe now exercises the shape test, which is the thing actually deciding.
+        base = m[5:] if m.startswith("node:") else m
+        if not _NPM_SPECIFIER.match(base):     # not a package name at all -> not a dependency
+            continue
+        if base.split("/")[0] not in _NODE_BUILTINS:
+            third.add(m)
+    return ms, third
+
+
+def _deps_r(code):
+    ps = set(re.findall(r"""\b(?:library|require|requireNamespace)\s*\(\s*["']?([A-Za-z][A-Za-z0-9._]*)""", code))
+    ps |= set(re.findall(r"\b([A-Za-z][A-Za-z0-9._]*)::", code))
+    return ps, {x for x in ps if x not in _R_BASE_PKGS}
+
+
+DEPS_EXTRACT = {"cpp": _deps_cpp, "go": _deps_go, "rust": _deps_rust,
+                "javascript": _deps_js, "r": _deps_r}
+
+
+def _deps_nonpython(text, lane):
+    """C6 outside python. Refuses to say `pass` when it could not read the source."""
+    if lane not in DEPS_EXTRACT:
+        return ("deps", "unverifiable",
+                _u("NO_RULE_TABLE", f"no dependency rule for lane '{lane}'"))
+    code, ok = strip_noncode(text, lane, keep_strings=True)
+    if not ok:
+        return ("deps", "unverifiable",
+                _u(_strip_fail_reason(lane),
+                   f"could not strip lane '{lane}' — an import named in a COMMENT would "
+                   "count, so nothing was measured"))
+    allm, third = DEPS_EXTRACT[lane](code)
+    if third:
+        return ("deps", "flag", "third-party import(s) with no dependency manifest: "
+                                + ", ".join(sorted(third)))
+    return ("deps", "pass", f"{len(allm)} import(s), all standard")
+
+
 def check_deps(text, lane, tree):
     """C6 — a third-party import runs here and crashes in the customer's clean environment.
     There is no dependency manifest in the library, so ANY third-party import is a flag."""
     if lane != "python":
-        return ("deps", "unverifiable",
-                _u("NON_PYTHON_AST", f"import classification implemented for python "
-                   f"only; lane is '{lane}'"))
+        return _deps_nonpython(text, lane)
     if tree is None:
         return ("deps", "fail",
                 _u("PARSE_FAIL", "python source did not parse — a malformed file is "
@@ -2004,7 +2259,14 @@ SELFTEST_CASES = [
      "x = 2\nassert x == 2\n", "pass"),
     ("assert: mixed live + always-true is a flag", check_assert_nonvacuous, "python",
      "x = 2\nassert x == 2\nassert True\n", "flag"),
-    ("assert: non-python is UNVERIFIABLE not pass", check_assert_nonvacuous, "go", "x", "unverifiable"),
+    # ⛔ ROUND 20 — this slot asserted the LIMITATION ("non-python is UNVERIFIABLE"), the
+    # shape Round 19 removed from doc_behavior and C6 removed from deps. C4 now decides in
+    # all six lanes; both arms of every lane are probed in the matrix and in the C4-<lane>
+    # block near the end of the self-test.
+    ("assert: a go guard on two literals can never fire", check_assert_nonvacuous, "go",
+     "package main\nfunc main(){ if 1 != 1 { os.Exit(1) } }\n", "fail"),
+    ("assert: a go guard on a variable is live", check_assert_nonvacuous, "go",
+     "package main\nfunc main(){ if got != 1 { os.Exit(1) } }\n", "pass"),
 
     ("importable: no defs is script-only", check_importable, "python", "print(1)\n", "flag"),
     ("importable: side effect at module level", check_importable, "python",
@@ -2015,7 +2277,13 @@ SELFTEST_CASES = [
     ("deps: third-party import is flagged", check_deps, "python", "import numpy\n", "flag"),
     ("deps: stdlib only passes", check_deps, "python", "import json, os\n", "pass"),
     ("deps: relative import is not third-party", check_deps, "python", "from . import x\n", "pass"),
-    ("deps: non-python is UNVERIFIABLE not pass", check_deps, "rust", "use foo;", "unverifiable"),
+    # ⛔ ROUND 20 — this slot held `("deps: non-python is UNVERIFIABLE not pass", ...
+    # "rust", "use foo;", "unverifiable")`: a probe asserting the LIMITATION, exactly the
+    # shape Round 19 removed from doc_behavior. It defended the gap, not the tool. C6 now
+    # decides in all six lanes; both arms of every lane are probed in the matrix and in the
+    # C6-<lane> false-positive block near the end of the self-test.
+    ("deps: a rust crate that is not std IS third-party", check_deps, "rust", "use foo;",
+     "flag"),
 
     ("dangerous: eval is flagged", check_dangerous, "python", "eval('1')\n", "flag"),
     ("dangerous: shell=True is flagged", check_dangerous, "python", "run(x, shell=True)\n", "flag"),
@@ -3479,7 +3747,29 @@ def self_test() -> int:
         "javascript": "function f(){ return 1; }\n",
     }
     _PY_POSITIVE = {"assert_nonvacuous": "assert 1 == 1\n", "importable": "print(1)\n",
-                    "deps": "import numpy\n", "doc_behavior": "x = 1\n"}
+                    "doc_behavior": "x = 1\n"}
+    # `deps` is the one check whose positive is LANE-SPECIFIC: a third-party import is
+    # spelled differently in each of the six, so one python fixture cannot serve them.
+    # Feeding `import numpy` to the cpp arm would return `pass` and the MATRIX+ probe would
+    # (correctly) fail -- these exist so the probe passes for the RIGHT reason.
+    # Like deps, C4's positive is LANE-SPECIFIC: a vacuous assertion is spelled differently
+    # in each lane, and `assert 1 == 1` is not valid in any of the other five.
+    _C4_POSITIVE = {
+        "python":     "assert 1 == 1\n",
+        "cpp":        "int main(){ assert(1 == 1); return 0; }\n",
+        "go":         "package main\nfunc main(){ if 1 != 1 { os.Exit(1) } }\n",
+        "rust":       "fn main(){ assert_eq!(1, 1); }\n",
+        "r":          "stopifnot(TRUE)\n",
+        "javascript": 'if (1 !== 1) { throw new Error("x"); }\n',
+    }
+    _DEPS_POSITIVE = {
+        "python":     "import numpy\n",
+        "cpp":        "#include <boost/asio.hpp>\nint main(){ return 0; }\n",
+        "go":         'package main\n\nimport "github.com/pkg/errors"\n\nfunc main(){}\n',
+        "rust":       "use serde::Serialize;\nfn main() { }\n",
+        "r":          "library(dplyr)\n",
+        "javascript": 'const _ = require("lodash");\n',
+    }
     _byname = {f.__name__: f for f in FILE_CHECKS}
     _cells = _gaps = 0
     for _cname, _lanes in sorted(ANALYSER_COVERAGE.items()):
@@ -3506,6 +3796,10 @@ def self_test() -> int:
                 # Feed each covered cell something it MUST catch.
                 if _cname == "hollow":
                     _pos = _NOASSERT[_lane]
+                elif _cname == "deps":
+                    _pos = _DEPS_POSITIVE[_lane]
+                elif _cname == "assert_nonvacuous":
+                    _pos = _C4_POSITIVE[_lane]
                 elif _cname in _PY_POSITIVE:
                     _pos = _PY_POSITIVE[_cname]
                 else:
@@ -3527,6 +3821,127 @@ def self_test() -> int:
                   f"({len(ANALYSER_COVERAGE)} checks x {len(LANES) + 1} lanes), "
                   f"{_gaps} of them declared analyser-less",
                   _cells == len(ANALYSER_COVERAGE) * (len(LANES) + 1) and _gaps > 0))
+
+    # ---- C4 non-python: BOTH ARMS, and the POLARITY trap ---------------------------------
+    # The dangerous error here is the inverted one: reading `if (1 != 1) { os.Exit(1) }` as a
+    # good assertion and `assert(1 == 1)` as a bad one. Each lane is probed in both
+    # directions, and the `live` arm is what stops this from becoming an accusation machine.
+    for _lane9, _dead9, _live9 in (
+        ("cpp", "int main(){ assert(1 == 1); }\n", "int main(){ assert(x == 1); }\n"),
+        ("rust", "fn main(){ assert_eq!(1, 1); }\n", "fn main(){ assert_eq!(got, 1); }\n"),
+        ("rust", "fn main(){ assert!(true); }\n", "fn main(){ assert!(ok); }\n"),
+        ("r", "stopifnot(TRUE)\n", "stopifnot(x == 1)\n"),
+        ("javascript", 'if (1 !== 1) { throw new Error("x"); }\n',
+                       'if (a !== 1) { throw new Error("x"); }\n'),
+        ("go", "package main\nfunc main(){ if 1 != 1 { os.Exit(1) } }\n",
+               "package main\nfunc main(){ if got != 1 { os.Exit(1) } }\n"),
+    ):
+        _sd = check_assert_nonvacuous(_dead9, _lane9, None)
+        _sl = check_assert_nonvacuous(_live9, _lane9, None)
+        extra.append((f"C4-{_lane9} an assertion on two LITERALS is caught "
+                      f"(got {_sd[1]}: {_sd[2][:44]})", _sd[1] in ("fail", "flag")))
+        extra.append((f"C4-{_lane9} the SAME assertion on a variable is left alone — the "
+                      f"check is not an accusation machine (got {_sl[1]})", _sl[1] == "pass"))
+    # POLARITY: an always-TRUE guard FIRES every time; it is a failure-path marker, not
+    # decoration. Reading it as vacuous would be the inverted verdict.
+    _pol = check_assert_nonvacuous('if (1 === 1) { throw new Error("x"); }\n', "javascript", None)
+    extra.append((f"C4-js an always-TRUE guard is a failure-path MARKER, not a vacuous "
+                  f"assertion (got {_pol[1]}: {_pol[2][:40]})", _pol[1] == "pass"))
+    _polc = check_assert_nonvacuous("int main(){ assert(1 == 2); }\n", "cpp", None)
+    extra.append((f"C4-cpp assert(1 == 2) is a MARKER (it always fires), not vacuous "
+                  f"(got {_polc[1]})", _polc[1] == "pass"))
+    # ⛔ WHY THE LITERAL-ONLY GUARD IS NOT REDUNDANT WITH _c4_fold's except-branch.
+    # MEASURED 2026-09-02: a mutant deleting the guard SURVIVED at first, because for any
+    # expression containing an identifier `_c4_fold` already fails with NameError and the
+    # expression is counted live. But the two disagree on expressions with NO identifier
+    # that python CAN still evaluate — `"abc"[0] == "a"` and `[1,2][0] == 1` fold to True.
+    # Dropping the guard would call those vacuous, and THAT IS THE BUG: _c4_fold evaluates
+    # under PYTHON semantics, and these are cpp/go/rust/r/js files. Indexing, truthiness and
+    # array literals do not mean the same thing across those languages, so the check must
+    # only fold where the languages genuinely agree — literal arithmetic and comparison.
+    # The guard is what confines it to that, and these two probes are what defend the guard.
+    for _sub in ('int main(){ assert("abc"[0] == \'a\'); }\n',
+                 "int main(){ assert([1,2][0] == 1); }\n"):
+        _r5 = check_assert_nonvacuous(_sub, "cpp", None)
+        extra.append((f"C4 a SUBSCRIPT expression is out of the declared literal-only scope "
+                      f"and is left live — the tool does not judge foreign source by python "
+                      f"semantics (got {_r5[1]})", _r5[1] == "pass"))
+    extra.append(("C4 a file with no assertion at all is SKIP, deferred to the hollow check",
+                  check_assert_nonvacuous("int main(){ return 0; }\n", "cpp", None)[1] == "skip"))
+    extra.append(("C4 an assertion named only in a COMMENT is not an assertion",
+                  check_assert_nonvacuous("// assert(1 == 1);\nint main(){ assert(x); }\n",
+                                          "cpp", None)[1] == "pass"))
+
+    # ---- C6 non-python: the FALSE-POSITIVE arm ------------------------------------------
+    # MATRIX+ proves each lane's rule can FIRE. Nothing above proves it stays silent on a
+    # standard import -- and a `deps` rule that flags the standard library would mark most
+    # of 1,150 non-python patterns and look strict while being useless. That is trap 3 from
+    # `sanitizer-detonation`: a checker red-teamed only with bad controls blocks correct
+    # work. Each pair below is (source, must_flag).
+    for _lane6, _cases in {
+        "cpp": [('#include <vector>\n#include <sys/wait.h>\nint main(){return 0;}\n', False),
+                ('#include "local_helper.h"\nint main(){return 0;}\n', False),
+                ('#include <boost/asio.hpp>\nint main(){return 0;}\n', True)],
+        "go":  [('package main\nimport (\n\t"fmt"\n\t"os/exec"\n)\nfunc main(){}\n', False),
+                ('package main\nimport "github.com/x/y"\nfunc main(){}\n', True),
+                ('package main\nimport f "gopkg.in/yaml.v2"\nfunc main(){}\n', True)],
+        "rust": [("use std::collections::HashMap;\nuse crate::helper;\nfn main(){}\n", False),
+                 ("extern crate serde;\nfn main(){}\n", True)],
+        "javascript": [('const fs = require("fs");\nconst p = require("node:path");\n'
+                        'const h = require("./helper");\n', False),
+                       ('import x from "lodash";\n', True)],
+        "r":  [('x <- stats::median(c(1,2))\nlibrary(utils)\n', False),
+               ('library(dplyr)\n', True)],
+    }.items():
+        for _src6, _want6 in _cases:
+            _n6, _st6, _d6 = check_deps(_src6, _lane6, None)
+            extra.append((f"C6-{_lane6} {'flags' if _want6 else 'is SILENT on'} "
+                          f"{_src6.splitlines()[0][:34]!r} (got {_st6}: {_d6[:44]})",
+                          (_st6 == "flag") == _want6 and _st6 in ("flag", "pass")))
+    # The three false-positive classes the npm corpus exposed (see _NPM_SPECIFIER).
+    for _lbl8, _src8 in (
+        # ⛔ These two are VERBATIM from the npm corpus (astro's code-generating source).
+        # The fixture that stood here was invented, did not match the extraction regex at
+        # all, and so passed with or without the shape test — it measured nothing.
+        ("a TEMPLATE-LITERAL specifier in code that GENERATES js source",
+         "const code = `import { renderers } from '${ASTRO_RENDERERS_MODULE_ID}';`;\n"),
+        ("an INTERPOLATED subpath inside an otherwise real-looking specifier",
+         'const c = `export { default as P } from '
+         '"astro/components/${imageComponentPrefix}Picture.astro";`;\n'),
+        ("the word `from` inside ordinary quoted prose",
+         "const msg = 'copied from ', path.call(print$1, ' here';\n"),
+        ("a Node SUBPATH import (#foo), which resolves to a LOCAL file",
+         'const p = require("#minpath");\n'),
+    ):
+        _st8, _d8 = check_deps(_src8, "javascript", None)[1:]
+        extra.append((f"C6-js {_lbl8} is not a dependency (got {_st8}: {_d8[:40]})",
+                      _st8 == "pass"))
+    extra.append(("C6-js a REAL scoped package is still caught after the shape test",
+                  check_deps('import x from "@babel/core";\n', "javascript", None)[1] == "flag"))
+
+    # A comment naming a third-party package must NOT count as an import -- this is the
+    # whole reason the extraction runs on stripped source.
+    extra.append(("C6 a package named only in a COMMENT is not an import",
+                  check_deps('package main\n// import "github.com/x/y"\n'
+                             'import "fmt"\nfunc main(){}\n', "go", None)[1] == "pass"))
+    # ⛔ THE `if not ok` BRANCH IN _deps_nonpython IS UNREACHABLE FOR THESE FIVE LANES.
+    # MEASURED 2026-09-02: strip_noncode returns ok=True for cpp/go/rust/r/javascript on
+    # every malformed input tried — only python's tokeniser can report failure, and python
+    # never reaches _deps_nonpython. The branch is kept because strip_noncode's CONTRACT
+    # returns a bool and a future stripper may use it, but it must not be read as an active
+    # safety net. So the real question is not "does it refuse" but "does a mangled literal
+    # SWALLOW a later import and yield a confident false pass?" Measured: it does not —
+    # the strippers resync at the newline. These four are that measurement, and they are
+    # the probes that would go red if a stripper were rewritten to consume to EOF.
+    for _lane7, _src7 in (
+        ("rust", 'fn f() { let s = r#"oops;\nuse serde::Serialize;\nfn main(){}\n'),
+        ("go", 'package main\nvar s = "oops\nimport "github.com/x/y"\nfunc main(){}\n'),
+        ("cpp", '/* oops\n#include <boost/asio.hpp>\nint main(){return 0;}\n'),
+        ("javascript", 'const a = "oops;\nconst _ = require("lodash");\n'),
+    ):
+        _st7 = check_deps(_src7, _lane7, None)[1]
+        extra.append((f"C6-{_lane7} a MALFORMED literal does not swallow the import that "
+                      f"follows it — no confident false pass (got {_st7})", _st7 == "flag"))
 
     # every unverifiable detail in the tool must carry a reason code -- prose is not a key
     extra.append(("every unverifiable return carries a [REASON_CODE]",
