@@ -471,6 +471,17 @@ MUTANTS = [
     # round-24 hardening caught it: 157 KILLED / 1 SKIPPED, banner printed, exit 1.
     # ⚠️ An exact-string anchor breaks on a pure RENAME that changes no behaviour. If this
     # recurs, the fix is a regex anchor with an asserted match count, not another re-aim.
+    # ---- ROUND 27: the fail-open predicate in _text_check ----
+    # The anchor is the multi-line block containing the condition AND the unique string
+    # literal "lexer failure: unterminated". The literal is the STABLE part — it will not
+    # move on a variable rename. The variable names (_fail, fail_code, fail_lit) are a known
+    # risk: if any is renamed, the anchor matches 0 and the harness prints SKIPPED/DARK/exit 1
+    # — which is the safety net, not a silent failure. The match-count assertion (n != 1)
+    # is the guard the brief asked for. (4Q round 27)
+    ('R27 fail-open predicate disabled (malformed files return pass again)',
+     'if _fail is not None:\n        return (name, "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+     'if False:  # R27 MUTANT\n        return (name, "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+     'R27 fail-open'),
     ('go import lines not restored',
      '        return stripped + "\\n" + _import_lines(text, lane, _lexed), True',
      '        return stripped, True',
