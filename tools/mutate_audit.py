@@ -298,6 +298,24 @@ MUTANTS = [
  # dependency stops being seen) and four TIGHTEN them (the standard library starts being
  # flagged). Both directions matter -- a deps rule that flags <vector> would mark most of
  # 1,150 non-python patterns and look strict while being useless.
+ # ⛔ ROUND 20, 4Q's five measured defects. Each fix was a real finding with a
+ # discriminating input; without a mutant a fix is just a line I happen to trust.
+ ('4Q-R20 F2/F4: deps reads strings again (prose becomes an import)',
+  '    code, ok = strip_noncode(text, lane, keep_strings=False)\n    if not ok:\n        return ("deps", "unverifiable",',
+  '    code, ok = strip_noncode(text, lane, keep_strings=True)\n    if not ok:\n        return ("deps", "unverifiable",',
+  '4Q-R20 F'),
+ ('4Q-R20 F1: the POSIX header family drops out of the standard set',
+  'arpa/inet.h netdb.h netinet/in.h netinet/tcp.h sys/socket.h sys/un.h sys/select.h',
+  'XXR20nothing',
+  '4Q-R20 F1'),
+ ('4Q-R20 F5: rust stops accepting a crate-relative `use ::crate`',
+  '    cs = set(re.findall(r"\\buse\\s+(?:::)?([A-Za-z_][A-Za-z0-9_]*)\\s*(?:::|;)", code))',
+  '    cs = set(re.findall(r"\\buse\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*(?:::|;)", code))',
+  '4Q-R20 F5'),
+ ('4Q-R20 F3: string literals re-enter the literal-only set (python folds foreign strings)',
+  '      \\b\\d+(?:\\.\\d+)?(?:[uUlLfF]+)?\\b        # numeric literal, C/Rust suffixes allowed',
+  '      "(?:[^"\\\\]|\\\\.)*"\n    | \\b\\d+(?:\\.\\d+)?(?:[uUlLfF]+)?\\b        # numeric literal',
+  '4Q-R20 F3'),
  ('C4 THE POLARITY IS INVERTED (every good guard becomes vacuous and back)',
   '        vacuous = (val is True) if pol == "assert" else (val is False)',
   '        vacuous = (val is False) if pol == "assert" else (val is True)',
@@ -336,10 +354,14 @@ MUTANTS = [
  # SINGLE edit can make that probe go red -- which is exactly what "survived" meant.
  # The equivalent mutant is removed; this one attacks the OTHER arm instead, so the
  # restore is not left undefended.
- ("C6 js: the npm-specifier shape test removed (template junk becomes a dependency)",
+ # ⛔ ROUND 20, AFTER 4Q's F2/F4 FIX: the frag was 'TEMPLATE-LITERAL' and now misses,
+ # because keep_strings=False STRIPS the template prose before extraction ever runs.
+ # The shape test's remaining unique job is the Node #subpath case, so the frag names
+ # that. The two guards overlap by design; only the non-overlapping part can be a frag.
+ ("C6 js: the npm-specifier shape test removed (#subpath becomes a dependency)",
   '        if not _NPM_SPECIFIER.match(base):     # not a package name at all -> not a dependency\n            continue',
   '        if False:                              # not a package name at all -> not a dependency\n            continue',
-  "TEMPLATE-LITERAL"),
+  'SUBPATH import'),
  ("C6 the go import-line RESTORE is dropped from _IMPORT_LINE",
   '    "go": re.compile(r\'^\\s*(import\\s|")\'),',
   '    "go": re.compile(r\'^\\s*(XXR20import\\s)\'),',
