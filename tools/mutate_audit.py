@@ -304,6 +304,13 @@ MUTANTS = [
   '    code, ok = strip_noncode(text, lane, keep_strings=False)\n    if not ok:\n        return ("deps", "unverifiable",',
   '    code, ok = strip_noncode(text, lane, keep_strings=True)\n    if not ok:\n        return ("deps", "unverifiable",',
   '4Q-R20 F'),
+ # ⛔ The grouped-import restore. Without this line a real third-party import in go's
+ # IDIOMATIC grouped form is invisible — the regression 6E's corpus caught within
+ # minutes of the F2/F4 fix landing, and that my own check had missed.
+ ("C6 go: the grouped-import RESTORE line is dropped (idiomatic imports go blind)",
+  '    paths |= set(re.findall(r\'^[ \\t]*"([^"]+)"[ \\t]*(?://.*)?$\', code, re.M))',
+  '    paths |= set()',
+  'GROUPED import'),
  ('4Q-R20 F1: the POSIX header family drops out of the standard set',
   'arpa/inet.h netdb.h netinet/in.h netinet/tcp.h sys/socket.h sys/un.h sys/select.h',
   'XXR20nothing',

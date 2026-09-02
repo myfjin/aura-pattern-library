@@ -1202,6 +1202,16 @@ def _deps_go(code):
     for m in re.finditer(r"import\s*\(([^)]*)\)", code, re.S):
         paths |= set(re.findall(r'"([^"]+)"', m.group(1)))
     paths |= set(re.findall(r'import\s+(?:[\w.]+\s+)?"([^"]+)"', code))
+    # ⛔ REGRESSION CAUGHT BY 6E's CORPUS, 2026-09-02, minutes after 4Q's F2/F4 fix landed.
+    # Stripping string literals blanks the BODY of a grouped `import ( ... )`, and
+    # _IMPORT_LINE re-appends those paths as BARE quoted lines at the end of the file —
+    # belonging to neither the block regex nor the single-import regex. Result: a real
+    # third-party import in the grouped form (which is the IDIOMATIC form) reported
+    # "0 import(s), all standard". My own check of the fix used a single-line import and
+    # missed it entirely; re-running the corpus is what found it.
+    # A bare quoted line is what the RESTORE produces, and it is not valid go statement
+    # syntax otherwise, so reading it here does not reopen the prose hole F2/F4 closed.
+    paths |= set(re.findall(r'^[ \t]*"([^"]+)"[ \t]*(?://.*)?$', code, re.M))
     return paths, {p for p in paths if "." in p.split("/")[0]}
 
 
@@ -3926,6 +3936,26 @@ def self_test() -> int:
         extra.append((f"4Q-R20 stripping prose does not lose a REAL {_lane4b} import "
                       f"({_src4b.strip().splitlines()[-1][:34]!r})",
                       check_deps(_src4b, _lane4b, None)[1] == "flag"))
+
+    # ⛔ THE GROUPED GO IMPORT — a regression I introduced with 4Q's F2/F4 fix and did not
+    # catch, because my own check used the single-line form. 6E's corpus caught it within
+    # minutes. The grouped form is the IDIOMATIC one, so this was a false negative on most
+    # real go files. Both arms below, plus a prose control STRONGER than the one that
+    # started this: a string containing a complete import statement.
+    for _lbl0, _src0, _want0 in (
+        ("a GROUPED import ( ... ) block finds the third-party path",
+         'package main\n\nimport (\n\t"fmt"\n\t"gopkg.in/yaml.v3"\n)\nfunc main(){}\n', "flag"),
+        ("a single-line import still works",
+         'package main\nimport "github.com/pkg/errors"\nfunc main(){}\n', "flag"),
+        ("a GROUPED stdlib-only block is silent",
+         'package main\n\nimport (\n\t"fmt"\n\t"os/exec"\n)\nfunc main(){}\n', "pass"),
+        ("prose naming a module path is not an import",
+         'package main\nvar s = "see github.com/x/y for docs"\nfunc main(){}\n', "pass"),
+        ("prose CONTAINING a whole import statement is still not an import",
+         'package main\nvar s = "use import \\"github.com/evil/x\\" here"\nfunc main(){}\n', "pass"),
+    ):
+        _g0 = check_deps(_src0, "go", None)
+        extra.append((f"C6-go {_lbl0} (got {_g0[1]}: {_g0[2][:38]})", _g0[1] == _want0))
 
     # ---- C6 non-python: the FALSE-POSITIVE arm ------------------------------------------
     # MATRIX+ proves each lane's rule can FIRE. Nothing above proves it stays silent on a
