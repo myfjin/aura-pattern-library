@@ -479,41 +479,73 @@ def _js_regex_after_kw(text: str, i: int) -> bool:
     return True
 
 
-def _import_lines(text: str, lane: str) -> str:
+def _import_lines(text: str, lane: str, lexed: str = None) -> str:
     """Import/include lines put back after stripping. In Go an import path IS a string
     literal (`import "os/exec"`), so blanking strings would delete the dependency the rule
-    tables exist to find. An import is code, not prose."""
+    tables exist to find. An import is code, not prose.
+
+    ⛔ DECIDE ON THE LEXED VIEW, TAKE THE CONTENT FROM THE ORIGINAL. `lexed` is the
+    string-blanked, comment-stripped text that `strip_noncode` has already produced, line
+    for line with `text`. Asking "is this line an import?" of the ORIGINAL was the root
+    cause of FIVE separate defects across rounds 21 and 22, because the question is
+    unanswerable without knowing where the strings and comments are -- and the lexer
+    already knows:
+
+      R   `msg <- "Use library(dplyr) to load"`     the pattern matched inside a STRING
+      js  `const h = "Call require('express')..."`  the same, one lane over
+      go  a whole `import ( ... )` block quoted in a backtick raw string
+      go  a backtick in a `//` comment desynchronised a hand-rolled parity tracker, and
+          EVERY subsequent line was silently dropped
+      go  `import ( // stdlib` did not match the block detector, because of the comment
+
+    Deciding on the lexed view kills all five, and it deletes the backtick tracker rather
+    than fixing it: a hand-rolled scanner competing with the real lexer is the two-tables
+    defect again. The restore still yields the ORIGINAL line, because that is where the
+    import path text actually lives.
+    """
     pat = _IMPORT_LINE.get(lane)
     if pat is None:
         return ""
-    keep, in_block, raw = [], False, False
-    for ln in text.splitlines():
-        st = ln.strip()
+    src = text.splitlines()
+    view = (text if lexed is None else lexed).splitlines()[:len(src)]
+    if len(view) < len(src):                 # defensive: never mis-pair the two streams
+        view += [""] * (len(src) - len(view))
+
+    # ⛔ WHERE THE LEXED VIEW IS NOT TRUSTWORTHY, FALL BACK TO THE ORIGINAL LINE.
+    # Single-quoted strings stop at a newline ("do not eat the rest of the file", above), but
+    # the MULTI-LINE constructs do not: an unterminated go backtick, rust `r#"` or C `/*`
+    # swallows everything after it. Deciding on the lexed view then loses every import below
+    # the damage SILENTLY -- a confident false pass, the worst verdict this tool can give.
+    # MEASURED 2026-09-02, and the signature is exact: when the lexer has lost the plot its
+    # output goes blank and STAYS blank to EOF.
+    #     rust  `let s = r#"oops;`     -> blank run [1, 2]      (the whole rest)
+    #     cpp   `/* oops`              -> blank run [0, 1, 2]
+    #     go    a WELL-FORMED raw string holding an import block -> blank run []
+    #     r     a string containing `library(dplyr)`             -> blank run []
+    # So the fallback fires only on genuinely broken source, and there it is exactly the
+    # pre-round-22 behaviour -- never worse than what it replaced.
+    _fallback = set()
+    for _i in range(len(src) - 1, -1, -1):
+        if view[_i].strip():
+            break
+        _fallback.add(_i)
+
+    keep, in_block = [], False
+    for _i, (ln, vw) in enumerate(zip(src, view)):
+        if _i in _fallback:
+            vw = ln
+        st = vw.strip()
         if lane == "go":
-            # ⛔ 4Q ROUND 21 FINDING 2. A backtick raw string can contain a whole import
-            # block as prose (a code sample, a generator template, a test fixture). Track
-            # backtick parity and restore NOTHING while inside one -- otherwise the block
-            # detector fires on quoted text and every line of it becomes a dependency.
-            if raw:
-                if ln.count("`") % 2:
-                    raw = False
-                continue
-            opened = bool(ln.count("`") % 2)
             if re.match(r'^import\s*\($', st):
-                in_block, raw = True, opened
+                in_block = True
                 continue
             if in_block:
                 if st == ")":
                     in_block = False
                 else:
                     keep.append(ln)
-                raw = opened
                 continue
-            if pat.match(ln):
-                keep.append(ln)
-            raw = opened
-            continue
-        if pat.match(ln):
+        if pat.match(vw):
             keep.append(ln)
     # ⛔ Strip comments from the RESTORED lines too. Restoring the original line undid the
     # comment blanking for exactly those lines -- `import "fmt" // uses crypto/md5` would
@@ -603,7 +635,7 @@ def strip_noncode(text: str, lane: str, keep_strings: bool = False):
             if block and text.startswith("/*", i):
                 j = text.find("*/", i + 2)
                 j = n if j == -1 else j + 2
-                out.append(" " * (j - i)); i = j; continue
+                out.append("".join(ch if ch == "\n" else " " for ch in text[i:j])); i = j; continue
             # C++ raw string: R"delim( ... )delim"
             if lane == "cpp" and c == "R" and i + 1 < n and text[i + 1] == '"':
                 op = text.find("(", i + 2)
@@ -724,7 +756,7 @@ def strip_noncode(text: str, lane: str, keep_strings: bool = False):
                 prev_sig = c
             i += 1
         stripped = "".join(out)
-        return stripped + "\n" + _import_lines(text, lane), True
+        return stripped + "\n" + _import_lines(text, lane, stripped), True
     return text, False
 
 
@@ -1233,20 +1265,19 @@ _RUST_LOCAL_ROOTS = frozenset({"std", "core", "alloc", "crate", "self", "super"}
 
 def _deps_cpp(code):
     hs = set(re.findall(r"#\s*include\s*<([^>]+)>", code))
-    # ⛔ 4Q ROUND 21 FINDING 6 — ADOPTED AS A STRUCTURAL GUARD, NOT AS A CATCH.
-    # MEASURED 2026-09-02: 0 of 420 cpp files in the library use the quote form, so this
-    # changes ZERO records today and must not be reported as having caught anything.
-    #
-    # ⚠️ AND IT IS NARROWER THAN 4Q PROPOSED, because adopting the finding as written broke
-    # an existing probe: `#include "local_helper.h"` must stay SILENT, and my first pass
-    # flagged it. The probe was right and the reasoning I wrote to justify the change ("a
-    # single-file pattern has no sibling, so a quote include must be external") proved too
-    # much -- it makes a missing local header into a dependency, which it is not.
-    # THE BRACKET FORM DOES NOT DECIDE. What decides is whether the header is named by a
-    # PACKAGE-QUALIFIED PATH: third-party C/C++ headers are conventionally included as
-    # `openssl/sha.h`, `boost/asio.hpp`, `gtest/gtest.h`. A bare `foo.h` in quotes is a
-    # local header (possibly a broken reference, but that is not this check's class).
-    hs |= {h for h in re.findall(r'#\s*include\s*"([^"]+)"', code) if "/" in h}
+    # ⛔ 4Q ROUND 21 FINDING 6 WAS ADOPTED HERE AND ROUND 22 RETRACTED IT. Quote-form
+    # `#include "..."` is NOT read at all, and this is a measured decision, not an omission.
+    # The rule needs a discriminator between a third-party header and a local one, and the
+    # only lexical candidate -- does the path contain a slash -- is unsound in BOTH
+    # directions (4Q round 22, findings 5 and 6, both with fixtures):
+    #     #include "utils/helpers.h"   LOCAL header in a subdirectory      -> falsely flagged
+    #     #include "zlib.h"            THIRD-PARTY (zlib, libuv, libev)    -> silently missed
+    # Angle-bracket includes are still checked against _CPP_STD_HEADERS, which is where the
+    # convention actually carries information. 0 of 420 cpp files in the library use the
+    # quote form, so this catches nothing today either way -- and a signal that cannot
+    # separate true from false must not decide verdicts (the near-duplicate ruling, 6E
+    # 2026-08-30; the same ruling that rejected rust finding 7 in round 21).
+    # ⛔ DO NOT RE-PROPOSE THE SLASH TEST. It has been measured wrong twice.
     return hs, {h for h in hs if h not in _CPP_STD_HEADERS}
 
 
@@ -1391,6 +1422,22 @@ def check_deps(text, lane, tree):
                 for sub in ast.walk(n):
                     if isinstance(sub, (ast.Import, ast.ImportFrom)):
                         typing_only.add(id(sub))
+    # ⛔ 4Q ROUND 22 FINDING 7: the round-21 walker matched ANY call named `import_module`,
+    # so a local `def import_module(name)` -- plausible in module-loading utility code --
+    # had its argument read as a third-party dependency. Matching by NAME is not matching
+    # the function. Collect what `importlib` and `import_module` are actually BOUND to in
+    # this file, and accept only those.
+    il_mods, il_funcs = set(), set()
+    for n in ast.walk(tree):
+        if isinstance(n, ast.Import):
+            for a in n.names:
+                if a.name == "importlib":
+                    il_mods.add(a.asname or "importlib")
+        elif isinstance(n, ast.ImportFrom):
+            if n.level == 0 and n.module == "importlib":
+                for a in n.names:
+                    if a.name == "import_module":
+                        il_funcs.add(a.asname or "import_module")
     mods = set()
     for n in ast.walk(tree):
         if id(n) in typing_only:
@@ -1406,8 +1453,9 @@ def check_deps(text, lane, tree):
         # is genuinely undecidable here and is left alone rather than guessed at.
         elif isinstance(n, ast.Call):
             f = n.func
-            named = ((isinstance(f, ast.Attribute) and f.attr == "import_module")
-                     or (isinstance(f, ast.Name) and f.id == "import_module"))
+            named = ((isinstance(f, ast.Attribute) and f.attr == "import_module"
+                      and isinstance(f.value, ast.Name) and f.value.id in il_mods)
+                     or (isinstance(f, ast.Name) and f.id in il_funcs))
             if named and n.args and isinstance(n.args[0], ast.Constant) \
                     and isinstance(n.args[0].value, str):
                 mods.add(n.args[0].value.split(".")[0])
@@ -4141,6 +4189,18 @@ def self_test() -> int:
             ("raw string whose `import (` sits ALONE on its own line",
              'package main\nimport "fmt"\nfunc main(){\n\tc := `\nimport (\n\t"github.com/x/y"\n)\n`\n'
              '\tfmt.Println(c)\n}\n', False),
+            # ⛔ ROUND 22. All four below were SILENT FALSE NEGATIVES or FALSE POSITIVES
+            # until the restore started deciding on the LEXED view instead of the original.
+            # 4Q R22 F1 -- one backtick in a `//` comment desynchronised the hand-rolled
+            # parity tracker and every line after it was dropped. Nothing was reported.
+            ("a backtick inside a // comment does not blind the rest of the file",
+             'package main\n// See `go test for execution\nimport "github.com/x/y"\n'
+             'func main(){}\n', True),
+            # 4Q R22 F2 -- `import ( // stdlib` did not match the block detector, so no line
+            # inside the block was restored. Inline comments on `import (` are idiomatic.
+            ("an inline comment on the `import (` line does not hide the block",
+             'package main\nimport ( // stdlib\n\t"fmt"\n\t"github.com/x/y"\n)\n'
+             'func main(){}\n', True),
         ],
         "r": [
             ("library() at line start", 'library(dplyr)\n', True),
@@ -4150,6 +4210,10 @@ def self_test() -> int:
              'if (!requireNamespace("dplyr", quietly = TRUE)) {\n  stop("needed")\n}\n', True),
             ("requireNamespace at line start", 'requireNamespace("dplyr")\n', True),
             ("base package only", 'library(utils)\nx <- stats::median(c(1,2))\n', False),
+            # 4Q R22 F3 -- unanchoring the restore pattern in round 21 made it match inside
+            # STRING LITERALS. Help text and error messages quote `library(...)` all the time.
+            ("library() inside a STRING is prose, not an import",
+             'msg <- "Use library(dplyr) to load data tools"\ncat(msg, "\\n")\n', False),
         ],
         "javascript": [
             ("static import ... from", 'import x from "lodash";\n', True),
@@ -4158,14 +4222,26 @@ def self_test() -> int:
             ("DYNAMIC import()", 'const m = await import("express");\n', True),
             ("dynamic import() of a builtin", 'const m = await import("node:fs");\n', False),
             ("relative dynamic import()", 'const m = await import("./helper.js");\n', False),
+            # 4Q R22 F4 -- the same defect as the R one, one lane over.
+            ("require() inside a STRING is prose, not an import",
+             'const helpText = "Call require(\'express\') to load the framework";\n'
+             'console.log(helpText);\n', False),
         ],
         "cpp": [
             ("angle-bracket third-party", '#include <boost/asio.hpp>\nint main(){return 0;}\n', True),
             # 4Q R21 F6 -- STRUCTURAL GUARD. 0 of 420 library files use this form today.
-            ("QUOTE-form third-party", '#include "openssl/sha.h"\nint main(){return 0;}\n', True),
-            # The bracket form does not decide -- the package-qualified PATH does.
+            # ⛔ RETRACTED IN ROUND 22 — both of these must now be SILENT, and that is a
+            # measured decision. 4Q's round-21 finding 6 (read quote-form includes) was
+            # adopted with a slash test to separate third-party from local, and round 22
+            # measured the slash unsound in BOTH directions: "utils/helpers.h" is local and
+            # was flagged, "zlib.h" is third-party and was missed. Quote-form includes are
+            # not read at all. The pair below pins that: neither direction fires.
+            ("QUOTE-form third-party is NOT read (round-22 retraction)",
+             '#include "openssl/sha.h"\nint main(){return 0;}\n', False),
             ("QUOTE-form bare local header stays silent",
              '#include "local_helper.h"\nint main(){return 0;}\n', False),
+            ("QUOTE-form LOCAL header WITH a slash stays silent (4Q R22 F5)",
+             '#include "utils/helpers.h"\nint main(){return 0;}\n', False),
             ("ANGLE-form bare header is still stdlib-checked",
              '#include <vector>\nint main(){return 0;}\n', False),
             ("angle-bracket stdlib", '#include <vector>\nint main(){return 0;}\n', False),
@@ -4194,6 +4270,17 @@ def self_test() -> int:
          'import importlib\ndef f(n):\n    return importlib.import_module(n)\n', False),
         ("bare import_module() after a from-import",
          'from importlib import import_module\ndef f():\n    return import_module("numpy")\n', True),
+        # ⛔ 4Q R22 F7 -- the round-21 walker matched ANY call named `import_module`, so a
+        # LOCAL helper of that name had its argument read as a third-party dependency.
+        # Matching by name is not matching the function; the binding is what decides.
+        ("a LOCAL def import_module is not importlib's",
+         'import os\ndef import_module(name):\n    return __import__(name)\n'
+         'result = import_module("my_plugin")\n', False),
+        ("an aliased importlib is still followed",
+         'import importlib as il\ndef f():\n    return il.import_module("numpy")\n', True),
+        ("an UNRELATED module\'s .import_module() is not importlib\'s",
+         'import os\nclass L:\n    def import_module(self, n): return n\n'
+         'loader = L()\nx = loader.import_module("my_plugin")\n', False),
     ):
         _r5 = check_deps(_src5, "python", ast.parse(_src5))
         extra.append((f"C6-py {_lbl5} (got {_r5[1]}: {_r5[2][:40]})",

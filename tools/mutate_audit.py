@@ -465,10 +465,10 @@ MUTANTS = [
  ("comment stripping removed",
   '    if lane in ("cpp", "go", "rust", "javascript", "r"):', '    if False:',
   "COMMENT"),
- ("go import lines not restored",
-  '        return stripped + "\\n" + _import_lines(text, lane), True',
-  '        return stripped, True',
-  "non-python lane really is scanned"),
+    ('go import lines not restored',
+     '        return stripped + "\\n" + _import_lines(text, lane, stripped), True',
+     '        return stripped, True',
+     'non-python lane really is scanned'),
  ("SEEDED no longer requires an argument",
   '_ARG = r"\\s*\\(\\s*[^)\\s]"', '_ARG = r"\\s*\\("',
   "bare random.seed()"),
@@ -617,14 +617,22 @@ MUTANTS = [
      'STALE', R),
 
     # ---- ROUND 21: the _IMPORT_LINE <-> DEPS_EXTRACT agreement fixes ----
-    ('R21 go _IMPORT_LINE gets its string-blind bare quote back (the csv_validator FP)',
-     '    "go": re.compile(r\'^\\s*import\\s\'),',
-     '    "go": re.compile(r\'^\\s*(import\\s|")\'),',
-     'AGREE go CONCATENATED'),
-    ('R21 go raw-string tracking disabled (an import block quoted as prose is read as code)',
-     '            if raw:\n                if ln.count("`") % 2:\n                    raw = False\n                continue',
-     '            if False:\n                if ln.count("`") % 2:\n                    raw = False\n                continue',
-     'ALONE on its own line'),
+    # ---- RETIRED 2026-09-02, with the measurement, NOT because it was inconvenient ----
+    # 'R21 go _IMPORT_LINE gets its string-blind bare quote back (the csv_validator FP)'
+    # old: '    "go": re.compile(r'^\\s*import\\s'),'
+    # new: '    "go": re.compile(r'^\\s*(import\\s|")'),'
+    # It SURVIVED the 2026-09-02 run and it is a genuine EQUIVALENT MUTANT, not a gap.
+    # Round 22 made _import_lines decide on the LEXED view, and the lexer blanks string
+    # DELIMITERS as well as string bodies. A go grouped-import body line is `\t"fmt"` --
+    # in the lexed view its leading quote is a space. So `^\s*(import\s|")` cannot match
+    # anything the original `^\s*import\s` did not already match: the mutation is
+    # unobservable BY CONSTRUCTION, not merely unprobed.
+    # DO NOT re-add it to buy back a KILLED count. If the lexed-view design is ever
+    # reverted, this mutant becomes live again and must come back with it.
+    ('R22 the restore decides on the ORIGINAL text again (every string defect returns)',
+     '        if _i in _fallback:\n            vw = ln',
+     '        if True:\n            vw = ln',
+     'library() inside a STRING'),
     ('R21 _deps_go loses the alias prefix (idiomatic aliased grouped imports go blind)',
      'r\'^[ \\t]*(?:[\\w.]+[ \\t]+)?"([^"]+)"[ \\t]*(?://.*)?$\'',
      'r\'^[ \\t]*"([^"]+)"[ \\t]*(?://.*)?$\'',
@@ -641,22 +649,32 @@ MUTANTS = [
      '    ms |= set(re.findall(r"""\\bimport\\s*\\(\\s*["\']([^"\']+)["\']""", code))',
      '    ms |= set()',
      'AGREE javascript DYNAMIC'),
-    ('R21 cpp quote-form include capture removed (the structural guard goes dark)',
-     '    hs |= {h for h in re.findall(r\'#\\s*include\\s*"([^"]+)"\', code) if "/" in h}',
-     '    hs |= set()',
-     'AGREE cpp QUOTE-form third-party'),
-    ('R21 cpp quote-form drops the package-path test (a bare local header becomes a dependency)',
-     'if "/" in h}',
-     'if True}',
-     'AGREE cpp QUOTE-form bare local'),
-    ('R21 python importlib.import_module walker disarmed (dynamic imports invisible again)',
-     '                     or (isinstance(f, ast.Name) and f.id == "import_module"))',
-     '                     or (isinstance(f, ast.Name) and f.id == "__never__"))',
-     'C6-py bare import_module'),
-    ('R21 python import_module attribute form disarmed',
-     '            named = ((isinstance(f, ast.Attribute) and f.attr == "import_module")',
-     '            named = ((isinstance(f, ast.Attribute) and f.attr == "__never__")',
-     'C6-py importlib.import_module of a third'),
+    ('R22 the retracted cpp quote-form rule is re-added WITH the slash test',
+     '    hs = set(re.findall(r"#\\s*include\\s*<([^>]+)>", code))',
+     '    hs = set(re.findall(r"#\\s*include\\s*<([^>]+)>", code))\n    hs |= {h for h in re.findall(r\'#\\s*include\\s*"([^"]+)"\', code) if "/" in h}',
+     'QUOTE-form third-party is NOT read'),
+    ('R22 the retracted cpp quote-form rule is re-added with NO slash test',
+     '    hs = set(re.findall(r"#\\s*include\\s*<([^>]+)>", code))',
+     '    hs = set(re.findall(r"#\\s*include\\s*<([^>]+)>", code))\n    hs |= set(re.findall(r\'#\\s*include\\s*"([^"]+)"\', code))',
+     'QUOTE-form bare local header stays silent'),
+    ('R22 python import_module accepts ANY bare name (a local def is read as importlib)',
+     '                     or (isinstance(f, ast.Name) and f.id in il_funcs))',
+     '                     or (isinstance(f, ast.Name) and f.id is not None))',
+     'a LOCAL def import_module'),
+    ('R22 python import_module accepts ANY attribute owner (loader.import_module counts)',
+     '            named = ((isinstance(f, ast.Attribute) and f.attr == "import_module"\n                      and isinstance(f.value, ast.Name) and f.value.id in il_mods)',
+     '            named = ((isinstance(f, ast.Attribute) and f.attr == "import_module"\n                      and isinstance(f.value, ast.Name))',
+     'UNRELATED module'),
+
+    # ---- ROUND 22: the lexed-view restore and its fallback ----
+    ('R22 the lexer-lost-the-plot fallback is removed (a malformed literal hides every import below)',
+     '    _fallback = set()\n    for _i in range(len(src) - 1, -1, -1):',
+     '    _fallback = set()\n    for _i in range(0, -1, -1):',
+     'MALFORMED literal'),
+    ('R22 go: the block detector no longer sees a commented `import (` line',
+     "            if re.match(r'^import\\s*\\($', st):\n                in_block = True",
+     "            if re.match(r'^XXR22never\\($', st):\n                in_block = True",
+     'inline comment on the `import (` line'),
 ]
 def run():
     r = subprocess.run([PY_, P, "--self-test"], capture_output=True, text=True,
