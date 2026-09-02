@@ -301,8 +301,8 @@ MUTANTS = [
  # ⛔ ROUND 20, 4Q's five measured defects. Each fix was a real finding with a
  # discriminating input; without a mutant a fix is just a line I happen to trust.
  ('4Q-R20 F2/F4: deps reads strings again (prose becomes an import)',
-  '    code, ok = strip_noncode(text, lane, keep_strings=False)\n    if not ok:\n        return ("deps", "unverifiable",',
-  '    code, ok = strip_noncode(text, lane, keep_strings=True)\n    if not ok:\n        return ("deps", "unverifiable",',
+  '    code, ok, _ = strip_noncode(text, lane, keep_strings=False)\n    if not ok:\n        return ("deps", "unverifiable",',
+  '    code, ok, _ = strip_noncode(text, lane, keep_strings=True)\n    if not ok:\n        return ("deps", "unverifiable",',
   '4Q-R20 F'),
  # ⛔ The grouped-import restore. Without this line a real third-party import in go's
  # IDIOMATIC grouped form is invisible — the regression 6E's corpus caught within
@@ -536,8 +536,8 @@ MUTANTS = [
   # added an identical call, so the mutant printed SKIPPED and the guard went dark. A
   # SKIPPED mutant is not a pass -- it is a defence that stopped defending. Anchored past
   # the shared line onto the check's own name.
-  '    code, ok = strip_noncode(text, lane, keep_strings=True)\n    if not ok:\n        return ("hardcoded_abs_path", "unverifiable",',
-  '    code, ok = (text, True)\n    if not ok:\n        return ("hardcoded_abs_path", "unverifiable",',
+  '    code, ok, _ = strip_noncode(text, lane, keep_strings=True)\n    if not ok:\n        return ("hardcoded_abs_path", "unverifiable",',
+  '    code, ok, _ = (text, True, None)\n    if not ok:\n        return ("hardcoded_abs_path", "unverifiable",',
   "quoted path inside a COMMENT"),
  ("index_parity substring fallback restored (4Q D3)",
   "        if str(p.relative_to(ROOT)) in txt:",
@@ -732,20 +732,34 @@ atexit.register(_restore_all)
 for _sig in (signal.SIGTERM, signal.SIGINT):
     signal.signal(_sig, lambda *_a: sys.exit("*** killed -- restoring originals ***"))
 
+_TALLY = {"seen": 0, "killed": 0}
+_DARK = []
+
+# A substring filter, so the DARK-guard below can itself be red-teamed in seconds instead of
+# a 15-minute full run. An unverifiable guard is decoration -- the thing this file exists to
+# catch. Full runs pass no filter and are unaffected.
+_ONLY = os.environ.get("MUTATE_ONLY", "")
+if _ONLY:
+    MUTANTS = [_x for _x in MUTANTS if _ONLY in _x[0]]
+    print("MUTATE_ONLY=%r -> %d mutant(s) selected" % (_ONLY, len(MUTANTS)))
+
 for _m in MUTANTS:
     label, old, new, frag = _m[0], _m[1], _m[2], _m[3]
+    _TALLY["seen"] += 1
     tgt  = _m[4] if len(_m) > 4 else P
     bak  = {R: RBAK, BX: BXBAK}.get(tgt, BAK)
     tbase = {R: rbase, BX: bxbase}.get(tgt, base)
     s = open(bak).read()
     n = s.count(old)
     if n != 1:
-        print("\n%-45s SKIPPED (anchor matched %d)" % (label, n)); continue
+        print("\n%-45s SKIPPED (anchor matched %d)" % (label, n))
+        _DARK.append((label, "anchor matched %d -- the code it guarded has MOVED" % n)); continue
     mut = s.replace(old, new, 1)
     try:
         ast.parse(mut)                     # a mutant that cannot parse is not a result
     except SyntaxError as e:
-        print("\n%-45s SKIPPED (mutant does not parse: %s)" % (label, e)); continue
+        print("\n%-45s SKIPPED (mutant does not parse: %s)" % (label, e))
+        _DARK.append((label, "mutant does not parse: %s" % e)); continue
     open(tgt,"w").write(mut)
     fails, crashed = run()
     hit = [x for x in fails if frag in x]
@@ -757,12 +771,34 @@ for _m in MUTANTS:
         verdict = "KILLED-BY-OTHER (frag %r missed; fix the frag)" % frag
     else:
         verdict = "*** SURVIVED — DECORATION ***"
+    if verdict == "KILLED":
+        _TALLY["killed"] += 1
+    elif verdict.startswith("KILLED-BY-OTHER"):
+        _DARK.append((label, verdict))
+    else:
+        _DARK.append((label, "SURVIVED -- the probe passes with and without the fix"))
     print("\n%-45s %s" % (label, verdict))
     print("   failures=%d crashed=%s" % (len(fails), crashed))
     for x in fails[:2]: print("     ", x[:100])
     shutil.copy(bak, tgt)
     assert hashlib.md5(open(tgt,"rb").read()).hexdigest() == tbase, "RESTORE FAILED " + label
 
+# ⛔ THE RUN MUST FAIL LOUD. Twice now (round 20, round 24) a mutant went SKIPPED because the
+# code it anchored to had MOVED, and the run still ended with a clean-looking transcript and
+# exit 0 -- so a defence that had stopped defending read as a pass. Printing "SKIPPED" into a
+# 700-line log is not reporting it. Only a non-zero exit is.
+print("\n" + "=" * 62)
+print("MUTANTS: %d seen · %d KILLED · %d NOT KILLED" % (_TALLY["seen"], _TALLY["killed"], len(_DARK)))
+if _DARK:
+    print("\n*** %d GUARD(S) ARE DARK -- THIS RUN IS NOT A PASS ***" % len(_DARK))
+    for _lbl, _why in _DARK:
+        print("  - %s\n      %s" % (_lbl, _why))
+    print("\nA SKIPPED mutant is not a pass. It is a defence that stopped defending.")
+print("=" * 62)
+
 print("\nrestored tool:", hashlib.md5(open(P,"rb").read()).hexdigest() == base)
 print("restored renderer:", hashlib.md5(open(R,"rb").read()).hexdigest() == rbase)
 print("restored ruler:", hashlib.md5(open(BX,"rb").read()).hexdigest() == bxbase)
+
+if _DARK:
+    sys.exit(1)

@@ -579,6 +579,10 @@ def _import_lines(text: str, lane: str, lexed: str = None) -> str:
     return "\n".join(out)
 
 
+from collections import namedtuple as _nt
+_StripFailure = _nt("_StripFailure", ["construct", "line"])
+
+
 def strip_noncode(text: str, lane: str, keep_strings: bool = False):
     """Remove comments (and, unless keep_strings, string literals) so a regex table measures
     CODE, not prose. Returns (stripped_text, ok); ok=False means no stripper exists for the
@@ -617,15 +621,16 @@ def strip_noncode(text: str, lane: str, keep_strings: bool = False):
                         continue
                     keep_nl = ln[a:b].count("\n")
                     lines[row - 1] = ln[:a] + (" " * (b - a - keep_nl)) + "\n" * keep_nl + ln[b:]
-            return "".join(lines), True
+            return "".join(lines), True, None
         except Exception:
-            return text, False          # unparseable -> do NOT pretend we measured code
+            return text, False, None          # unparseable -> do NOT pretend we measured code
     if lane in ("cpp", "go", "rust", "javascript", "r"):
         line_tok = "#" if lane == "r" else "//"
         block = lane != "r"
         quotes = "'\"" + ("`" if lane in ("go", "javascript") else "")
         out, i, n = [], 0, len(text)
         prev_sig = ""                    # last significant char, for JS regex detection
+        _fail = None                     # first unterminated construct left open (4Q r24)
         while i < n:
             c = text[i]
             if text.startswith(line_tok, i):
@@ -634,6 +639,8 @@ def strip_noncode(text: str, lane: str, keep_strings: bool = False):
                 continue
             if block and text.startswith("/*", i):
                 j = text.find("*/", i + 2)
+                if j == -1 and _fail is None:
+                    _fail = _StripFailure("block_comment", text[:i].count("\n") + 1)
                 j = n if j == -1 else j + 2
                 out.append("".join(ch if ch == "\n" else " " for ch in text[i:j])); i = j; continue
             # C++ raw string: R"delim( ... )delim"
@@ -643,6 +650,8 @@ def strip_noncode(text: str, lane: str, keep_strings: bool = False):
                     delim = text[i + 2:op]
                     close = ")" + delim + '"'
                     j = text.find(close, op + 1)
+                    if j == -1 and _fail is None:
+                        _fail = _StripFailure("raw_string", text[:i].count("\n") + 1)
                     j = n if j == -1 else j + len(close)
                     seg = text[i:j]
                     out.append(seg if keep_strings else
@@ -682,6 +691,8 @@ def strip_noncode(text: str, lane: str, keep_strings: bool = False):
                     if k < n and text[k] == '"':
                         close = '"' + "#" * (k - _rp - 1)
                         j = text.find(close, k + 1)
+                        if j == -1 and _fail is None:
+                            _fail = _StripFailure("rust_raw_string", text[:i].count("\n") + 1)
                         j = n if j == -1 else j + len(close)
                         seg = text[_st:j]
                         out.append(seg if keep_strings else
@@ -703,6 +714,7 @@ def strip_noncode(text: str, lane: str, keep_strings: bool = False):
             # literal halves are blanked and the interpolations are kept AS CODE.
             if lane == "javascript" and c == "`":
                 j, depth, seg = i + 1, 0, [" "]
+                _tpl_closed = False
                 while j < n:
                     ch = text[j]
                     if ch == "\\":
@@ -713,7 +725,7 @@ def strip_noncode(text: str, lane: str, keep_strings: bool = False):
                         if ch == "$" and j + 1 < n and text[j + 1] == "{":
                             depth = 1; seg.append("  "); j += 2; continue
                         if ch == "`":
-                            seg.append(" "); j += 1; break
+                            seg.append(" "); j += 1; _tpl_closed = True; break
                         seg.append("\n" if ch == "\n" else " "); j += 1; continue
                     # inside ${...}: real code, but its own strings must not be scanned for
                     # braces or the depth count walks off.
@@ -735,18 +747,23 @@ def strip_noncode(text: str, lane: str, keep_strings: bool = False):
                         if depth == 0:
                             seg.append(" "); j += 1; continue
                     seg.append(ch); j += 1
+                if not _tpl_closed and _fail is None:
+                    _fail = _StripFailure("template_literal", text[:i].count("\n") + 1)
                 out.append(text[i:j] if keep_strings else "".join(seg))
                 i = j; prev_sig = "`"; continue
             if c in quotes:
                 q, j = c, i + 1
+                _q_closed = False
                 while j < n:
                     if text[j] == "\\":
                         j += 2; continue
                     if text[j] == q:
-                        j += 1; break
+                        j += 1; _q_closed = True; break
                     if text[j] == "\n" and q != "`":
                         break            # unterminated -- do not eat the rest of the file
                     j += 1
+                if not _q_closed and q == "`" and _fail is None:
+                    _fail = _StripFailure("backtick_string", text[:i].count("\n") + 1)
                 seg = text[i:j]
                 out.append(seg if keep_strings else
                            "".join(ch if ch == "\n" else " " for ch in seg))
@@ -756,8 +773,8 @@ def strip_noncode(text: str, lane: str, keep_strings: bool = False):
                 prev_sig = c
             i += 1
         stripped = "".join(out)
-        return stripped + "\n" + _import_lines(text, lane, stripped), True
-    return text, False
+        return stripped + "\n" + _import_lines(text, lane, stripped), True, _fail
+    return text, False, None
 
 
 def _text_check(text, lane, table, name, ok_detail, want_pats=False):
@@ -775,7 +792,7 @@ def _text_check(text, lane, table, name, ok_detail, want_pats=False):
     if not table[lane]:
         return (name, "unverifiable", _u("EMPTY_RULE_TABLE", f"{name} rule table for lane "
                     f"'{lane}' is EMPTY — zero rules measured nothing"), [])
-    code, ok = strip_noncode(text, lane)
+    code, ok, _fail = strip_noncode(text, lane)
     if not ok:
         return (name, "unverifiable",
                 _u(_strip_fail_reason(lane),
@@ -802,7 +819,7 @@ def _text_check(text, lane, table, name, ok_detail, want_pats=False):
     # at `createHash`, which is code; a bare `eval(` inside a string starts inside the literal.
     # Both passes blank IN PLACE, so offsets align and a position survived pass 1 exactly when
     # code[i] == lit[i]. No rule list, no marking, nothing to forget.
-    lit, lit_ok = strip_noncode(text, lane, keep_strings=True)
+    lit, lit_ok, _ = strip_noncode(text, lane, keep_strings=True)
     lit_ok = lit_ok and len(lit) == len(code)      # alignment is the premise; never assume it
 
     # ⛔ 6E ROUND 17 F1 — the restored-import region makes the invariant VACUOUS. strip_noncode
@@ -873,8 +890,8 @@ def check_determinism_markers(text, lane, tree):
         # reproducible, but blanking the literal leaves `random.seed(    )` and `[^)\s]` cannot
         # match spaces. So a seeded, reproducible pattern was reported as needing judgement --
         # a false FLAG, the same dead-by-construction class one function over.
-        code, ok = strip_noncode(text, lane)
-        _slit, _sok = strip_noncode(text, lane, keep_strings=True)
+        code, ok, _ = strip_noncode(text, lane)
+        _slit, _sok, _ = strip_noncode(text, lane, keep_strings=True)
         _sok = _sok and len(_slit) == len(code)
         _seeded = SEEDED.search(code) or (_sok and any(
             m.start() < len(code) and code[m.start()] == _slit[m.start()]
@@ -894,7 +911,7 @@ def check_determinism_markers(text, lane, tree):
 def check_abs_paths(text, lane, tree):
     # This check intentionally looks for paths inside STRING LITERALS, so it keeps strings
     # -- but a quoted path inside a COMMENT is prose, not a hardcoded path (4Q round 2, F5).
-    code, ok = strip_noncode(text, lane, keep_strings=True)
+    code, ok, _ = strip_noncode(text, lane, keep_strings=True)
     if not ok:
         return ("hardcoded_abs_path", "unverifiable",
                 _u(_strip_fail_reason(lane),
@@ -931,7 +948,7 @@ def check_hollow(text, lane, tree):
     if pat is None:
         return ("hollow", "unverifiable",
                 _u("NO_ASSERT_GRAMMAR", f"no assertion grammar for lane '{lane}'"))
-    code, ok = strip_noncode(text, lane)
+    code, ok, _ = strip_noncode(text, lane)
     if not ok:
         return ("hollow", "unverifiable",
                 _u(_strip_fail_reason(lane),
@@ -1050,7 +1067,7 @@ def _c4_sites(code: str, lane: str):
 
 
 def _assert_nonvacuous_lexical(text, lane):
-    code, ok = strip_noncode(text, lane, keep_strings=True)
+    code, ok, _ = strip_noncode(text, lane, keep_strings=True)
     if not ok:
         return ("assert_nonvacuous", "unverifiable",
                 _u(_strip_fail_reason(lane),
@@ -1387,7 +1404,7 @@ def _deps_nonpython(text, lane):
     # `'To load express: from "express" import {Router}'` were both read as imports.
     # MEASURED after the flip: every real import still found (go/js/R, quoted and bare),
     # both prose cases clean. Stripping is strictly better here.
-    code, ok = strip_noncode(text, lane, keep_strings=False)
+    code, ok, _ = strip_noncode(text, lane, keep_strings=False)
     if not ok:
         return ("deps", "unverifiable",
                 _u(_strip_fail_reason(lane),
@@ -1634,7 +1651,7 @@ def duplicate_map(files, lane_of, root=None):
         except Exception:
             continue
         norm[p] = hashlib.sha256(t.encode()).hexdigest()
-        code, _ok = strip_noncode(t, lane_of[p])
+        code, _ok, _ = strip_noncode(t, lane_of[p])
         sh[p] = _shingles(code)
     by_hash = defaultdict(list)
     for p, h in norm.items():
