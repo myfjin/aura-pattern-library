@@ -48,9 +48,13 @@ print("ruler baseline md5:", bxbase)
 MUTANTS = [
     ('TRIAGE-A go os.Exit assertion removed (86 false hollow flags return)',
      '|\\bos\\.Exit\\s*\\(\\s*[1-9]"', '|XXTRIAGEA"', 'TRIAGE-A go: `if x != y'),
-    ('TRIAGE-A go os.Exit accepted with ANY argument (os.Exit(0) becomes an assertion)',
-     'os\\.Exit\\s*\\(\\s*[1-9]', 'os\\.Exit\\s*\\(\\s*[0-9]',
-     'os.Exit(0) is a SUCCESSFUL exit'),
+ # ⛔ ROUND 20: the anchor was the bare `os.Exit` fragment, which C4's _C4_IF table
+ # duplicated -> it matched TWICE and the guard went dark. Re-aimed at ASSERT_PAT's go
+ # entry, where the [1-9] vs [0-9] distinction actually lives.
+ ("TRIAGE-A go os.Exit accepted with ANY argument (os.Exit(0) becomes an assertion)",
+  'r"\\bpanic\\s*\\(|\\bt\\.(?:Error|Fatal)f?\\s*\\(|\\bos\\.Exit\\s*\\(\\s*[1-9]"',
+  'r"\\bpanic\\s*\\(|\\bt\\.(?:Error|Fatal)f?\\s*\\(|\\bos\\.Exit\\s*\\(\\s*[0-9]"',
+  'os.Exit(0) is a SUCCESSFUL exit'),
     ('TRIAGE-A go log.Fatal dropped', '|\\blog\\.Fatal(?:f|ln)?\\s*\\("', '|XXTRIAGEA2"',
      'log.Fatal IS os.Exit(1)'),
     ('TRIAGE-B pure-decorator allowlist emptied (34 false flags return)',
@@ -165,8 +169,11 @@ MUTANTS = [
      r'(r"XXR16D", "unbounded scanf %s")', 'scanf'),
     ('R16 nondet os.urandom PATTERN gutted', r'(r"\bos\.urandom\s*\(", "os.urandom")',
      r'(r"XXR16E", "os.urandom")', 'urandom'),
-    ('R16 rust debug_assert! false-POSITIVE fix reverted (a real assertion called missing)',
-     '(?:debug_)?assert', 'assert', 'debug_assert'),
+ # ⛔ ROUND 20: the bare `(?:debug_)?assert` fragment was duplicated by C4's _C4_HEAD.
+ ("R16 rust debug_assert! false-POSITIVE fix reverted (a real assertion called missing)",
+  '    "rust": r"\\b(?:debug_)?assert(?:_eq|_ne)?!",',
+  '    "rust": r"\\bassert(?:_eq|_ne)?!",',
+  'debug_assert'),
     ('6E-R15-F3 JS template scanner removed (backtick falls back to a plain quote)',
      '            if lane == "javascript" and c == "`":\n',
      '            if False:\n',
@@ -285,22 +292,92 @@ MUTANTS = [
   'PROPERTY ACCESS'),
  # ---- 6E's trap: U1 quietly converted to PASS. These are the exact edits a well-meaning
  # future contributor would make. Every one must break the matrix probe.
- ("THE TRAP: deps gets a helpful pass-fallback for non-python",
-    '        return ("deps", "unverifiable",\n                _u("NON_PYTHON_AST", f"import classification implemented for python "',
-  '        return ("deps", "pass",\n                (lambda *_a: "nothing to classify")(f"python "',
-  "MATRIX deps x cpp"),
+ # ⛔ ROUND 20. The mutant that stood here targeted the NON_PYTHON_AST early-return in
+ # check_deps -- the text C6 replaced. It would now print SKIPPED (anchor matched 0), which
+ # is visible but defends nothing. These seven take its place: three LOOSEN the rules (a
+ # dependency stops being seen) and four TIGHTEN them (the standard library starts being
+ # flagged). Both directions matter -- a deps rule that flags <vector> would mark most of
+ # 1,150 non-python patterns and look strict while being useless.
+ ('C4 THE POLARITY IS INVERTED (every good guard becomes vacuous and back)',
+  '        vacuous = (val is True) if pol == "assert" else (val is False)',
+  '        vacuous = (val is False) if pol == "assert" else (val is True)',
+  'C4-'),
+ # ⛔ ROUND 20: this SURVIVED at first — for any expression containing an identifier
+ # _c4_fold already fails with NameError, so the guard looked redundant. It is NOT:
+ # the two disagree on identifier-free expressions python CAN evaluate
+ # (`"abc"[0] == 'a'`, `[1,2][0] == 1`), and folding those would judge cpp/go/rust/r/js
+ # source by PYTHON semantics. The SUBSCRIPT probes are what defend it.
+ ("C4 the literal-only test is dropped (foreign source folded by python semantics)",
+  '        if not _c4_literal_only(expr):\n            live += 1; continue',
+  '        if False:\n            live += 1; continue',
+  'SUBSCRIPT'),
+ ('C4 the rust assert!/assert_eq! head is dropped',
+  '    "rust": re.compile(r"\\b(?:debug_)?assert(_eq|_ne)?!\\s*(?=[\\(\\[])"),',
+  '    "rust": re.compile(r"\\bXXR20assert(_eq|_ne)?!\\s*(?=[\\(\\[])"),',
+  'assert_nonvacuous x rust'),
+ ("C4 R's TRUE stops folding to a python True",
+  '    e = re.sub(r"\\b(?:true|TRUE)\\b", "True", e)',
+  '    e = re.sub(r"\\bXXR20true\\b", "True", e)',
+  'assert_nonvacuous x r'),
+ ("C6 THE TRAP: non-python deps gets a helpful pass-fallback",
+  '    if lane != "python":\n        return _deps_nonpython(text, lane)',
+  '    if lane != "python":\n        return ("deps", "pass", "nothing to classify")',
+  "MATRIX+ deps x cpp"),
+ ("C6 go: a remote module path stops counting as third-party",
+  '    return paths, {p for p in paths if "." in p.split("/")[0]}',
+  '    return paths, set()',
+  "MATRIX+ deps x go"),
+ # ⛔ ROUND 20, MEASURED. A mutant stood here flipping C6's `keep_strings=True` to
+ # False. It SURVIVED -- and the cause is not an undefended fix, it is a REDUNDANCY.
+ # Two independent mechanisms preserve a go/js import line: keep_strings=True never
+ # strips it, AND _IMPORT_LINE re-appends it afterwards (round 2, F5). Measured on
+ # `import "github.com/pkg/errors"`: with keep_strings=False the original line is
+ # blanked but the RESTORED copy is still there, so extraction is unaffected. No
+ # SINGLE edit can make that probe go red -- which is exactly what "survived" meant.
+ # The equivalent mutant is removed; this one attacks the OTHER arm instead, so the
+ # restore is not left undefended.
+ ("C6 js: the npm-specifier shape test removed (template junk becomes a dependency)",
+  '        if not _NPM_SPECIFIER.match(base):     # not a package name at all -> not a dependency\n            continue',
+  '        if False:                              # not a package name at all -> not a dependency\n            continue',
+  "TEMPLATE-LITERAL"),
+ ("C6 the go import-line RESTORE is dropped from _IMPORT_LINE",
+  '    "go": re.compile(r\'^\\s*(import\\s|")\'),',
+  '    "go": re.compile(r\'^\\s*(XXR20import\\s)\'),',
+  "go"),
+ ("C6 rust: the std/crate/self allowlist emptied (use std:: starts flagging)",
+  '_RUST_LOCAL_ROOTS = frozenset({"std", "core", "alloc", "crate", "self", "super"})',
+  '_RUST_LOCAL_ROOTS = frozenset()',
+  "C6-rust is SILENT"),
+ ("C6 cpp: the standard-header set stops exempting (<vector> starts flagging)",
+  '    return hs, {h for h in hs if h not in _CPP_STD_HEADERS}',
+  '    return hs, set(hs)',
+  "C6-cpp is SILENT"),
+ ("C6 js: the node builtin set stops exempting (require fs starts flagging)",
+  '        if base.split("/")[0] not in _NODE_BUILTINS:',
+  '        if True:',
+  "C6-javascript is SILENT"),
+ ("C6 r: the base-package set stops exempting (stats:: starts flagging)",
+  '    return ps, {x for x in ps if x not in _R_BASE_PKGS}',
+  '    return ps, set(ps)',
+  "C6-r is SILENT"),
  ("THE TRAP: doc_behavior returns pass for a lane with no slot instead of unverifiable",
   '        return ("doc_behavior", "unverifiable",\n                _u("NO_DOC_SLOT", f"no description slot is defined for lane \'{lane}\'"))',
   '        return ("doc_behavior", "pass", "assumed fine")',
   "NO slot defined"),
+ # ⛔ ROUND 20: C4 replaced assert_nonvacuous's NON_PYTHON_AST return, so this guard lost
+ # its subject. The RULE it defends -- an unverifiable return must carry a reason code --
+ # is unchanged; moved to importable, which is still python-only.
  ("THE TRAP: an unverifiable return loses its reason code",
-  '        return ("assert_nonvacuous", "unverifiable",\n                _u("NON_PYTHON_AST", f"decidable on the python AST only; lane is \'{lane}\'"))',
-  '        return ("assert_nonvacuous", "unverifiable",\n                f"decidable on the python AST only; lane is \'{lane}\'")',
-  "MATRIX assert_nonvacuous x cpp"),
+  '        return ("importable", "unverifiable",\n                _u("NON_PYTHON_AST", f"decidable on the python AST only; lane is \'{lane}\'"))',
+  '        return ("importable", "unverifiable",\n                f"decidable on the python AST only; lane is \'{lane}\'")',
+  'MATRIX importable x cpp'),
+ # ⛔ ROUND 20: assert_nonvacuous is now LEGITIMATELY all-lanes (C4), and the MATRIX+
+ # positive arm is what earns that declaration. The guard -- declaring coverage you do
+ # not have must break the matrix -- moves to importable, the last python-only check.
  ("coverage table overclaims: python-only checks declared for all lanes",
-  '    "assert_nonvacuous":    ("python",),    # python AST only',
-  '    "assert_nonvacuous":    LANES,',
-  "MATRIX assert_nonvacuous x cpp"),
+  '    "importable":           ("python",),    # python AST only',
+  '    "importable":           LANES,',
+  'MATRIX importable x cpp'),
  ("the empty-lane row is dropped from the matrix (fake exhaustiveness)",
   '        for _lane in list(LANES) + ["cobol"]:',
   '        for _lane in list(LANES):',
@@ -426,8 +503,12 @@ MUTANTS = [
   '            if False and (',
   "REGEX LITERAL containing quotes does not swallow"),
  ("abs_path back to raw text (4Q F5)",
-  "    code, ok = strip_noncode(text, lane, keep_strings=True)",
-  "    code, ok = (text, True)",
+  # ⛔ ROUND 20: this anchor was ONE line and matched TWICE once C6's _deps_nonpython
+  # added an identical call, so the mutant printed SKIPPED and the guard went dark. A
+  # SKIPPED mutant is not a pass -- it is a defence that stopped defending. Anchored past
+  # the shared line onto the check's own name.
+  '    code, ok = strip_noncode(text, lane, keep_strings=True)\n    if not ok:\n        return ("hardcoded_abs_path", "unverifiable",',
+  '    code, ok = (text, True)\n    if not ok:\n        return ("hardcoded_abs_path", "unverifiable",',
   "quoted path inside a COMMENT"),
  ("index_parity substring fallback restored (4Q D3)",
   "        if str(p.relative_to(ROOT)) in txt:",
