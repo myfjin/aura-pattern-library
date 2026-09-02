@@ -883,9 +883,7 @@ def check_hollow(text, lane, tree):
 # cannot be a real test. A `pass` therefore means "no literal-only assertion that can never
 # fire was found", which is a measurement, not a fallback.
 _LIT_TOKEN = re.compile(r"""
-      "(?:[^"\\]|\\.)*"                      # double-quoted string
-    | '(?:[^'\\]|\\.)*'                      # single-quoted string
-    | \b\d+(?:\.\d+)?(?:[uUlLfF]+)?\b        # numeric literal, C/Rust suffixes allowed
+      \b\d+(?:\.\d+)?(?:[uUlLfF]+)?\b        # numeric literal, C/Rust suffixes allowed
     | \b(?:true|false|TRUE|FALSE|True|False)\b
     | [-+*/%()<>=!&|^~,\s]                   # operators, punctuation, whitespace
 """, re.X)
@@ -1172,6 +1170,14 @@ cstddef cstdint cstdio cstdlib cstring ctime cuchar cwchar cwctype cstdalign cst
 assert.h ctype.h errno.h fenv.h float.h inttypes.h limits.h locale.h math.h setjmp.h signal.h
 stdarg.h stddef.h stdint.h stdio.h stdlib.h string.h time.h wchar.h wctype.h
 unistd.h sys/wait.h sys/types.h sys/stat.h sys/mman.h fcntl.h pthread.h dlfcn.h sys/time.h
+# ⛔ 4Q ROUND 20 FINDING 1. `#include <arpa/inet.h>` was flagged as a third-party package.
+# It is POSIX.1-2001, shipped with every POSIX OS -- a system header, not a dependency.
+# The omission was not one header but a whole FAMILY: sockets, terminals, users, signals.
+arpa/inet.h netdb.h netinet/in.h netinet/tcp.h sys/socket.h sys/un.h sys/select.h
+sys/ioctl.h sys/uio.h sys/resource.h sys/utsname.h sys/file.h sys/param.h sys/sysctl.h
+poll.h termios.h pwd.h grp.h glob.h fnmatch.h regex.h dirent.h libgen.h syslog.h utime.h
+sched.h semaphore.h aio.h spawn.h iconv.h langinfo.h monetary.h nl_types.h search.h
+strings.h sys/statvfs.h sys/times.h sys/wait.h ucontext.h wordexp.h ftw.h tar.h cpio.h
 """.split())
 _NODE_BUILTINS = frozenset("""
 assert async_hooks buffer child_process cluster console constants crypto dgram diagnostics_channel
@@ -1200,7 +1206,10 @@ def _deps_go(code):
 
 
 def _deps_rust(code):
-    cs = set(re.findall(r"\buse\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:::|;)", code))
+    # ⛔ 4Q ROUND 20 FINDING 5: `use ::serde::Deserialize;` is valid, crate-relative Rust.
+    # The character class excluded ':' so the leading `::` form matched nothing and a real
+    # third-party crate reported "0 import(s), all standard".
+    cs = set(re.findall(r"\buse\s+(?:::)?([A-Za-z_][A-Za-z0-9_]*)\s*(?:::|;)", code))
     cs |= set(re.findall(r"\bextern\s+crate\s+([A-Za-z_][A-Za-z0-9_]*)", code))
     return cs, {c for c in cs if c not in _RUST_LOCAL_ROOTS}
 
@@ -1255,7 +1264,16 @@ def _deps_nonpython(text, lane):
     if lane not in DEPS_EXTRACT:
         return ("deps", "unverifiable",
                 _u("NO_RULE_TABLE", f"no dependency rule for lane '{lane}'"))
-    code, ok = strip_noncode(text, lane, keep_strings=True)
+    # ⛔ 4Q ROUND 20 FINDINGS 2 AND 4 — and this line is the opposite of what I first wrote.
+    # It USED to pass keep_strings=True, reasoning that in go/js/R the import target IS a
+    # string literal and stripping literals would delete the thing being measured. That
+    # reasoning was wrong, because `_IMPORT_LINE` RESTORES whole import lines after the
+    # strip: the genuine import survives either way. What keep_strings=True additionally
+    # preserved was PROSE — `"Tip: use dplyr::filter"` and
+    # `'To load express: from "express" import {Router}'` were both read as imports.
+    # MEASURED after the flip: every real import still found (go/js/R, quoted and bare),
+    # both prose cases clean. Stripping is strictly better here.
+    code, ok = strip_noncode(text, lane, keep_strings=False)
     if not ok:
         return ("deps", "unverifiable",
                 _u(_strip_fail_reason(lane),
@@ -3871,6 +3889,43 @@ def self_test() -> int:
     extra.append(("C4 an assertion named only in a COMMENT is not an assertion",
                   check_assert_nonvacuous("// assert(1 == 1);\nint main(){ assert(x); }\n",
                                           "cpp", None)[1] == "pass"))
+
+    # ---- 4Q ROUND 20: five measured defects, five regression probes ---------------------
+    # Each input below is 4Q's verbatim discriminating case. Four were FALSE POSITIVES
+    # (the expensive direction: an accusation against correct code) and one a false
+    # negative. None of them came from my own fixtures — I looked for exactly these and
+    # did not find them.
+    for _lbl4, _lane4, _src4, _fn4, _want4 in (
+        ("F1 a POSIX system header is not a third-party package", "cpp",
+         "#include <arpa/inet.h>\n#include <cstdint>\nint main(){ return htonl(1); }\n",
+         "deps", "pass"),
+        ("F2 an R `pkg::` inside a STRING is prose, not an import", "r",
+         'msg <- "Tip: use dplyr::filter to subset data frames"\ncat(msg)\n',
+         "deps", "pass"),
+        ("F3 a C++ string-literal comparison must NOT be folded by python semantics "
+         "(C++ compares pointers, so the assert CAN fire)", "cpp",
+         '#include <cassert>\nint main(){ assert("x" == "x"); return 0; }\n',
+         "assert_nonvacuous", "pass"),
+        ("F4 a JS `from \"pkg\"` inside a STRING is prose, not an import", "javascript",
+         """const h = 'To load express: from "express" import { Router }';\n""",
+         "deps", "pass"),
+        ("F5 rust `use ::serde::X` is crate-relative and IS third-party", "rust",
+         "use ::serde::Deserialize;\nfn main(){}\n", "deps", "flag"),
+    ):
+        _got4 = (check_deps if _fn4 == "deps" else check_assert_nonvacuous)(_src4, _lane4, None)
+        extra.append((f"4Q-R20 {_lbl4} (got {_got4[1]}: {_got4[2][:40]})",
+                      _got4[1] == _want4))
+    # The other half of F2/F4: stripping prose must not cost a REAL import. Every one of
+    # these targets is a string literal, and each must still be found.
+    for _lane4b, _src4b in (
+        ("r", "library(dplyr)\n"), ("r", 'library("dplyr")\n'),
+        ("javascript", 'const _ = require("lodash");\n'),
+        ("javascript", 'import x from "lodash";\n'),
+        ("go", 'package main\nimport "github.com/pkg/errors"\nfunc main(){}\n'),
+    ):
+        extra.append((f"4Q-R20 stripping prose does not lose a REAL {_lane4b} import "
+                      f"({_src4b.strip().splitlines()[-1][:34]!r})",
+                      check_deps(_src4b, _lane4b, None)[1] == "flag"))
 
     # ---- C6 non-python: the FALSE-POSITIVE arm ------------------------------------------
     # MATRIX+ proves each lane's rule can FIRE. Nothing above proves it stays silent on a
