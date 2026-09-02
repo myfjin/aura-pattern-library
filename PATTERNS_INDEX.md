@@ -1,6 +1,6 @@
 # AURA Pattern Library — Pattern Index
 
-Direct link and description for every one of the **1,500 pattern files** (1,024 unique pattern IDs across 6 languages).
+Direct link and description for every one of the **1,550 pattern files** (1,074 unique pattern IDs across 6 languages).
 
 Descriptions are extracted from each file at generation time under the frozen ruler (python = module docstring; others = first real comment block), so this index cannot drift from the code. `—` means the file carries no description.
 
@@ -8,7 +8,7 @@ Regenerate with `python3 build_patterns_index.py`. For the ID-keyed master (twin
 
 ## Contents
 
-- [`cpp`](#cpp) — 370 files, 37 categories
+- [`cpp`](#cpp) — 420 files, 38 categories
 - [`go/programming`](#goprogramming) — 45 files, 11 categories
 - [`go/system-administration`](#gosystem-administration) — 58 files, 1 categories
 - [`javascript`](#javascript) — 91 files, 6 categories
@@ -20,7 +20,7 @@ Regenerate with `python3 build_patterns_index.py`. For the ID-keyed master (twin
 
 ## cpp
 
-*370 files across 37 categories.*
+*420 files across 38 categories.*
 
 ### data-science/applied_ds_practice
 
@@ -576,6 +576,61 @@ Regenerate with `python3 build_patterns_index.py`. For the ID-keyed master (twin
 | [`rolling_zscore_anomaly`](cpp/data-science/time_series/rolling_zscore_anomaly.cpp) | Rolling z-score anomaly detection: for each point, computes the mean and stdev over a trailing window and flags the point when its z-score exceeds a threshold; near-constant… | Python |
 | [`seasonal_decomposition`](cpp/data-science/time_series/seasonal_decomposition.cpp) | Seasonal Decomposition (naive additive) C++17 self-contained implementation. | Python |
 | [`walk_forward_validation`](cpp/data-science/time_series/walk_forward_validation.cpp) | Walk-forward (expanding-window) time-series backtesting: for each step past an initial window, trains a forecaster on all prior points and predicts one step ahead, collecting… | Python |
+
+### programming/memory_safety
+
+| Pattern | Description | Also in |
+|---|---|---|
+| [`aliasing_shared_ptr_lifetime`](cpp/programming/memory_safety/aliasing_shared_ptr_lifetime.cpp) | aliasing_shared_ptr_lifetime — a raw member pointer does not keep the owner alive WHY: you often want to hand out a pointer to one member of a shared object. A raw &sp->m says… | — |
+| [`aligned_storage_lifetime`](cpp/programming/memory_safety/aligned_storage_lifetime.cpp) | aligned_storage_lifetime — an explicit destructor ends the object's lifetime WHY: the mirror image of placement new. Once you call the destructor explicitly, the object's lifetime… | — |
+| [`allocation_failure_path`](cpp/programming/memory_safety/allocation_failure_path.cpp) | allocation_failure_path — the failure path must release everything acquired so far WHY: allocation failure is a path almost nobody exercises, so it is where cleanup code goes to… | — |
+| [`allocation_size_overflow_check`](cpp/programming/memory_safety/allocation_size_overflow_check.cpp) | allocation_size_overflow_check — count * sizeof(T) wraps, and malloc succeeds on the small result WHY: count * sizeof(T) is unsigned arithmetic — it does not overflow, it wraps. A… | — |
+| [`allocator_propagation_on_container_move`](cpp/programming/memory_safety/allocator_propagation_on_container_move.cpp) | allocator_propagation_on_container_move — moving between unequal allocators must copy WHY: a container with a stateful allocator cannot simply steal another's buffer on… | — |
+| [`arena_reset_semantics`](cpp/programming/memory_safety/arena_reset_semantics.cpp) | arena_reset_semantics — reset that reallocates invalidates all issued pointers WHY: an arena is fast because it hands out slices of one big block and frees nothing individually.… | — |
+| [`c_str_pointer_after_string_mutation`](cpp/programming/memory_safety/c_str_pointer_after_string_mutation.cpp) | c_str_pointer_after_string_mutation — c_str() pointer dies on string reallocation WHY: c_str() hands you a pointer into the string's current buffer. Any mutation that grows the… | — |
+| [`capacity_vs_size_contract`](cpp/programming/memory_safety/capacity_vs_size_contract.cpp) | capacity_vs_size_contract — reserve buys memory, not elements WHY: reserve() buys memory; it does not create elements. The gap between size() and capacity() is raw storage the… | — |
+| [`cleanup_after_partial_container_fill`](cpp/programming/memory_safety/cleanup_after_partial_container_fill.cpp) | cleanup_after_partial_container_fill — raw pointers in a container own nothing WHY: filling a container with raw owning pointers is a loop that can throw halfway. The elements… | — |
+| [`copy_and_swap_strong_guarantee`](cpp/programming/memory_safety/copy_and_swap_strong_guarantee.cpp) | copy_and_swap_strong_guarantee — naive free-then-rebuild violates the strong guarantee WHY: the strong guarantee says a failed assignment leaves the target unchanged. The naive… | — |
+| [`custom_deleter_c_handle`](cpp/programming/memory_safety/custom_deleter_c_handle.cpp) | custom_deleter_c_handle — a smart pointer with a no-op deleter silently leaks WHY: C APIs hand back handles that need a specific release function. Wrapping one in a smart pointer… | — |
+| [`dangling_string_view_owner`](cpp/programming/memory_safety/dangling_string_view_owner.cpp) | dangling_string_view_owner — string_view does not keep its owner alive WHY: string_view is a borrow, not a copy — it does not extend the owner's lifetime. WHEN: returning a… | — |
+| [`data_pointer_after_shrink_to_fit`](cpp/programming/memory_safety/data_pointer_after_shrink_to_fit.cpp) | data_pointer_after_shrink_to_fit — shrink_to_fit releases the buffer that clear kept WHY: clear() alone keeps the buffer, so a stale data() pointer often seems to work — right up… | — |
+| [`destructor_must_not_throw`](cpp/programming/memory_safety/destructor_must_not_throw.cpp) | destructor_must_not_throw — a throwing destructor during unwinding calls std::terminate WHY: during stack unwinding an exception is already in flight. A second one leaving a… | — |
+| [`double_close_guard`](cpp/programming/memory_safety/double_close_guard.cpp) | double_close_guard — explicit close plus destructor close is a double-free WHY: an explicit close() plus a destructor that also closes is two releases for one acquisition. Each… | — |
+| [`double_release_on_error_path`](cpp/programming/memory_safety/double_release_on_error_path.cpp) | double_release_on_error_path — error-path cleanup plus normal-path cleanup is a double-free WHY: you added cleanup to the error path and forgot the success path already had it.… | — |
+| [`erase_loses_owned_resource`](cpp/programming/memory_safety/erase_loses_owned_resource.cpp) | erase_loses_owned_resource — erasing a raw-pointer element abandons its pointee WHY: erasing an element from a container of raw owning pointers destroys the pointer and abandons… | — |
+| [`iterator_invalidation_realloc`](cpp/programming/memory_safety/iterator_invalidation_realloc.cpp) | iterator_invalidation_realloc — iterator obtained before reallocation dangles WHY: you reach for this when a loop mutates the container it is walking. WHEN: appending to a vector… | — |
+| [`lambda_captured_pointer_outlives_owner`](cpp/programming/memory_safety/lambda_captured_pointer_outlives_owner.cpp) | lambda_captured_pointer_outlives_owner — captured raw pointer does not extend lifetime WHY: a lambda stored in a std::function outlives the scope that created it. Anything it… | — |
+| [`leak_between_two_allocations_on_throw`](cpp/programming/memory_safety/leak_between_two_allocations_on_throw.cpp) | leak_between_two_allocations_on_throw — raw owning pointer abandoned by a throw WHY: two raw news in one function is a leak waiting for the second one to fail. WHEN: allocating… | — |
+| [`move_only_resource_handle`](cpp/programming/memory_safety/move_only_resource_handle.cpp) | move_only_resource_handle — a move that copies the pointer but does not neuter the source WHY: writing your own move constructor is the moment you take responsibility for the… | — |
+| [`over_aligned_type_allocation`](cpp/programming/memory_safety/over_aligned_type_allocation.cpp) | over_aligned_type_allocation — malloc does not know about alignas(64) WHY: a type with alignas(64) — a SIMD vector, a cache-line-padded counter — has an alignment requirement that… | — |
+| [`overlapping_copy_requires_memmove`](cpp/programming/memory_safety/overlapping_copy_requires_memmove.cpp) | overlapping_copy_requires_memmove — memcpy on overlapping regions is undefined WHY: memcpy is allowed to be fast precisely because it may assume the regions do not overlap — it… | — |
+| [`ownership_across_factory`](cpp/programming/memory_safety/ownership_across_factory.cpp) | ownership_across_factory — a factory returning a raw pointer relies on every caller path WHY: a factory that returns a raw T* has no way to say whether the caller must delete it.… | — |
+| [`partially_constructed_cleanup`](cpp/programming/memory_safety/partially_constructed_cleanup.cpp) | partially_constructed_cleanup — a throwing ctor leaks raw members; RAII members are cleaned up WHY: if a constructor throws, the object never existed so its destructor never runs… | — |
+| [`placement_new_explicit_destroy`](cpp/programming/memory_safety/placement_new_explicit_destroy.cpp) | placement_new_explicit_destroy — placement new does not own storage, so no destructor runs WHY: placement new constructs an object in storage you already own, and it does not own… | — |
+| [`pointer_after_container_swap`](cpp/programming/memory_safety/pointer_after_container_swap.cpp) | pointer_after_container_swap — swap transfers buffer ownership; pointer follows the buffer WHY: swap is O(1) because it exchanges buffers, not contents. Swapping with a… | — |
+| [`pointer_to_erased_element`](cpp/programming/memory_safety/pointer_to_erased_element.cpp) | pointer_to_erased_element — erasing a node-based container element frees its node WHY: you kept a pointer to an element and then removed that element from the container. WHEN:… | — |
+| [`polymorphic_delete_through_base`](cpp/programming/memory_safety/polymorphic_delete_through_base.cpp) | polymorphic_delete_through_base — deleting through a base without a virtual destructor WHY: deleting a derived object through a base pointer tells delete to release an object of… | — |
+| [`raii_over_manual_cleanup_on_throw`](cpp/programming/memory_safety/raii_over_manual_cleanup_on_throw.cpp) | raii_over_manual_cleanup_on_throw — trailing delete never runs on the throwing path WHY: the manual delete at the bottom of a function is correct exactly once — on the path where… | — |
+| [`reference_into_erased_map_node`](cpp/programming/memory_safety/reference_into_erased_map_node.cpp) | reference_into_erased_map_node — erasing a map key deallocates its node WHY: a reference obtained from a map stays pointing at that element's node. Erasing the key deallocates the… | — |
+| [`reference_to_temporary_in_loop`](cpp/programming/memory_safety/reference_to_temporary_in_loop.cpp) | reference_to_temporary_in_loop — binding const& to a member of a temporary does not extend life WHY: a const& bound to a member of a temporary does not extend the temporary's… | — |
+| [`scope_guard_rollback`](cpp/programming/memory_safety/scope_guard_rollback.cpp) | scope_guard_rollback — manual cleanup does not run on the throwing path WHY: you acquired something, and the commit step three lines later can throw. A scope guard makes the… | — |
+| [`self_assignment_safety`](cpp/programming/memory_safety/self_assignment_safety.cpp) | self_assignment_safety — copy-assignment must be self-assignment-safe WHY: x = x looks impossible until an alias makes it happen, and a naive copy-assign frees the memory it is… | — |
+| [`shared_from_this_ownership_contract`](cpp/programming/memory_safety/shared_from_this_ownership_contract.cpp) | shared_from_this_ownership_contract — shared_from_this requires prior shared_ptr ownership WHY: enable_shared_from_this lets an object hand out a shared_ptr to itself — but it… | — |
+| [`shared_ptr_reference_cycle_leak`](cpp/programming/memory_safety/shared_ptr_reference_cycle_leak.cpp) | shared_ptr_reference_cycle_leak — a cycle of shared_ptr never releases WHY: shared_ptr frees when the count hits zero, and two nodes pointing at each other keep each other's count… | — |
+| [`sink_vs_borrow_parameter_contract`](cpp/programming/memory_safety/sink_vs_borrow_parameter_contract.cpp) | sink_vs_borrow_parameter_contract — sink destroys what the borrower still holds WHY: a function taking unique_ptr by value is a sink — it consumes the object. One taking a raw… | — |
+| [`small_buffer_boundary`](cpp/programming/memory_safety/small_buffer_boundary.cpp) | small_buffer_boundary — crossing the inline/heap boundary invalidates all pointers WHY: small-buffer optimisation keeps a few elements inside the object and spills to the heap… | — |
+| [`span_over_resized_container`](cpp/programming/memory_safety/span_over_resized_container.cpp) | span_over_resized_container — span does not track container reallocation WHY: a span is a borrow — pointer plus length. Growing the container it views moves the buffer and leaves… | — |
+| [`stack_buffer_overflow_bounds`](cpp/programming/memory_safety/stack_buffer_overflow_bounds.cpp) | stack_buffer_overflow_bounds — a pointer passed to a function loses the array bound WHY: a stack array's size is known to the compiler, which is why the classic overflow is… | — |
+| [`stack_unwinding_release_order`](cpp/programming/memory_safety/stack_unwinding_release_order.cpp) | stack_unwinding_release_order — destructors run in reverse construction order for a reason WHY: later objects may hold references into earlier ones. Manual cleanup in the wrong… | — |
+| [`throwing_copy_in_swap`](cpp/programming/memory_safety/throwing_copy_in_swap.cpp) | throwing_copy_in_swap — a swap that can throw leaves both objects broken WHY: swap must be noexcept. A swap that throws halfway leaves both objects sharing or losing buffers, and… | — |
+| [`two_owners_from_one_raw_pointer`](cpp/programming/memory_safety/two_owners_from_one_raw_pointer.cpp) | two_owners_from_one_raw_pointer — two shared_ptrs from one raw pointer create two control blocks WHY: shared_ptr counts references to a control block, not to an address.… | — |
+| [`two_phase_init_failure_path`](cpp/programming/memory_safety/two_phase_init_failure_path.cpp) | two_phase_init_failure_path — failed init must leave the object refusing use WHY: two-phase init (ctor then init()) means an object can exist in a failed state. The dangerous… | — |
+| [`unique_ptr_array_vs_scalar_delete`](cpp/programming/memory_safety/unique_ptr_array_vs_scalar_delete.cpp) | unique_ptr_array_vs_scalar_delete — scalar deleter on array allocation is a mismatch WHY: unique_ptr<T> calls delete, unique_ptr<T[]> calls delete[]. Handing an array allocation… | — |
+| [`use_after_move_contract`](cpp/programming/memory_safety/use_after_move_contract.cpp) | use_after_move_contract — pointer captured before a move follows the buffer to the destination WHY: you captured a pointer into a container and then moved the container. The… | — |
+| [`vector_element_reference_after_growth`](cpp/programming/memory_safety/vector_element_reference_after_growth.cpp) | vector_element_reference_after_growth — reference to element dies on vector growth WHY: you held a reference to an element and then grew the container. WHEN: caching a reference… | — |
+| [`vector_push_back_strong_guarantee`](cpp/programming/memory_safety/vector_push_back_strong_guarantee.cpp) | vector_push_back_strong_guarantee — growth must not free the old buffer until the new one is ready WHY: push_back promises the strong guarantee — if it throws, the vector is… | — |
+| [`weak_ptr_expired_access`](cpp/programming/memory_safety/weak_ptr_expired_access.cpp) | weak_ptr_expired_access — a cached raw pointer from a shared_ptr cannot tell you it expired WHY: weak_ptr exists so an observer can ask "is it still there?" before touching it.… | — |
+| [`zero_size_allocation_contract`](cpp/programming/memory_safety/zero_size_allocation_contract.cpp) | zero_size_allocation_contract — new T[0] succeeds and must not be dereferenced WHY: new T[0] and malloc(0) succeed. They return a real, non-null, unique pointer that you must… | — |
 
 ## go/programming
 

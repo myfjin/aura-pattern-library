@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-08-07",
+  "created": "2026-09-02",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -12,7 +12,7 @@
     },
     {
       "path": ".folder-nature",
-      "sha256": "9f3fa3bc9b8a8749b60f903a95d8e3c2e912e06cc7cddf3658cdf5476ef9f9fc",
+      "sha256": "aacca0eeb2e573c7051c1e350831135ba847a0f4076e3994ed23b9a78d284b19",
       "bytes": 313
     },
     {
@@ -3904,6 +3904,516 @@
       "path": "data-science/time_series/walk_forward_validation.md",
       "sha256": "486c8d20a712fdbdc8de412444adc58b39e399015dca453d25556fddacb5c1cc",
       "bytes": 4749
+    },
+    {
+      "path": "programming/.folder-nature",
+      "sha256": "d63c8bb95b67863cfce5bda44606511084fb8399930ec999d4f44bcf92550db6",
+      "bytes": 342
+    },
+    {
+      "path": "programming/memory_safety/.folder-nature",
+      "sha256": "0fd502c6400eb25595850c1d393b55f3e896f273547cdef9b34502155b7d5c41",
+      "bytes": 347
+    },
+    {
+      "path": "programming/memory_safety/aliasing_shared_ptr_lifetime.cpp",
+      "sha256": "ba99adfed963bab2d6a0e8e8d4748d71dfa8341d53ceb7a58307fc48b85e09a5",
+      "bytes": 8971
+    },
+    {
+      "path": "programming/memory_safety/aliasing_shared_ptr_lifetime.md",
+      "sha256": "e703b7636fb8401020901443c0dcd779f89f482944e6bc174bbd58dc35614924",
+      "bytes": 2000
+    },
+    {
+      "path": "programming/memory_safety/aligned_storage_lifetime.cpp",
+      "sha256": "928009785260841e8ebeb3947f03dd57f2891cf6b6a6985e2046406381c6db73",
+      "bytes": 8252
+    },
+    {
+      "path": "programming/memory_safety/aligned_storage_lifetime.md",
+      "sha256": "13c410e1dbb9c52f946d7e77413259b3351b8d0f29e1d1001d89915c8e76be46",
+      "bytes": 2000
+    },
+    {
+      "path": "programming/memory_safety/allocation_failure_path.cpp",
+      "sha256": "46bb28941095569e8383f087169b40fd3b554ffa76e787a13a96c96f02c11e1c",
+      "bytes": 9148
+    },
+    {
+      "path": "programming/memory_safety/allocation_failure_path.md",
+      "sha256": "6e4d0671ec226359d7198ebe14d9fea55357a9b9c1b1f2a9264ced431559b987",
+      "bytes": 1857
+    },
+    {
+      "path": "programming/memory_safety/allocation_size_overflow_check.cpp",
+      "sha256": "930bcb0f03a4a5f29ad705a629a530df15c1fad58342648877409aaa0a18007f",
+      "bytes": 8805
+    },
+    {
+      "path": "programming/memory_safety/allocation_size_overflow_check.md",
+      "sha256": "0e065dc080002239622adc70976eb04f333737f600b965df666a09b0f73ef080",
+      "bytes": 1903
+    },
+    {
+      "path": "programming/memory_safety/allocator_propagation_on_container_move.cpp",
+      "sha256": "fc55c35cbb9aea6b79d72051740e757f45b1cac427abb56b2815d17d7732397d",
+      "bytes": 9564
+    },
+    {
+      "path": "programming/memory_safety/allocator_propagation_on_container_move.md",
+      "sha256": "1fcfdff99f72232626a2dfed438b9910456262656e972c5c890768ce2737a5a2",
+      "bytes": 2167
+    },
+    {
+      "path": "programming/memory_safety/arena_reset_semantics.cpp",
+      "sha256": "3833218d94d069e31decd6267cd6387544fb5cafc78fc82a41e3798a1389a53a",
+      "bytes": 9191
+    },
+    {
+      "path": "programming/memory_safety/arena_reset_semantics.md",
+      "sha256": "259e6089ac5a19eb76c945b84935edf206d5b2f8de366b3edc5dc3cbb0d47928",
+      "bytes": 1989
+    },
+    {
+      "path": "programming/memory_safety/c_str_pointer_after_string_mutation.cpp",
+      "sha256": "29d57dff0b12c665fd0f9851735933ed5f0da3a10046d054b6d4f89bc973606e",
+      "bytes": 8098
+    },
+    {
+      "path": "programming/memory_safety/c_str_pointer_after_string_mutation.md",
+      "sha256": "b1bd4347f9e5acac5190fcb34947106b8df6c0574defa79196870fcd9a78bd7a",
+      "bytes": 2076
+    },
+    {
+      "path": "programming/memory_safety/capacity_vs_size_contract.cpp",
+      "sha256": "5fd34775d5a5c13f0291fe1432e3de11943a339e63f423d8f9935e90dfb67d76",
+      "bytes": 8699
+    },
+    {
+      "path": "programming/memory_safety/capacity_vs_size_contract.md",
+      "sha256": "627435b7c727bb003196c19ca623b5e9113839d2cf633fb93cc2787c97f27f65",
+      "bytes": 1969
+    },
+    {
+      "path": "programming/memory_safety/cleanup_after_partial_container_fill.cpp",
+      "sha256": "f83f1bdbea25f12b3df999f838723f2455a51b35c7cb53dc761f88b81b9dffb4",
+      "bytes": 9615
+    },
+    {
+      "path": "programming/memory_safety/cleanup_after_partial_container_fill.md",
+      "sha256": "dc677fc1c50e6e01b453e49c77329afe9257f099a5d0a06b1b6fd0e1b6ea6f1f",
+      "bytes": 1954
+    },
+    {
+      "path": "programming/memory_safety/copy_and_swap_strong_guarantee.cpp",
+      "sha256": "c8e32af2c323ad5d03ae6b53de4ec519a4d2539576c9d48af8a0ba50cb850afe",
+      "bytes": 9937
+    },
+    {
+      "path": "programming/memory_safety/copy_and_swap_strong_guarantee.md",
+      "sha256": "be4153396fbeb2a204f71e1c1ca58c3affc6efa2c6ab2644ae223187a33514ed",
+      "bytes": 1980
+    },
+    {
+      "path": "programming/memory_safety/custom_deleter_c_handle.cpp",
+      "sha256": "ad58edf1990c9e3d81ca9a9eefa519b22cd703893b0d81fd500688860dac91a7",
+      "bytes": 8636
+    },
+    {
+      "path": "programming/memory_safety/custom_deleter_c_handle.md",
+      "sha256": "e89f5f44d66bc278e945b93ba4c87e00224d1f48b82fa2ec95324234333b5869",
+      "bytes": 1667
+    },
+    {
+      "path": "programming/memory_safety/dangling_string_view_owner.cpp",
+      "sha256": "0832280febda9c1c134ecbb9665a04011883fc136bbe08d9ff1e957f8acc6d95",
+      "bytes": 7961
+    },
+    {
+      "path": "programming/memory_safety/dangling_string_view_owner.md",
+      "sha256": "0bdc99e030e1129322911d83b49b80db3be17269f61e033c708a50e2d0167e40",
+      "bytes": 1863
+    },
+    {
+      "path": "programming/memory_safety/data_pointer_after_shrink_to_fit.cpp",
+      "sha256": "74d57289e925ce51927bfb5d4e40f6ec88f4644ed59c7536a2e436f04f5d4b19",
+      "bytes": 8098
+    },
+    {
+      "path": "programming/memory_safety/data_pointer_after_shrink_to_fit.md",
+      "sha256": "09d532d6e707cc86f6cd847ac282a778314320d7fb577a6d143bb7f10c317313",
+      "bytes": 2039
+    },
+    {
+      "path": "programming/memory_safety/destructor_must_not_throw.cpp",
+      "sha256": "755a93850d238031f00c4bc990da8f6afae038163de94723243dc1c92e4818ac",
+      "bytes": 8210
+    },
+    {
+      "path": "programming/memory_safety/destructor_must_not_throw.md",
+      "sha256": "80cea875f23f357bcbb4c1a69f300613f0d26481ff59a56ec1bedc1c44b5458c",
+      "bytes": 2277
+    },
+    {
+      "path": "programming/memory_safety/double_close_guard.cpp",
+      "sha256": "2dbd6f1eab3c4112ae6e3822c9a71a8a0b9a4d9eab8ebef3f1df8131a719d4fe",
+      "bytes": 8915
+    },
+    {
+      "path": "programming/memory_safety/double_close_guard.md",
+      "sha256": "33922db4b49092cd3a2cedb99dd6f3e75a61851c70b6ba47a77d0762abdb39bc",
+      "bytes": 1711
+    },
+    {
+      "path": "programming/memory_safety/double_release_on_error_path.cpp",
+      "sha256": "a09116bb77120dbf4cd2d290cf78e99a0eabc4386471b3ab57eb12e482d00b1d",
+      "bytes": 8586
+    },
+    {
+      "path": "programming/memory_safety/double_release_on_error_path.md",
+      "sha256": "5cce6d503dff3fd02a89b7aa7b3d824228f347d912e208c1c29fa7c55c848cf5",
+      "bytes": 1798
+    },
+    {
+      "path": "programming/memory_safety/erase_loses_owned_resource.cpp",
+      "sha256": "40a47a9637f4948e73cb64a549a88b3b01ad9461cad23b80db4f443df1e35ccb",
+      "bytes": 9432
+    },
+    {
+      "path": "programming/memory_safety/erase_loses_owned_resource.md",
+      "sha256": "534d598cb45c907c769922ec2fe1ab3d0dfe90a118c169e39627a14684048598",
+      "bytes": 1762
+    },
+    {
+      "path": "programming/memory_safety/iterator_invalidation_realloc.cpp",
+      "sha256": "1562db089856a69913816adaca3bd778e651a41e9f804d6a74914878a669ead9",
+      "bytes": 8047
+    },
+    {
+      "path": "programming/memory_safety/iterator_invalidation_realloc.md",
+      "sha256": "f714f54905ef7f1a8dfbdd52d5c67af418ea81318830362ee9a7ba7ea13b6bf7",
+      "bytes": 1888
+    },
+    {
+      "path": "programming/memory_safety/lambda_captured_pointer_outlives_owner.cpp",
+      "sha256": "8fb1aa5991f7bb063ec198f9cee0cb6dfa1bdff84dd85c373b89abd5f8703b3d",
+      "bytes": 7333
+    },
+    {
+      "path": "programming/memory_safety/lambda_captured_pointer_outlives_owner.md",
+      "sha256": "135e033506be71453703d324f2f3283b76a9e127f3106553f31162a63535c8a6",
+      "bytes": 1972
+    },
+    {
+      "path": "programming/memory_safety/leak_between_two_allocations_on_throw.cpp",
+      "sha256": "efd1b8bf55da69b94f4f0aff4ff6691aabdc6cad760055e556cbeba6f872a68f",
+      "bytes": 7863
+    },
+    {
+      "path": "programming/memory_safety/leak_between_two_allocations_on_throw.md",
+      "sha256": "f65c9387ac4d2aaa979c5847622b3dd21a3109e5d4faac138d23ecba491dfae8",
+      "bytes": 1709
+    },
+    {
+      "path": "programming/memory_safety/move_only_resource_handle.cpp",
+      "sha256": "dfba7e7a3bf720a7cd428ad6f4bc1517ca56fb6fcc59dd27d05888fbcbfaec7f",
+      "bytes": 9130
+    },
+    {
+      "path": "programming/memory_safety/move_only_resource_handle.md",
+      "sha256": "f59984f97e85ed1fc7fb20b7cdd2636fc690164df93fa5b00619f54cd218594d",
+      "bytes": 1816
+    },
+    {
+      "path": "programming/memory_safety/over_aligned_type_allocation.cpp",
+      "sha256": "1bb5ecd26f5c7b3ece74d88305329a673345001866b79b9f6bd178c3552ebd8d",
+      "bytes": 8482
+    },
+    {
+      "path": "programming/memory_safety/over_aligned_type_allocation.md",
+      "sha256": "8483ab43a00eb9d58a752aad6b16aaf426d6a419a2d0c0cf8bad046332ec247d",
+      "bytes": 2084
+    },
+    {
+      "path": "programming/memory_safety/overlapping_copy_requires_memmove.cpp",
+      "sha256": "f4c614574545574f1f8e6cb95975b8c3833384b8907bf95d02ce24e96b374c8e",
+      "bytes": 8520
+    },
+    {
+      "path": "programming/memory_safety/overlapping_copy_requires_memmove.md",
+      "sha256": "d280a40643c6ce7af1468ebbc5447f8b365262535beb0a492fcd186663f956f0",
+      "bytes": 1820
+    },
+    {
+      "path": "programming/memory_safety/ownership_across_factory.cpp",
+      "sha256": "1ed821044d0169ee41ac520e8a75f5c54b60dff1e116f03f278802dd87b73972",
+      "bytes": 8648
+    },
+    {
+      "path": "programming/memory_safety/ownership_across_factory.md",
+      "sha256": "88cf34d3436dae320ff507f1ddc1681172c624d796c2c32e40cd4273b86d73f4",
+      "bytes": 1788
+    },
+    {
+      "path": "programming/memory_safety/partially_constructed_cleanup.cpp",
+      "sha256": "9e2664782f4520b710090dcfc4b1d1a4e3fab4a10561e649aff3449b357ac239",
+      "bytes": 8435
+    },
+    {
+      "path": "programming/memory_safety/partially_constructed_cleanup.md",
+      "sha256": "8e8caa256c57ebbbde6544a13420b3efff4630322933d95989803a204a664451",
+      "bytes": 1969
+    },
+    {
+      "path": "programming/memory_safety/placement_new_explicit_destroy.cpp",
+      "sha256": "70ee6d8eeb4ccd44087c9a98c2e5fb491449144eeb67f179f92c8690c9ac2484",
+      "bytes": 8617
+    },
+    {
+      "path": "programming/memory_safety/placement_new_explicit_destroy.md",
+      "sha256": "056677ff3c2b6b308cf7fa5e1423fd929d280a2e6a70f9e4d0f824bc431d62d6",
+      "bytes": 1867
+    },
+    {
+      "path": "programming/memory_safety/pointer_after_container_swap.cpp",
+      "sha256": "058f775b2597683714bc190cf65e209889ae4c0ae7fa19bbd9af4101b7d0e311",
+      "bytes": 8185
+    },
+    {
+      "path": "programming/memory_safety/pointer_after_container_swap.md",
+      "sha256": "6802d0bbfb2d95c7f14db21a86734dce4b8a3e8c2b7301c33ab1643243675885",
+      "bytes": 1922
+    },
+    {
+      "path": "programming/memory_safety/pointer_to_erased_element.cpp",
+      "sha256": "a5da6cb02e123adda248bd7b88792fd274b7e870fab9cd16da446015b4e3f789",
+      "bytes": 8013
+    },
+    {
+      "path": "programming/memory_safety/pointer_to_erased_element.md",
+      "sha256": "f436d999bdda341f9b0f06e13a138472deb214e067de30c9d6b70c51a840f7a7",
+      "bytes": 1867
+    },
+    {
+      "path": "programming/memory_safety/polymorphic_delete_through_base.cpp",
+      "sha256": "9aa2c169f8d8dc197c98ff6d82c88ad5dc55662f1bb973ce3da241a9a96dba86",
+      "bytes": 9222
+    },
+    {
+      "path": "programming/memory_safety/polymorphic_delete_through_base.md",
+      "sha256": "9da445734f89d09c5d916d040264358bf4d627219fde5c47298cd80d00d28126",
+      "bytes": 1991
+    },
+    {
+      "path": "programming/memory_safety/raii_over_manual_cleanup_on_throw.cpp",
+      "sha256": "6c15c7014da5ed1c2fa4d175f4b0bd812e3bbab0d051fd47f5199ac0e23ab0a0",
+      "bytes": 7905
+    },
+    {
+      "path": "programming/memory_safety/raii_over_manual_cleanup_on_throw.md",
+      "sha256": "733f77548e59beebfc7cfe81765c8bd802cfbfd8afb423ecc1613e08bb835576",
+      "bytes": 1733
+    },
+    {
+      "path": "programming/memory_safety/reference_into_erased_map_node.cpp",
+      "sha256": "2169485e162c3d13da121d1e21ce70d3596eeb6f3a2ced29b6861b9602bc3d6a",
+      "bytes": 8061
+    },
+    {
+      "path": "programming/memory_safety/reference_into_erased_map_node.md",
+      "sha256": "82cf23fb2ba71e7e30c6c46792dfebcbeb85837f4a11833d60670f37ef6fd493",
+      "bytes": 1832
+    },
+    {
+      "path": "programming/memory_safety/reference_to_temporary_in_loop.cpp",
+      "sha256": "afcedde765754459cd7e508f1c9d8f455977e3cff604d00e3c49b9a741492b9d",
+      "bytes": 8838
+    },
+    {
+      "path": "programming/memory_safety/reference_to_temporary_in_loop.md",
+      "sha256": "e830f482c1b3e67d1251ee64eb920f7489097fcdc07eb4dd73bf1cc922317a39",
+      "bytes": 2626
+    },
+    {
+      "path": "programming/memory_safety/scope_guard_rollback.cpp",
+      "sha256": "449530b0fc7ee908df6ff66a8935b3cd8ba2e2f9442ec91bbb115fab435fd06d",
+      "bytes": 8744
+    },
+    {
+      "path": "programming/memory_safety/scope_guard_rollback.md",
+      "sha256": "1e66708b50aadb854c8ec9a49e4dd64e5d05dbd35bee066da68b5f7fa91ada5b",
+      "bytes": 1735
+    },
+    {
+      "path": "programming/memory_safety/self_assignment_safety.cpp",
+      "sha256": "7039b551994e19a9efd2df48b5a5698c76f4ed2bd1757112f83a75d612125325",
+      "bytes": 9327
+    },
+    {
+      "path": "programming/memory_safety/self_assignment_safety.md",
+      "sha256": "ff08579d8141c8393fad40f152780db55a69ca1af88a4208ed8473c7e1705b48",
+      "bytes": 1962
+    },
+    {
+      "path": "programming/memory_safety/shared_from_this_ownership_contract.cpp",
+      "sha256": "af81dc377f8125da1a968197af2b6e6f619fe891cc200ccff0e7dfeefaab6516",
+      "bytes": 8248
+    },
+    {
+      "path": "programming/memory_safety/shared_from_this_ownership_contract.md",
+      "sha256": "b5f468758e485030ef7000d591aff014b70c87f200eb47c1cc331f1a833d0a81",
+      "bytes": 2407
+    },
+    {
+      "path": "programming/memory_safety/shared_ptr_reference_cycle_leak.cpp",
+      "sha256": "35f55c8060575be6588579fdf9080cdae0ab2598e37866fca4489bd4e9be631a",
+      "bytes": 8522
+    },
+    {
+      "path": "programming/memory_safety/shared_ptr_reference_cycle_leak.md",
+      "sha256": "f7eec3785481d0bcd3708101cf76d1b098ec0529127169efcf3e3efcc58ffb5e",
+      "bytes": 1909
+    },
+    {
+      "path": "programming/memory_safety/sink_vs_borrow_parameter_contract.cpp",
+      "sha256": "6cf916d2dbf34ed0c4745278958f69b3aebe0cf7927c20ff600fec7f11f2a3ac",
+      "bytes": 8348
+    },
+    {
+      "path": "programming/memory_safety/sink_vs_borrow_parameter_contract.md",
+      "sha256": "99659079b04fed0bac813bbfe12f60089509e80ae99ec2e41deed8206e246673",
+      "bytes": 1913
+    },
+    {
+      "path": "programming/memory_safety/small_buffer_boundary.cpp",
+      "sha256": "c61851bacb4afa6654b7183aa988b690680eb25d746c7c32447afe85c02d1f19",
+      "bytes": 9172
+    },
+    {
+      "path": "programming/memory_safety/small_buffer_boundary.md",
+      "sha256": "ec526bbe5f8cb23e4c1b8ca5bde295d84499dbf0270729c2568f597340a8d05e",
+      "bytes": 2029
+    },
+    {
+      "path": "programming/memory_safety/span_over_resized_container.cpp",
+      "sha256": "b2e2d47b97084570533298071efe9760297eb22ba33c63e9c46535c8783f80a0",
+      "bytes": 8440
+    },
+    {
+      "path": "programming/memory_safety/span_over_resized_container.md",
+      "sha256": "39778698e6a3b7ce269c9024fa821a7a39e4637855686fd4ffe567caba7e3508",
+      "bytes": 2361
+    },
+    {
+      "path": "programming/memory_safety/stack_buffer_overflow_bounds.cpp",
+      "sha256": "e14408e73ed7881369ac5d9e053ac6e6f641f0d49e6a369f60f7a622e12de974",
+      "bytes": 8459
+    },
+    {
+      "path": "programming/memory_safety/stack_buffer_overflow_bounds.md",
+      "sha256": "551a065884815e0f8deb721eb6073ad41c399a11432a5ccb339f3c2e4970ba62",
+      "bytes": 1863
+    },
+    {
+      "path": "programming/memory_safety/stack_unwinding_release_order.cpp",
+      "sha256": "e6c465d7c6e361f17079c115166be086a4f9f5010d5815eb7367766a8baf7f37",
+      "bytes": 9044
+    },
+    {
+      "path": "programming/memory_safety/stack_unwinding_release_order.md",
+      "sha256": "5b77cdc5da7e9f8648b33cc3f37ce50de6da1a8f298c9d04de6cfc8331e44ca3",
+      "bytes": 1904
+    },
+    {
+      "path": "programming/memory_safety/throwing_copy_in_swap.cpp",
+      "sha256": "26f71c8ed1c0c603ee83d96f6c1ba1a63252d43ad0ab51bba835330bd55a35d7",
+      "bytes": 8961
+    },
+    {
+      "path": "programming/memory_safety/throwing_copy_in_swap.md",
+      "sha256": "a4e031df42b2261d5bf7470a4e7b13b45ce8004dc5b71c212c2648aeb08ceac3",
+      "bytes": 1738
+    },
+    {
+      "path": "programming/memory_safety/two_owners_from_one_raw_pointer.cpp",
+      "sha256": "0081735b2c442bcb599ea799860501e596d612073abcd86521311a042e006096",
+      "bytes": 8775
+    },
+    {
+      "path": "programming/memory_safety/two_owners_from_one_raw_pointer.md",
+      "sha256": "6e3e60672ee8b02cd6f1f21ebd93059375f4e3cffa84f05357390978dcbabb33",
+      "bytes": 1843
+    },
+    {
+      "path": "programming/memory_safety/two_phase_init_failure_path.cpp",
+      "sha256": "a53daaad99648cf9696b80311df3d316dddf3249d3d9568fbb854dd484a0eb8c",
+      "bytes": 9762
+    },
+    {
+      "path": "programming/memory_safety/two_phase_init_failure_path.md",
+      "sha256": "ac0b2f24a20e225892a6cc217f963ed58d34cb14196c46f77cc38270541d953e",
+      "bytes": 2066
+    },
+    {
+      "path": "programming/memory_safety/unique_ptr_array_vs_scalar_delete.cpp",
+      "sha256": "7387810eb6d9888beec863117852583a5ac18ceabd4929a1c6d59fdb49eb3ad8",
+      "bytes": 7969
+    },
+    {
+      "path": "programming/memory_safety/unique_ptr_array_vs_scalar_delete.md",
+      "sha256": "cc31c774c51bfac0b4ec60cac520734003fd0d327663312eef63c97f7064e01a",
+      "bytes": 1736
+    },
+    {
+      "path": "programming/memory_safety/use_after_move_contract.cpp",
+      "sha256": "b939cfd0eb090d0db016a4b0ae6c49f379b330414c8a658de20e921c29f360cc",
+      "bytes": 8032
+    },
+    {
+      "path": "programming/memory_safety/use_after_move_contract.md",
+      "sha256": "2957bb983c81fe0cef3b8b21cec6056c95b0eb157755af1a8d4a34c4a53f1fa6",
+      "bytes": 1918
+    },
+    {
+      "path": "programming/memory_safety/vector_element_reference_after_growth.cpp",
+      "sha256": "f7fffe2d5478f8ae5e56f8e773c2aa47f5043ff83d7a22c3aa6fa25e52d3e11f",
+      "bytes": 7973
+    },
+    {
+      "path": "programming/memory_safety/vector_element_reference_after_growth.md",
+      "sha256": "2dd9f0d9752a135e49b32e31f59b8cf1bcf354b049ba1a9ceb67a56078eddea4",
+      "bytes": 1852
+    },
+    {
+      "path": "programming/memory_safety/vector_push_back_strong_guarantee.cpp",
+      "sha256": "5de69e8c2e9e7470a43e5782255c4f07031d2689ab598dacc08b6742cde581da",
+      "bytes": 9509
+    },
+    {
+      "path": "programming/memory_safety/vector_push_back_strong_guarantee.md",
+      "sha256": "7b31b15b522671ef788214a55353ae3d2e4d4568cf84ca74ae54d87b2b004974",
+      "bytes": 1871
+    },
+    {
+      "path": "programming/memory_safety/weak_ptr_expired_access.cpp",
+      "sha256": "ded51df3cc6278d30079a9ba50b14d0d415d73c0761bf0705c1c11be6a590eb7",
+      "bytes": 8308
+    },
+    {
+      "path": "programming/memory_safety/weak_ptr_expired_access.md",
+      "sha256": "d804077bf548584d1fd56d1c20c4fd4e120f40f35c297d321dd434ea9c778550",
+      "bytes": 1859
+    },
+    {
+      "path": "programming/memory_safety/zero_size_allocation_contract.cpp",
+      "sha256": "0bd6c569a6fc1f84b02aea319ff2ad28ea7c91a447d6c45434e72ebc7733a223",
+      "bytes": 8529
+    },
+    {
+      "path": "programming/memory_safety/zero_size_allocation_contract.md",
+      "sha256": "63dfd2f5ae763ee3551fef5300b8a279b7b524c817acce36783759da23899f53",
+      "bytes": 2004
     }
   ]
 }

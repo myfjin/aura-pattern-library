@@ -1038,6 +1038,56 @@ _Generated 2026-08-29. **1035 patterns** (1024 unique IDs — a stem in two sphe
 | `zipf_law_fit` | python·cpp | Text / NLP II |
 | `zombie_reaper` | python | System Administration — Process Supervision |
 | `zscore_anomaly` | python | System Administration — Monitoring & Metrics |
+| `aliasing_shared_ptr_lifetime` | cpp | C++ — Memory Safety |
+| `aligned_storage_lifetime` | cpp | C++ — Memory Safety |
+| `allocation_failure_path` | cpp | C++ — Memory Safety |
+| `allocation_size_overflow_check` | cpp | C++ — Memory Safety |
+| `allocator_propagation_on_container_move` | cpp | C++ — Memory Safety |
+| `arena_reset_semantics` | cpp | C++ — Memory Safety |
+| `c_str_pointer_after_string_mutation` | cpp | C++ — Memory Safety |
+| `capacity_vs_size_contract` | cpp | C++ — Memory Safety |
+| `cleanup_after_partial_container_fill` | cpp | C++ — Memory Safety |
+| `copy_and_swap_strong_guarantee` | cpp | C++ — Memory Safety |
+| `custom_deleter_c_handle` | cpp | C++ — Memory Safety |
+| `dangling_string_view_owner` | cpp | C++ — Memory Safety |
+| `data_pointer_after_shrink_to_fit` | cpp | C++ — Memory Safety |
+| `destructor_must_not_throw` | cpp | C++ — Memory Safety |
+| `double_close_guard` | cpp | C++ — Memory Safety |
+| `double_release_on_error_path` | cpp | C++ — Memory Safety |
+| `erase_loses_owned_resource` | cpp | C++ — Memory Safety |
+| `iterator_invalidation_realloc` | cpp | C++ — Memory Safety |
+| `lambda_captured_pointer_outlives_owner` | cpp | C++ — Memory Safety |
+| `leak_between_two_allocations_on_throw` | cpp | C++ — Memory Safety |
+| `move_only_resource_handle` | cpp | C++ — Memory Safety |
+| `over_aligned_type_allocation` | cpp | C++ — Memory Safety |
+| `overlapping_copy_requires_memmove` | cpp | C++ — Memory Safety |
+| `ownership_across_factory` | cpp | C++ — Memory Safety |
+| `partially_constructed_cleanup` | cpp | C++ — Memory Safety |
+| `placement_new_explicit_destroy` | cpp | C++ — Memory Safety |
+| `pointer_after_container_swap` | cpp | C++ — Memory Safety |
+| `pointer_to_erased_element` | cpp | C++ — Memory Safety |
+| `polymorphic_delete_through_base` | cpp | C++ — Memory Safety |
+| `raii_over_manual_cleanup_on_throw` | cpp | C++ — Memory Safety |
+| `reference_into_erased_map_node` | cpp | C++ — Memory Safety |
+| `reference_to_temporary_in_loop` | cpp | C++ — Memory Safety |
+| `scope_guard_rollback` | cpp | C++ — Memory Safety |
+| `self_assignment_safety` | cpp | C++ — Memory Safety |
+| `shared_from_this_ownership_contract` | cpp | C++ — Memory Safety |
+| `shared_ptr_reference_cycle_leak` | cpp | C++ — Memory Safety |
+| `sink_vs_borrow_parameter_contract` | cpp | C++ — Memory Safety |
+| `small_buffer_boundary` | cpp | C++ — Memory Safety |
+| `span_over_resized_container` | cpp | C++ — Memory Safety |
+| `stack_buffer_overflow_bounds` | cpp | C++ — Memory Safety |
+| `stack_unwinding_release_order` | cpp | C++ — Memory Safety |
+| `throwing_copy_in_swap` | cpp | C++ — Memory Safety |
+| `two_owners_from_one_raw_pointer` | cpp | C++ — Memory Safety |
+| `two_phase_init_failure_path` | cpp | C++ — Memory Safety |
+| `unique_ptr_array_vs_scalar_delete` | cpp | C++ — Memory Safety |
+| `use_after_move_contract` | cpp | C++ — Memory Safety |
+| `vector_element_reference_after_growth` | cpp | C++ — Memory Safety |
+| `vector_push_back_strong_guarantee` | cpp | C++ — Memory Safety |
+| `weak_ptr_expired_access` | cpp | C++ — Memory Safety |
+| `zero_size_allocation_contract` | cpp | C++ — Memory Safety |
 
 ## Counts (2026-08-29)
 - **python/programming**: 99 · gate_ok 99 · authentic + unaltered
