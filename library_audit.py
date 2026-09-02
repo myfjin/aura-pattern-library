@@ -1626,6 +1626,12 @@ def main():
     ap.add_argument("--acknowledge-unverifiable", action="store_true",
                     help="suppress the non-zero exit when UNVERIFIABLE records exist — use "
                          "only once they have actually been dispositioned")
+    ap.add_argument("--root", default=None,
+                    help="audit an arbitrary directory instead of the signed library. Lanes "
+                         "are derived from FILE EXTENSION, not from subtree names, because a "
+                         "corpus is not laid out like the library. The run is marked "
+                         "root_mode=corpus and library-only facts (manifest, census, index "
+                         "parity, verifier md5) are absent BY CONSTRUCTION, not clean.")
     ap.add_argument("--self-test", action="store_true",
                     help="prove every check can BOTH fire and stay quiet, then exit")
     args = ap.parse_args()
@@ -1633,18 +1639,35 @@ def main():
         return self_test()
 
     files, lane_of = [], {}
-    for st in LV.SIGNED_SUBTREES:
-        sroot = ROOT / st
-        if not sroot.is_dir():
-            continue
-        lane = st.split("/")[0]
-        ext = LANE_EXT.get(lane)
-        if ext is None:
-            continue
-        for p in sorted(sroot.rglob("*")):
-            if p.suffix == ext and "__pycache__" not in p.parts:
+    if args.root:
+        # ⛔ REBINDING THE MODULE ROOT is the tested idiom here -- the self-test already does
+        # it (`global ROOT`) for duplicate_map and index_parity. Threading a second root
+        # through every call site would leave two roots that can disagree; one root that
+        # MOVES cannot. Everything downstream (relative_to, duplicate_map, index_parity)
+        # then resolves against the corpus, and the library-only artefacts are simply
+        # absent -- which the existing guards already report as unverifiable rather than
+        # pass.
+        global ROOT
+        ROOT = Path(args.root).resolve()
+        if not ROOT.is_dir():
+            ap.error(f"--root {ROOT} is not a directory")
+        for p in sorted(ROOT.rglob("*")):
+            if p.is_file() and p.suffix in EXT_LANE and "__pycache__" not in p.parts:
                 files.append(p)
-                lane_of[p] = lane
+                lane_of[p] = EXT_LANE[p.suffix]
+    else:
+      for st in LV.SIGNED_SUBTREES:
+          sroot = ROOT / st
+          if not sroot.is_dir():
+              continue
+          lane = st.split("/")[0]
+          ext = LANE_EXT.get(lane)
+          if ext is None:
+              continue
+          for p in sorted(sroot.rglob("*")):
+              if p.suffix == ext and "__pycache__" not in p.parts:
+                  files.append(p)
+                  lane_of[p] = lane
     if args.limit:
         files = files[:args.limit]
 
@@ -1673,7 +1696,9 @@ def main():
         "host": subprocess.run(["hostname"], capture_output=True, text=True).stdout.strip(),
         "root": str(ROOT),
         "manifest_sha256": hashlib.sha256(mf_bytes).hexdigest() if mf_bytes else None,
-        "library_verify_md5": hashlib.md5((ROOT / "library_verify.py").read_bytes()).hexdigest(),
+        "root_mode": "corpus" if args.root else "library",
+        "library_verify_md5": (hashlib.md5((ROOT / "library_verify.py").read_bytes()).hexdigest()
+                               if (ROOT / "library_verify.py").exists() else None),
         "gate": bool(args.gate),
         "repeat": args.repeat,
         "toolchains_present": {t: bool(_sh.which(t)) for t in
