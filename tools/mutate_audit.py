@@ -465,8 +465,14 @@ MUTANTS = [
  ("comment stripping removed",
   '    if lane in ("cpp", "go", "rust", "javascript", "r"):', '    if False:',
   "COMMENT"),
+    # ROUND 26: 4Q changed this return's THIRD ARG (stripped -> _lexed) so _import_lines
+    # decides on the string-blanked view. The anchor went dark -- the THIRD time a mutant
+    # aimed at this line lost its anchor to an edit (cf. rounds 20 and 24 above). The
+    # round-24 hardening caught it: 157 KILLED / 1 SKIPPED, banner printed, exit 1.
+    # ⚠️ An exact-string anchor breaks on a pure RENAME that changes no behaviour. If this
+    # recurs, the fix is a regex anchor with an asserted match count, not another re-aim.
     ('go import lines not restored',
-     '        return stripped + "\\n" + _import_lines(text, lane, stripped), True',
+     '        return stripped + "\\n" + _import_lines(text, lane, _lexed), True',
      '        return stripped, True',
      'non-python lane really is scanned'),
  ("SEEDED no longer requires an argument",
