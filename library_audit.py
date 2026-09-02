@@ -799,7 +799,15 @@ def strip_noncode(text: str, lane: str, keep_strings: bool = False):
                 prev_sig = c
             i += 1
         stripped = "".join(out)
-        return stripped + "\n" + _import_lines(text, lane, stripped), True, _fail
+        # ⛔ 4Q ROUND 26: _import_lines decides which lines are imports by scanning the
+        # lexed view. When keep_strings=True, backtick raw strings preserve their content,
+        # so an `import (` block INSIDE a backtick string is visible and falsely restored
+        # — making the keep_strings=True body longer than keep_strings=False (21 bytes on
+        # backup_rotation.go). Fix: always decide on the STRING-BLANKED view, so import
+        # lines inside string literals are invisible to the restore decision. The restored
+        # lines are still appended to whichever body was built.
+        _lexed = stripped if not keep_strings else strip_noncode(text, lane, keep_strings=False)[0]
+        return stripped + "\n" + _import_lines(text, lane, _lexed), True, _fail
     return text, False, None
 
 
@@ -2456,10 +2464,15 @@ def _derive_view_coverage(source_text):
     from the source."""
     tree = ast.parse(source_text)
 
-    # 1. Collect module-level function definitions
+    # 1. Collect module-level function definitions.
+    # ⛔ strip_noncode is the PRIMITIVE being tracked, not a node in the call graph:
+    # calls TO it are strip-consumption points (step 2), but its own body is not
+    # walked for strips and it is not a callee. This prevents a recursive self-call
+    # inside strip_noncode (e.g. the round-26 code-view derivation) from leaking
+    # spurious strips into every check that calls it. (4Q round 26)
     funcs = {}
     for node in ast.iter_child_nodes(tree):
-        if isinstance(node, ast.FunctionDef):
+        if isinstance(node, ast.FunctionDef) and node.name != "strip_noncode":
             funcs[node.name] = node
 
     # 2. For each function, find direct strip_noncode calls and their keep_strings value
@@ -4487,6 +4500,24 @@ def self_test() -> int:
     _undeclared_vc = set(_derived_vc) - set(VIEW_COVERAGE)
     extra.append((f"VIEW_COVERAGE no undeclared check consumes strips "
                   f"(undeclared={sorted(_undeclared_vc)})", not _undeclared_vc))
+
+    # ---- 4Q ROUND 26: two-strip length invariant on the file that exposed the defect ----
+    # backup_rotation.go has backtick raw strings containing `import (...)` blocks.
+    # Before the fix, _import_lines falsely restored imports from inside backtick strings
+    # when keep_strings=True, making the lit body 21 bytes longer than the code body.
+    # This probe asserts both strips have the SAME length on this exact file. Reverting
+    # the fix makes it go RED.
+    _r26_file = Path(__file__).resolve().parent / "go" / "system-administration" / "sysadmin" / "backup_rotation.go"
+    if _r26_file.exists():
+        _r26_t = _r26_file.read_text(encoding="utf-8")
+        _r26_c, _, _ = strip_noncode(_r26_t, "go")
+        _r26_l, _, _ = strip_noncode(_r26_t, "go", keep_strings=True)
+        extra.append((f"R26 two-strip length invariant on backup_rotation.go: "
+                      f"code={len(_r26_c)} lit={len(_r26_l)} gap={len(_r26_l)-len(_r26_c)}",
+                      len(_r26_c) == len(_r26_l)))
+    else:
+        extra.append(("R26 two-strip length invariant: backup_rotation.go not found "
+                      "(running outside library root)", False))
 
     print()
     for label, cond in extra:
