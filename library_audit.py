@@ -127,6 +127,9 @@ REASON_SUBCLASS = {
     # and locked by a probe, not vestigial by accident. (Measured: 0 of the 1500 records
     # carry a PARSE_FAIL check — the class is real but unexercised by this library.)
     "PARSE_FAIL":       "U3", "HANG":             "U3", "REPEAT_ERROR":     "U3",
+    # ⛔ 4Q ROUND 27: a strip inconsistency (length/line mismatch with fail=None) is a TOOL
+    # defect, not a file pathology. No pattern file causes it. Routed as U1 (tool work).
+    "STRIP_MISMATCH":   "U1",
 }
 SUBCLASS_REMEDY = {
     "U1": ("NO_ANALYSER", "tool work: build the analyser for this check x lane"),
@@ -826,7 +829,7 @@ def _text_check(text, lane, table, name, ok_detail, want_pats=False):
     if not table[lane]:
         return (name, "unverifiable", _u("EMPTY_RULE_TABLE", f"{name} rule table for lane "
                     f"'{lane}' is EMPTY — zero rules measured nothing"), [])
-    code, ok, _fail = strip_noncode(text, lane)
+    code, ok, fail_code = strip_noncode(text, lane)
     if not ok:
         return (name, "unverifiable",
                 _u(_strip_fail_reason(lane),
@@ -853,7 +856,25 @@ def _text_check(text, lane, table, name, ok_detail, want_pats=False):
     # at `createHash`, which is code; a bare `eval(` inside a string starts inside the literal.
     # Both passes blank IN PLACE, so offsets align and a position survived pass 1 exactly when
     # code[i] == lit[i]. No rule list, no marking, nothing to forget.
-    lit, lit_ok, _ = strip_noncode(text, lane, keep_strings=True)
+    lit, lit_ok, fail_lit = strip_noncode(text, lane, keep_strings=True)
+    # ⛔ 4Q ROUND 27 — 6E's predicate: a check that could not run must never report `pass`.
+    # The alignment guard below used to trip silently and narrow the check to a weaker rule
+    # that still returned a confident pass. Now the predicate fires FIRST and returns
+    # `unverifiable` with a detail that names the cause, because the remedies differ:
+    #   fail is not None           -> the FILE is malformed (U3 PARSE_FAIL)
+    #   len/line mismatch, no fail -> the TOOL is broken  (U1 STRIP_MISMATCH)
+    # ⛔ `ok` is a CONSTANT (True in every corpus row) — key on `fail`, never on `ok`.
+    _fail = fail_code if fail_code is not None else fail_lit
+    if _fail is not None:
+        return (name, "unverifiable",
+                _u("PARSE_FAIL",
+                   f"lexer failure: unterminated {_fail.construct} at line {_fail.line}"),
+                [])
+    if len(code) != len(lit) or code.count("\n") != lit.count("\n"):
+        return (name, "unverifiable",
+                _u("STRIP_MISMATCH",
+                   "strip inconsistency: length/line mismatch — tool defect"),
+                [])
     lit_ok = lit_ok and len(lit) == len(code)      # alignment is the premise; never assume it
 
     # ⛔ 6E ROUND 17 F1 — the restored-import region makes the invariant VACUOUS. strip_noncode
@@ -4518,6 +4539,19 @@ def self_test() -> int:
     else:
         extra.append(("R26 two-strip length invariant: backup_rotation.go not found "
                       "(running outside library root)", False))
+
+    # ---- 4Q ROUND 27: the fail-open predicate — a check that could not run must never say pass
+    # A malformed file (unterminated block comment) with a dangerous primitive AFTER the
+    # damage: before the fix, the lexer blanked to EOF, the primitive was invisible, and the
+    # check returned a confident pass. Now the predicate fires and returns unverifiable.
+    # The WELLFORMED arm has the same primitive with no damage — it must still flag.
+    _r27_bad = '/* UNTERMINATED block comment\nvoid f() { system("ls"); }\n'
+    _r27_good = '/* comment */\nvoid f() { system("ls"); }\n'
+    extra.append(("R27 fail-open: malformed file with dangerous primitive returns "
+                  "UNVERIFIABLE not pass",
+                  check_dangerous(_r27_bad, "cpp", None)[1] == "unverifiable"))
+    extra.append(("R27 fail-open NEGATIVE ARM: wellformed file with same primitive still flags",
+                  check_dangerous(_r27_good, "cpp", None)[1] == "flag"))
 
     print()
     for label, cond in extra:
