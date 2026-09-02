@@ -1,0 +1,15 @@
+schema_version: '1.0'
+identity:
+  name: programming
+  being: collector
+  purpose: Programming — 50 patterns / 1 subfolders
+director: false
+tags:
+- cpp
+- programming
+- verified
+memory:
+  created: '2026-09-02'
+  last_significant_change: '2026-09-02'
+  notable_events:
+  - '2026-09-02: semantic identity layer added (REQ-tag-library-folders)'
