@@ -178,6 +178,32 @@ ANALYSER_COVERAGE = {
     "doc_behavior":         LANES,
 }
 
+# ⛔ 4Q ROUND 25 — VIEW_COVERAGE: which strip_noncode views each check consumes.
+# "code"         = keep_strings=False  (comments AND strings removed)
+# "code+strings" = keep_strings=True   (comments removed, strings kept)
+#
+# The registry tracks the MECHANICAL fact (which strips are consumed), not the
+# semantic intent. _text_check consumes BOTH views in its two-pass match, so both
+# dangerous_primitives and determinism_markers inherit both even though they are
+# semantically "code" checks. A lexer failure in EITHER pass corrupts the check,
+# and that is what the next round's verdict rule needs to know.
+#
+# Enforced by _derive_view_coverage in the self-test, which walks this module's
+# own AST and asserts the declaration matches the code — no hand-listed expectation.
+VIEW_COVERAGE = {
+    "hollow":               ("code",),               # strip_noncode(keep_strings=False)
+    "dangerous_primitives": ("code", "code+strings"),  # _text_check: both passes
+    "determinism_markers":  ("code", "code+strings"),  # _text_check + direct calls
+    "hardcoded_abs_path":   ("code+strings",),       # strip_noncode(keep_strings=True)
+    "assert_nonvacuous":    ("code+strings",),       # _assert_nonvacuous_lexical: keep_strings=True
+    "deps":                 ("code",),               # _deps_nonpython: keep_strings=False
+    # duplicate_map is a CROSS-FILE check, not a per-pattern check, and has no
+    # ANALYSER_COVERAGE entry. It consumes one strip view for shingle computation;
+    # a corrupted strip would produce false duplicate detection. Declared under its
+    # function name because it is not dispatched through FILE_CHECKS.
+    "duplicate_map":        ("code",),               # strip_noncode(keep_strings=False)
+}
+
 
 def _u(code: str, detail: str) -> str:
     """Tag an unverifiable detail with its reason code. Raises on an unknown code, so a new
@@ -2415,6 +2441,100 @@ def main():
 
 
 
+# ================================================================= 4Q R25 view-coverage
+# The enforcement: derive which strips each check consumes from the tool's OWN AST.
+# No hand-listed expectation — a hand-list is a third copy of the same table and proves
+# nothing. The derivation walks every function, finds strip_noncode calls and their
+# keep_strings argument, builds a call graph to resolve helper chains (including
+# _text_check), and maps check names to functions via three patterns:
+#   1. _text_check(..., "check_name", ...) — the 4th positional arg
+#   2. return ("check_name", ...)         — the first element of a return tuple
+#   3. function name IS a check name       — e.g. duplicate_map
+def _derive_view_coverage(source_text):
+    """Walk the AST of this module and derive which strip_noncode views each check
+    actually consumes. Returns {check_name: frozenset_of_strip_names} derived purely
+    from the source."""
+    tree = ast.parse(source_text)
+
+    # 1. Collect module-level function definitions
+    funcs = {}
+    for node in ast.iter_child_nodes(tree):
+        if isinstance(node, ast.FunctionDef):
+            funcs[node.name] = node
+
+    # 2. For each function, find direct strip_noncode calls and their keep_strings value
+    _STRIP = {True: "code+strings", False: "code"}
+    direct_strips = {}
+    for fname, fdef in funcs.items():
+        strips = set()
+        for node in ast.walk(fdef):
+            if (isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+                    and node.func.id == "strip_noncode"):
+                ks = None
+                if len(node.args) >= 3 and isinstance(node.args[2], ast.Constant):
+                    ks = node.args[2].value          # positional 3rd arg
+                for kw in node.keywords:
+                    if kw.arg == "keep_strings" and isinstance(kw.value, ast.Constant):
+                        ks = kw.value.value           # keyword arg
+                strips.add(_STRIP.get(ks, "code") if ks is not None else "code")
+        direct_strips[fname] = strips
+
+    # 3. Build call graph: func_name -> set of called func_names in this module
+    call_graph = {}
+    for fname, fdef in funcs.items():
+        called = set()
+        for node in ast.walk(fdef):
+            if (isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+                    and node.func.id in funcs and node.func.id != fname):
+                called.add(node.func.id)
+        call_graph[fname] = called
+
+    # 4. Transitive closure of strips per function (with cycle guard)
+    def _transitive(fname, _seen=None):
+        if _seen is None:
+            _seen = set()
+        if fname in _seen:
+            return set()
+        _seen.add(fname)
+        result = set(direct_strips.get(fname, set()))
+        for callee in call_graph.get(fname, set()):
+            result |= _transitive(callee, _seen)
+        return result
+
+    all_strips = {fname: _transitive(fname) for fname in funcs}
+
+    # 5. Map check names to functions via three AST patterns
+    check_to_funcs = {}
+    for fname, fdef in funcs.items():
+        for node in ast.walk(fdef):
+            # Pattern 1: _text_check(..., "check_name", ...) — 4th positional arg
+            if (isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+                    and node.func.id == "_text_check" and len(node.args) >= 4
+                    and isinstance(node.args[3], ast.Constant)
+                    and isinstance(node.args[3].value, str)):
+                check_to_funcs.setdefault(node.args[3].value, set()).add(fname)
+            # Pattern 2: return ("check_name", ...) — first element of return tuple
+            if (isinstance(node, ast.Return) and node.value is not None
+                    and isinstance(node.value, ast.Tuple) and node.value.elts
+                    and isinstance(node.value.elts[0], ast.Constant)
+                    and isinstance(node.value.elts[0].value, str)):
+                check_to_funcs.setdefault(node.value.elts[0].value, set()).add(fname)
+        # Pattern 3: function name IS a declared check name (e.g. duplicate_map)
+        if fname in VIEW_COVERAGE:
+            check_to_funcs.setdefault(fname, set()).add(fname)
+
+    # 6. Build derived mapping for every check name found in the source
+    derived = {}
+    for check_name, fnames in check_to_funcs.items():
+        strips = set()
+        for fn in fnames:
+            strips |= all_strips.get(fn, set())
+        if strips:
+            derived[check_name] = frozenset(strips)
+
+    return derived
+
+
 # ================================================================= self-test
 # ⛔ A CHECK THAT HAS NEVER FAILED IS NOT KNOWN TO WORK. Every check below gets BOTH arms:
 # a positive fixture that MUST fire and a negative fixture that MUST stay quiet. A check
@@ -4351,6 +4471,22 @@ def self_test() -> int:
     extra.append((f"DF filter NEGATIVE ARM: without it, harness-sharing files ARE falsely "
                   f"linked ({_off}/20)", _off >= 15))
     extra.append((f"DF filter POSITIVE ARM: with it, they are not ({_on}/20)", _on == 0))
+
+    # ---- 4Q ROUND 25: VIEW_COVERAGE enforcement ----------------------------------------
+    # The registry declares which strips each check consumes. This probe DERIVES the
+    # truth from the tool's own AST and asserts the declaration matches. A hand-listed
+    # expectation would be a third copy of the same table and proves nothing.
+    _src_text = Path(__file__).read_text(encoding="utf-8")
+    _derived_vc = _derive_view_coverage(_src_text)
+    for _check, _declared in sorted(VIEW_COVERAGE.items()):
+        _got = _derived_vc.get(_check, frozenset())
+        extra.append((f"VIEW_COVERAGE {_check}: declared={sorted(_declared)} "
+                      f"derived={sorted(_got)}", frozenset(_declared) == _got))
+    # Also assert no UNDECLARED check consumes strips — catches a new check added
+    # to the code without a VIEW_COVERAGE entry.
+    _undeclared_vc = set(_derived_vc) - set(VIEW_COVERAGE)
+    extra.append((f"VIEW_COVERAGE no undeclared check consumes strips "
+                  f"(undeclared={sorted(_undeclared_vc)})", not _undeclared_vc))
 
     print()
     for label, cond in extra:
