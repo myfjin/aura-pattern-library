@@ -428,12 +428,37 @@ ABS_PATH = re.compile(
 
 
 
+# ⛔ THIS TABLE AND `DEPS_EXTRACT` MUST AGREE ABOUT WHAT A DEPENDENCY LINE LOOKS LIKE.
+# They are two independent tables and NOTHING used to enforce their agreement, which is the
+# single defect behind four of 4Q's round-21 findings and behind the round-20 regression:
+#   restore DROPS a line the extractor could parse  -> FALSE NEGATIVE  (go alias, R
+#                                                       requireNamespace, js dynamic import)
+#   restore KEEPS a line that is not an import      -> FALSE POSITIVE  (go raw string)
+# `_probe_restore_extract_agreement` in the self-test now asserts the invariant per lane.
 _IMPORT_LINE = {
-    "go": re.compile(r'^\s*(import\s|")'),
+    # ⛔ 4Q ROUND 21 FINDING 2: the bare `"` alternative matched ANY line starting with
+    # whitespace + a quote, including lines inside a backtick raw string, and
+    # `csv_validator.go` flagged a line of CSV test data as a third-party import. Grouped
+    # imports are restored by the dedicated block branch below, not by this pattern, so
+    # dropping the alternative loses nothing and closes the hole.
+    "go": re.compile(r'^\s*import\s'),
     "rust": re.compile(r'^\s*(use|extern)\s'),
-    "javascript": re.compile(r'^\s*(import\s|const\s+\w+\s*=\s*require|.*\brequire\s*\()'),
+    # ⛔ 4Q ROUND 21 FINDING 4: dynamic `import("express")` has `(` immediately after the
+    # keyword, so `import\s` never matched and the line was dropped before `_deps_js` saw it.
+    "javascript": re.compile(r'^\s*(import\s|const\s+\w+\s*=\s*require|.*\b(?:require|import)\s*\()'),
     "cpp": re.compile(r'^\s*#\s*include\b'),
-    "r": re.compile(r'^\s*(library|require)\s*\('),
+    # ⛔ 4Q ROUND 21 FINDING 3: `require\s*\(` cannot match `requireNamespace(` (an `N`
+    # follows, not a paren), so the line was dropped and `_deps_r` — which DOES look for
+    # requireNamespace — never saw the package name. Longest alternative first.
+    # ⛔ AND IT MUST NOT BE ANCHORED TO THE LINE START. `requireNamespace` is idiomatically
+    # written inside a guard -- `if (!requireNamespace("dplyr", quietly = TRUE))` -- so an
+    # anchored pattern still dropped the line while `_deps_r`, which is UNANCHORED, expected
+    # it. My first pass at this finding fixed the vocabulary and left the anchoring wrong:
+    # the two tables have to agree on BOTH, which is the whole point of the invariant probe.
+    # The restore loop uses `.match`, which anchors at position 0 whatever the pattern says,
+    # so the leading `^.*` is load-bearing -- a bare `\b` alternation here matches nothing
+    # but a line that STARTS with the keyword, which is the bug this line is fixing.
+    "r": re.compile(r'^.*\b(library|requireNamespace|require)\s*\('),
 }
 
 
@@ -461,19 +486,33 @@ def _import_lines(text: str, lane: str) -> str:
     pat = _IMPORT_LINE.get(lane)
     if pat is None:
         return ""
-    keep, in_block = [], False
+    keep, in_block, raw = [], False, False
     for ln in text.splitlines():
         st = ln.strip()
         if lane == "go":
+            # ⛔ 4Q ROUND 21 FINDING 2. A backtick raw string can contain a whole import
+            # block as prose (a code sample, a generator template, a test fixture). Track
+            # backtick parity and restore NOTHING while inside one -- otherwise the block
+            # detector fires on quoted text and every line of it becomes a dependency.
+            if raw:
+                if ln.count("`") % 2:
+                    raw = False
+                continue
+            opened = bool(ln.count("`") % 2)
             if re.match(r'^import\s*\($', st):
-                in_block = True
+                in_block, raw = True, opened
                 continue
             if in_block:
                 if st == ")":
                     in_block = False
                 else:
                     keep.append(ln)
+                raw = opened
                 continue
+            if pat.match(ln):
+                keep.append(ln)
+            raw = opened
+            continue
         if pat.match(ln):
             keep.append(ln)
     # ⛔ Strip comments from the RESTORED lines too. Restoring the original line undid the
@@ -1194,6 +1233,20 @@ _RUST_LOCAL_ROOTS = frozenset({"std", "core", "alloc", "crate", "self", "super"}
 
 def _deps_cpp(code):
     hs = set(re.findall(r"#\s*include\s*<([^>]+)>", code))
+    # ⛔ 4Q ROUND 21 FINDING 6 — ADOPTED AS A STRUCTURAL GUARD, NOT AS A CATCH.
+    # MEASURED 2026-09-02: 0 of 420 cpp files in the library use the quote form, so this
+    # changes ZERO records today and must not be reported as having caught anything.
+    #
+    # ⚠️ AND IT IS NARROWER THAN 4Q PROPOSED, because adopting the finding as written broke
+    # an existing probe: `#include "local_helper.h"` must stay SILENT, and my first pass
+    # flagged it. The probe was right and the reasoning I wrote to justify the change ("a
+    # single-file pattern has no sibling, so a quote include must be external") proved too
+    # much -- it makes a missing local header into a dependency, which it is not.
+    # THE BRACKET FORM DOES NOT DECIDE. What decides is whether the header is named by a
+    # PACKAGE-QUALIFIED PATH: third-party C/C++ headers are conventionally included as
+    # `openssl/sha.h`, `boost/asio.hpp`, `gtest/gtest.h`. A bare `foo.h` in quotes is a
+    # local header (possibly a broken reference, but that is not this check's class).
+    hs |= {h for h in re.findall(r'#\s*include\s*"([^"]+)"', code) if "/" in h}
     return hs, {h for h in hs if h not in _CPP_STD_HEADERS}
 
 
@@ -1211,7 +1264,13 @@ def _deps_go(code):
     # missed it entirely; re-running the corpus is what found it.
     # A bare quoted line is what the RESTORE produces, and it is not valid go statement
     # syntax otherwise, so reading it here does not reopen the prose hole F2/F4 closed.
-    paths |= set(re.findall(r'^[ \t]*"([^"]+)"[ \t]*(?://.*)?$', code, re.M))
+    # ⛔ 4Q ROUND 21 FINDING 1: `e "github.com/pkg/errors"` is an ALIASED grouped import and
+    # is idiomatic Go. The alias sits between the leading whitespace and the quote, so the
+    # bare-path form below missed it. My round-20 fix was verified with the unaliased form
+    # only -- the same "I tested the form I happened to type" defect, one round later.
+    # The optional prefix covers an alias, a dot import (`. "fmt"`) and a blank import
+    # (`_ "net/http/pprof"`).
+    paths |= set(re.findall(r'^[ \t]*(?:[\w.]+[ \t]+)?"([^"]+)"[ \t]*(?://.*)?$', code, re.M))
     return paths, {p for p in paths if "." in p.split("/")[0]}
 
 
@@ -1221,6 +1280,15 @@ def _deps_rust(code):
     # third-party crate reported "0 import(s), all standard".
     cs = set(re.findall(r"\buse\s+(?:::)?([A-Za-z_][A-Za-z0-9_]*)\s*(?:::|;)", code))
     cs |= set(re.findall(r"\bextern\s+crate\s+([A-Za-z_][A-Za-z0-9_]*)", code))
+    # ⛔ KNOWN LIMITATION, 4Q ROUND 21 FINDING 7 — MEASURED AND REJECTED, do not re-propose.
+    # In Rust 2018+ a crate is reachable at the root without `use`, so
+    # `serde_json::from_str(...)` with no `use` line is invisible here. The obvious cure is
+    # R's trick -- a `([a-z][a-z0-9_]*)::` root regex -- and it is unusable: MEASURED
+    # 2026-09-02 it matches 120 of 200 rust files, and the roots it returns are
+    # collections 51 · sync 28 · thread 25 · u32 22 · atomic 18 · collect 10 · hint 9 —
+    # fragments of `std::collections::HashMap`, `u32::MAX` and `.collect::<Vec<_>>()`
+    # turbofish, not crates. ~120 false flags. A signal that cannot separate true from
+    # false must not decide verdicts (the near-duplicate ruling, 6E 2026-08-30).
     return cs, {c for c in cs if c not in _RUST_LOCAL_ROOTS}
 
 
@@ -1242,6 +1310,11 @@ def _deps_js(code):
     ms = set(re.findall(r"""require\s*\(\s*["']([^"']+)["']""", code))
     ms |= set(re.findall(r"""\bfrom\s+["']([^"']+)["']""", code))
     ms |= set(re.findall(r"""\bimport\s+["']([^"']+)["']""", code))
+    # ⛔ 4Q ROUND 21 FINDING 4: dynamic `import("express")` is ES2020 and is how lazy loading
+    # is written. `import\s+` requires whitespace and cannot match it. The `_NPM_SPECIFIER`
+    # shape test below still guards against a template literal or prose being read as a
+    # package, so widening the capture here does not reopen the F4 prose hole.
+    ms |= set(re.findall(r"""\bimport\s*\(\s*["']([^"']+)["']""", code))
     third = set()
     for m in ms:
         if m.startswith((".", "/")):           # relative or absolute -> a local file
@@ -1327,6 +1400,17 @@ def check_deps(text, lane, tree):
         elif isinstance(n, ast.ImportFrom):
             if n.level == 0 and n.module:
                 mods.add(n.module.split(".")[0])
+        # ⛔ 4Q ROUND 21 FINDING 5: `importlib.import_module("numpy")` is an ast.Call, not an
+        # ast.Import, so the walker never saw the module it names. `import importlib` alone
+        # is stdlib and passed. Only a CONSTANT argument is read -- a computed module name
+        # is genuinely undecidable here and is left alone rather than guessed at.
+        elif isinstance(n, ast.Call):
+            f = n.func
+            named = ((isinstance(f, ast.Attribute) and f.attr == "import_module")
+                     or (isinstance(f, ast.Name) and f.id == "import_module"))
+            if named and n.args and isinstance(n.args[0], ast.Constant) \
+                    and isinstance(n.args[0].value, str):
+                mods.add(n.args[0].value.split(".")[0])
     third = sorted(m for m in mods if m not in _STDLIB and not m.startswith("_"))
     if third:
         return ("deps", "flag", "third-party import(s) with no dependency manifest: "
@@ -4009,6 +4093,120 @@ def self_test() -> int:
     extra.append(("C6 a package named only in a COMMENT is not an import",
                   check_deps('package main\n// import "github.com/x/y"\n'
                              'import "fmt"\nfunc main(){}\n', "go", None)[1] == "pass"))
+
+    # ---- ROUND 21: THE _IMPORT_LINE <-> DEPS_EXTRACT AGREEMENT INVARIANT ----------------
+    # ⛔ THE STRUCTURAL DEFECT BEHIND FOUR OF 4Q'S ROUND-21 FINDINGS AND THE ROUND-20
+    # REGRESSION. `_IMPORT_LINE` (which decides what survives string-blanking) and
+    # `DEPS_EXTRACT` (which parses what survived) are two INDEPENDENT tables that must agree
+    # about what a dependency line looks like. Nothing enforced that, so every disagreement
+    # became a silent verdict:
+    #     restore DROPS a line the extractor could parse  -> FALSE NEGATIVE
+    #     restore KEEPS a line that is not an import      -> FALSE POSITIVE
+    # Each row below is a REAL syntactic form the tables claim to handle, paired with the
+    # third-party name that must come back. A future edit to either table that breaks their
+    # agreement turns one of these red instead of silently mis-verdicting the library.
+    # ⚠️ These are round-trip probes THROUGH strip_noncode(keep_strings=False) -- the whole
+    # point is the interaction, so do not "simplify" them by calling the extractor directly.
+    for _lane9, _cases9 in {
+        "go": [
+            ("plain grouped", 'package main\nimport (\n\t"fmt"\n\t"github.com/x/y"\n)\n', True),
+            # 4Q R21 F1 -- the alias sits between the whitespace and the quote.
+            ("ALIASED grouped", 'package main\nimport (\n\tf "fmt"\n\te "github.com/x/y"\n)\n', True),
+            ("BLANK-identifier grouped", 'package main\nimport (\n\t_ "github.com/x/y"\n)\n', True),
+            ("DOT-import grouped", 'package main\nimport (\n\t. "github.com/x/y"\n)\n', True),
+            ("single-line", 'package main\nimport "github.com/x/y"\n', True),
+            ("single-line ALIASED", 'package main\nimport e "github.com/x/y"\n', True),
+            ("grouped, stdlib only", 'package main\nimport (\n\t"fmt"\n\t"os"\n)\n', False),
+            # 4Q R21 F2 -- an import block quoted inside a backtick raw string is PROSE.
+            ("raw string holding a whole import block",
+             'package main\nimport "fmt"\nfunc main(){\n\tc := `import (\n\t"github.com/x/y"\n)`\n\tfmt.Println(c)\n}\n', False),
+            ("raw string holding a bare quoted path",
+             'package main\nimport "fmt"\nfunc main(){\n\tc := `\n\t"github.com/x/y"\n`\n\tfmt.Println(c)\n}\n', False),
+            # ⛔ THESE TWO EXIST BECAUSE THE MUTANTS SAID THE OTHER GO FP PROBES WERE
+            # DECORATION. The FP is defended by two INDEPENDENT mechanisms -- `_IMPORT_LINE`
+            # no longer matching a bare quote, and the raw-string tracker -- and every probe
+            # I first wrote used 4Q's fixture shape, which BOTH mechanisms defend. So either
+            # one could be deleted and nothing went red. MEASURED 2026-09-02, each shape
+            # below is caught by exactly ONE of the two:
+            #   concatenated regular strings  -> only the `_IMPORT_LINE` fix catches it
+            #   `import (` alone on its line  -> only the raw-string tracker catches it
+            # ⚠️ The first is `csv_validator.go`'s REAL shape (`"a\\n" + "b\\n"`), which is
+            # not a backtick raw string at all. I found the defect in the library and then
+            # wrote its probe using the crew's fixture form instead of the form I had
+            # actually found -- the third time in one day that a test inherited the shape
+            # its author happened to type. Do not "simplify" these into one case.
+            ("CONCATENATED regular strings holding a package-like path (csv_validator's shape)",
+             'package main\nimport "fmt"\nfunc main(){\n\tcsv := "1,Alice,30\\n" +\n'
+             '\t\t"2,Bob,35\\n" +\n\t\t"github.com/x/y\\n"\n\tfmt.Println(csv)\n}\n', False),
+            ("raw string whose `import (` sits ALONE on its own line",
+             'package main\nimport "fmt"\nfunc main(){\n\tc := `\nimport (\n\t"github.com/x/y"\n)\n`\n'
+             '\tfmt.Println(c)\n}\n', False),
+        ],
+        "r": [
+            ("library() at line start", 'library(dplyr)\n', True),
+            # 4Q R21 F3 -- requireNamespace is idiomatically written inside a guard, so the
+            # restore pattern must be unanchored AND carry the longer keyword.
+            ("requireNamespace inside a guard",
+             'if (!requireNamespace("dplyr", quietly = TRUE)) {\n  stop("needed")\n}\n', True),
+            ("requireNamespace at line start", 'requireNamespace("dplyr")\n', True),
+            ("base package only", 'library(utils)\nx <- stats::median(c(1,2))\n', False),
+        ],
+        "javascript": [
+            ("static import ... from", 'import x from "lodash";\n', True),
+            ("require()", 'const x = require("lodash");\n', True),
+            # 4Q R21 F4 -- `import(` has no whitespace after the keyword.
+            ("DYNAMIC import()", 'const m = await import("express");\n', True),
+            ("dynamic import() of a builtin", 'const m = await import("node:fs");\n', False),
+            ("relative dynamic import()", 'const m = await import("./helper.js");\n', False),
+        ],
+        "cpp": [
+            ("angle-bracket third-party", '#include <boost/asio.hpp>\nint main(){return 0;}\n', True),
+            # 4Q R21 F6 -- STRUCTURAL GUARD. 0 of 420 library files use this form today.
+            ("QUOTE-form third-party", '#include "openssl/sha.h"\nint main(){return 0;}\n', True),
+            # The bracket form does not decide -- the package-qualified PATH does.
+            ("QUOTE-form bare local header stays silent",
+             '#include "local_helper.h"\nint main(){return 0;}\n', False),
+            ("ANGLE-form bare header is still stdlib-checked",
+             '#include <vector>\nint main(){return 0;}\n', False),
+            ("angle-bracket stdlib", '#include <vector>\nint main(){return 0;}\n', False),
+        ],
+        "rust": [
+            ("use", "use serde::Serialize;\nfn main(){}\n", True),
+            ("leading-colon use", "use ::serde::Serialize;\nfn main(){}\n", True),
+            ("extern crate", "extern crate serde;\nfn main(){}\n", True),
+            ("std only", "use std::collections::HashMap;\nfn main(){}\n", False),
+        ],
+    }.items():
+        for _lbl9, _src9, _want9 in _cases9:
+            _st9, _d9 = check_deps(_src9, _lane9, None)[1:]
+            extra.append((f"C6-AGREE {_lane9} {_lbl9} -> "
+                          f"{'flag' if _want9 else 'pass'} (got {_st9}: {_d9[:40]})",
+                          (_st9 == "flag") == _want9 and _st9 in ("flag", "pass")))
+
+    # 4Q R21 F5 -- importlib.import_module is an ast.Call, invisible to an Import/ImportFrom
+    # walker. Only a CONSTANT argument is read; a computed name stays undecidable.
+    for _lbl5, _src5, _want5 in (
+        ("importlib.import_module of a third-party module",
+         'import importlib\ndef f():\n    return importlib.import_module("numpy")\n', True),
+        ("importlib.import_module of a stdlib module",
+         'import importlib\ndef f():\n    return importlib.import_module("json")\n', False),
+        ("a COMPUTED module name is left alone, not guessed at",
+         'import importlib\ndef f(n):\n    return importlib.import_module(n)\n', False),
+        ("bare import_module() after a from-import",
+         'from importlib import import_module\ndef f():\n    return import_module("numpy")\n', True),
+    ):
+        _r5 = check_deps(_src5, "python", ast.parse(_src5))
+        extra.append((f"C6-py {_lbl5} (got {_r5[1]}: {_r5[2][:40]})",
+                      (_r5[1] == "flag") == _want5 and _r5[1] in ("flag", "pass")))
+
+    # ⛔ 4Q R21 F7 REJECTED, and this probe PINS THE REJECTION so a future session cannot
+    # quietly "fix" it. A rust `::` path-root regex was MEASURED to match 120 of 200 library
+    # files (collections 51, sync 28, thread 25, u32 22, atomic 18 -- std path fragments and
+    # turbofish, not crates). Direct path access without `use` stays INVISIBLE on purpose.
+    extra.append(("C6-rust F7 REJECTED: direct `serde_json::` path with no `use` stays pass",
+                  check_deps('fn main(){ let _v: serde_json::Value = '
+                             'serde_json::from_str("{}").unwrap(); }\n',
+                             "rust", None)[1] == "pass"))
     # ⛔ THE `if not ok` BRANCH IN _deps_nonpython IS UNREACHABLE FOR THESE FIVE LANES.
     # MEASURED 2026-09-02: strip_noncode returns ok=True for cpp/go/rust/r/javascript on
     # every malformed input tried — only python's tokeniser can report failure, and python
