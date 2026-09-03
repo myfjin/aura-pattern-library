@@ -223,8 +223,8 @@ MUTANTS = [
      '        "needs_human_judgement": review or pathology or bool(unclaimed),\n',
      'EXCLUDES a tool defect'),
     ('4Q-R7 the routed invariant always claims routed',
-     '    out["routed"] = review or pathology or impl or out["needs_tool_fix"]\n',
-     '    out["routed"] = True\n',
+     'or out["needs_tool_fix"]',
+     'or True',
      'a clean record needs NO routing'),
     ('6E-D3-Q3 the coverage axis reports MEASURED instead of unverified',
      '    out["unverified"] = "%d/%d" % (out["checks_unmeasured"], len(checks))\n',
@@ -301,8 +301,8 @@ MUTANTS = [
  # ⛔ ROUND 20, 4Q's five measured defects. Each fix was a real finding with a
  # discriminating input; without a mutant a fix is just a line I happen to trust.
  ('4Q-R20 F2/F4: deps reads strings again (prose becomes an import)',
-  '    code, ok, fail = strip_noncode(text, lane, keep_strings=False)\n    if fail is not None:\n        return ("deps", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
-  '    code, ok, fail = strip_noncode(text, lane, keep_strings=True)\n    if fail is not None:\n        return ("deps", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+  '    code, ok, fail = strip_noncode(text, lane, keep_strings=False)\n    if fail is not None:\n        return ("deps", "unverifiable",\n                _u("LEXER_INCOMPLETE",\n                   f"lexer could not complete: reached EOF inside a ',
+  '    code, ok, fail = strip_noncode(text, lane, keep_strings=True)\n    if fail is not None:\n        return ("deps", "unverifiable",\n                _u("LEXER_INCOMPLETE",\n                   f"lexer could not complete: reached EOF inside a ',
   '4Q-R20 F'),
  # ⛔ The grouped-import restore. Without this line a real third-party import in go's
  # IDIOMATIC grouped form is invisible — the regression 6E's corpus caught within
@@ -479,8 +479,8 @@ MUTANTS = [
     # — which is the safety net, not a silent failure. The match-count assertion (n != 1)
     # is the guard the brief asked for. (4Q round 27)
     ('R27 fail-open predicate disabled (malformed files return pass again)',
-     'if _fail is not None:\n        return (name, "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
-     'if False:  # R27 MUTANT\n        return (name, "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+     'if _fail is not None:\n        return (name, "unverifiable",\n                _u("LEXER_INCOMPLETE",\n                   f"lexer could not complete: reached EOF inside a ',
+     'if False:  # R27 MUTANT\n        return (name, "unverifiable",\n                _u("LEXER_INCOMPLETE",\n                   f"lexer could not complete: reached EOF inside a ',
      'R27 fail-open'),
     ('go import lines not restored',
      '        return stripped + "\\n" + _import_lines(text, lane, _lexed), True',
@@ -553,8 +553,8 @@ MUTANTS = [
   # check name + "lexer failure: unterminated " string literal. Fourth re-aim on this
   # campaign; the string literal is the stable part. If `fail` is renamed, anchor
   # matches 0 -> SKIPPED -> DARK -> exit 1, which is the safety net.
-  '    code, ok, fail = strip_noncode(text, lane, keep_strings=True)\n    if fail is not None:\n        return ("hardcoded_abs_path", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
-  '    code, ok, fail = (text, True, None)\n    if fail is not None:\n        return ("hardcoded_abs_path", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+  '    code, ok, fail = strip_noncode(text, lane, keep_strings=True)\n    if fail is not None:\n        return ("hardcoded_abs_path", "unverifiable",\n                _u("LEXER_INCOMPLETE",\n                   f"lexer could not complete: reached EOF inside a ',
+  '    code, ok, fail = (text, True, None)\n    if fail is not None:\n        return ("hardcoded_abs_path", "unverifiable",\n                _u("LEXER_INCOMPLETE",\n                   f"lexer could not complete: reached EOF inside a ',
   "quoted path inside a COMMENT"),
  ("index_parity substring fallback restored (4Q D3)",
   "        if str(p.relative_to(ROOT)) in txt:",
@@ -712,21 +712,32 @@ MUTANTS = [
     # move on a variable rename. If `fail` is renamed, the anchor matches 0 -> SKIPPED -> DARK
     # -> exit 1, which is the safety net. (4Q round 28)
     ('R28 hollow fail-guard disabled (malformed file false-passes again)',
-     'if fail is not None:\n        return ("hollow", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
-     'if False:  # R28 MUTANT hollow\n        return ("hollow", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+     'if fail is not None:\n        return ("hollow", "unverifiable",\n                _u("LEXER_INCOMPLETE",\n                   f"lexer could not complete: reached EOF inside a ',
+     'if False:  # R28 MUTANT hollow\n        return ("hollow", "unverifiable",\n                _u("LEXER_INCOMPLETE",\n                   f"lexer could not complete: reached EOF inside a ',
      'R28 hollow:'),
     ('R28 abs_paths fail-guard disabled (malformed file false-passes again)',
-     'if fail is not None:\n        return ("hardcoded_abs_path", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
-     'if False:  # R28 MUTANT abs_paths\n        return ("hardcoded_abs_path", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+     'if fail is not None:\n        return ("hardcoded_abs_path", "unverifiable",\n                _u("LEXER_INCOMPLETE",\n                   f"lexer could not complete: reached EOF inside a ',
+     'if False:  # R28 MUTANT abs_paths\n        return ("hardcoded_abs_path", "unverifiable",\n                _u("LEXER_INCOMPLETE",\n                   f"lexer could not complete: reached EOF inside a ',
      'R28 abs_paths:'),
     ('R28 assert_nonvacuous fail-guard disabled (malformed file false-passes again)',
-     'if fail is not None:\n        return ("assert_nonvacuous", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
-     'if False:  # R28 MUTANT assert_nonvacuous\n        return ("assert_nonvacuous", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+     'if fail is not None:\n        return ("assert_nonvacuous", "unverifiable",\n                _u("LEXER_INCOMPLETE",\n                   f"lexer could not complete: reached EOF inside a ',
+     'if False:  # R28 MUTANT assert_nonvacuous\n        return ("assert_nonvacuous", "unverifiable",\n                _u("LEXER_INCOMPLETE",\n                   f"lexer could not complete: reached EOF inside a ',
      'R28 assert_nonvacuous:'),
     ('R28 deps fail-guard disabled (malformed file false-passes again)',
-     'if fail is not None:\n        return ("deps", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
-     'if False:  # R28 MUTANT deps\n        return ("deps", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+     'if fail is not None:\n        return ("deps", "unverifiable",\n                _u("LEXER_INCOMPLETE",\n                   f"lexer could not complete: reached EOF inside a ',
+     'if False:  # R28 MUTANT deps\n        return ("deps", "unverifiable",\n                _u("LEXER_INCOMPLETE",\n                   f"lexer could not complete: reached EOF inside a ',
      'R28 deps:'),
+    # ---- ROUND 29: LEXER_INCOMPLETE / U4 UNDETERMINED ----
+    # Anchor on the "U4" string literal (the subclass code) and "needs_tool_fix" (a dict
+    # key literal) — both are string constants, not variable names.
+    ('R29 U4 branch dropped from triage (U4 falls through to unclaimed/tool-fix)',
+     'elif _sub == "U4":\n            cause_det = True',
+     'elif _sub == "U4":\n            pass',
+     'R29 U4 sets needs_cause_determination'),
+    ('R29 needs_cause_determination dropped from routed (U4 record unrouted)',
+     'or cause_det or out["needs_tool_fix"]',
+     'or out["needs_tool_fix"]',
+     'R29 U4 routing invariant'),
 ]
 def run():
     r = subprocess.run([PY_, P, "--self-test"], capture_output=True, text=True,

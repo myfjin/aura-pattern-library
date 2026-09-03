@@ -130,11 +130,18 @@ REASON_SUBCLASS = {
     # ⛔ 4Q ROUND 27: a strip inconsistency (length/line mismatch with fail=None) is a TOOL
     # defect, not a file pathology. No pattern file causes it. Routed as U1 (tool work).
     "STRIP_MISMATCH":   "U1",
+    # ⛔ 4Q ROUND 29: the lexer predicate sites (round 27/28) used PARSE_FAIL, but a lexer
+    # reaching EOF inside a construct is AMBIGUOUS — the file may be malformed or the lexer
+    # may have mis-tracked. PARSE_FAIL (U3, certain cause) is for python's ast.parse only.
+    # LEXER_INCOMPLETE is U4 UNDETERMINED: neither cause asserted, both outcomes routable.
+    "LEXER_INCOMPLETE": "U4",
 }
 SUBCLASS_REMEDY = {
     "U1": ("NO_ANALYSER", "tool work: build the analyser for this check x lane"),
     "U2": ("MISSING_PREREQUISITE", "environment/data work: provide the prerequisite"),
     "U3": ("PATHOLOGICAL", "investigate the file: defect (fix/quarantine) or documented"),
+    "U4": ("UNDETERMINED", "investigate: the file may be malformed or the tool may be at "
+           "fault — determine which before routing"),
 }
 # Closed set. A triage session assigns one of these; WAIVE additionally REQUIRES a
 # disposition_ref, or it is a silent pass wearing another name (6E).
@@ -144,6 +151,7 @@ SUBCLASS_DISPOSITIONS = {
     "U1": ("TOOL_WORK", "WAIVE", "ESCALATE"),
     "U2": ("PROVISION", "WAIVE", "ESCALATE"),
     "U3": ("FIX", "QUARANTINE", "ACCEPT", "ESCALATE"),
+    "U4": ("FIX", "QUARANTINE", "ACCEPT", "TOOL_WORK", "WAIVE", "ESCALATE"),
 }
 
 
@@ -861,14 +869,15 @@ def _text_check(text, lane, table, name, ok_detail, want_pats=False):
     # The alignment guard below used to trip silently and narrow the check to a weaker rule
     # that still returned a confident pass. Now the predicate fires FIRST and returns
     # `unverifiable` with a detail that names the cause, because the remedies differ:
-    #   fail is not None           -> the FILE is malformed (U3 PARSE_FAIL)
-    #   len/line mismatch, no fail -> the TOOL is broken  (U1 STRIP_MISMATCH)
+    #   fail is not None           -> LEXER_INCOMPLETE (U4, cause undetermined)
+    #   len/line mismatch, no fail -> STRIP_MISMATCH  (U1, tool defect)
     # ⛔ `ok` is a CONSTANT (True in every corpus row) — key on `fail`, never on `ok`.
     _fail = fail_code if fail_code is not None else fail_lit
     if _fail is not None:
         return (name, "unverifiable",
-                _u("PARSE_FAIL",
-                   f"lexer failure: unterminated {_fail.construct} at line {_fail.line}"),
+                _u("LEXER_INCOMPLETE",
+                   f"lexer could not complete: reached EOF inside a {_fail.construct} at line {_fail.line}; "
+                   "cause undetermined — the file may be malformed or the lexer may have mis-tracked the construct."),
                 [])
     if len(code) != len(lit) or code.count("\n") != lit.count("\n"):
         return (name, "unverifiable",
@@ -969,8 +978,9 @@ def check_abs_paths(text, lane, tree):
     code, ok, fail = strip_noncode(text, lane, keep_strings=True)
     if fail is not None:
         return ("hardcoded_abs_path", "unverifiable",
-                _u("PARSE_FAIL",
-                   f"lexer failure: unterminated {fail.construct} at line {fail.line}"),
+                _u("LEXER_INCOMPLETE",
+                   f"lexer could not complete: reached EOF inside a {fail.construct} at line {fail.line}; "
+                   "cause undetermined — the file may be malformed or the lexer may have mis-tracked the construct."),
                 [])
     if not ok:
         return ("hardcoded_abs_path", "unverifiable",
@@ -1011,8 +1021,9 @@ def check_hollow(text, lane, tree):
     code, ok, fail = strip_noncode(text, lane)
     if fail is not None:
         return ("hollow", "unverifiable",
-                _u("PARSE_FAIL",
-                   f"lexer failure: unterminated {fail.construct} at line {fail.line}"),
+                _u("LEXER_INCOMPLETE",
+                   f"lexer could not complete: reached EOF inside a {fail.construct} at line {fail.line}; "
+                   "cause undetermined — the file may be malformed or the lexer may have mis-tracked the construct."),
                 [])
     if not ok:
         return ("hollow", "unverifiable",
@@ -1135,8 +1146,9 @@ def _assert_nonvacuous_lexical(text, lane):
     code, ok, fail = strip_noncode(text, lane, keep_strings=True)
     if fail is not None:
         return ("assert_nonvacuous", "unverifiable",
-                _u("PARSE_FAIL",
-                   f"lexer failure: unterminated {fail.construct} at line {fail.line}"),
+                _u("LEXER_INCOMPLETE",
+                   f"lexer could not complete: reached EOF inside a {fail.construct} at line {fail.line}; "
+                   "cause undetermined — the file may be malformed or the lexer may have mis-tracked the construct."),
                 [])
     if not ok:
         return ("assert_nonvacuous", "unverifiable",
@@ -1477,8 +1489,9 @@ def _deps_nonpython(text, lane):
     code, ok, fail = strip_noncode(text, lane, keep_strings=False)
     if fail is not None:
         return ("deps", "unverifiable",
-                _u("PARSE_FAIL",
-                   f"lexer failure: unterminated {fail.construct} at line {fail.line}"),
+                _u("LEXER_INCOMPLETE",
+                   f"lexer could not complete: reached EOF inside a {fail.construct} at line {fail.line}; "
+                   "cause undetermined — the file may be malformed or the lexer may have mis-tracked the construct."),
                 [])
     if not ok:
         return ("deps", "unverifiable",
@@ -1871,7 +1884,7 @@ def triage_fields(checks, subclasses):
         raise KeyError("triage_fields: undeclared status %r -- add it to STATUSES and to "
                        "both partitions" % sorted(unknown))
 
-    review = pathology = impl = False
+    review = pathology = impl = cause_det = False
     unclaimed, derived = [], set()
     for _n, _st, _d in checks:
         if _st in CLEAN_STATUSES:
@@ -1886,6 +1899,8 @@ def triage_fields(checks, subclasses):
             impl = True                        # R2: build the analyser / provide the input
         elif _sub == "U3":
             pathology = True                   # R3: defect or documented edge case?
+        elif _sub == "U4":
+            cause_det = True                   # R4: cause undetermined — investigate
         else:
             # No rule claims this check. It is a tool defect and it is NAMED, so the reader
             # can tell "the U1 rule claimed this" from "nothing claimed it".
@@ -1900,11 +1915,16 @@ def triage_fields(checks, subclasses):
         "needs_review": review,
         "needs_pathology_triage": pathology,
         "needs_implementation": impl,
+        # ⛠ 4Q ROUND 29: U4 UNDETERMINED — the cause is neither certain (U3) nor a tool
+        # gap (U1). It needs a human to determine whether it is a file defect or a tool
+        # bug before routing. NOT human judgement about the PATTERN.
+        "needs_cause_determination": cause_det,
         # ⛔ NOT human work. Routes to whoever maintains this tool.
         "needs_tool_fix": bool(unclaimed),
         "unclaimed_checks": unclaimed or None,
         # derived union, kept for consumers of the old name. Deliberately EXCLUDES
-        # needs_tool_fix: a tool defect must never be counted as human triage.
+        # needs_tool_fix AND needs_cause_determination: a tool defect or an undetermined
+        # cause must never be counted as human triage.
         "needs_human_judgement": review or pathology,
         "unowned_fallback": bool(unclaimed),
         "checks_measured": sum(1 for c in checks if c[1] in MEASURED_STATUSES),
@@ -1918,7 +1938,7 @@ def triage_fields(checks, subclasses):
     # ⛔ THE INVARIANT. Anything that is not a clean pass or a deliberate skip MUST reach
     # someone -- and now every one of them reaches a NAMED someone.
     out["needs_routing"] = any(c[1] not in CLEAN_STATUSES for c in checks)
-    out["routed"] = review or pathology or impl or out["needs_tool_fix"]
+    out["routed"] = review or pathology or impl or cause_det or out["needs_tool_fix"]
     return out
 
 
@@ -3339,10 +3359,11 @@ def self_test() -> int:
         extra.append((f"4Q-R8 {_code}/{_sub} is claimed by its OWN routing rule, never by "
                       "the tool-defect lane (which would hide the rule's removal)",
                       not _tfx["needs_tool_fix"]))
-        extra.append((f"6E-D3 {_code}/{_sub} goes to exactly ONE of the three lanes, so the "
+        extra.append((f"6E-D3 {_code}/{_sub} goes to exactly ONE of the routing lanes, so the "
                       "824-record triage session cannot double-count it",
                       [_tfx["needs_review"], _tfx["needs_pathology_triage"],
-                       _tfx["needs_implementation"]].count(True) == 1))
+                       _tfx["needs_implementation"],
+                       _tfx["needs_cause_determination"]].count(True) == 1))
     # 4Q round 8 F1: this loop used to hardcode the three non-clean statuses -- the same
     # shape as the bug it exists to prevent. Derived from STATUSES, so a status added
     # tomorrow is tested tomorrow.
@@ -3413,6 +3434,34 @@ def self_test() -> int:
                   "disagree with the router, and that raises)",
                   _raises(lambda: triage_fields([("a", "fail", "[PARSE_FAIL] x")], {"U3"}),
                           KeyError)))
+    # ---- 4Q ROUND 29: LEXER_INCOMPLETE / U4 UNDETERMINED probes ----
+    _U4D = _u("LEXER_INCOMPLETE",
+              "lexer could not complete: reached EOF inside a block_comment at line 3; "
+              "cause undetermined")
+    _u4 = triage_fields([("a", "pass", ""), ("b", "unverifiable", _U4D)], {"U4"})
+    # Item 6: the routed invariant — a U4 record is needs_routing=True/routed=True
+    extra.append(("R29 U4 routing invariant: a LEXER_INCOMPLETE record needs routing AND "
+                  "gets it (does not fall through unrouted)",
+                  _u4["needs_routing"] and _u4["routed"]))
+    # U4 sets ONLY needs_cause_determination, not the three existing lanes
+    extra.append(("R29 U4 sets needs_cause_determination and NOT review/pathology/impl",
+                  _u4["needs_cause_determination"]
+                  and not _u4["needs_review"]
+                  and not _u4["needs_pathology_triage"]
+                  and not _u4["needs_implementation"]))
+    # U4 does NOT set needs_human_judgement (it is not review or pathology)
+    extra.append(("R29 U4 does NOT count as human judgement (cause determination is not "
+                  "pattern triage)",
+                  not _u4["needs_human_judgement"]))
+    # U4 is a CLAIMED subclass — does not fall through to unclaimed/tool-fix
+    extra.append(("R29 U4 is claimed by its own rule, never by the tool-defect lane",
+                  not _u4["needs_tool_fix"]))
+    # Family A negative arm: python PARSE_FAIL still yields PARSE_FAIL/U3, not LEXER_INCOMPLETE/U4
+    extra.append(("R29 Family A negative arm: python PARSE_FAIL maps to U3, NOT U4",
+                  reason_of(_u("PARSE_FAIL", "python source did not parse"))
+                  == ("PARSE_FAIL", "U3")))
+    extra.append(("R29 Family B: LEXER_INCOMPLETE maps to U4, NOT U3",
+                  reason_of(_U4D) == ("LEXER_INCOMPLETE", "U4")))
     # ---- THE RENDERER. Eleven rounds of attack went into this module and the renderer had
     # none, and BOTH agents' round-11 findings were in it -- it is what a human actually
     # reads. Fixture: two UNVERIFIABLE records (one dispositioned, one not), one FAIL and
