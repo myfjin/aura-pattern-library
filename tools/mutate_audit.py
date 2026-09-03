@@ -45,6 +45,24 @@ shutil.copy(BX, BXBAK)
 bxbase = hashlib.md5(open(BX,"rb").read()).hexdigest()
 print("ruler baseline md5:", bxbase)
 
+# ⛔ ANCHOR DISCIPLINE (6E round 30, 2026-09-03)
+# An anchor must be the MINIMAL STABLE FRAGMENT carrying the mutation's semantic:
+# a string literal, a distinctive identifier, or a short operator+operand tail.
+# NEVER a whole statement, expression, or accumulating line. count==1 stays the guard.
+#
+# Root cause of six dark anchors (rounds 20-29): over-long anchors that included
+# variable names or accumulating expressions. A rename or a new term inserted into
+# the expression shifted the text and the anchor matched 0 -> SKIPPED -> DARK.
+# The fix is NOT regex (regex trades a loud failure for a silent wrong-site match).
+# The fix is shortening the anchor to the stable tail: the string literal, the dict
+# key, the operator+operand that carries the mutation's semantic and will not move
+# when a variable is renamed or a term is inserted above it.
+#
+# Verified patterns in this file:
+#   'or out["needs_tool_fix"]'           — tail of accumulating or-chain (R7 re-aim)
+#   'out["checks_unmeasured"]'           — dict-key literal (R30 re-aim)
+#   '"lexer could not complete: ...'     — message string literal (R27-R29)
+#   'elif _sub == "U4":\n            cause_det = True' — string-literal subclass code (R29)
 MUTANTS = [
     ('TRIAGE-A go os.Exit assertion removed (86 false hollow flags return)',
      '|\\bos\\.Exit\\s*\\(\\s*[1-9]"', '|XXTRIAGEA"', 'TRIAGE-A go: `if x != y'),
@@ -219,16 +237,16 @@ MUTANTS = [
      '            impl = False ',
      'needs IMPLEMENTATION, not a human'),
     ('6E-D3-Q2 needs_human_judgement counts a TOOL DEFECT as human work',
-     '        "needs_human_judgement": review or pathology,\n',
-     '        "needs_human_judgement": review or pathology or bool(unclaimed),\n',
+     '"needs_human_judgement": review',
+     '"needs_human_judgement": review or bool(unclaimed)',
      'EXCLUDES a tool defect'),
     ('4Q-R7 the routed invariant always claims routed',
      'or out["needs_tool_fix"]',
      'or True',
      'a clean record needs NO routing'),
     ('6E-D3-Q3 the coverage axis reports MEASURED instead of unverified',
-     '    out["unverified"] = "%d/%d" % (out["checks_unmeasured"], len(checks))\n',
-     '    out["unverified"] = "%d/%d" % (out["checks_measured"], len(checks))\n',
+     'out["checks_unmeasured"]',
+     'out["checks_measured"]',
      'stated as UNVERIFIED'),
     ('6E-D3 caller/router disagreement no longer raises',
      '    if derived != set(subclasses):\n',
