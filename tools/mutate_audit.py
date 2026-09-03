@@ -301,8 +301,8 @@ MUTANTS = [
  # ⛔ ROUND 20, 4Q's five measured defects. Each fix was a real finding with a
  # discriminating input; without a mutant a fix is just a line I happen to trust.
  ('4Q-R20 F2/F4: deps reads strings again (prose becomes an import)',
-  '    code, ok, _ = strip_noncode(text, lane, keep_strings=False)\n    if not ok:\n        return ("deps", "unverifiable",',
-  '    code, ok, _ = strip_noncode(text, lane, keep_strings=True)\n    if not ok:\n        return ("deps", "unverifiable",',
+  '    code, ok, fail = strip_noncode(text, lane, keep_strings=False)\n    if fail is not None:\n        return ("deps", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+  '    code, ok, fail = strip_noncode(text, lane, keep_strings=True)\n    if fail is not None:\n        return ("deps", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
   '4Q-R20 F'),
  # ⛔ The grouped-import restore. Without this line a real third-party import in go's
  # IDIOMATIC grouped form is invisible — the regression 6E's corpus caught within
@@ -549,12 +549,12 @@ MUTANTS = [
   '            if False and (',
   "REGEX LITERAL containing quotes does not swallow"),
  ("abs_path back to raw text (4Q F5)",
-  # ⛔ ROUND 20: this anchor was ONE line and matched TWICE once C6's _deps_nonpython
-  # added an identical call, so the mutant printed SKIPPED and the guard went dark. A
-  # SKIPPED mutant is not a pass -- it is a defence that stopped defending. Anchored past
-  # the shared line onto the check's own name.
-  '    code, ok, _ = strip_noncode(text, lane, keep_strings=True)\n    if not ok:\n        return ("hardcoded_abs_path", "unverifiable",',
-  '    code, ok, _ = (text, True, None)\n    if not ok:\n        return ("hardcoded_abs_path", "unverifiable",',
+  # ⛔ ROUND 28: re-aimed from `code, ok, _` (which became `code, ok, fail`) onto the
+  # check name + "lexer failure: unterminated " string literal. Fourth re-aim on this
+  # campaign; the string literal is the stable part. If `fail` is renamed, anchor
+  # matches 0 -> SKIPPED -> DARK -> exit 1, which is the safety net.
+  '    code, ok, fail = strip_noncode(text, lane, keep_strings=True)\n    if fail is not None:\n        return ("hardcoded_abs_path", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+  '    code, ok, fail = (text, True, None)\n    if fail is not None:\n        return ("hardcoded_abs_path", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
   "quoted path inside a COMMENT"),
  ("index_parity substring fallback restored (4Q D3)",
   "        if str(p.relative_to(ROOT)) in txt:",
@@ -684,14 +684,49 @@ MUTANTS = [
      'UNRELATED module'),
 
     # ---- ROUND 22: the lexed-view restore and its fallback ----
-    ('R22 the lexer-lost-the-plot fallback is removed (a malformed literal hides every import below)',
-     '    _fallback = set()\n    for _i in range(len(src) - 1, -1, -1):',
-     '    _fallback = set()\n    for _i in range(0, -1, -1):',
-     'MALFORMED literal'),
+    # RETIRED 2026-09-02 (4Q round 28). The _fallback mechanism inside _import_lines
+    # rescues import lines from the raw text when the lexer ate to EOF. It is NOT dead
+    # code -- strip_noncode's output genuinely differs with and without _fallback on
+    # all three fail-is-not-None cases (go block comment, rust r#", cpp /*). But the
+    # only unguarded consumer is duplicate_map L1709 (the two sites we did NOT add the
+    # predicate to in round 28), and duplicate_map strips import lines as LANE
+    # BOILERPLATE before shingling. Rescued imports are boilerplate, so _fallback
+    # cannot move duplicate_map's verdict by construction.
+    # The four guarded consumers (abs_paths, hollow, assert_nonvacuous, deps) have the
+    # round-28 predicate, which returns unverifiable before they use the result -- but
+    # that is NOT the reason this mutant survives. The reason is the boilerplate strip.
+    # Residual: I failed to construct a kill. Not proof none exists.
+    # The _fallback CODE stays (removing it needs 6E); the MUTANT is retired because the
+    # defence it tested cannot be discriminated by any consumer in the current tool.
+    # ('R22 the lexer-lost-the-plot fallback is removed (a malformed literal hides every import below)',
+    #  '    _fallback = set()\n    for _i in range(len(src) - 1, -1, -1):',
+    #  '    _fallback = set()\n    for _i in range(0, -1, -1):',
+    #  'MALFORMED literal'),
     ('R22 go: the block detector no longer sees a commented `import (` line',
      "            if re.match(r'^import\\s*\\($', st):\n                in_block = True",
      "            if re.match(r'^XXR22never\\($', st):\n                in_block = True",
      'inline comment on the `import (` line'),
+    # ---- ROUND 28: the four dead guards — one mutant per site, anchored on the CHECK NAME
+    # (a string literal) + the unique "lexer failure: unterminated " literal. The check name
+    # makes each anchor unique (count == 1); the string literal is the stable part that won't
+    # move on a variable rename. If `fail` is renamed, the anchor matches 0 -> SKIPPED -> DARK
+    # -> exit 1, which is the safety net. (4Q round 28)
+    ('R28 hollow fail-guard disabled (malformed file false-passes again)',
+     'if fail is not None:\n        return ("hollow", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+     'if False:  # R28 MUTANT hollow\n        return ("hollow", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+     'R28 hollow:'),
+    ('R28 abs_paths fail-guard disabled (malformed file false-passes again)',
+     'if fail is not None:\n        return ("hardcoded_abs_path", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+     'if False:  # R28 MUTANT abs_paths\n        return ("hardcoded_abs_path", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+     'R28 abs_paths:'),
+    ('R28 assert_nonvacuous fail-guard disabled (malformed file false-passes again)',
+     'if fail is not None:\n        return ("assert_nonvacuous", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+     'if False:  # R28 MUTANT assert_nonvacuous\n        return ("assert_nonvacuous", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+     'R28 assert_nonvacuous:'),
+    ('R28 deps fail-guard disabled (malformed file false-passes again)',
+     'if fail is not None:\n        return ("deps", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+     'if False:  # R28 MUTANT deps\n        return ("deps", "unverifiable",\n                _u("PARSE_FAIL",\n                   f"lexer failure: unterminated ',
+     'R28 deps:'),
 ]
 def run():
     r = subprocess.run([PY_, P, "--self-test"], capture_output=True, text=True,

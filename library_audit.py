@@ -966,7 +966,12 @@ def check_determinism_markers(text, lane, tree):
 def check_abs_paths(text, lane, tree):
     # This check intentionally looks for paths inside STRING LITERALS, so it keeps strings
     # -- but a quoted path inside a COMMENT is prose, not a hardcoded path (4Q round 2, F5).
-    code, ok, _ = strip_noncode(text, lane, keep_strings=True)
+    code, ok, fail = strip_noncode(text, lane, keep_strings=True)
+    if fail is not None:
+        return ("hardcoded_abs_path", "unverifiable",
+                _u("PARSE_FAIL",
+                   f"lexer failure: unterminated {fail.construct} at line {fail.line}"),
+                [])
     if not ok:
         return ("hardcoded_abs_path", "unverifiable",
                 _u(_strip_fail_reason(lane),
@@ -1003,7 +1008,12 @@ def check_hollow(text, lane, tree):
     if pat is None:
         return ("hollow", "unverifiable",
                 _u("NO_ASSERT_GRAMMAR", f"no assertion grammar for lane '{lane}'"))
-    code, ok, _ = strip_noncode(text, lane)
+    code, ok, fail = strip_noncode(text, lane)
+    if fail is not None:
+        return ("hollow", "unverifiable",
+                _u("PARSE_FAIL",
+                   f"lexer failure: unterminated {fail.construct} at line {fail.line}"),
+                [])
     if not ok:
         return ("hollow", "unverifiable",
                 _u(_strip_fail_reason(lane),
@@ -1122,7 +1132,12 @@ def _c4_sites(code: str, lane: str):
 
 
 def _assert_nonvacuous_lexical(text, lane):
-    code, ok, _ = strip_noncode(text, lane, keep_strings=True)
+    code, ok, fail = strip_noncode(text, lane, keep_strings=True)
+    if fail is not None:
+        return ("assert_nonvacuous", "unverifiable",
+                _u("PARSE_FAIL",
+                   f"lexer failure: unterminated {fail.construct} at line {fail.line}"),
+                [])
     if not ok:
         return ("assert_nonvacuous", "unverifiable",
                 _u(_strip_fail_reason(lane),
@@ -1459,7 +1474,12 @@ def _deps_nonpython(text, lane):
     # `'To load express: from "express" import {Router}'` were both read as imports.
     # MEASURED after the flip: every real import still found (go/js/R, quoted and bare),
     # both prose cases clean. Stripping is strictly better here.
-    code, ok, _ = strip_noncode(text, lane, keep_strings=False)
+    code, ok, fail = strip_noncode(text, lane, keep_strings=False)
+    if fail is not None:
+        return ("deps", "unverifiable",
+                _u("PARSE_FAIL",
+                   f"lexer failure: unterminated {fail.construct} at line {fail.line}"),
+                [])
     if not ok:
         return ("deps", "unverifiable",
                 _u(_strip_fail_reason(lane),
@@ -4474,15 +4494,19 @@ def self_test() -> int:
     # SWALLOW a later import and yield a confident false pass?" Measured: it does not —
     # the strippers resync at the newline. These four are that measurement, and they are
     # the probes that would go red if a stripper were rewritten to consume to EOF.
-    for _lane7, _src7 in (
-        ("rust", 'fn f() { let s = r#"oops;\nuse serde::Serialize;\nfn main(){}\n'),
-        ("go", 'package main\nvar s = "oops\nimport "github.com/x/y"\nfunc main(){}\n'),
-        ("cpp", '/* oops\n#include <boost/asio.hpp>\nint main(){return 0;}\n'),
-        ("javascript", 'const a = "oops;\nconst _ = require("lodash");\n'),
+    # ⛔ 4Q ROUND 28: the rust r#" and cpp /* cases eat to EOF (fail is not None), so the
+    # round-28 predicate now returns unverifiable — the check could not read the file.
+    # The go and js cases use ' or " which resync at the newline (fail is None), so the
+    # import is still found and the probe still expects flag. Both are correct.
+    for _lane7, _src7, _want7 in (
+        ("rust", 'fn f() { let s = r#"oops;\nuse serde::Serialize;\nfn main(){}\n', "unverifiable"),
+        ("go", 'package main\nvar s = "oops\nimport "github.com/x/y"\nfunc main(){}\n', "flag"),
+        ("cpp", '/* oops\n#include <boost/asio.hpp>\nint main(){return 0;}\n', "unverifiable"),
+        ("javascript", 'const a = "oops;\nconst _ = require("lodash");\n', "flag"),
     ):
         _st7 = check_deps(_src7, _lane7, None)[1]
         extra.append((f"C6-{_lane7} a MALFORMED literal does not swallow the import that "
-                      f"follows it — no confident false pass (got {_st7})", _st7 == "flag"))
+                      f"follows it — no confident false pass (got {_st7})", _st7 == _want7))
 
     # every unverifiable detail in the tool must carry a reason code -- prose is not a key
     extra.append(("every unverifiable return carries a [REASON_CODE]",
@@ -4552,6 +4576,43 @@ def self_test() -> int:
                   check_dangerous(_r27_bad, "cpp", None)[1] == "unverifiable"))
     extra.append(("R27 fail-open NEGATIVE ARM: wellformed file with same primitive still flags",
                   check_dangerous(_r27_good, "cpp", None)[1] == "flag"))
+
+    # ---- 4Q ROUND 28: the four dead guards — fail predicate on single-view sites ------
+    # Each of the four checks below discarded `fail` into `_` and consulted `ok` (a constant
+    # True). The guard was present, careful, and dead. Now `fail is not None` fires first.
+    # MALFORMED arm: unterminated block comment → unverifiable. NEGATIVE ARM: same content
+    # with the comment closed → real verdict (not unverifiable).
+    _r28_bad = '/* UNTERMINATED\n'
+    _r28_good_cpp = '/* comment */\n'
+    # check_hollow: malformed → unverifiable; wellformed with an assertion → pass
+    extra.append(("R28 hollow: malformed file returns UNVERIFIABLE not flag/pass",
+                  check_hollow(_r28_bad + 'int main(){ assert(1); }\n', "cpp", None)[1]
+                  == "unverifiable"))
+    extra.append(("R28 hollow NEGATIVE ARM: wellformed file with assertion still passes",
+                  check_hollow(_r28_good_cpp + 'int main(){ assert(1); }\n', "cpp", None)[1]
+                  == "pass"))
+    # check_abs_paths: malformed → unverifiable; wellformed with a path → flag
+    extra.append(("R28 abs_paths: malformed file returns UNVERIFIABLE not pass",
+                  check_abs_paths(_r28_bad + 'const char* p = "/home/x";\n', "cpp", None)[1]
+                  == "unverifiable"))
+    extra.append(("R28 abs_paths NEGATIVE ARM: wellformed file with path still flags",
+                  check_abs_paths(_r28_good_cpp + 'const char* p = "/home/x";\n', "cpp", None)[1]
+                  == "flag"))
+    # _assert_nonvacuous (via check_assert_nonvacuous): malformed → unverifiable; wellformed
+    # with a live assert → pass
+    extra.append(("R28 assert_nonvacuous: malformed file returns UNVERIFIABLE not pass/skip",
+                  check_assert_nonvacuous(_r28_bad + 'int main(){ assert(x); }\n', "cpp", None)[1]
+                  == "unverifiable"))
+    extra.append(("R28 assert_nonvacuous NEGATIVE ARM: wellformed live assert still passes",
+                  check_assert_nonvacuous(_r28_good_cpp + 'int main(){ assert(x); }\n', "cpp", None)[1]
+                  == "pass"))
+    # check_deps: malformed → unverifiable; wellformed with third-party → flag
+    extra.append(("R28 deps: malformed file returns UNVERIFIABLE not pass",
+                  check_deps(_r28_bad + '#include <boost/asio.hpp>\nint main(){}\n', "cpp", None)[1]
+                  == "unverifiable"))
+    extra.append(("R28 deps NEGATIVE ARM: wellformed third-party import still flags",
+                  check_deps(_r28_good_cpp + '#include <boost/asio.hpp>\nint main(){}\n', "cpp", None)[1]
+                  == "flag"))
 
     print()
     for label, cond in extra:
