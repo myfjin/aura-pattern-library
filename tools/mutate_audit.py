@@ -795,11 +795,15 @@ if f or c:
           " traceback, or no summary line) — every mutant would score for free.")
     sys.exit(1)
 
-# ---- 4Q ROUND 31: ANCHOR RIGHT-EXTENSION GUARD ----
+# ---- 4Q ROUND 31/32: ANCHOR RIGHT-EXTENSION GUARD + BASELINE RATCHET ----
 # A GUARD against right-extension, NOT a minimality proof (6E round 32, S4.1). It detects
 # one specific failure class: the anchor extends past the changed region between old and
-# new. It has no semantics and must not claim to. A check that overstates its reach gets
-# trusted where it is blind — that is how the last three dark anchors happened.
+# new. It has no semantics and must not claim to.
+#
+# ROUND 32: a committed baseline (tools/mutate_audit.baseline) lists the 44 known flags.
+# Known flags collapse to a one-line summary. A NEW flag prints loudly and exits 1. A
+# stale baseline entry (no longer flagged) prints PAID DOWN and exits 1. The baseline
+# may only shrink — growth is a deliberate edit, not an accident.
 #
 # Algorithm: compute LCP(old,new) and LCS(old,new). The changed region is old[LCP:len-LCS].
 # If LCS>0 (anchor extends past the changed region), try trimming: keep everything up to
@@ -808,7 +812,7 @@ if f or c:
 # with a non-separator (part of an identifier or string), keep it all — it is semantic,
 # not context. Flag when the trimmed fragment is strictly shorter AND count==1 in the
 # target.
-import re as _re
+import re as _re, ast as _ast, os as _os
 def _lcp(a, b):
     n = min(len(a), len(b))
     for i in range(n):
@@ -841,24 +845,47 @@ def _anchor_check(old, new, target_text):
     return False, "count!=1"
 
 _target_text = open(P).read()
-_anchor_flags = 0
-_acceptance = ["4Q-R7 the routed", "6E-D3-Q2 needs_human", "6E-D3-Q3 the coverage",
-               "R29 needs_cause", "4Q-R7-O1 checks_skipped"]
-print("\n--- ANCHOR RIGHT-EXTENSION GUARD (report-only, not a minimality proof) ---")
+_baseline_path = _os.path.join(ROOT, 'tools', 'mutate_audit.baseline')
+_baseline = set()
+if _os.path.exists(_baseline_path):
+    with open(_baseline_path) as _bf:
+        for _bl in _bf:
+            _bl = _bl.rstrip('\n')
+            if _bl:
+                _baseline.add(_ast.literal_eval(_bl))
+
+_new_flags = []
+_known = 0
+_flagged_olds = set()
+print("\n--- ANCHOR RIGHT-EXTENSION GUARD (baseline ratchet) ---")
 for _m in MUTANTS:
     _label, _old, _new = _m[0], _m[1], _m[2]
     _tgt = _m[4] if len(_m) > 4 else P
     if _tgt != P:
         continue
     _flag, _reason = _anchor_check(_old, _new, _target_text)
-    _is_accept = any(_a in _label for _a in _acceptance)
-    if _flag or _is_accept:
-        _tag = "FLAG" if _flag else "no-flag"
-        print("  %-12s %s" % (_tag, _label[:70]))
-        if _flag:
-            _anchor_flags += 1
+    if _flag:
+        _flagged_olds.add(_old)
+        if _old in _baseline:
+            _known += 1
+        else:
+            _new_flags.append((_label, _reason))
+            print("  *** NEW FLAG: %s" % _label[:70])
             print("             %s" % _reason)
-print("  (%d anchor(s) flagged)" % _anchor_flags)
+
+# Check for stale baseline entries (paid down)
+_stale = _baseline - _flagged_olds
+for _s in sorted(_stale):
+    print("  *** PAID DOWN: %r no longer flagged — remove from baseline" % _s[:60])
+
+print("  baseline: %d known, %d new, %d paid down" % (_known, len(_new_flags), len(_stale)))
+if _new_flags or _stale:
+    print("*** ANCHOR GUARD FAILED ***")
+    if _new_flags:
+        print("    %d NEW flag(s) — fix the anchor or deliberately add to baseline" % len(_new_flags))
+    if _stale:
+        print("    %d stale baseline entr(y/ies) — remove from tools/mutate_audit.baseline" % len(_stale))
+    sys.exit(1)
 
 # ⛔ The renderer is a SEPARATE FILE and mutants aimed at it silently SKIPPED -- an anchor
 # that matches 0 measures nothing. A mutant may now name its target as a 5th element.
