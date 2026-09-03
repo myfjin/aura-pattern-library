@@ -795,6 +795,71 @@ if f or c:
           " traceback, or no summary line) — every mutant would score for free.")
     sys.exit(1)
 
+# ---- 4Q ROUND 31: ANCHOR RIGHT-EXTENSION GUARD ----
+# A GUARD against right-extension, NOT a minimality proof (6E round 32, S4.1). It detects
+# one specific failure class: the anchor extends past the changed region between old and
+# new. It has no semantics and must not claim to. A check that overstates its reach gets
+# trusted where it is blind — that is how the last three dark anchors happened.
+#
+# Algorithm: compute LCP(old,new) and LCS(old,new). The changed region is old[LCP:len-LCS].
+# If LCS>0 (anchor extends past the changed region), try trimming: keep everything up to
+# the changed region's right edge, plus a trailing separator from the common suffix if it
+# starts with one (operator keyword+space or punctuation). If the common suffix starts
+# with a non-separator (part of an identifier or string), keep it all — it is semantic,
+# not context. Flag when the trimmed fragment is strictly shorter AND count==1 in the
+# target.
+import re as _re
+def _lcp(a, b):
+    n = min(len(a), len(b))
+    for i in range(n):
+        if a[i] != b[i]:
+            return i
+    return n
+
+def _lcs(a, b):
+    n = min(len(a), len(b))
+    for i in range(1, n+1):
+        if a[-i] != b[-i]:
+            return i - 1
+    return n
+
+def _anchor_check(old, new, target_text):
+    p = _lcp(old, new)
+    s = _lcs(old, new)
+    if s == 0:
+        return False, "LCS=0"
+    common_suffix = old[len(old)-s:]
+    sep_m = _re.match(r'((?:or|and|not|in|is)\s+|[^\w]+)', common_suffix)
+    if sep_m:
+        trimmed = old[:len(old)-s] + sep_m.group(1)
+    else:
+        trimmed = old
+    if len(trimmed) >= len(old):
+        return False, "trimmed==old"
+    if target_text.count(trimmed) == 1:
+        return True, "trimmed=%r (len=%d<%d) count=1" % (trimmed[:50], len(trimmed), len(old))
+    return False, "count!=1"
+
+_target_text = open(P).read()
+_anchor_flags = 0
+_acceptance = ["4Q-R7 the routed", "6E-D3-Q2 needs_human", "6E-D3-Q3 the coverage",
+               "R29 needs_cause", "4Q-R7-O1 checks_skipped"]
+print("\n--- ANCHOR RIGHT-EXTENSION GUARD (report-only, not a minimality proof) ---")
+for _m in MUTANTS:
+    _label, _old, _new = _m[0], _m[1], _m[2]
+    _tgt = _m[4] if len(_m) > 4 else P
+    if _tgt != P:
+        continue
+    _flag, _reason = _anchor_check(_old, _new, _target_text)
+    _is_accept = any(_a in _label for _a in _acceptance)
+    if _flag or _is_accept:
+        _tag = "FLAG" if _flag else "no-flag"
+        print("  %-12s %s" % (_tag, _label[:70]))
+        if _flag:
+            _anchor_flags += 1
+            print("             %s" % _reason)
+print("  (%d anchor(s) flagged)" % _anchor_flags)
+
 # ⛔ The renderer is a SEPARATE FILE and mutants aimed at it silently SKIPPED -- an anchor
 # that matches 0 measures nothing. A mutant may now name its target as a 5th element.
 # ⛔ A HARNESS KILLED MID-MUTANT LEAVES A MUTATED PRODUCTION FILE ON DISK. A 2-minute
