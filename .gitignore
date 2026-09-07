@@ -17,3 +17,7 @@ demo_logs/
 # renderer writes its report into the CURRENT directory; the canonical copy lives in ~/aura-docs
 AUDIT-REPORT.md
 AUDIT-RESULTS.jsonl
+
+# observation-mode harvest results — per-run outputs, not part of the signed library
+.harvest/results/
+.harvest/contradictions/
