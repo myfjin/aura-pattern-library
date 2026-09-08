@@ -1622,8 +1622,8 @@
     },
     {
       "path": "information_theory_and_probability/inverse_transform_sampling.py",
-      "sha256": "78497fcbec2ca11ed0a10a6ebfba96ad095cd7c6cea07f5c2406387e0d24dd99",
-      "bytes": 9704
+      "sha256": "7361ce63f1ae73833b6c25129bb6024bf7e890a6e6ff26b761f5a492b32a7b20",
+      "bytes": 10481
     },
     {
       "path": "information_theory_and_probability/kl_divergence_cross_entropy.md",

@@ -37,7 +37,15 @@ def piecewise_inverse_cdf(u: float) -> float:
       F(x) = 2*x/3       for x in [0, 1]  (mass 2/3 on [0,1])
       F(x) = 2/3 + (x-1)/3 for x in [1, 2] (mass 1/3 on [1,2])
     So F^{-1}(u) = 3*u/2 for u in [0, 2/3], and F^{-1}(u) = 1 + 3*(u - 2/3) for u in [2/3, 1]
+
+    u must be in [0, 1); 1.0 is excluded because the inverse-CDF contract is
+    undefined at exactly 1 (DOMAIN_SILENT — previously any u out of range was
+    silently absorbed).
     """
+    if not (u == u):  # NaN
+        raise ValueError(f"AURA-E010: u must be in [0, 1), got {u}")
+    if u < 0.0 or u >= 1.0:
+        raise ValueError(f"AURA-E010: u must be in [0, 1), got {u}")
     if u < 2.0 / 3.0:
         return 3 * u / 2.0
     else:
@@ -71,7 +79,16 @@ def empirical_variance(samples: List[float]) -> float:
 
 
 def empirical_quantile(samples: List[float], q: float) -> float:
-    """Compute empirical quantile (e.g., q=0.25 for 25th percentile)."""
+    """Compute empirical quantile (e.g., q=0.25 for 25th percentile).
+
+    q must be in [0, 1); 1.0 is excluded because the inverse-CDF contract is
+    undefined there. Before this guard, the min-clamp silently absorbed any
+    q >= 1 into the top sample (DOMAIN_SILENT).
+    """
+    if not (q == q):  # NaN
+        raise ValueError(f"AURA-E010: q must be in [0, 1), got {q}")
+    if q < 0.0 or q >= 1.0:
+        raise ValueError(f"AURA-E010: q must be in [0, 1), got {q}")
     sorted_samples = sorted(samples)
     idx = int(q * len(sorted_samples))
     return sorted_samples[min(idx, len(sorted_samples) - 1)]
