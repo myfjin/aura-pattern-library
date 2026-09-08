@@ -89,13 +89,13 @@
     "2026-07-26 constraint-render fix: hollow `assert False` markers no longer rendered as checkable constraints (114 lines / 69 cards; extractor tag honoured)"
   ],
   "twin_contract_divergence": {
-    "declared": 125,
+    "declared": 127,
     "lanes": {
-      "cpp": 125,
+      "cpp": 127,
       "go": 0,
       "rust": 0
     },
-    "unique_source_ids": 119,
+    "unique_source_ids": 121,
     "as_of": "2026-07-28",
     "introduced_by": "7497d40 (2026-07-21 input-contract retrofit; compiled lanes deliberately excluded)",
     "note": "Twin FILES whose python/r source carries an _aura_validate_* input contract that the twin does not. NOT a defect verdict: no cpp attack lane exists yet, so it is unknown which of these twins actually accept the attacks their sources now reject. Declared so the number cannot move in silence \u2014 library_verify goes RED on any change, in either direction. Fix the twins or update this block; do not silence it.",

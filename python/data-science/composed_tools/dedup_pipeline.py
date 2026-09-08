@@ -21,7 +21,21 @@ import random
 from typing import Dict, List, Set, Tuple
 
 
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+
 def shingles(text: str, k: int = 3) -> Set[str]:
+    v = []
+    if not isinstance(k, int) or isinstance(k, bool):
+        v.append(f"AURA-E009: k must be an int, got {type(k).__name__}")
+    elif k < 1:
+        v.append(f"AURA-E009: k must be >= 1, got {k}")
+    if v:
+        raise AuraInputError(v)
     words = text.lower().split()
     return {" ".join(words[i:i + k]) for i in range(max(1, len(words) - k + 1))}
 
