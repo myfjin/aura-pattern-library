@@ -23,16 +23,24 @@ class AuraInputError(ValueError):
         self.violations = violations
         super().__init__("input contract violated:\n  " + "\n  ".join(violations))
 
-def _aura_validate_encode(lat):
+def _aura_validate_encode(lat, lon=None, precision=None):
     v = []
     if isinstance(lat, (int, float)) and not math.isfinite(lat):
         v.append(f"AURA-E008: lat must be finite, got {lat}")
+    if lon is not None and isinstance(lon, (int, float)) and not math.isfinite(lon):
+        v.append(f"AURA-E008: lon must be finite, got {lon}")
+    if precision is not None:
+        if isinstance(precision, float) and not math.isfinite(precision):
+            v.append(f"AURA-E008: precision must be finite, got {precision}")
+        elif isinstance(precision, (int, float)) and not isinstance(precision, bool):
+            if int(precision) < 1:
+                v.append(f"AURA-E008: precision must be >= 1, got {precision}")
     if v:
         raise AuraInputError(v)
 
 def encode(lat: float, lon: float, precision: int = 6) -> str:
     """Encode lat/lon as geohash string."""
-    _aura_validate_encode(lat)
+    _aura_validate_encode(lat, lon, precision)
     lat_range, lon_range = [-90.0, 90.0], [-180.0, 180.0]
     geohash, is_lon = [], True
     bits, ch = 0, 0
