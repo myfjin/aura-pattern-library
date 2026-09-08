@@ -1177,8 +1177,8 @@
     },
     {
       "path": "data-science/ensembles_and_robust_methods/gradient_boosting_stumps.py",
-      "sha256": "835631e344ced13db10bf8134fd67470bdb43c2ca039375a4c658c4e3e572450",
-      "bytes": 11559
+      "sha256": "c251f4442e761750b8f0f460d382125ab408c81e64b32af2c80d69b1c64db69a",
+      "bytes": 10274
     },
     {
       "path": "data-science/ensembles_and_robust_methods/huber_robust_regression.md",
@@ -1627,8 +1627,8 @@
     },
     {
       "path": "data-science/information_theory_and_probability/inverse_transform_sampling.py",
-      "sha256": "627253a40d15eccf6991658cd9c7a523ad10cb7715ca520eb37e79dd322ab4d0",
-      "bytes": 10286
+      "sha256": "7361ce63f1ae73833b6c25129bb6024bf7e890a6e6ff26b761f5a492b32a7b20",
+      "bytes": 10481
     },
     {
       "path": "data-science/information_theory_and_probability/kl_divergence_cross_entropy.md",
@@ -3162,8 +3162,8 @@
     },
     {
       "path": "data-science/statistical_modeling/power_analysis_sample_size.py",
-      "sha256": "056016a17add849643106c77d4172f0702e81482d8a9907f6b8ca9e041cc3b56",
-      "bytes": 8963
+      "sha256": "aa1f8e640e2d017b6989358e564cdfd970a137daa193fd65cecc08501e1256c7",
+      "bytes": 8633
     },
     {
       "path": "data-science/statistical_modeling/quantile_regression_pinball.md",

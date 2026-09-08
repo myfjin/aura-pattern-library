@@ -9,8 +9,30 @@ _AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCI
 import math
 from typing import List
 
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+def _aura_validate_quantile_mapping(data_biased, data_reference):
+    v = []
+    for i, x in enumerate(data_biased):
+        if isinstance(x, (int, float)) and not math.isfinite(x):
+            v.append(f"AURA-E008: data_biased[{i}] must be finite, got {x}")
+    for i, x in enumerate(data_reference):
+        if isinstance(x, (int, float)) and not math.isfinite(x):
+            v.append(f"AURA-E008: data_reference[{i}] must be finite, got {x}")
+    if len(data_biased) == 0:
+        v.append("AURA-E009: data_biased must be non-empty")
+    if len(data_reference) == 0:
+        v.append("AURA-E009: data_reference must be non-empty")
+    if v:
+        raise AuraInputError(v)
+
 def quantile_mapping_correct(data_biased: List[float], data_reference: List[float]) -> List[float]:
     """Correct bias in data_biased by mapping onto data_reference quantiles."""
+    _aura_validate_quantile_mapping(data_biased, data_reference)
     data_biased_sorted = sorted(data_biased)
     data_ref_sorted = sorted(data_reference)
 
