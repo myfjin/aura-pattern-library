@@ -21,3 +21,7 @@ AUDIT-RESULTS.jsonl
 # observation-mode harvest results — per-run outputs, not part of the signed library
 .harvest/results/
 .harvest/contradictions/
+
+# SQLite test-artifact pollution guard (2026-09-08)
+the quick brown fox
+*-journal
