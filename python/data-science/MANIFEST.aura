@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-08-07",
+  "created": "2026-09-08",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -302,8 +302,8 @@
     },
     {
       "path": "bayesian_iii_modeling_and_selection/dirichlet_stick_breaking.py",
-      "sha256": "043740d26a0d0baebda7624ecefc7cb86e1ed8f958eb2fb3093bff0866f02b13",
-      "bytes": 6707
+      "sha256": "ea041bbe63baa673ecd6dd391e1a1a592fba1fcbbd9acd4191ed3cf31fd10105",
+      "bytes": 7227
     },
     {
       "path": "bayesian_iii_modeling_and_selection/evidence_ranks_true_model.md",
