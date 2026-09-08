@@ -47,8 +47,20 @@ def stick_breaking_process(alpha: float, num_breaks: int = 100) -> List[float]:
 
     return weights
 
+def _aura_domain_count_active_clusters(weights, threshold):
+    v = []
+    if not (isinstance(threshold, (int, float)) and math.isfinite(threshold)):
+        v.append(f"AURA-E008: threshold must be finite, got {threshold}")
+    for i, w in enumerate(weights):
+        if not (isinstance(w, (int, float)) and math.isfinite(w)):
+            v.append(f"AURA-E008: weights[{i}] must be finite, got {w}")
+            break
+    if v:
+        raise AuraInputError(v)
+
 def count_active_clusters(weights: List[float], threshold: float = 0.01) -> int:
     """Count weights above threshold (approximate number of 'active' clusters)."""
+    _aura_domain_count_active_clusters(weights, threshold)
     return sum(1 for w in weights if w > threshold)
 
 if __name__ == "__main__":
