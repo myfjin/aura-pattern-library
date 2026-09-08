@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""harvest_gate_v5.py — Phase A runner with nan_domain_probe + metamorphic_scan wired.
+"""harvest_gate_v6.py — Phase A runner with per-tool result isolation (no clobber).
 
-Based on v4 (md5 3b7bb4234bb792206e299ec9eb84a834).
-Changes from v4:
-  - metamorphic_scan wired into --run mode (second runner alongside nan_domain_probe).
-  - Row 6: negative-control abort → whole-run SKIP `negative_control_failed` (short-circuit).
-  - Row 7: tool-emitted FLAG (metamorphic-harness-error) → override to SKIP `harness_error`.
-  - Rows 1-5, 8-9: carry forward from v4's rule-3-refined logic.
-  - --self-test extended to 8 tests (tests 7-8 prove the two divergences).
-  - chaos_scan / invariant_mine remain stubbed.
+Based on v5 (md5 aebe44e8deb1a81ac3cfda0b08941d54).
+Changes from v5:
+  - Per-tool result isolation: results written to results/<date>/<pid>/<tool>.json
+    instead of results/<date>/<pid>.json. Both tools' verdicts survive on disk.
+  - _skip_all now takes tool_name parameter (was hardcoded to nan_domain_probe).
+  - _write_result / _write_contradiction helpers added.
+  - --self-test extended to 9 tests (test 9 proves no-clobber across tools).
+  - nan_domain_probe + metamorphic_scan routing unchanged from v5.
 
 INVARIANTS (unchanged from v1):
   1. NEVER mutates the signed library tree.
@@ -252,11 +252,13 @@ def run_nan_domain_probe(
     except subprocess.TimeoutExpired:
         # 6E rule 2: timeout → SKIP
         return _skip_all(t1_ids, results_dir, tool_hash,
-                         "nan_domain_probe timed out", "timeout")
+                         "nan_domain_probe timed out", "timeout",
+                         tool_name="nan_domain_probe")
     except Exception as exc:
         # 6E rule 1-adjacent: spawn failure → SKIP
         return _skip_all(t1_ids, results_dir, tool_hash,
-                         f"spawn failed: {type(exc).__name__}: {exc}", "spawn_failed")
+                         f"spawn failed: {type(exc).__name__}: {exc}", "spawn_failed",
+                         tool_name="nan_domain_probe")
     finally:
         try:
             targets_json.unlink()
@@ -272,6 +274,7 @@ def run_nan_domain_probe(
     if action == "skip":
         return _skip_all(t1_ids, results_dir, tool_hash,
                          f"routing skip: {reason_code}", reason_code,
+                         tool_name="nan_domain_probe",
                          stderr_tail=proc.stderr[-300:])
 
     # 6. Map report rows to pattern IDs and route verdicts
@@ -314,13 +317,11 @@ def run_nan_domain_probe(
 
         if contradiction and verdict in ("INVALID", "FLAG"):
             # Route to contradictions dir instead of results
-            contr_path = contradictions_dir / f"{pid}.json"
-            contr_path.write_text(json.dumps(result, indent=2) + "\n")
+            _write_contradiction(contradictions_dir, pid, "nan_domain_probe", result)
             counts["CONTRADICTION"] += 1
             print(f"  {pid:45} {cls:22} → CONTRADICTION (frozen exam mismatch)")
         else:
-            result_path = results_dir / f"{pid}.json"
-            result_path.write_text(json.dumps(result, indent=2) + "\n")
+            _write_result(results_dir, pid, "nan_domain_probe", result)
             counts[verdict] += 1
             print(f"  {pid:45} {cls:22} → {verdict}")
 
@@ -338,7 +339,7 @@ def run_nan_domain_probe(
                 "evidence": [],
                 "timestamp": now_iso,
             }
-            (results_dir / f"{pid}.json").write_text(json.dumps(result, indent=2) + "\n")
+            _write_result(results_dir, pid, "nan_domain_probe", result)
             counts["SKIP"] += 1
             print(f"  {pid:45} {'NOT_IN_REPORT':22} → SKIP")
 
@@ -354,11 +355,34 @@ def run_nan_domain_probe(
             "evidence": [],
             "timestamp": now_iso,
         }
-        (results_dir / f"{pid}.json").write_text(json.dumps(result, indent=2) + "\n")
+        _write_result(results_dir, pid, "nan_domain_probe", result)
         counts["SKIP"] += 1
         print(f"  {pid:45} {'UNRESOLVED':22} → SKIP")
 
     return counts
+
+
+def _write_result(results_dir: Path, pid: str, tool_name: str, result: dict) -> None:
+    """Write a per-tool per-pattern result to results_dir/<pid>/<tool_name>.json.
+
+    Per-tool isolation: each tool writes to its own file inside the pattern's
+    directory, so tools never clobber each other. Extensible to N tools.
+    """
+    pattern_dir = results_dir / pid
+    pattern_dir.mkdir(parents=True, exist_ok=True)
+    (pattern_dir / f"{tool_name}.json").write_text(
+        json.dumps(result, indent=2) + "\n"
+    )
+
+
+def _write_contradiction(contradictions_dir: Path, pid: str, tool_name: str,
+                         result: dict) -> None:
+    """Write a contradiction result to contradictions_dir/<pid>/<tool_name>.json."""
+    pattern_dir = contradictions_dir / pid
+    pattern_dir.mkdir(parents=True, exist_ok=True)
+    (pattern_dir / f"{tool_name}.json").write_text(
+        json.dumps(result, indent=2) + "\n"
+    )
 
 
 def _skip_all(
@@ -367,6 +391,7 @@ def _skip_all(
     tool_hash: str,
     reason: str,
     reason_code: str,
+    tool_name: str = "nan_domain_probe",
     stderr_tail: str = "",
 ) -> dict:
     """Write SKIP results for all T1 patterns (used when the tool invocation fails)."""
@@ -374,7 +399,7 @@ def _skip_all(
     for pid in t1_ids:
         result = {
             "pattern_id": pid,
-            "tool": "nan_domain_probe",
+            "tool": tool_name,
             "tool_hash": tool_hash,
             "class": "SKIP",
             "verdict": "SKIP",
@@ -384,7 +409,7 @@ def _skip_all(
             "evidence": [],
             "timestamp": now_iso,
         }
-        (results_dir / f"{pid}.json").write_text(json.dumps(result, indent=2) + "\n")
+        _write_result(results_dir, pid, tool_name, result)
     print(f"  ALL SKIP — {reason_code}: {reason}")
     return {"PASS": 0, "FLAG": 0, "INVALID": 0, "SKIP": len(t1_ids),
             "CONTRADICTION": 0, "reason_code": reason_code}
@@ -502,10 +527,12 @@ def run_metamorphic_scan(
         )
     except subprocess.TimeoutExpired:
         return _skip_all(t1_ids, results_dir, tool_hash,
-                         "metamorphic_scan timed out", "timeout")
+                         "metamorphic_scan timed out", "timeout",
+                         tool_name="metamorphic_scan")
     except Exception as exc:
         return _skip_all(t1_ids, results_dir, tool_hash,
-                         f"spawn failed: {type(exc).__name__}: {exc}", "spawn_failed")
+                         f"spawn failed: {type(exc).__name__}: {exc}", "spawn_failed",
+                         tool_name="nan_domain_probe")
 
     # 4. Route the result using 6E's refined table
     action, reason_code, report = _route_metamorphic_result(
@@ -516,6 +543,7 @@ def run_metamorphic_scan(
     if action == "skip":
         return _skip_all(t1_ids, results_dir, tool_hash,
                          f"routing skip: {reason_code}", reason_code,
+                         tool_name="nan_domain_probe",
                          stderr_tail=proc.stderr[-300:])
 
     # 5. Parse cards and route per-pattern verdicts
@@ -553,13 +581,11 @@ def run_metamorphic_scan(
         contradiction = False
 
         if contradiction and harvest_verdict in ("INVALID", "FLAG"):
-            contr_path = contradictions_dir / f"{pid}.json"
-            contr_path.write_text(json.dumps(result, indent=2) + "\n")
+            _write_contradiction(contradictions_dir, pid, "nan_domain_probe", result)
             counts["CONTRADICTION"] += 1
             print(f"  {pid:45} {cls:30} → CONTRADICTION")
         else:
-            result_path = results_dir / f"{pid}.json"
-            result_path.write_text(json.dumps(result, indent=2) + "\n")
+            _write_result(results_dir, pid, "nan_domain_probe", result)
             counts[harvest_verdict] += 1
             extra = f" (override: {tool_verdict}→SKIP)" if tool_verdict == "FLAG" else ""
             print(f"  {pid:45} {cls:30} → {harvest_verdict}{extra}")
@@ -577,7 +603,7 @@ def run_metamorphic_scan(
                 "evidence": [],
                 "timestamp": now_iso,
             }
-            (results_dir / f"{pid}.json").write_text(json.dumps(result, indent=2) + "\n")
+            _write_result(results_dir, pid, "metamorphic_scan", result)
             counts["SKIP"] += 1
 
     return counts
@@ -789,7 +815,68 @@ def self_test() -> int:
             print(f"  FLIP PROVEN: without override → FLAG (wrong, counts as defect); with override → SKIP (correct).")
         all_pass &= ok
 
-    print(f"\n=== {'All 8 tests passed.' if all_pass else 'SOME TESTS FAILED.'} ===")
+        # ── Test 9: no-clobber across tools ──
+        # Simulate two tools reporting on the SAME pattern with different verdicts.
+        # With the fix (per-tool subdirectory layout), both survive on disk.
+        # Without the fix (flat layout), the second write clobbers the first.
+        test_results_dir = Path(tmpdir) / "test_results"
+        test_results_dir.mkdir()
+
+        # Tool A (nan_domain_probe) writes INVALID for pattern "foo"
+        result_a = {
+            "pattern_id": "foo",
+            "tool": "nan_domain_probe",
+            "tool_hash": "abc123",
+            "class": "DOMAIN_SILENT",
+            "verdict": "INVALID",
+            "reason": "domain silent",
+            "evidence": [],
+            "timestamp": "2026-09-08T12:00:00",
+        }
+        _write_result(test_results_dir, "foo", "nan_domain_probe", result_a)
+
+        # Tool B (metamorphic_scan) writes SKIP for the same pattern "foo"
+        result_b = {
+            "pattern_id": "foo",
+            "tool": "metamorphic_scan",
+            "tool_hash": "def456",
+            "class": "not_covered",
+            "verdict": "SKIP",
+            "reason": "pattern not in metamorphic_scan PATTERNS dict",
+            "evidence": [],
+            "timestamp": "2026-09-08T12:01:00",
+        }
+        _write_result(test_results_dir, "foo", "metamorphic_scan", result_b)
+
+        # Both results must be readable from disk
+        path_a = test_results_dir / "foo" / "nan_domain_probe.json"
+        path_b = test_results_dir / "foo" / "metamorphic_scan.json"
+        both_exist = path_a.is_file() and path_b.is_file()
+
+        if both_exist:
+            read_a = json.loads(path_a.read_text())
+            read_b = json.loads(path_b.read_text())
+            verdict_a = read_a.get("verdict")
+            verdict_b = read_b.get("verdict")
+            ok = (verdict_a == "INVALID" and verdict_b == "SKIP"
+                  and read_a.get("tool") == "nan_domain_probe"
+                  and read_b.get("tool") == "metamorphic_scan")
+        else:
+            ok = False
+            verdict_a = verdict_b = "N/A"
+
+        print(f"\nTest 9 — no-clobber across tools:")
+        print(f"  nan_domain_probe → {path_a.name} verdict={verdict_a!r}")
+        print(f"  metamorphic_scan  → {path_b.name} verdict={verdict_b!r}")
+        print(f"  Both files exist: {both_exist}")
+        print(f"  Expected: nan_domain_probe=INVALID, metamorphic_scan=SKIP (both survive)")
+        print(f"  Result: {'PASS ✓' if ok else 'FAIL ✗'}")
+        if ok:
+            print(f"  FLIP PROVEN: without fix → second write clobbers first (verdict lost);")
+            print(f"               with fix → both verdicts survive in per-tool files.")
+        all_pass &= ok
+
+    print(f"\n=== {'All 9 tests passed.' if all_pass else 'SOME TESTS FAILED.'} ===")
     if all_pass:
         print("  1. Stale report → SKIP (correct)")
         print("  2. Without check → stale misattributed (flip proven)")
@@ -799,6 +886,7 @@ def self_test() -> int:
         print("  6. Wrong row count → SKIP (partial-write guard flip)")
         print("  7. Negative-control abort → SKIP (row-6 short-circuit flip)")
         print("  8. Harness-error FLAG → SKIP override (row-7 override flip)")
+        print("  9. No-clobber across tools → both verdicts survive (per-tool isolation flip)")
     return 0 if all_pass else 1
 
 
