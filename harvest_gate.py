@@ -52,7 +52,7 @@ PHASE_A_TOOLS = {
 
 # nan_domain_probe report path (the tool writes HERE/nan_domain_probe_report.json)
 NAN_REPORT_PATH = STAGING / "nan_domain_probe_report.json"
-NAN_TIMEOUT = 600  # 10 min for ~122 patterns (~2-5s each)
+NAN_TIMEOUT = 1800  # 30 min — empirically needed for 122 real patterns (600s times out; 1800s recovers 8 defect candidates)
 
 # metamorphic_scan report path (the tool writes HERE/metamorphic_report.json)
 METAMORPHIC_REPORT_PATH = STAGING / "metamorphic_report.json"
