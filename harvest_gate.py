@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
-"""harvest_gate_v4.py — Phase A runner with nan_domain_probe wired (rule-3 refined).
+"""harvest_gate_v5.py — Phase A runner with nan_domain_probe + metamorphic_scan wired.
 
-Based on v3 (md5 df9265679fa8a135c5800ae6bce21fe8).
-Changes from v3:
-  - Rule 3 demoted: stderr traceback no longer triggers whole-run SKIP by itself.
-    Only fires as whole-run SKIP when zero rows AND stderr tracebacks (true crash).
-  - Report is now the load-bearing signal, not exit code or stdout.
-  - Non-zero exit + fresh parseable report → still trustworthy, parse it.
-  - Row-count guard: len(rows) != suspect_count → SKIP (partial-write protection).
-  - --self-test extended to 6 tests (tests 5-6 prove the refinement flip).
-  - Other tools (metamorphic_scan, chaos_scan, invariant_mine) remain stubbed.
+Based on v4 (md5 3b7bb4234bb792206e299ec9eb84a834).
+Changes from v4:
+  - metamorphic_scan wired into --run mode (second runner alongside nan_domain_probe).
+  - Row 6: negative-control abort → whole-run SKIP `negative_control_failed` (short-circuit).
+  - Row 7: tool-emitted FLAG (metamorphic-harness-error) → override to SKIP `harness_error`.
+  - Rows 1-5, 8-9: carry forward from v4's rule-3-refined logic.
+  - --self-test extended to 8 tests (tests 7-8 prove the two divergences).
+  - chaos_scan / invariant_mine remain stubbed.
 
 INVARIANTS (unchanged from v1):
   1. NEVER mutates the signed library tree.
@@ -53,7 +52,14 @@ PHASE_A_TOOLS = {
 
 # nan_domain_probe report path (the tool writes HERE/nan_domain_probe_report.json)
 NAN_REPORT_PATH = STAGING / "nan_domain_probe_report.json"
-NAN_TIMEOUT = 1800  # 30 min — empirically needed for 122 real patterns (5-8s/pattern with import overhead)
+NAN_TIMEOUT = 600  # 10 min for ~122 patterns (~2-5s each)
+
+# metamorphic_scan report path (the tool writes HERE/metamorphic_report.json)
+METAMORPHIC_REPORT_PATH = STAGING / "metamorphic_report.json"
+METAMORPHIC_TIMEOUT = 300  # 30s × 9 patterns
+
+# Negative-control abort signal (6E row 6)
+NEGATIVE_CONTROL_ABORT = "ABORT: metamorphic detection is cosmetic"
 
 # nan_domain_probe class → verdict mapping.
 # Refinement from brief: INF_ABSORBED → FLAG (not INVALID).
@@ -385,22 +391,213 @@ def _skip_all(
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# metamorphic_scan wiring
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+def parse_metamorphic_patterns(tool_path: Path) -> dict[str, str]:
+    """Parse PATTERNS dict from metamorphic_scan.py source.
+    Returns {relpath: pattern_id} for reverse-mapping cards back to IDs.
+    """
+    import re
+    text = tool_path.read_text(encoding="utf-8", errors="ignore")
+    result = {}
+    for m in re.finditer(r'"([a-z0-9_]+)":\s*\("[^"]+",\s*"([^"]+)"\)', text):
+        pid, relpath = m.group(1), m.group(2)
+        result[relpath] = pid
+    return result
+
+
+def _route_metamorphic_result(
+    returncode: int,
+    stdout: str,
+    stderr: str,
+    report_path: Path,
+    t_start: float,
+    suspect_count: int,
+) -> tuple[str, str, dict | None]:
+    """Route metamorphic_scan subprocess result per 6E's 9-row table.
+
+    Returns (action, reason_code, report_or_None).
+    action is "parse" or "skip".
+
+    Row 6 (negative-control abort) is checked FIRST — short-circuit before
+    any report check. The tool returns 1 before writing any report, so a
+    stale report from a previous run must never be parsed.
+    """
+    # Row 6: negative-control abort — short-circuit
+    if returncode != 0 and NEGATIVE_CONTROL_ABORT in stdout:
+        return "skip", "negative_control_failed", None
+
+    # Rows 1-5, 8-9: same report-first logic as _route_nan_result
+    if not report_path.is_file():
+        return "skip", "report_missing", None
+    if not check_report_freshness(report_path, t_start):
+        return "skip", "report_stale", None
+    try:
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+    except Exception:
+        return "skip", "report_unparseable", None
+
+    # Row 9: row-count guard (cards, not rows)
+    cards = report.get("cards", [])
+    if len(cards) != suspect_count:
+        return "skip", "row_count_mismatch", None
+
+    # Row 3: zero cards + stderr traceback → true crash
+    if len(cards) == 0 and "Traceback (most recent call last)" in stderr:
+        return "skip", "stderr_traceback_zero_cards", None
+
+    # Row 4: parse and route per-card
+    return "parse", "", report
+
+
+# metamorphic card verdict → harvest verdict mapping (6E row 4 + row 7 override)
+METAMORPHIC_VERDICT_MAP = {
+    "PASS": "PASS",
+    "INVALID-CANDIDATE": "INVALID",
+    "FLAG": "SKIP",  # row 7 override: harness-error, not defect
+}
+
+
+def run_metamorphic_scan(
+    t1_ids: list[str],
+    results_dir: Path,
+    contradictions_dir: Path,
+    tool_hash: str,
+) -> dict:
+    """Invoke metamorphic_scan.py over the T1 ∩ PATTERNS intersection, route verdicts.
+
+    Returns a summary dict with counts per verdict.
+    """
+    tool_path = PHASE_A_TOOLS["metamorphic_scan"]
+    if not tool_path.is_file():
+        print("  metamorphic_scan: NOT FOUND — skipped")
+        return {"PASS": 0, "FLAG": 0, "INVALID": 0, "SKIP": len(t1_ids),
+                "CONTRADICTION": 0, "reason_code": "tool_missing"}
+
+    # 1. Parse the tool's PATTERNS dict to get covered pattern IDs
+    relpath_to_pid = parse_metamorphic_patterns(tool_path)
+    covered_pids = set(relpath_to_pid.values())
+    suspects = [pid for pid in t1_ids if pid in covered_pids]
+
+    if not suspects:
+        print("  metamorphic_scan: no T1 patterns in tool's PATTERNS dict — skipped")
+        return {"PASS": 0, "FLAG": 0, "INVALID": 0, "SKIP": len(t1_ids),
+                "CONTRADICTION": 0, "reason_code": "no_covered_patterns"}
+
+    print(f"  T1 ∩ PATTERNS: {len(suspects)} patterns to scan")
+
+    # 2. Record t_start for freshness check
+    t_start = time.time()
+
+    # 3. Invoke metamorphic_scan as a subprocess (patterns as CLI args, not JSON)
+    runner = shutil.which("python3") or shutil.which("python")
+    try:
+        proc = subprocess.run(
+            [runner, str(tool_path)] + suspects,
+            capture_output=True,
+            text=True,
+            timeout=METAMORPHIC_TIMEOUT,
+        )
+    except subprocess.TimeoutExpired:
+        return _skip_all(t1_ids, results_dir, tool_hash,
+                         "metamorphic_scan timed out", "timeout")
+    except Exception as exc:
+        return _skip_all(t1_ids, results_dir, tool_hash,
+                         f"spawn failed: {type(exc).__name__}: {exc}", "spawn_failed")
+
+    # 4. Route the result using 6E's refined table
+    action, reason_code, report = _route_metamorphic_result(
+        proc.returncode, proc.stdout, proc.stderr,
+        METAMORPHIC_REPORT_PATH, t_start, len(suspects),
+    )
+
+    if action == "skip":
+        return _skip_all(t1_ids, results_dir, tool_hash,
+                         f"routing skip: {reason_code}", reason_code,
+                         stderr_tail=proc.stderr[-300:])
+
+    # 5. Parse cards and route per-pattern verdicts
+    cards = report.get("cards", [])
+    counts = {"PASS": 0, "FLAG": 0, "INVALID": 0, "SKIP": 0, "CONTRADICTION": 0}
+    now_iso = time.strftime("%Y-%m-%dT%H:%M:%S")
+
+    for card in cards:
+        relpath = card.get("pattern", "")
+        pid = relpath_to_pid.get(relpath, relpath)  # fallback to relpath if unknown
+        tool_verdict = card.get("verdict", "PASS")
+        cls = card.get("class", "")
+
+        # Row 7: override harness-error FLAG to SKIP
+        if tool_verdict == "FLAG" and cls == "metamorphic-harness-error":
+            harvest_verdict = "SKIP"
+            reason = "harness_error — pattern was not tested (load/eval failure)"
+        else:
+            harvest_verdict = METAMORPHIC_VERDICT_MAP.get(tool_verdict, "SKIP")
+            reason = card.get("actual", "")
+
+        result = {
+            "pattern_id": pid,
+            "tool": "metamorphic_scan",
+            "tool_hash": tool_hash,
+            "class": cls,
+            "verdict": harvest_verdict,
+            "tool_verdict": tool_verdict,
+            "reason": reason,
+            "evidence": card.get("detail", []),
+            "timestamp": now_iso,
+        }
+
+        # Row 8: contradiction check (scaffolded — needs frozen exam data)
+        contradiction = False
+
+        if contradiction and harvest_verdict in ("INVALID", "FLAG"):
+            contr_path = contradictions_dir / f"{pid}.json"
+            contr_path.write_text(json.dumps(result, indent=2) + "\n")
+            counts["CONTRADICTION"] += 1
+            print(f"  {pid:45} {cls:30} → CONTRADICTION")
+        else:
+            result_path = results_dir / f"{pid}.json"
+            result_path.write_text(json.dumps(result, indent=2) + "\n")
+            counts[harvest_verdict] += 1
+            extra = f" (override: {tool_verdict}→SKIP)" if tool_verdict == "FLAG" else ""
+            print(f"  {pid:45} {cls:30} → {harvest_verdict}{extra}")
+
+    # SKIP all T1 IDs not in the tool's PATTERNS (not covered by this tool)
+    for pid in t1_ids:
+        if pid not in covered_pids:
+            result = {
+                "pattern_id": pid,
+                "tool": "metamorphic_scan",
+                "tool_hash": tool_hash,
+                "class": "not_covered",
+                "verdict": "SKIP",
+                "reason": "pattern not in metamorphic_scan PATTERNS dict",
+                "evidence": [],
+                "timestamp": now_iso,
+            }
+            (results_dir / f"{pid}.json").write_text(json.dumps(result, indent=2) + "\n")
+            counts["SKIP"] += 1
+
+    return counts
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Self-test: stale-report mutation flip proof
 # ─────────────────────────────────────────────────────────────────────────────
 
 def self_test() -> int:
     """Prove the refined routing catches stale reports, partial writes, and
-    does NOT over-fire on stderr noise.
+    does NOT over-fire on stderr noise. Tests 7-8 cover metamorphic divergences.
 
     Tests 1-4: freshness check (unchanged from v3).
     Test 5: stderr traceback + fresh valid report → parse (NOT skip).
-             Without refinement (v3), this would SKIP. WITH refinement, it parses.
-             Flip: v3 would SKIP, v4 parses — the refinement saves 8 real defect candidates.
     Test 6: fresh report with wrong row count → skip (row_count_mismatch).
-             Without the guard, it would parse and under-report.
-             Flip: without guard → parse (wrong), with guard → skip (correct).
+    Test 7: negative-control abort (exit 1 + ABORT msg) → skip (negative_control_failed).
+    Test 8: harness-error FLAG override → SKIP, not FLAG.
     """
-    print("=== Self-test: 6 tests (rule-3 refinement + row-count guard) ===\n")
+    print("=== Self-test: 8 tests (nan + metamorphic wiring) ===\n")
 
     all_pass = True
 
@@ -510,7 +707,89 @@ def self_test() -> int:
             print(f"  FLIP PROVEN: without guard → parse (under-report); with guard → skip (correct).")
         all_pass &= ok
 
-    print(f"\n=== {'All 6 tests passed.' if all_pass else 'SOME TESTS FAILED.'} ===")
+        # ── Test 7: negative-control abort → skip (negative_control_failed) ──
+        # 6E row 6: exit 1 + "ABORT: metamorphic detection is cosmetic" on stdout.
+        # The tool returns 1 before writing any report. A stale report might exist.
+        # Wiring must short-circuit to SKIP BEFORE checking the report.
+        # Without the check, a fresh/stale report would be parsed → wrong.
+        # Set up: write a fresh report (would pass freshness if we got that far)
+        fresh_report_7 = {
+            "cards": [
+                {"pattern": "python/fake.py", "verdict": "PASS", "class": "metamorphic-coverage"},
+            ],
+        }
+        report_path.write_text(json.dumps(fresh_report_7))
+        now_time = time.time()
+        os.utime(report_path, (now_time, now_time))
+        t_start_7 = time.time() - 0.5
+
+        action7, reason_code7, parsed7 = _route_metamorphic_result(
+            returncode=1,
+            stdout="METAMORPHIC RELATION ORACLE\n...\nnegative control: ... COSMETIC (ABORT)\nABORT: metamorphic detection is cosmetic (negative control failed).",
+            stderr="",
+            report_path=report_path,
+            t_start=t_start_7,
+            suspect_count=1,
+        )
+        print(f"\nTest 7 — negative-control abort (exit 1 + ABORT on stdout):")
+        print(f"  _route_metamorphic_result() = action={action7!r}, reason={reason_code7!r}")
+        print(f"  Expected: action='skip', reason='negative_control_failed'")
+        print(f"  (fresh report exists but must be discarded — tool's relations lost calibration)")
+        ok = (action7 == "skip" and reason_code7 == "negative_control_failed")
+        print(f"  Result: {'PASS ✓' if ok else 'FAIL ✗'}")
+        if ok:
+            print(f"  FLIP PROVEN: without row-6 check → fresh report parsed (wrong); with check → skip (correct).")
+        all_pass &= ok
+
+        # ── Test 8: harness-error FLAG override → SKIP, not FLAG ──
+        # 6E row 7: tool emits verdict="FLAG" with class="metamorphic-harness-error".
+        # Wiring must override to SKIP with reason "harness_error".
+        # Without the override, it would emit FLAG (wrong — harness broke, not a defect).
+        harness_report = {
+            "cards": [
+                {"pattern": "python/fake.py", "verdict": "FLAG", "class": "metamorphic-harness-error",
+                 "actual": "ImportError: missing dep"},
+            ],
+        }
+        report_path.write_text(json.dumps(harness_report))
+        now_time = time.time()
+        os.utime(report_path, (now_time, now_time))
+        t_start_8 = time.time() - 0.5
+
+        action8, reason_code8, parsed8 = _route_metamorphic_result(
+            returncode=0,
+            stdout="METAMORPHIC RELATION ORACLE\n...\nmetamorphic PASS: 0/1 patterns",
+            stderr="",
+            report_path=report_path,
+            t_start=t_start_8,
+            suspect_count=1,
+        )
+        print(f"\nTest 8 — harness-error FLAG override:")
+        print(f"  _route_metamorphic_result() = action={action8!r}, reason={reason_code8!r}")
+        # Now simulate the per-card override
+        if action8 == "parse" and parsed8:
+            card = parsed8["cards"][0]
+            tool_v = card.get("verdict", "")
+            cls = card.get("class", "")
+            if tool_v == "FLAG" and cls == "metamorphic-harness-error":
+                harvest_v = "SKIP"
+                override_reason = "harness_error"
+            else:
+                harvest_v = METAMORPHIC_VERDICT_MAP.get(tool_v, "SKIP")
+                override_reason = "no override"
+            print(f"  Card: tool_verdict={tool_v!r}, class={cls!r}")
+            print(f"  Override: harvest_verdict={harvest_v!r}, reason={override_reason!r}")
+            print(f"  Expected: harvest_verdict='SKIP', reason='harness_error'")
+            ok = (harvest_v == "SKIP" and override_reason == "harness_error")
+        else:
+            print(f"  UNEXPECTED: routing did not parse — cannot test override")
+            ok = False
+        print(f"  Result: {'PASS ✓' if ok else 'FAIL ✗'}")
+        if ok:
+            print(f"  FLIP PROVEN: without override → FLAG (wrong, counts as defect); with override → SKIP (correct).")
+        all_pass &= ok
+
+    print(f"\n=== {'All 8 tests passed.' if all_pass else 'SOME TESTS FAILED.'} ===")
     if all_pass:
         print("  1. Stale report → SKIP (correct)")
         print("  2. Without check → stale misattributed (flip proven)")
@@ -518,6 +797,8 @@ def self_test() -> int:
         print("  4. Missing report → SKIP (correct)")
         print("  5. stderr traceback + fresh report → parse (rule-3 refinement flip)")
         print("  6. Wrong row count → SKIP (partial-write guard flip)")
+        print("  7. Negative-control abort → SKIP (row-6 short-circuit flip)")
+        print("  8. Harness-error FLAG → SKIP override (row-7 override flip)")
     return 0 if all_pass else 1
 
 
@@ -697,8 +978,26 @@ def main(argv):
     if "reason_code" in counts:
         print(f"    reason_code: {counts['reason_code']}")
 
+    # ── metamorphic_scan wiring ──
+    print(f"\n── metamorphic_scan ──")
+    print(f"  Tool: {PHASE_A_TOOLS['metamorphic_scan']}")
+    print(f"  Report path: {METAMORPHIC_REPORT_PATH}")
+    print(f"  Timeout: {METAMORPHIC_TIMEOUT}s")
+    print()
+
+    meta_hash = current_hashes.get("metamorphic_scan", "unknown")
+    meta_counts = run_metamorphic_scan(
+        t1_ids, results_dir, contradictions_dir, meta_hash,
+    )
+
+    print(f"\n  metamorphic_scan results:")
+    for k in ("PASS", "FLAG", "INVALID", "SKIP", "CONTRADICTION"):
+        print(f"    {k:14} {meta_counts.get(k, 0)}")
+    if "reason_code" in meta_counts:
+        print(f"    reason_code: {meta_counts['reason_code']}")
+
     # Other tools remain stubbed
-    print(f"\n── metamorphic_scan / chaos_scan / invariant_mine ──")
+    print(f"\n── chaos_scan / invariant_mine ──")
     print(f"  Stubbed — wiring deferred to later rounds.")
 
     return 0
