@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-07-26",
+  "created": "2026-09-08",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -19,6 +19,11 @@
       "path": "data-science/.folder-nature",
       "sha256": "7a825456023a8622872ea1ef5c16ea2d71efe607310937f7dcd3d2778a2bdae0",
       "bytes": 350
+    },
+    {
+      "path": "data-science/ROBUSTNESS.md",
+      "sha256": "e8543a34922a37da899d8e0019a549d5ca547023cca1c8dbaf290daf224cd32c",
+      "bytes": 8421
     },
     {
       "path": "data-science/applied_ds_practice/.folder-nature",
@@ -67,13 +72,13 @@
     },
     {
       "path": "data-science/applied_ds_practice/feature_hashing_trick.md",
-      "sha256": "a24a6ffe4c48cd4d4edcd1201073b34718720dfadbc150fb03911ae6a9f0d7bf",
-      "bytes": 2008
+      "sha256": "ba2e653ddebfd4b64ee21478d77777d9f5794953560641b6f2cb9797da637ed8",
+      "bytes": 2433
     },
     {
       "path": "data-science/applied_ds_practice/feature_hashing_trick.py",
-      "sha256": "5784e6b8e0d18fbe51b7ce6705eefd1878f8d72091eb4a30aeb1f21312642eb9",
-      "bytes": 10861
+      "sha256": "06d9ce9a993045f10168f12f59c02c10550ced8863cc99bcc6d5a50a3399a6f4",
+      "bytes": 10849
     },
     {
       "path": "data-science/applied_ds_practice/funnel_conversion_analysis.md",
@@ -97,22 +102,22 @@
     },
     {
       "path": "data-science/applied_ds_practice/simpsons_paradox_demo.md",
-      "sha256": "da3362047ccb04dca5444546e8aca963c60e8e64e54d3dffc90f4c98824ad24d",
-      "bytes": 1422
+      "sha256": "dc791c83908953427b057e8ec9758344f25342560970914f067be3ded983d87d",
+      "bytes": 1792
     },
     {
       "path": "data-science/applied_ds_practice/simpsons_paradox_demo.py",
-      "sha256": "a1e72c3197a00a8f1eee082ea74f2fddc0bf5646406c1b388a2100ebca65637c",
-      "bytes": 9572
+      "sha256": "f09c46efaa8e352edebd00c3ce3a00c9e9d761db6557511fa0be0733e648f037",
+      "bytes": 9560
     },
     {
       "path": "data-science/applied_ds_practice/target_encoding_smoothing.md",
-      "sha256": "2a34b889b98ebaab7cbc678e2446de55c6835a272f90b007b6c85e32e8eb1973",
-      "bytes": 2035
+      "sha256": "15d49f554444a4d2e734a3ec12ab4defb17412be1e6082e9aa689a40f2624418",
+      "bytes": 2886
     },
     {
       "path": "data-science/applied_ds_practice/target_encoding_smoothing.py",
-      "sha256": "082d75a72e819dd211a547ff23fbdba27ae5e983b7fd1de36bb2e6720b5e62fc",
+      "sha256": "3a5806ea646cfc55e8c2f3efd20d52920b2f3ffa0469755011f01f7462f9a90f",
       "bytes": 10811
     },
     {
@@ -302,8 +307,8 @@
     },
     {
       "path": "data-science/bayesian_iii_modeling_and_selection/dirichlet_stick_breaking.py",
-      "sha256": "043740d26a0d0baebda7624ecefc7cb86e1ed8f958eb2fb3093bff0866f02b13",
-      "bytes": 6707
+      "sha256": "ea041bbe63baa673ecd6dd391e1a1a592fba1fcbbd9acd4191ed3cf31fd10105",
+      "bytes": 7227
     },
     {
       "path": "data-science/bayesian_iii_modeling_and_selection/evidence_ranks_true_model.md",
@@ -362,13 +367,13 @@
     },
     {
       "path": "data-science/causal_inference_and_experimentation/difference_in_differences.md",
-      "sha256": "f1243308cedca57ccd638db62911f2a859da62e56cf287b2e65cf46bbd7b2460",
-      "bytes": 904
+      "sha256": "fccaff622f57c8ce858771ad4892b3e75459bfa8715bd22c1cd9dc49c4bc2a0f",
+      "bytes": 1269
     },
     {
       "path": "data-science/causal_inference_and_experimentation/difference_in_differences.py",
-      "sha256": "4f4c511387de6216a2d02b94a0ef8f06af8e68b579ff97040e6d88c582d8b13c",
-      "bytes": 7673
+      "sha256": "15b01075610622a681b0d3fded13eba396d5c9099235a80cde8384ded1d1957b",
+      "bytes": 7661
     },
     {
       "path": "data-science/causal_inference_and_experimentation/instrumental_variable_lite.md",
@@ -497,12 +502,12 @@
     },
     {
       "path": "data-science/causal_inference_ii/heterogeneous_effects_subgroups.md",
-      "sha256": "3a95020fe7a48aaf8cc7b4f7536a34cedc1755bae7cceac2d274c57ed26da1e8",
-      "bytes": 927
+      "sha256": "1f4c7465638df4f8273025488f2e79193b3aaf69176d89d7256a5414b205b3a0",
+      "bytes": 1191
     },
     {
       "path": "data-science/causal_inference_ii/heterogeneous_effects_subgroups.py",
-      "sha256": "889988088196d6cfc4434dddee72f795f5c558ff598292de2abf8507097470d2",
+      "sha256": "ffbcb64e0b223cba5a9b3733c965d274d1bcc000d5bb75b05b73ab868163e0e2",
       "bytes": 6919
     },
     {
@@ -537,12 +542,12 @@
     },
     {
       "path": "data-science/causal_inference_ii/stratification_subclassification.md",
-      "sha256": "e3d8100208c0ec630a3ba7b9b63bf6d4e967d7840c66e79baed70a106e1819a0",
-      "bytes": 828
+      "sha256": "9645d51c3cdecd17e36daecea7feea754e2094e14dc3890229a5b232866b66de",
+      "bytes": 1162
     },
     {
       "path": "data-science/causal_inference_ii/stratification_subclassification.py",
-      "sha256": "92032927e9f41309301b4a6e9f54f5da44c8d402d3707dd9e0af78c55d522d9d",
+      "sha256": "39df5898fa3835217b0a033938a14d3d7d63ab9c631d5aa98a733c3bd8d4de6a",
       "bytes": 7680
     },
     {
@@ -702,8 +707,8 @@
     },
     {
       "path": "data-science/composed_tools/dedup_pipeline.py",
-      "sha256": "ab449273dec62dcf0d33a0c5c1543f9b960f7e34d5441c84b661ca409a78d6f0",
-      "bytes": 9041
+      "sha256": "bf6aa0212ced15537829a3b9478e3eebcd291132e904c1cb099dd6d7de8f7abc",
+      "bytes": 9569
     },
     {
       "path": "data-science/composed_tools/dtw_shape_drift_monitor.md",
@@ -757,12 +762,12 @@
     },
     {
       "path": "data-science/composed_tools/latency_percentile_monitor.md",
-      "sha256": "c0d487f2a099e65b2379ca7dedf8722b8999fc1f0de40bd98c19c362ea43212a",
-      "bytes": 1023
+      "sha256": "f7e23ad99ad371b5a389587db67c87ed3961914ad1c583e7356701796d2a5c93",
+      "bytes": 1683
     },
     {
       "path": "data-science/composed_tools/latency_percentile_monitor.py",
-      "sha256": "9d472d9ea03caa29032eb972098526d032ef7a28fea70513571b244c958b7223",
+      "sha256": "b8958fe1b065b8560d9b4a5e807f19d597e21007b87674d9efd6d3fe87861619",
       "bytes": 10111
     },
     {
@@ -777,12 +782,12 @@
     },
     {
       "path": "data-science/composed_tools/queue_capacity_planner.md",
-      "sha256": "dd1c3db0b75bbadf0c47d53580f5545590ab08690b3e0bb7b76d126040141c52",
-      "bytes": 897
+      "sha256": "22916da71f76588e1a96d0e89cbe9499d73dff18940878b0e14a9c8a0f4f29c0",
+      "bytes": 1607
     },
     {
       "path": "data-science/composed_tools/queue_capacity_planner.py",
-      "sha256": "ef03fa29c4e718206a0bbc2a1f7de61de9e1b90267f6a032c7ae02fea3d9b3c6",
+      "sha256": "a4a2f42c07bde2762d5c9ca752aeb4f2675b3ff07d5763b34399dbfcf44ba221",
       "bytes": 10184
     },
     {
@@ -907,8 +912,8 @@
     },
     {
       "path": "data-science/core_ml/pca_power_iteration.py",
-      "sha256": "f573bf2b6d5a734023c8a23918c974b773d163d92ea276f6a5c2f1ee142ca05d",
-      "bytes": 9504
+      "sha256": "8ed2ce5ccac993dcd9a414dcc68c9a1603d1390b042a553af0b28c459c0176a6",
+      "bytes": 9508
     },
     {
       "path": "data-science/core_ml/perceptron.md",
@@ -1132,13 +1137,13 @@
     },
     {
       "path": "data-science/econometrics_and_finance/value_averaging_vs_dca.md",
-      "sha256": "2cab4207927a2e454dd04d97e15675db257e8c21c7f0f2fe32422d6e6aec0348",
-      "bytes": 726
+      "sha256": "c97a43798e535d8e103bba6d239a5baab724fca28321a5e693204d8869285c18",
+      "bytes": 992
     },
     {
       "path": "data-science/econometrics_and_finance/value_averaging_vs_dca.py",
-      "sha256": "33a3d5e7bfe4d20e833deb1d6a7cc8a2da284c52577aefccaa81518cd995333c",
-      "bytes": 7138
+      "sha256": "b3419a92bb941e0a740bece16f647e1399a9ee7c245d7eadcea9d820e1329cc8",
+      "bytes": 7140
     },
     {
       "path": "data-science/ensembles_and_robust_methods/.folder-nature",
@@ -1157,13 +1162,13 @@
     },
     {
       "path": "data-science/ensembles_and_robust_methods/bagging_variance_reduction.md",
-      "sha256": "d406b88ab2195c6eda07a20beb9b0d3ca14a64de7b17ef6eceb9af139e20766c",
-      "bytes": 1481
+      "sha256": "98d2a83d9b5d36d3e0762596dcecd50f58a36fcff554d910fd600e4acd4849df",
+      "bytes": 2092
     },
     {
       "path": "data-science/ensembles_and_robust_methods/bagging_variance_reduction.py",
-      "sha256": "1520987d1b9f5a9db4c74ac05f1d8485d74aa0e3efbb8d4f053cc1ffd5531798",
-      "bytes": 8430
+      "sha256": "c51f3c25bcf4ede08efdcbe5ec8db3c59e8d5ba3e9665332ce832ac10b1040c7",
+      "bytes": 8418
     },
     {
       "path": "data-science/ensembles_and_robust_methods/gradient_boosting_stumps.md",
@@ -1172,8 +1177,8 @@
     },
     {
       "path": "data-science/ensembles_and_robust_methods/gradient_boosting_stumps.py",
-      "sha256": "c251f4442e761750b8f0f460d382125ab408c81e64b32af2c80d69b1c64db69a",
-      "bytes": 10274
+      "sha256": "835631e344ced13db10bf8134fd67470bdb43c2ca039375a4c658c4e3e572450",
+      "bytes": 11559
     },
     {
       "path": "data-science/ensembles_and_robust_methods/huber_robust_regression.md",
@@ -1482,13 +1487,13 @@
     },
     {
       "path": "data-science/geospatial_and_spatial/geohash_encode_decode.md",
-      "sha256": "3bbbd35ae1bab2e2d8a44b9eb480350a1c4e51d30499cffec412af0ea7498968",
-      "bytes": 913
+      "sha256": "ef0724aa93efcd5cd3a7e01033a8320f8465d7a36ad5426c79632ad9fbd26351",
+      "bytes": 1222
     },
     {
       "path": "data-science/geospatial_and_spatial/geohash_encode_decode.py",
-      "sha256": "93a49646f863e523a778031c4e547044fa47f1dc96cffd0249a34231182c93a0",
-      "bytes": 7809
+      "sha256": "ca301d983f79fd29b4daa5602282aa59a9d4648bce63d403a47362a96fbffc34",
+      "bytes": 8381
     },
     {
       "path": "data-science/geospatial_and_spatial/great_circle_waypoints.md",
@@ -1567,12 +1572,12 @@
     },
     {
       "path": "data-science/information_theory_and_probability/bayes_diagnostic_test.md",
-      "sha256": "215493e42ae0640d10de689510675bc03b457c339e2b938b04be3c0af24651dc",
-      "bytes": 1745
+      "sha256": "c3f7fe00d1e6babbc1eaf4d646bb7fd6370602c410994fbcbedd097fc15c9386",
+      "bytes": 2297
     },
     {
       "path": "data-science/information_theory_and_probability/bayes_diagnostic_test.py",
-      "sha256": "28dcf4d6d24a2adfdd3b3257775e1a4c4db7335ced9d765c8fd2c1d55ee4bf0b",
+      "sha256": "7826e6285d111668d3b77bf0427f57c501e865c02840a25c385edee9d611dd17",
       "bytes": 9874
     },
     {
@@ -1622,8 +1627,8 @@
     },
     {
       "path": "data-science/information_theory_and_probability/inverse_transform_sampling.py",
-      "sha256": "78497fcbec2ca11ed0a10a6ebfba96ad095cd7c6cea07f5c2406387e0d24dd99",
-      "bytes": 9704
+      "sha256": "627253a40d15eccf6991658cd9c7a523ad10cb7715ca520eb37e79dd322ab4d0",
+      "bytes": 10286
     },
     {
       "path": "data-science/information_theory_and_probability/kl_divergence_cross_entropy.md",
@@ -1827,22 +1832,22 @@
     },
     {
       "path": "data-science/model_diagnostics/lift_gain_chart.md",
-      "sha256": "b38d3b96a381a522c497f05785653a431e63d42e022dbddd3980b6ba8ada2885",
-      "bytes": 1702
+      "sha256": "888f05305ec8122ae7fb0123a261ca8b056ae2b9ba990ae93662ad7c114c76da",
+      "bytes": 1979
     },
     {
       "path": "data-science/model_diagnostics/lift_gain_chart.py",
-      "sha256": "19f915bda615264aaf87634594d835d0e4ae536413a07e8dacb9e00c6b7f8f70",
-      "bytes": 8957
+      "sha256": "b53cedff98e12adabbba35b84079715cbad3fb856114981945c7547b10cbf218",
+      "bytes": 8945
     },
     {
       "path": "data-science/model_diagnostics/precision_recall_curve.md",
-      "sha256": "48a0cc5e3ff4b9bc93aa9d1488e0352baaf14bea4442377ddadefd64b4791486",
-      "bytes": 1554
+      "sha256": "45b3773055078426e5d719b9ef4cfafa72907a668c30e738e71a6129a985796d",
+      "bytes": 1884
     },
     {
       "path": "data-science/model_diagnostics/precision_recall_curve.py",
-      "sha256": "905e30055f094523fd36d4b57416761a0c2c6fd2094e1de9d6cf6f8a03ae964d",
+      "sha256": "24b3282d584f9b18a6882fb4ac7cccb599ed396caa6a14f47142bdef21872ad1",
       "bytes": 9643
     },
     {
@@ -1892,13 +1897,13 @@
     },
     {
       "path": "data-science/model_understanding_and_tuning/conformal_prediction_intervals.md",
-      "sha256": "db3dcd479d760c8535f712f303898c0ac7629e2eb604049d71c9839ef1e8e2ab",
-      "bytes": 756
+      "sha256": "2deb4b01028daae005638da016af0251208f4da57e07a9e1d80bcaf30e69ec5f",
+      "bytes": 1154
     },
     {
       "path": "data-science/model_understanding_and_tuning/conformal_prediction_intervals.py",
-      "sha256": "734ff0bf35348ea13bb224b0ee67f3c6b5146bcea066a261f43f0a88fae18d9c",
-      "bytes": 8134
+      "sha256": "99855002d4c38a421b1f821dae02fa9eaa6f2bbd48785a167799aefbdcbd86ea",
+      "bytes": 8122
     },
     {
       "path": "data-science/model_understanding_and_tuning/grid_vs_random_search.md",
@@ -1922,13 +1927,13 @@
     },
     {
       "path": "data-science/model_understanding_and_tuning/partial_dependence_data.md",
-      "sha256": "4d9c2c5f2a9a927e5acb7d1f5af0f4c0bd509da7ee22f94eb5f35dcb033a861a",
-      "bytes": 744
+      "sha256": "d3ebc2b182c7a3c59d122ae4b891d3bd57a6b5b67e5ff15db15e753f9405183e",
+      "bytes": 1131
     },
     {
       "path": "data-science/model_understanding_and_tuning/partial_dependence_data.py",
-      "sha256": "a1ddd154b0e67b3c6c469d2835b5b40523a96db0726fe87dff37d006e35929ca",
-      "bytes": 8350
+      "sha256": "540b82e798e471eae5dfb43adfe4e8abde73ff29ae8738a2be07e836959e6aa1",
+      "bytes": 8338
     },
     {
       "path": "data-science/model_understanding_and_tuning/permutation_feature_importance.md",
@@ -1972,12 +1977,12 @@
     },
     {
       "path": "data-science/model_understanding_and_tuning/threshold_tuning_cost.md",
-      "sha256": "cd6f50b1944c14b3025cdfdcdd839c66ef4fab9dbcf2160f6ee7b7e99328b323",
-      "bytes": 839
+      "sha256": "b88a314922b177ccff009ac3fdff87a599573ce06308d3789fdcce5d8fad53c8",
+      "bytes": 1234
     },
     {
       "path": "data-science/model_understanding_and_tuning/threshold_tuning_cost.py",
-      "sha256": "08b487c58e570853d80afbe79cad80b0b5b5fb6a16a2c7fbb758ca13393a5d28",
+      "sha256": "9c059c7a2a0dbd87a1325075032c77b6db04a184d045215b0a6897423c5e7e23",
       "bytes": 9145
     },
     {
@@ -2152,12 +2157,12 @@
     },
     {
       "path": "data-science/numerical_methods/richardson_extrapolation.md",
-      "sha256": "9f1021eff8003be9ce04d27fd4ba6fb8f52908d1d230feead8b76f59dccef1da",
-      "bytes": 728
+      "sha256": "446b15d3592e43a2671e59cc1af77a4aa5bf09625bd56465e9865f9ad5ca9a9a",
+      "bytes": 1309
     },
     {
       "path": "data-science/numerical_methods/richardson_extrapolation.py",
-      "sha256": "c8165b37c05b2837247edf8b8c1f3701d193e6da8cbcaaf73eb8c09b5d52be66",
+      "sha256": "61dc53df3d3bfcd68803d6e90ec7d039673c63bc9d1209ae88ecf133fa65ffb7",
       "bytes": 7317
     },
     {
@@ -2392,12 +2397,12 @@
     },
     {
       "path": "data-science/preprocessing_and_eda/winsorize_clip_outliers.md",
-      "sha256": "df69453874aa6edc80bd19f1cdf50782425f755cf47f0587635b0c31e9302a65",
-      "bytes": 934
+      "sha256": "9f7db4c315302d9d95f991c0167fa3fdc78227649e1eeaceec88cf587edd9a4e",
+      "bytes": 1341
     },
     {
       "path": "data-science/preprocessing_and_eda/winsorize_clip_outliers.py",
-      "sha256": "0dd8dbe9b04d9b10d80f5e40f53ff399c160b32748696f843fc144ff4db377a9",
+      "sha256": "25f2a41fa7d0fe85368aca00222f3b058948cec0b31abccd9615aa210c67ed77",
       "bytes": 8367
     },
     {
@@ -2597,8 +2602,8 @@
     },
     {
       "path": "data-science/probability_iii/quantile_mapping_bias_correction.py",
-      "sha256": "9196d121ee05f60ebc8295cc4e9fbe60e6c03a5aa68432fa22d12a8ad528f173",
-      "bytes": 5650
+      "sha256": "bc2ea46fb684ddffb489f17de942804fe52b27df8695d5d431b583b48f981f66",
+      "bytes": 6668
     },
     {
       "path": "data-science/probability_iii/stirling_approximation_error.md",
@@ -2657,13 +2662,13 @@
     },
     {
       "path": "data-science/rankings_and_information_retrieval/mean_reciprocal_rank.md",
-      "sha256": "95bbaa2c9377ae30c5ec46ba780ab06e6e6633af1e75d944ebd88e96408869ee",
-      "bytes": 1159
+      "sha256": "769465422675ed5f6d612138694190a4f3b3b843a2cfa47cc2278cc1cabc5183",
+      "bytes": 1539
     },
     {
       "path": "data-science/rankings_and_information_retrieval/mean_reciprocal_rank.py",
-      "sha256": "78c0822e226629412cc283c81304b47c466a463dcf6afa2444d6536d29b0804c",
-      "bytes": 7092
+      "sha256": "e30c80b995b8d4ac0f46ebda94e02ef8bf00c3635e9cdbf930c660c818d917a6",
+      "bytes": 7080
     },
     {
       "path": "data-science/rankings_and_information_retrieval/ndcg_evaluation.md",
@@ -2932,12 +2937,12 @@
     },
     {
       "path": "data-science/signal_processing_and_sequences/hampel_filter_outliers.md",
-      "sha256": "90bf3150a16c6357372ba788466e5aff9382226447e02160cfe15745b4a5ea69",
-      "bytes": 740
+      "sha256": "49c18448920941d85d968887f0fe8302e45e0de424219df9a6b3d2903737ea15",
+      "bytes": 1058
     },
     {
       "path": "data-science/signal_processing_and_sequences/hampel_filter_outliers.py",
-      "sha256": "c2fd790905651bd0410fd7bac6f4150a49a78cd605c750ffb582949e8e66c50a",
+      "sha256": "086c15ea00179b0d1e250e1da68b1886bbc8d2f4bd7cb03f4ccd756483829f0f",
       "bytes": 7531
     },
     {
@@ -2962,12 +2967,12 @@
     },
     {
       "path": "data-science/signal_processing_and_sequences/savitzky_golay_lite.md",
-      "sha256": "5efceaf3cb2b9f22259758a4dfcf05f80f1f29c4e541aa220190e5c1eb15a97b",
-      "bytes": 805
+      "sha256": "59c5cadc7bd53776c2093e901ebe487cb99618a0db5b2922b6b2eb8e4d3c3c19",
+      "bytes": 1112
     },
     {
       "path": "data-science/signal_processing_and_sequences/savitzky_golay_lite.py",
-      "sha256": "5c6974a1535004e65ab272ce99420488e1e1153af53500225f7ce04b67f30988",
+      "sha256": "baee2d943b7e96c5e897cac4ee9cfac611277a47208400c8b671e44783c1f42d",
       "bytes": 10491
     },
     {
@@ -3157,8 +3162,8 @@
     },
     {
       "path": "data-science/statistical_modeling/power_analysis_sample_size.py",
-      "sha256": "aa1f8e640e2d017b6989358e564cdfd970a137daa193fd65cecc08501e1256c7",
-      "bytes": 8633
+      "sha256": "056016a17add849643106c77d4172f0702e81482d8a9907f6b8ca9e041cc3b56",
+      "bytes": 8963
     },
     {
       "path": "data-science/statistical_modeling/quantile_regression_pinball.md",
@@ -3187,12 +3192,12 @@
     },
     {
       "path": "data-science/statistics_and_testing/benjamini_hochberg.md",
-      "sha256": "e726e9ba7f933f22512f71c5c48cedc8f90e81338eebc60bea8c97e11e79bf2c",
-      "bytes": 1787
+      "sha256": "69ec5d01856314e68af4bb3a1d5a8b3d2ea3ab0b5307ad51f88ac95a229bb44d",
+      "bytes": 2347
     },
     {
       "path": "data-science/statistics_and_testing/benjamini_hochberg.py",
-      "sha256": "42a83d81b9e5e3d1bfb9864fc96acb0d80af9795d768cc2d13b310f69d6dc5ae",
+      "sha256": "60893556ec83858917c28966502a195715f859286f7b090b06d857f2e83de34b",
       "bytes": 9201
     },
     {
@@ -3217,12 +3222,12 @@
     },
     {
       "path": "data-science/statistics_and_testing/confusion_matrix_metrics.md",
-      "sha256": "865595af775dcd1a19bbf7cccc14ad744f75e5694889c649950b27f560364537",
-      "bytes": 1919
+      "sha256": "c7d5843ee8ae3e99416057c7ee5e3669d744ebbc205ac5d4ba6b20afc22f0abc",
+      "bytes": 2287
     },
     {
       "path": "data-science/statistics_and_testing/confusion_matrix_metrics.py",
-      "sha256": "490c2fab951cd8f4ff5c1207d7f51378b8f4ef54be6b969078ff964dfb6dda24",
+      "sha256": "e57a00493e6e7087c07907e6e4449364df27e9225b3346894a7ae47d63ffde0d",
       "bytes": 8536
     },
     {
@@ -3257,13 +3262,13 @@
     },
     {
       "path": "data-science/statistics_and_testing/train_test_split_kfold.md",
-      "sha256": "b59e9f2c82cf59d319d56eba63c15e731695a418ef34fe4d3175f126cd1d364f",
-      "bytes": 1972
+      "sha256": "e424ccde30ca019a0ae95b0223b28983ba8382eddf419d2f66949a493cedb4eb",
+      "bytes": 2378
     },
     {
       "path": "data-science/statistics_and_testing/train_test_split_kfold.py",
-      "sha256": "6e25e39f1862163e7b9c9fe9de4a53e5952b39abad4559f0ee4947c73b298572",
-      "bytes": 8946
+      "sha256": "e971617f581e8a19bc40bce27eb94534fe4532a6122d791ba87862548f876111",
+      "bytes": 8934
     },
     {
       "path": "data-science/streaming_and_sketches/.folder-nature",
@@ -3322,13 +3327,13 @@
     },
     {
       "path": "data-science/streaming_and_sketches/sliding_window_extrema.md",
-      "sha256": "3e5e76df36088b186c42b167c8dc0aff1e809a221fe590924b2b4d73ecea9f91",
-      "bytes": 1807
+      "sha256": "674ce481de6e7b7a01ad55172882ee5ea3817a362d486a8c0fed7e300aa2ea3c",
+      "bytes": 2172
     },
     {
       "path": "data-science/streaming_and_sketches/sliding_window_extrema.py",
-      "sha256": "824f83abc26be66bcef97d601bc70cc630e4b5cd102a82e19ed7e1ae2a3a280e",
-      "bytes": 9058
+      "sha256": "7388814d22410cee5913c597b7d347079703bfdf30f436298976d76c27019d0a",
+      "bytes": 9046
     },
     {
       "path": "data-science/streaming_and_sketches/space_saving_heavy_hitters.md",
@@ -3417,13 +3422,13 @@
     },
     {
       "path": "data-science/streaming_iii/exponential_histogram_count.md",
-      "sha256": "9987edac896b6988a30426f68e52e7cecf564de37c2f687830d3586aefd1aa6b",
-      "bytes": 749
+      "sha256": "3ca820243b8bafa177da7e4924546b5acdebc3a33bae5b231ee639f59a6e6868",
+      "bytes": 1397
     },
     {
       "path": "data-science/streaming_iii/exponential_histogram_count.py",
-      "sha256": "4d0178ecdb2d1eaca586fb7638069a3acdda686ba74ec744932b5d7de91ca42b",
-      "bytes": 8360
+      "sha256": "7674761c10208620b384c1e36a237699fa2a0d6e45f1264e635bd7e6f1b31d19",
+      "bytes": 8348
     },
     {
       "path": "data-science/streaming_iii/frugal_streaming_median.md",
@@ -3537,12 +3542,12 @@
     },
     {
       "path": "data-science/streaming_iii/tdigest_lite.md",
-      "sha256": "1bcc8abcdd42330ea6e9b9efd111e406136dd031937169b0b33040b7047b5067",
-      "bytes": 843
+      "sha256": "34ccea67a4242a33059787e71409b7cfc2813e7b8515413d7d69ae3a6bb1237e",
+      "bytes": 1403
     },
     {
       "path": "data-science/streaming_iii/tdigest_lite.py",
-      "sha256": "323596de8bc4fffa1b8cac299908f096418ce45030cc428e09b711bf6368ee53",
+      "sha256": "51ad2ce260e454efd1bb1a32ebc8eda7701d6fe933fb3b94b2ad9e750aedda7d",
       "bytes": 8117
     },
     {
@@ -3602,13 +3607,13 @@
     },
     {
       "path": "data-science/survival_and_reliability/competing_risks_naive_bias.md",
-      "sha256": "1f7dd387eab7dc3ebe298fe6d868080660ce9e164851d94eeabb08e51b469df8",
-      "bytes": 1918
+      "sha256": "8d44c77c5e4584fdf9224d4c0249e1c46f78273a4ea4caf4d609d581ac7f2918",
+      "bytes": 2623
     },
     {
       "path": "data-science/survival_and_reliability/competing_risks_naive_bias.py",
-      "sha256": "5c1c953e136ef60fc1db262357f4d749c1af8e4a88846a902f7e747d6e208772",
-      "bytes": 8548
+      "sha256": "67211a3cdcafe3534dffa2ecad541bd068f4395ca9ea7e7066fd8b6800c77941",
+      "bytes": 8536
     },
     {
       "path": "data-science/survival_and_reliability/cox_partial_likelihood_lite.md",
@@ -3877,13 +3882,13 @@
     },
     {
       "path": "data-science/time_series/autocorrelation_function.md",
-      "sha256": "854c2a41504eb99b4c1675d4005307c3550de14bcc9ee1a53f8ac2a58a7cf88b",
-      "bytes": 887
+      "sha256": "b89c452c2847e3e5d4fd831c2c74627f627640e2fe90fef5e170ff479f176588",
+      "bytes": 1175
     },
     {
       "path": "data-science/time_series/autocorrelation_function.py",
-      "sha256": "56563b7422ee30ad526579141738f4bf1343617c435c693fc12ee38f56f58958",
-      "bytes": 7631
+      "sha256": "5016037a8931be041d962ae86a0b39928be6e054a2426dae2f4cd99c7b236713",
+      "bytes": 7619
     },
     {
       "path": "data-science/time_series/autoregressive_model.md",
@@ -3897,12 +3902,12 @@
     },
     {
       "path": "data-science/time_series/cusum_changepoint.md",
-      "sha256": "89167a8e1570c157a3e1387e8359e6d0f782a4485c5ef61e094e0f2ce96b674d",
-      "bytes": 765
+      "sha256": "68ccfc05a51294e17307a36583b461dd338e362930af9043aa5897ad1dcc0952",
+      "bytes": 1054
     },
     {
       "path": "data-science/time_series/cusum_changepoint.py",
-      "sha256": "535129b26425507755357af34b7647283c82ce95eed325f841d058ca24a5c133",
+      "sha256": "8cb3e5810bc53df4222d5e5a01cadfc45aba9635fc0ed315c7b6648ba5c101bc",
       "bytes": 7305
     },
     {
@@ -3917,22 +3922,22 @@
     },
     {
       "path": "data-science/time_series/exponential_smoothing.md",
-      "sha256": "e1e24f60a3cda75b8d14e81072cb4c331c3b0ba9b659b43fce09d32084140c1f",
-      "bytes": 875
+      "sha256": "c79b071888d93b2d674209c0d31905e0ceafe81a1f0f275efec0ca5b9772f726",
+      "bytes": 1186
     },
     {
       "path": "data-science/time_series/exponential_smoothing.py",
-      "sha256": "088465670f914d451eb93ad646b4fa50270835f48ecf3a97b593005a2b9ed398",
-      "bytes": 8142
+      "sha256": "4b7b61ec65a1ff0bee3715da993a8de57ad4f6bc03a3b0b72a707404bcd6afc1",
+      "bytes": 8130
     },
     {
       "path": "data-science/time_series/kalman_filter_1d.md",
-      "sha256": "70b47069f3c19499be1c5613bd2b3ba07df334f3f9520bad8234a36c3a2ee0fa",
-      "bytes": 936
+      "sha256": "ba2704be582ce9e391c90785b29593e258901014d70bdaace380f1311647389e",
+      "bytes": 1334
     },
     {
       "path": "data-science/time_series/kalman_filter_1d.py",
-      "sha256": "e41ada3acbc328f3344ba392d1608a5089e4639ace05ce4af285bb613e995dc2",
+      "sha256": "a9aa820543b0c4a1415667b84589027431baca5455fc5a187e2a245ff9d265bb",
       "bytes": 9062
     },
     {
@@ -3947,12 +3952,12 @@
     },
     {
       "path": "data-science/time_series/rolling_zscore_anomaly.md",
-      "sha256": "72f4e0c568d88e367272069d478a624bce78e939188a17257c5431fcee3636de",
-      "bytes": 784
+      "sha256": "2e8ccae07c87e513c3fb0af82aa360f6185b621b950dd7818e245392bcd86058",
+      "bytes": 1108
     },
     {
       "path": "data-science/time_series/rolling_zscore_anomaly.py",
-      "sha256": "87a51e254ab0cf728ce4073bd3f19b5ac9034936dee1faad979b82571892bc71",
+      "sha256": "123e2c6f936121e5a7a830dda0a8f7e8c13934a918ebb9a5a1a09dc9928691ec",
       "bytes": 7639
     },
     {
@@ -3967,13 +3972,13 @@
     },
     {
       "path": "data-science/time_series/walk_forward_validation.md",
-      "sha256": "2910fabfd3014cda7754f774fa7b6ecae8b9d19f4f94edaff481d0c213ca561d",
-      "bytes": 1050
+      "sha256": "751a2d3ba7bdce92ff4e6087d42f3d26fc50925f5955472f5afea0511b16698e",
+      "bytes": 1374
     },
     {
       "path": "data-science/time_series/walk_forward_validation.py",
-      "sha256": "2a501a3e2945704b61a1d17e8c557b7da93644d5afa84800bdbbc4619b00da5c",
-      "bytes": 8717
+      "sha256": "2fcad798f668e93632f7dcf178a40170b906fb8f55bbec03326d9279d1edc315",
+      "bytes": 8705
     },
     {
       "path": "programming/.folder-mark.yaml",
@@ -4007,8 +4012,8 @@
     },
     {
       "path": "programming/architecture/event_bus.py",
-      "sha256": "3ebb51aa7d360206b9ddb3f091ad205f878d8b483aeb5f25de1e9bfc1c360e96",
-      "bytes": 12057
+      "sha256": "5f75f137f17e56f078c488cbd02643901460eca248263f361465416275bb7124",
+      "bytes": 12311
     },
     {
       "path": "programming/architecture/event_sourcing_store.md",
@@ -4047,8 +4052,8 @@
     },
     {
       "path": "programming/architecture/saga_coordinator.py",
-      "sha256": "a931ee90bb2ffcd7cb540a834fbda499aa71a4da5c5b28dfac9325ee1b32f600",
-      "bytes": 13954
+      "sha256": "ad551f327d7f37277c5fcc70d8bcfc4666f36958c8cabccb133b774480d83aa8",
+      "bytes": 14208
     },
     {
       "path": "programming/architecture/state_machine.md",
@@ -4072,8 +4077,8 @@
     },
     {
       "path": "programming/async/async_task_queue.py",
-      "sha256": "f125830c12d89aa3b781fcce8d62e097ce8ee9a19ee61374bafc9e245458252b",
-      "bytes": 18421
+      "sha256": "093d070922cb0bb0e5f306b0823c31742e9b763e1aca83bd2fb5fe5b0aa702ff",
+      "bytes": 18675
     },
     {
       "path": "programming/async/cancellable_task_group.md",
@@ -4142,8 +4147,8 @@
     },
     {
       "path": "programming/data_structures/bloom_filter.md",
-      "sha256": "6b7f5365ca98fb2f190fcf04c052e3efd8471468974fdc477d0df55a4b0c8832",
-      "bytes": 1754
+      "sha256": "2494846f87e9ed4184bcdd525821bc4bb297d150d4c16976f0e7d0e6638bc61a",
+      "bytes": 1796
     },
     {
       "path": "programming/data_structures/bloom_filter.py",
@@ -4182,8 +4187,8 @@
     },
     {
       "path": "programming/data_structures/merkle_tree.md",
-      "sha256": "ea1b8f873bb4f9329b686fcb4a31ad95563414316b2bfb3ec8cfdd7b9dce1aab",
-      "bytes": 1390
+      "sha256": "9b754cc8c794f364de942a29c21ee2f412daa642e12b2240641b134c00a02ff0",
+      "bytes": 1447
     },
     {
       "path": "programming/data_structures/merkle_tree.py",
@@ -4252,8 +4257,8 @@
     },
     {
       "path": "programming/data_structures/skip_list.md",
-      "sha256": "65e4a895569d960cb31c14ac33791b008fac929b5b97f4b3157e35d34c460d90",
-      "bytes": 1784
+      "sha256": "04db0e8ce0f8d9c1627d0b17581b0117293fe71c7665ab932bac1819840c4112",
+      "bytes": 1754
     },
     {
       "path": "programming/data_structures/skip_list.py",
@@ -4307,8 +4312,8 @@
     },
     {
       "path": "programming/distributed/consistent_hash_ring.md",
-      "sha256": "33d15d9bd61501b02f2016507eeee6a09bdab720e0291ff3b684eb19d9d5731d",
-      "bytes": 1740
+      "sha256": "6f51c2c8c17e42cd910ba389cf7cc527985792fe27e6af2469a7fe2e1bd67dea",
+      "bytes": 1430
     },
     {
       "path": "programming/distributed/consistent_hash_ring.py",
@@ -4627,8 +4632,8 @@
     },
     {
       "path": "programming/networking/connection_pool_health_checks.py",
-      "sha256": "8200ffe50e602a185d78eb73e3bf60135440feaa8f63e0f9aca0b8ce5fb0f8ad",
-      "bytes": 18627
+      "sha256": "1e3046f3dbf5e05d0afc778b8b72809b7be50d5269634129ffbe0e9c3d949b8a",
+      "bytes": 18881
     },
     {
       "path": "programming/networking/dns_cache.md",
@@ -4647,8 +4652,8 @@
     },
     {
       "path": "programming/networking/http_retry_client.py",
-      "sha256": "68c4efd0ba1f47f274bc374d9f83abaf09a7eb5daa8043ea972fb0b5afcc56c6",
-      "bytes": 20273
+      "sha256": "ad7f9a3370d09ba8a3733633f01ecf49530a278d344f5b5295f98bdde63f0a63",
+      "bytes": 20527
     },
     {
       "path": "programming/networking/http_router.md",
@@ -4757,8 +4762,8 @@
     },
     {
       "path": "programming/performance/lru_cache.md",
-      "sha256": "259e8c9d9e1e1659180e65080048008e60ee72d386a7bb9c149fa63658a4e3f2",
-      "bytes": 1627
+      "sha256": "55e98bb684f020551bbbda751158d049244c30a41acdc263125a0425b544c0b1",
+      "bytes": 1721
     },
     {
       "path": "programming/performance/lru_cache.py",
@@ -4797,8 +4802,8 @@
     },
     {
       "path": "programming/performance/token_bucket.md",
-      "sha256": "e72c46c5a630b621636921654c73927688314d5dbabb4ca1eb6429c97f41d03c",
-      "bytes": 1900
+      "sha256": "7428dfad60bf36054c01b174e4e7d3be7729bec6d139571ead2ef974b248534a",
+      "bytes": 1753
     },
     {
       "path": "programming/performance/token_bucket.py",
@@ -4977,8 +4982,8 @@
     },
     {
       "path": "programming/resilience/dead_letter_queue.py",
-      "sha256": "a558859e1a39302b10097a0292f0c16c993e3590df8ff66bf0cfa771420037db",
-      "bytes": 17716
+      "sha256": "8e9b3c0fe99eaadce48efe30c7f4bec4cf2ce7d8f8e5c60a6b93a5cb92751379",
+      "bytes": 17970
     },
     {
       "path": "programming/resilience/timeout_guard.md",
