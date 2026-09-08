@@ -15,8 +15,41 @@ import random
 import math
 from typing import List, Tuple
 
+
+class AuraInputError(ValueError):
+    """All input-contract violations, reported together (accumulate-then-raise)."""
+    def __init__(self, violations):
+        self.violations = violations
+        super().__init__("input contract violated:\n  " + "\n  ".join(violations))
+
+
+def _aura_validate_gini_split(y):
+    v = []
+    if hasattr(y, '__iter__'):
+        for i, val in enumerate(y):
+            if isinstance(val, (int, float)) and not math.isfinite(val):
+                v.append(f"AURA-E008: y[{i}] must be finite, got {val}")
+    if v:
+        raise AuraInputError(v)
+
+
+def _aura_validate_gradient_boost(y, n_rounds, learning_rate):
+    v = []
+    if isinstance(n_rounds, (int, float)) and n_rounds < 1:
+        v.append(f"AURA-E009: n_rounds must be >= 1, got {n_rounds}")
+    if isinstance(learning_rate, (int, float)) and learning_rate <= 0:
+        v.append(f"AURA-E009: learning_rate must be > 0, got {learning_rate}")
+    if hasattr(y, '__iter__'):
+        for i, val in enumerate(y):
+            if isinstance(val, (int, float)) and not math.isfinite(val):
+                v.append(f"AURA-E008: y[{i}] must be finite, got {val}")
+    if v:
+        raise AuraInputError(v)
+
+
 def gini_split(y: List[float]) -> Tuple[float, float]:
     """Find best threshold for a single feature (stumps only split once)."""
+    _aura_validate_gini_split(y)
     if len(y) < 2:
         return 0.0, float('inf')
 
@@ -101,6 +134,7 @@ def predict_stump(x: Tuple[float, float], feature: int, threshold: float,
 def gradient_boost(X: List[Tuple[float, float]], y: List[float], n_rounds: int = 10,
                    learning_rate: float = 0.1) -> Tuple[List[Tuple[int, float, float, float, float]], float]:
     """Fit gradient boosting ensemble. Each stump stored with its learning rate."""
+    _aura_validate_gradient_boost(y, n_rounds, learning_rate)
     stumps = []
     pred = [0.0] * len(y)
 
