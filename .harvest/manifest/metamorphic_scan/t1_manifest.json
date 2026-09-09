@@ -1,0 +1,74 @@
+[
+  {
+    "pid": "decision_tree_id3",
+    "tool": "metamorphic_scan",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/decision_tree_id3/metamorphic_scan.json",
+    "relations_passed": "5/5"
+  },
+  {
+    "pid": "kmeans_clustering",
+    "tool": "metamorphic_scan",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/kmeans_clustering/metamorphic_scan.json",
+    "relations_passed": "3/3"
+  },
+  {
+    "pid": "knn_classifier",
+    "tool": "metamorphic_scan",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/knn_classifier/metamorphic_scan.json",
+    "relations_passed": "4/4"
+  },
+  {
+    "pid": "linear_regression_gd",
+    "tool": "metamorphic_scan",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/linear_regression_gd/metamorphic_scan.json",
+    "relations_passed": "3/3"
+  },
+  {
+    "pid": "logistic_regression",
+    "tool": "metamorphic_scan",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/logistic_regression/metamorphic_scan.json",
+    "relations_passed": "4/4"
+  },
+  {
+    "pid": "naive_bayes_text",
+    "tool": "metamorphic_scan",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/naive_bayes_text/metamorphic_scan.json",
+    "relations_passed": "4/4"
+  },
+  {
+    "pid": "perceptron",
+    "tool": "metamorphic_scan",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/perceptron/metamorphic_scan.json",
+    "relations_passed": "4/4"
+  },
+  {
+    "pid": "polynomial_regression",
+    "tool": "metamorphic_scan",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/polynomial_regression/metamorphic_scan.json",
+    "relations_passed": "2/2"
+  },
+  {
+    "pid": "ridge_regression_normal_eq",
+    "tool": "metamorphic_scan",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/ridge_regression_normal_eq/metamorphic_scan.json",
+    "relations_passed": "2/2"
+  }
+]
