@@ -18,6 +18,16 @@ demo_logs/
 AUDIT-REPORT.md
 AUDIT-RESULTS.jsonl
 
+# harvest_gate deployment symlinks — the tools live at ~/ai-lab/pattern-scoring/validator/ (STAGING)
+# and are symlinked here to satisfy v10.1's LIB-hardcoded paths. Symlinks are machine-specific.
+/chaos_scan.py
+/chaos_report.json
+/invariant_mine.py
+/invariant_mine_report.json
+
+# harvest_gate rolling backups from local deploys
+harvest_gate.py.bak-*
+
 # observation-mode harvest results — per-run outputs, not part of the signed library
 .harvest/results/
 .harvest/contradictions/

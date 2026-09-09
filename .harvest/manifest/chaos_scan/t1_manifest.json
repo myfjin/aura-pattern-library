@@ -1,0 +1,20 @@
+[
+  {"pid": "atomic_write_temp_rename",   "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/atomic_write_temp_rename/chaos_scan.json"},
+  {"pid": "write_ahead_log",            "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/write_ahead_log/chaos_scan.json"},
+  {"pid": "checkpoint_resume",          "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/checkpoint_resume/chaos_scan.json"},
+  {"pid": "segmented_wal",              "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/segmented_wal/chaos_scan.json"},
+  {"pid": "journaled_write",            "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/journaled_write/chaos_scan.json"},
+  {"pid": "point_in_time_restore",      "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/point_in_time_restore/chaos_scan.json"},
+  {"pid": "idempotent_replication",     "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/idempotent_replication/chaos_scan.json"},
+  {"pid": "idempotent_once_guard",      "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/idempotent_once_guard/chaos_scan.json"},
+  {"pid": "transaction_rollback",       "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/transaction_rollback/chaos_scan.json"},
+  {"pid": "migration_with_rollback",    "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/migration_with_rollback/chaos_scan.json"},
+  {"pid": "wal_append_replay",          "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/wal_append_replay/chaos_scan.json"},
+  {"pid": "tamper_evident_log",         "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/tamper_evident_log/chaos_scan.json"},
+  {"pid": "content_addressed_store",    "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/content_addressed_store/chaos_scan.json"},
+  {"pid": "rotating_log_checksum",      "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/rotating_log_checksum/chaos_scan.json"},
+  {"pid": "signed_snapshot",            "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/signed_snapshot/chaos_scan.json"},
+  {"pid": "hmac_signed_url",            "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/hmac_signed_url/chaos_scan.json"},
+  {"pid": "seqlock_snapshot",           "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/seqlock_snapshot/chaos_scan.json"},
+  {"pid": "double_buffer",              "tool": "chaos_scan", "verdict": "PASS", "date_frozen": "2026-09-09", "class": "chaos-survival", "evidence_ref": ".harvest/results/2026-09-09/double_buffer/chaos_scan.json"}
+]

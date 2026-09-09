@@ -1,0 +1,12 @@
+{
+  "tool": "nan_domain_probe",
+  "date_created": "2026-09-09",
+  "last_extended": "2026-09-09",
+  "created_by": "Illia (freeze pass, audited via chaos_scan Round 6 two-seat loop + v10.1 live-run adjudication)",
+  "history": [
+    "2026-09-09 (initial): 15 entries frozen from 2026-09-08 22:08 clean-baseline run, all class=GUARDED. The 9 patterns with class=metamorphic-coverage were routed to metamorphic_scan manifest.",
+    "2026-09-09 (extension): +5 entries (decision_tree_id3, logistic_regression, naive_bayes_text, perceptron, ridge_regression_normal_eq) — patterns reclassed from metamorphic-coverage to GUARDED on 2026-09-09 as nan_domain_probe gained confidence to attack them itself. These also live in metamorphic_scan/t1_manifest.json; overlap is intentional — row 8 is per-tool and both tools' frozen exams remain independently held."
+  ],
+  "tool_hash_at_freeze": "69856a2eae1246150f7c3fc7ee8baca7 (nan_domain_probe.py)",
+  "harness_hash_at_freeze": "45dc184e29291a5afaf3a0c3f9fe7ae9 (harvest_gate v10.1)"
+}

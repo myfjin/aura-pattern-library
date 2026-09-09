@@ -1,0 +1,10 @@
+{
+  "tool": "chaos_scan",
+  "date_created": "2026-09-09",
+  "created_by": "Illia (freeze pass, drafted by Claude), audited via chaos_scan Round 6 two-seat loop + v9.1/v10.1 live-runs",
+  "population": "T1 ∩ CHAOS_TARGETS (18 patterns declared by chaos_scan.py)",
+  "coverage": "18 of 18 declared targets — all PASS via class=chaos-survival",
+  "tool_hash_at_freeze": "23f0676a038ea5c8d4ffc9b2c414c86c (chaos_scan.py)",
+  "harness_hash_at_freeze": "45dc184e29291a5afaf3a0c3f9fe7ae9 (harvest_gate v10.1)",
+  "notes": "Frozen from 2026-09-09 v10.1 live-run on .5. All 18 patterns declared by chaos_scan.py as chaos targets survived the tool's fault-injection cycle (chaos-survival class) with 0 FLAG, 0 INVALID, 0 CONTRADICTION. The tool ran under rustc 1.75.0 (installed 2026-09-09 to cover 8 of 18 Rust patterns that would otherwise SKIP as harness errors). Once this manifest lands, row 8 auto-flip is armed for chaos_scan across all 18 T1-chaos patterns."
+}

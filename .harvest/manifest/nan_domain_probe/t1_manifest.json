@@ -1,0 +1,152 @@
+[
+  {
+    "pid": "apriori_frequent_itemsets",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/apriori_frequent_itemsets/nan_domain_probe.json"
+  },
+  {
+    "pid": "broker_term_extraction",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/broker_term_extraction/nan_domain_probe.json"
+  },
+  {
+    "pid": "csv_validator",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/csv_validator/nan_domain_probe.json"
+  },
+  {
+    "pid": "dedup_pipeline",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/dedup_pipeline/nan_domain_probe.json"
+  },
+  {
+    "pid": "geohash_encode_decode",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/geohash_encode_decode/nan_domain_probe.json"
+  },
+  {
+    "pid": "gradient_boosting_stumps",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/gradient_boosting_stumps/nan_domain_probe.json"
+  },
+  {
+    "pid": "label_propagation_communities",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/label_propagation_communities/nan_domain_probe.json"
+  },
+  {
+    "pid": "melt_unpivot",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/melt_unpivot/nan_domain_probe.json"
+  },
+  {
+    "pid": "migration_with_rollback",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/migration_with_rollback/nan_domain_probe.json"
+  },
+  {
+    "pid": "model_persistence_roundtrip",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/model_persistence_roundtrip/nan_domain_probe.json"
+  },
+  {
+    "pid": "pagerank_power_iteration",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/pagerank_power_iteration/nan_domain_probe.json"
+  },
+  {
+    "pid": "quantile_mapping_bias_correction",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/quantile_mapping_bias_correction/nan_domain_probe.json"
+  },
+  {
+    "pid": "query_expansion_prf",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/query_expansion_prf/nan_domain_probe.json"
+  },
+  {
+    "pid": "queue_capacity_planner",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/queue_capacity_planner/nan_domain_probe.json"
+  },
+  {
+    "pid": "spectral_clustering_lite",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-08/spectral_clustering_lite/nan_domain_probe.json"
+  },
+  {
+    "pid": "decision_tree_id3",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-09/decision_tree_id3/nan_domain_probe.json",
+    "class_when_frozen": "GUARDED",
+    "note": "reclassed from metamorphic-coverage to GUARDED on 2026-09-09 (nan tool improvement)"
+  },
+  {
+    "pid": "logistic_regression",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-09/logistic_regression/nan_domain_probe.json",
+    "class_when_frozen": "GUARDED",
+    "note": "reclassed from metamorphic-coverage to GUARDED on 2026-09-09 (nan tool improvement)"
+  },
+  {
+    "pid": "naive_bayes_text",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-09/naive_bayes_text/nan_domain_probe.json",
+    "class_when_frozen": "GUARDED",
+    "note": "reclassed from metamorphic-coverage to GUARDED on 2026-09-09 (nan tool improvement)"
+  },
+  {
+    "pid": "perceptron",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-09/perceptron/nan_domain_probe.json",
+    "class_when_frozen": "GUARDED",
+    "note": "reclassed from metamorphic-coverage to GUARDED on 2026-09-09 (nan tool improvement)"
+  },
+  {
+    "pid": "ridge_regression_normal_eq",
+    "tool": "nan_domain_probe",
+    "verdict": "PASS",
+    "date_frozen": "2026-09-09",
+    "evidence_ref": ".harvest/results/2026-09-09/ridge_regression_normal_eq/nan_domain_probe.json",
+    "class_when_frozen": "GUARDED",
+    "note": "reclassed from metamorphic-coverage to GUARDED on 2026-09-09 (nan tool improvement)"
+  }
+]
