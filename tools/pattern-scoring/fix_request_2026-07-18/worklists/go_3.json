@@ -1,0 +1,72 @@
+[
+ {
+  "file": "go/system-administration/sysadmin/checkpoint_resume.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/circuit_breaker.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/clock_skew_detect.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/command_allowlist.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/config_diff.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/config_drift_detect.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/config_versioning.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/corruption_repair.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/deadline_ttl.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/deadlock_timeout.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/deplock_verify.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/deploy_idempotency.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/deps_verify.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/dir_tree_diff.go",
+  "kind": "missing",
+  "current": null
+ }
+]

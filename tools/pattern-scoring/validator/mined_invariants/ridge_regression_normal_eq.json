@@ -1,0 +1,93 @@
+{
+  "pattern": "ridge_regression_normal_eq",
+  "oracle": "python/data-science/core_ml/ridge_regression_normal_eq.py",
+  "n_samples": 100,
+  "ratified": false,
+  "note": "MINED CANDIDATE \u2014 a human sets ratified=true after review; unratified = zero verdict weight",
+  "invariants": {
+    "r2": {
+      "observed": [
+        0.99535,
+        0.9992
+      ],
+      "mean": 0.99785,
+      "sd": 0.00074,
+      "contract": [
+        0.9749,
+        1.0208
+      ],
+      "sign": "positive",
+      "kind": "scalar"
+    },
+    "weight_0": {
+      "observed": [
+        1.9041,
+        2.11104
+      ],
+      "mean": 1.99949,
+      "sd": 0.0354,
+      "contract": [
+        1.8379,
+        2.1611
+      ],
+      "sign": "positive",
+      "kind": "scalar"
+    },
+    "weight_1": {
+      "observed": [
+        2.90466,
+        3.06997
+      ],
+      "mean": 2.99705,
+      "sd": 0.03193,
+      "contract": [
+        2.8493,
+        3.1448
+      ],
+      "sign": "positive",
+      "kind": "scalar"
+    },
+    "weight_2": {
+      "observed": [
+        -1.0783,
+        -0.90849
+      ],
+      "mean": -1.00015,
+      "sd": 0.03174,
+      "contract": [
+        -1.1471,
+        -0.8532
+      ],
+      "sign": "negative",
+      "kind": "scalar"
+    },
+    "ratio_w0_w1": {
+      "observed": [
+        0.62592,
+        0.72585
+      ],
+      "mean": 0.66724,
+      "sd": 0.01449,
+      "contract": [
+        0.5893,
+        0.7452
+      ],
+      "sign": "positive",
+      "kind": "relational"
+    },
+    "ratio_w1_w2": {
+      "observed": [
+        -3.32097,
+        -2.76729
+      ],
+      "mean": -2.99963,
+      "sd": 0.10047,
+      "contract": [
+        -3.4215,
+        -2.5777
+      ],
+      "sign": "negative",
+      "kind": "relational"
+    }
+  }
+}

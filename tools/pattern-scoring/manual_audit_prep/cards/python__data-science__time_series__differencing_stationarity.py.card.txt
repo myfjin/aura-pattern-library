@@ -1,0 +1,24 @@
+PATTERN: python/data-science/time_series/differencing_stationarity.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: Differencing for Stationarity
+
+First differencing transforms a non-stationary series (e.g., random walk)
+into a stationary one.
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "differencing_stationarity.py PASS",
+  "stderr": "",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

@@ -1,0 +1,77 @@
+[
+ {
+  "file": "cpp/data-science/optimization_distances/gradient_descent_momentum.cpp",
+  "kind": "short",
+  "current": "Gradient Descent with Momentum"
+ },
+ {
+  "file": "cpp/data-science/optimization_distances/hill_climbing_restarts.cpp",
+  "kind": "short",
+  "current": "Hill Climbing with Random Restarts"
+ },
+ {
+  "file": "cpp/data-science/preprocessing_eda/data_profiling_summary.cpp",
+  "kind": "short",
+  "current": "Data Profiling Summary Pattern."
+ },
+ {
+  "file": "cpp/data-science/preprocessing_eda/histogram_builder.cpp",
+  "kind": "short",
+  "current": "Histogram Builder Pattern."
+ },
+ {
+  "file": "cpp/data-science/preprocessing_eda/one_hot_encoding.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/preprocessing_eda/quantile_binning.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/preprocessing_eda/three_way_stratified_split.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/probability_iii/extreme_value_block_maxima.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/probability_iii/quantile_mapping_bias_correction.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/probability_iii/stirling_approximation_error.cpp",
+  "kind": "short",
+  "current": "Stirling's approximation for log(n!)."
+ },
+ {
+  "file": "cpp/data-science/rankings_information_retrieval/pairwise_ranking_learn.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/rankings_information_retrieval/position_bias_click_model.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/rankings_information_retrieval/query_expansion_prf.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/recommenders_graph_sampling/pagerank_power_iteration.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/recommenders_graph_sampling/thompson_sampling_bandit.cpp",
+  "kind": "missing",
+  "current": null
+ }
+]

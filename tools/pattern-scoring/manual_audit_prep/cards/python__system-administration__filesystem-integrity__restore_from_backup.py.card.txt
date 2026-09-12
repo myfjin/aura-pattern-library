@@ -1,0 +1,21 @@
+PATTERN: python/system-administration/filesystem-integrity/restore_from_backup.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: restore_from_backup: restore a file from backup after corruption/deletion.
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "restore_from_backup: original=4113, restored=4113, corrupted=2058\nrestore_from_backup PASS",
+  "stderr": "",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

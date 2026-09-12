@@ -1,0 +1,14 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "backup_dedup: detect and skip duplicate content in backups.",
+  "evidence": {
+    "built": true,
+    "ran": true,
+    "exit": 0,
+    "pass_marker": true,
+    "stdout": "backup_dedup PASS"
+  },
+  "file": "system-administration/sysadmin/backup_dedup.go",
+  "sha": "9c7f2901044a"
+}

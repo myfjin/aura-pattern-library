@@ -1,0 +1,24 @@
+PATTERN: python/programming/data_structures/avl_tree.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: AVL Tree Implementation
+
+A self-balancing binary search tree where the heights of the two child subtrees 
+of any node differ by at most one.
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "avl_tree: 50 sequential inserts height 6 (<=8) balanced, deletes rebalanced, 600-op set oracle agreed \u2014 PASS",
+  "stderr": "",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

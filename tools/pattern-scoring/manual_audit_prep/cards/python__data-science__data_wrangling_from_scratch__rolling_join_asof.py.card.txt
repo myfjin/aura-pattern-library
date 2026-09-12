@@ -1,0 +1,21 @@
+PATTERN: python/data-science/data_wrangling_from_scratch/rolling_join_asof.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: As-Of Join (Rolling Join).
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "Trades: 3 | Quotes: 3 | Joined: 3 | Matches: [(100, 49), (150, 50), (200, 51)] | PASS",
+  "stderr": "",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

@@ -1,0 +1,67 @@
+[
+ {
+  "file": "cpp/data-science/streaming_sketches/space_saving_heavy_hitters.cpp",
+  "kind": "short",
+  "current": "Space-Saving top-k heavy hitters."
+ },
+ {
+  "file": "cpp/data-science/streaming_sketches/streaming_histogram_merge.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/streaming_sketches/streaming_kmeans.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/survival_reliability/exponential_reliability_mtbf.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/survival_reliability/weibull_mle.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/text_nlp/tfidf_vectorizer.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/text_nlp/viterbi_hmm.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/text_nlp_ii/porter_stemmer_lite.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/text_nlp_ii/soundex_phonetic.cpp",
+  "kind": "short",
+  "current": "Soundex phonetic encoding."
+ },
+ {
+  "file": "cpp/data-science/text_nlp_ii/textrank_lite.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/text_nlp_ii/tf_idf_bm25_comparison.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/time_series/rolling_zscore_anomaly.cpp",
+  "kind": "short",
+  "current": "Rolling Z-Score Anomaly Detection."
+ },
+ {
+  "file": "cpp/data-science/time_series/walk_forward_validation.cpp",
+  "kind": "missing",
+  "current": null
+ }
+]

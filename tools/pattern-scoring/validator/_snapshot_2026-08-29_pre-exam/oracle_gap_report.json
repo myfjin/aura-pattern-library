@@ -1,0 +1,6306 @@
+{
+ "by_bucket": {
+  "NUMERIC": 415,
+  "SELF_REF": 400,
+  "INVARIANT": 167,
+  "OPAQUE": 228,
+  "ROUNDTRIP": 49
+ },
+ "rows": [
+  {
+   "file": "cpp/data-science/applied_ds_practice/cohort_retention_analysis.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/applied_ds_practice/cross_validation_leakage.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/applied_ds_practice/drift_detection_psi.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/applied_ds_practice/ewma_streaming_metrics.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/applied_ds_practice/feature_hashing_trick.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/applied_ds_practice/funnel_conversion_analysis.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/applied_ds_practice/rfm_customer_segmentation.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/applied_ds_practice/simpsons_paradox_demo.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/applied_ds_practice/target_encoding_smoothing.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/applied_ds_practice/welford_online_stats.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_approximate_inference/abc_rejection_sampler.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_approximate_inference/elbo_monotone_vi.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_approximate_inference/hierarchical_shrinkage_2level.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_approximate_inference/laplace_approximation_posterior.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_approximate_inference/meanfield_vi_gaussian.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_approximate_inference/posterior_contraction_rate.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_approximate_inference/posterior_predictive_pvalue.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_approximate_inference/rhat_convergence_diagnostic.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_approximate_inference/sbc_rank_uniformity.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_modeling_selection/bayesian_changepoint_offline.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_modeling_selection/bayesian_linreg_conjugate.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_modeling_selection/beta_binomial_overdispersion.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_modeling_selection/bic_selects_true_degree.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_modeling_selection/crp_table_growth.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_modeling_selection/dirichlet_multinomial_posterior.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_modeling_selection/dirichlet_stick_breaking.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_modeling_selection/evidence_ranks_true_model.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_modeling_selection/gp_regression_marginal_likelihood.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_modeling_selection/kalman_rts_smoother.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_experimentation/ab_test_srm_check.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_experimentation/cuped_variance_reduction.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_experimentation/difference_in_differences.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_experimentation/instrumental_variable_lite.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_experimentation/interrupted_time_series.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_experimentation/placebo_test_causal.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_experimentation/propensity_score_matching.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_experimentation/regression_discontinuity.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_experimentation/sequential_probability_ratio.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_experimentation/synthetic_control_lite.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_ii/backdoor_vs_collider_adjustment.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_ii/caliper_matching.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_ii/doubly_robust_aipw.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_ii/e_value_sensitivity.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_ii/frontdoor_criterion_lite.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_ii/heterogeneous_effects_subgroups.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_ii/ipw_ate.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_ii/mediation_effects_decomposition.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_ii/negative_control_outcome.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/causal_inference_ii/stratification_subclassification.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/clustering_graph_anomaly/betweenness_centrality.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/clustering_graph_anomaly/classic_mds.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/clustering_graph_anomaly/dbscan_clustering.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/clustering_graph_anomaly/elbow_method_kmeans.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/clustering_graph_anomaly/hierarchical_agglomerative.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/clustering_graph_anomaly/isolation_tree_anomaly.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/clustering_graph_anomaly/label_propagation_communities.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/clustering_graph_anomaly/linear_discriminant_analysis.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/clustering_graph_anomaly/random_projection_jl.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/clustering_graph_anomaly/silhouette_score.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/composed_tools_bridge_born/broker_term_extraction.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/composed_tools_bridge_born/dedup_pipeline.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/composed_tools_bridge_born/dtw_shape_drift_monitor.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/composed_tools_bridge_born/kde_seeded_gmm.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/composed_tools_bridge_born/knn_kdtree_accelerated.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/composed_tools_bridge_born/latency_percentile_monitor.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/composed_tools_bridge_born/mutual_information_matrix.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/composed_tools_bridge_born/queue_capacity_planner.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/composed_tools_bridge_born/rare_event_option_pricing.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/composed_tools_bridge_born/walk_forward_early_stopping.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/core_ml/decision_tree_id3.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/core_ml/gaussian_mixture_em.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/core_ml/kmeans_clustering.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/core_ml/knn_classifier.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/core_ml/linear_regression_gd.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/core_ml/logistic_regression.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/core_ml/naive_bayes_text.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/core_ml/pca_power_iteration.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/core_ml/perceptron.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/core_ml/ridge_regression_normal_eq.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/data_wrangling_from_scratch/csv_type_inference.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/data_wrangling_from_scratch/dedupe_records_fuzzy.cpp",
+   "bucket": "OPAQUE",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/data_wrangling_from_scratch/group_by_aggregate.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/data_wrangling_from_scratch/hash_join_merge.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/data_wrangling_from_scratch/melt_unpivot.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/data_wrangling_from_scratch/pivot_table.cpp",
+   "bucket": "OPAQUE",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/data_wrangling_from_scratch/resample_timeseries_bins.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/data_wrangling_from_scratch/rolling_join_asof.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/data_wrangling_from_scratch/sort_multi_key.cpp",
+   "bucket": "OPAQUE",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/data_wrangling_from_scratch/window_functions.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/econometrics_finance/black_scholes_monte_carlo.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/econometrics_finance/bootstrap_portfolio_var.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/econometrics_finance/cointegration_engle_granger_lite.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/econometrics_finance/fixed_effects_within.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/econometrics_finance/garch_lite_volatility_clustering.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/econometrics_finance/instrumental_2sls.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/econometrics_finance/logit_marginal_effects.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/econometrics_finance/ols_robust_se_white.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/econometrics_finance/sharpe_sortino_ratios.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/econometrics_finance/value_averaging_vs_dca.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/ensembles_robust_methods/adaboost.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/ensembles_robust_methods/bagging_variance_reduction.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/ensembles_robust_methods/huber_robust_regression.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/ensembles_robust_methods/random_forest.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/ensembles_robust_methods/ransac_robust_regression.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/ensembles_robust_methods/spectral_clustering_lite.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/ensembles_robust_methods/theil_sen_estimator.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/ensembles_robust_methods/voting_classifier.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/experiments_ii/cluster_randomized_icc.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/experiments_ii/minimum_detectable_effect.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/experiments_ii/msprt_lite.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/experiments_ii/multi_armed_holm_correction.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/experiments_ii/network_interference_demo.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/experiments_ii/novelty_effect_decay.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/experiments_ii/peeking_alpha_inflation.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/experiments_ii/post_stratification_variance.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/experiments_ii/stratified_randomization.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/experiments_ii/switchback_experiment_lite.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/fairness_privacy_robustness/adversarial_perturbation_lite.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/fairness_privacy_robustness/covariate_shift_reweighting.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/fairness_privacy_robustness/demographic_parity_metrics.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/fairness_privacy_robustness/differential_privacy_laplace.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/fairness_privacy_robustness/equalized_odds_thresholds.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/fairness_privacy_robustness/group_calibration_audit.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/fairness_privacy_robustness/k_anonymity_generalization.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/fairness_privacy_robustness/label_noise_robust_loss.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/fairness_privacy_robustness/mnar_missingness_bias.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/fairness_privacy_robustness/randomized_response.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/geospatial_spatial/convex_hull_graham.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/geospatial_spatial/douglas_peucker.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/geospatial_spatial/geohash_encode_decode.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/geospatial_spatial/great_circle_waypoints.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/geospatial_spatial/grid_density_binning.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/geospatial_spatial/haversine_bearing.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/geospatial_spatial/point_in_polygon.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/geospatial_spatial/polygon_area_centroid.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/geospatial_spatial/quadtree_point_index.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/geospatial_spatial/spatial_radius_join.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/information_theory_probability/bayes_diagnostic_test.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/information_theory_probability/box_muller_gaussian.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/information_theory_probability/conjugate_priors.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/information_theory_probability/entropy_estimators.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/information_theory_probability/hmm_forward_backward.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/information_theory_probability/inverse_transform_sampling.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/information_theory_probability/kl_divergence_cross_entropy.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/information_theory_probability/lln_clt_demo.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/information_theory_probability/markov_chain_stationary.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/information_theory_probability/nonlinear_dependence_mi.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/linear_algebra/conjugate_gradient.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/linear_algebra/gauss_seidel_vs_jacobi.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/linear_algebra/householder_reflection.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/linear_algebra/jacobi_eigen_symmetric.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/linear_algebra/least_squares_qr.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/linear_algebra/lu_decomposition_pivoting.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/linear_algebra/matrix_condition_number.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/linear_algebra/power_iteration_shifted.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/linear_algebra/qr_gram_schmidt.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/linear_algebra/woodbury_rank1_update.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_diagnostics/bias_variance_decomposition.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_diagnostics/bootstrap_model_comparison.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_diagnostics/gaussian_naive_bayes.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_diagnostics/learning_curve.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_diagnostics/lift_gain_chart.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_diagnostics/precision_recall_curve.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_diagnostics/rank_correlation.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_diagnostics/residual_analysis.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_diagnostics/ucb_bandit.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_understanding_tuning/class_weight_imbalance.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_understanding_tuning/conformal_prediction_intervals.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_understanding_tuning/grid_vs_random_search.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_understanding_tuning/model_persistence_roundtrip.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_understanding_tuning/partial_dependence_data.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_understanding_tuning/permutation_feature_importance.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_understanding_tuning/platt_scaling_calibration.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_understanding_tuning/shapley_value_sampling.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_understanding_tuning/successive_halving.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/model_understanding_tuning/threshold_tuning_cost.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/neural_networks_from_scratch/conv1d_feature_detector.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/neural_networks_from_scratch/dropout_regularization_sim.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/neural_networks_from_scratch/early_stopping.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/neural_networks_from_scratch/learning_rate_schedules.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/neural_networks_from_scratch/mlp_backprop.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/neural_networks_from_scratch/numerical_gradient_check.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/neural_networks_from_scratch/softmax_regression.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/neural_networks_from_scratch/tiny_autoencoder.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/neural_networks_from_scratch/weight_initialization_comparison.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/neural_networks_from_scratch/word2vec_skipgram.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/numerical_methods/adaptive_simpson.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/numerical_methods/bisection_newton_hybrid.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/numerical_methods/cubic_spline_interpolation.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/numerical_methods/euler_vs_rk4_error_order.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/numerical_methods/fixed_point_iteration.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/numerical_methods/gauss_legendre_quadrature_lite.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/numerical_methods/richardson_extrapolation.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/numerical_methods/rk4_ode_solver.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/numerical_methods/romberg_integration.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/numerical_methods/secant_method.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/optimization_distances/distance_metrics_toolkit.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/optimization_distances/dtw_dynamic_time_warping.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/optimization_distances/epsilon_greedy_bandit.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/optimization_distances/feature_scaling_toolkit.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/optimization_distances/genetic_algorithm.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/optimization_distances/gradient_descent_momentum.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/optimization_distances/hill_climbing_restarts.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/optimization_distances/mahalanobis_distance.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/optimization_distances/newton_method_optimization.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/optimization_distances/simulated_annealing.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/preprocessing_eda/covariance_matrix.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/preprocessing_eda/data_profiling_summary.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/preprocessing_eda/histogram_builder.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/preprocessing_eda/missing_value_imputation.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/preprocessing_eda/one_hot_encoding.cpp",
+   "bucket": "OPAQUE",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/preprocessing_eda/pearson_correlation_matrix.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/preprocessing_eda/quantile_binning.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/preprocessing_eda/random_oversampling_balance.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/preprocessing_eda/three_way_stratified_split.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/preprocessing_eda/winsorize_clip_outliers.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probabilistic_modeling_bayes_ii/bayesian_linear_regression.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probabilistic_modeling_bayes_ii/bayesian_two_segment_changepoint.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probabilistic_modeling_bayes_ii/dirichlet_multinomial.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probabilistic_modeling_bayes_ii/empirical_bayes_shrinkage.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probabilistic_modeling_bayes_ii/gamma_poisson_conjugate.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probabilistic_modeling_bayes_ii/gaussian_process_lite.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probabilistic_modeling_bayes_ii/hmm_baum_welch.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probabilistic_modeling_bayes_ii/particle_filter_1d.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probabilistic_modeling_bayes_ii/rejection_sampling.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probabilistic_modeling_bayes_ii/rts_kalman_smoother.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probability_iii/banach_matchbox_or_gambler_ruin.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probability_iii/benford_law_test.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probability_iii/birthday_paradox_exact_vs_sim.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probability_iii/copula_gaussian_lite.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probability_iii/coupon_collector.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probability_iii/extreme_value_block_maxima.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probability_iii/inclusion_exclusion_derangements.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probability_iii/polya_urn_reinforcement.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probability_iii/quantile_mapping_bias_correction.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/probability_iii/stirling_approximation_error.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/rankings_information_retrieval/ab_interleaving.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/rankings_information_retrieval/bm25_ranking.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/rankings_information_retrieval/elo_rating.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/rankings_information_retrieval/inverted_index_search.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/rankings_information_retrieval/mean_reciprocal_rank.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/rankings_information_retrieval/ndcg_evaluation.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/rankings_information_retrieval/pairwise_ranking_learn.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/rankings_information_retrieval/position_bias_click_model.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/rankings_information_retrieval/query_expansion_prf.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/rankings_information_retrieval/rank_fusion_rrf.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/recommenders_graph_sampling/apriori_frequent_itemsets.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/recommenders_graph_sampling/bayesian_ab_beta.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/recommenders_graph_sampling/iqr_outlier_detection.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/recommenders_graph_sampling/item_based_cf.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/recommenders_graph_sampling/matrix_factorization_sgd.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/recommenders_graph_sampling/monte_carlo_estimation.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/recommenders_graph_sampling/mutual_information_feature_selection.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/recommenders_graph_sampling/pagerank_power_iteration.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/recommenders_graph_sampling/thompson_sampling_bandit.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/recommenders_graph_sampling/user_based_cf.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/recommenders_ii_kept_survivors/catalog_coverage_diversity.cpp",
+   "bucket": "OPAQUE",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/recommenders_ii_kept_survivors/content_tfidf_rec.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/recommenders_ii_kept_survivors/intra_list_diversity.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/recommenders_ii_kept_survivors/novelty_serendipity.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/signal_processing_sequences/autocovariance_spectrum.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/signal_processing_sequences/convolution_filtering.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/signal_processing_sequences/cross_correlation_lag.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/signal_processing_sequences/discrete_fourier_transform.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/signal_processing_sequences/dynamic_range_compression.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/signal_processing_sequences/fft_cooley_tukey.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/signal_processing_sequences/hampel_filter_outliers.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/signal_processing_sequences/peak_detection.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/signal_processing_sequences/resampling_interpolation.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/signal_processing_sequences/savitzky_golay_lite.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/simulation_decision_science/discrete_event_simulation.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/simulation_decision_science/kelly_criterion.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/simulation_decision_science/mm1_queue_littles_law.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/simulation_decision_science/monte_carlo_var_es.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/simulation_decision_science/newsvendor_critical_fractile.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/simulation_decision_science/q_learning_gridworld.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/simulation_decision_science/schelling_segregation.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/simulation_decision_science/sir_epidemic_model.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/simulation_decision_science/tornado_sensitivity.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistical_modeling/em_two_coins.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistical_modeling/gibbs_sampling_bivariate.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistical_modeling/importance_sampling.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistical_modeling/kaplan_meier_survival.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistical_modeling/kernel_density_estimation.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistical_modeling/loess_local_regression.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistical_modeling/metropolis_hastings_mcmc.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistical_modeling/polynomial_regression.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistical_modeling/power_analysis_sample_size.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistical_modeling/quantile_regression_pinball.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistics_testing/ab_test_proportions.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistics_testing/benjamini_hochberg.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistics_testing/bootstrap_confidence_interval.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistics_testing/chi_square_independence.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistics_testing/confusion_matrix_metrics.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistics_testing/permutation_test.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistics_testing/reservoir_sampling.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistics_testing/roc_auc_from_scratch.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/statistics_testing/train_test_split_kfold.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/adwin_drift_detector.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/bloom_filter_fpr.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/concept_drift_ensemble.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/ddm_error_drift.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/exponential_histogram_count.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/frugal_streaming_median.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/gk_quantile_summary.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/hoeffding_tree_lite.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/hyperloglog_distinct.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/kswin_drift.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/lossy_counting_frequent.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/misra_gries_heavy_hitters.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/online_bagging_poisson.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/robust_streaming_mad.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/sliding_window_quantile.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/sliding_window_regression.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/tdigest_lite.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/weighted_reservoir_ares.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/welford_decayed_moments.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_iii/windowed_distinct_count.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_sketches/count_min_sketch.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_sketches/online_covariance.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_sketches/online_sgd_classifier.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_sketches/p2_quantile_estimator.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_sketches/page_hinkley_drift.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_sketches/sliding_window_extrema.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_sketches/space_saving_heavy_hitters.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_sketches/streaming_histogram_merge.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_sketches/streaming_kmeans.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/streaming_sketches/weighted_reservoir_sampling.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/survival_reliability/accelerated_failure_time_lite.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/survival_reliability/censoring_bias_demo.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/survival_reliability/competing_risks_naive_bias.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/survival_reliability/cox_partial_likelihood_lite.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/survival_reliability/exponential_reliability_mtbf.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/survival_reliability/hazard_vs_survival_conversion.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/survival_reliability/nelson_aalen_cumhazard.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/survival_reliability/reliability_series_parallel.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/survival_reliability/weibull_mle.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp/bag_of_words.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp/bpe_tokenizer_lite.cpp",
+   "bucket": "OPAQUE",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp/cosine_similarity_search.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp/edit_distance.cpp",
+   "bucket": "OPAQUE",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp/markov_chain_text.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp/minhash_dedup.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp/ngram_language_model.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp/rake_keyword_extraction.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp/tfidf_vectorizer.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp/viterbi_hmm.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp_ii/char_ngram_language_id.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp_ii/naive_bayes_complement.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp_ii/porter_stemmer_lite.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp_ii/sentence_boundary_detection.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp_ii/soundex_phonetic.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp_ii/textrank_lite.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp_ii/tf_idf_bm25_comparison.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/text_nlp_ii/zipf_law_fit.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/time_series/autocorrelation_function.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/time_series/autoregressive_model.cpp",
+   "bucket": "INVARIANT",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/time_series/cusum_changepoint.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/time_series/differencing_stationarity.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/time_series/exponential_smoothing.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/time_series/kalman_filter_1d.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/time_series/moving_average_smoothing.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/time_series/rolling_zscore_anomaly.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/time_series/seasonal_decomposition.cpp",
+   "bucket": "NUMERIC",
+   "lang": "cpp"
+  },
+  {
+   "file": "cpp/data-science/time_series/walk_forward_validation.cpp",
+   "bucket": "SELF_REF",
+   "lang": "cpp"
+  },
+  {
+   "file": "go/programming/architecture/cqrs_bus.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/architecture/event_bus.go",
+   "bucket": "NUMERIC",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/architecture/event_sourcing_store.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/async/async_task_queue.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/async/cancellable_task_group.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/data_structures/avl_tree.go",
+   "bucket": "INVARIANT",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/data_structures/binary_indexed_tree.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/data_structures/fenwick_tree.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/distributed/consistent_hash_ring.go",
+   "bucket": "INVARIANT",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/distributed/crdt_sets.go",
+   "bucket": "INVARIANT",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/distributed/distributed_lock_manager.go",
+   "bucket": "NUMERIC",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/distributed/g_counter_crdt.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/io/arg_parser.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/io/chunked_reader.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/io/csv_to_json.go",
+   "bucket": "ROUNDTRIP",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/io/diff_engine.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/monitoring/alert_manager.go",
+   "bucket": "INVARIANT",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/monitoring/event_logger.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/networking/connection_pool.go",
+   "bucket": "INVARIANT",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/networking/connection_pool_health_checks.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/networking/dns_cache.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/performance/batch_controller.go",
+   "bucket": "INVARIANT",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/performance/budget_allocator.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/performance/free_list_allocator.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/reasoning/astar_pathfinding.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/reasoning/bayesian_network.go",
+   "bucket": "INVARIANT",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/reasoning/csp_solver.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/reasoning/decision_tree.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/reasoning/expression_evaluator.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/reasoning/sat_solver.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/resilience/bulkhead_isolator.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/programming/resilience/dead_letter_queue.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/advisory_lock_timeout.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/ansi_strip.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/append_only_audit.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/atomic_append.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/atomic_snapshot.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/atomic_symlink_swap.go",
+   "bucket": "INVARIANT",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/atomic_write_temp_rename.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/backfill_range.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/backpressure_queue.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/backup_catalog.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/backup_dedup.go",
+   "bucket": "INVARIANT",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/backup_encryption.go",
+   "bucket": "INVARIANT",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/backup_rotation.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/binary_presence_check.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/blue_green_deploy.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/canary_gate.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/capability_probe.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/cas_file_update.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/checkpoint_resume.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/circuit_breaker.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/clock_skew_detect.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/command_allowlist.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/config_diff.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/config_drift_detect.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/config_versioning.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/corruption_repair.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/cow_backup.go",
+   "bucket": "INVARIANT",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/cpu_throttle.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/crash_consistent_snapshot.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/crash_log_capture.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/crash_loop_detector.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/cron_expr_next_fire.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/deadlock_timeout.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/dedup_stream.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/deplock_verify.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/deploy_idempotency.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/deps_verify.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/dir_tree_diff.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/disk_full_write_guard.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/disk_space_watchdog.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/dns_resolve_check.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/dotenv_parse.go",
+   "bucket": "NUMERIC",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/double_launch_block.go",
+   "bucket": "ROUNDTRIP",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/drift_compensation.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/dryrun_installer.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/enforce_600_perms.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/env_diff.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/env_load_defaults.go",
+   "bucket": "INVARIANT",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/env_secret_load.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/exactly_once_dedup.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/expiry_check.go",
+   "bucket": "OPAQUE",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/fd_leak_detector.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/field_extract.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/fsync_durability.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/full_incremental_backup.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "go/system-administration/sysadmin/timeout_kill.go",
+   "bucket": "SELF_REF",
+   "lang": "go"
+  },
+  {
+   "file": "ingest.py",
+   "bucket": "OPAQUE",
+   "lang": "ingest.py"
+  },
+  {
+   "file": "ingest_go.py",
+   "bucket": "OPAQUE",
+   "lang": "ingest_go.py"
+  },
+  {
+   "file": "library_verify.py",
+   "bucket": "INVARIANT",
+   "lang": "library_verify.py"
+  },
+  {
+   "file": "python/data-science/applied_ds_practice/cohort_retention_analysis.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/applied_ds_practice/ewma_streaming_metrics.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/applied_ds_practice/rfm_customer_segmentation.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/applied_ds_practice/welford_online_stats.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/bayesian_iii_approximate_inference/elbo_monotone_vi.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/bayesian_iii_approximate_inference/hierarchical_shrinkage_2level.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/bayesian_iii_approximate_inference/laplace_approximation_posterior.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/bayesian_iii_approximate_inference/meanfield_vi_gaussian.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/bayesian_iii_approximate_inference/posterior_contraction_rate.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/bayesian_iii_approximate_inference/rhat_convergence_diagnostic.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/bayesian_iii_approximate_inference/sbc_rank_uniformity.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/bayesian_iii_modeling_and_selection/bayesian_changepoint_offline.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/bayesian_iii_modeling_and_selection/bayesian_linreg_conjugate.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/bayesian_iii_modeling_and_selection/dirichlet_multinomial_posterior.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/bayesian_iii_modeling_and_selection/evidence_ranks_true_model.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/causal_inference_and_experimentation/ab_test_srm_check.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/causal_inference_and_experimentation/cuped_variance_reduction.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/causal_inference_and_experimentation/instrumental_variable_lite.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/causal_inference_and_experimentation/interrupted_time_series.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/causal_inference_and_experimentation/placebo_test_causal.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/causal_inference_and_experimentation/regression_discontinuity.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/causal_inference_and_experimentation/synthetic_control_lite.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/causal_inference_ii/backdoor_vs_collider_adjustment.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/causal_inference_ii/caliper_matching.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/causal_inference_ii/e_value_sensitivity.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/causal_inference_ii/frontdoor_criterion_lite.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/causal_inference_ii/mediation_effects_decomposition.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/causal_inference_ii/negative_control_outcome.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/clustering_graph_and_anomaly/betweenness_centrality.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/clustering_graph_and_anomaly/classic_mds.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/clustering_graph_and_anomaly/dbscan_clustering.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/clustering_graph_and_anomaly/elbow_method_kmeans.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/clustering_graph_and_anomaly/hierarchical_agglomerative.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/clustering_graph_and_anomaly/isolation_tree_anomaly.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/clustering_graph_and_anomaly/label_propagation_communities.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/clustering_graph_and_anomaly/linear_discriminant_analysis.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/clustering_graph_and_anomaly/silhouette_score.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/composed_tools/broker_term_extraction.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/composed_tools/community_local_authority.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/composed_tools/cross_domain_query_expansion.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/composed_tools/cross_domain_search_engine.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/composed_tools/dtw_shape_drift_monitor.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/composed_tools/forest_size_by_variance.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/composed_tools/interleaving_significance.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/composed_tools/knn_kdtree_accelerated.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/composed_tools/rolling_ols_update.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/composed_tools/topic_aware_recommender.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/core_ml/decision_tree_id3.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/core_ml/kmeans_clustering.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/core_ml/knn_classifier.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/core_ml/linear_regression_gd.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/core_ml/naive_bayes_text.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/core_ml/pca_power_iteration.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/core_ml/perceptron.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/core_ml/ridge_regression_normal_eq.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/data_wrangling_from_scratch/csv_type_inference.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/data_wrangling_from_scratch/dedupe_records_fuzzy.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/data_wrangling_from_scratch/group_by_aggregate.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/data_wrangling_from_scratch/hash_join_merge.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/data_wrangling_from_scratch/melt_unpivot.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/data_wrangling_from_scratch/pivot_table.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/data_wrangling_from_scratch/resample_timeseries_bins.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/data_wrangling_from_scratch/rolling_join_asof.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/data_wrangling_from_scratch/sort_multi_key.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/data_wrangling_from_scratch/window_functions.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/econometrics_and_finance/cointegration_engle_granger_lite.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/econometrics_and_finance/fixed_effects_within.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/econometrics_and_finance/garch_lite_volatility_clustering.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/econometrics_and_finance/instrumental_2sls.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/econometrics_and_finance/ols_robust_se_white.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/econometrics_and_finance/sharpe_sortino_ratios.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/ensembles_and_robust_methods/adaboost.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/ensembles_and_robust_methods/random_forest.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/ensembles_and_robust_methods/spectral_clustering_lite.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/ensembles_and_robust_methods/theil_sen_estimator.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/ensembles_and_robust_methods/voting_classifier.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/experiments_ii/msprt_lite.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/experiments_ii/multi_armed_holm_correction.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/experiments_ii/network_interference_demo.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/experiments_ii/novelty_effect_decay.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/experiments_ii/post_stratification_variance.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/experiments_ii/stratified_randomization.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/experiments_ii/switchback_experiment_lite.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/fairness_privacy_and_robustness/adversarial_perturbation_lite.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/fairness_privacy_and_robustness/covariate_shift_reweighting.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/fairness_privacy_and_robustness/demographic_parity_metrics.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/fairness_privacy_and_robustness/differential_privacy_laplace.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/fairness_privacy_and_robustness/equalized_odds_thresholds.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/fairness_privacy_and_robustness/group_calibration_audit.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/fairness_privacy_and_robustness/k_anonymity_generalization.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/fairness_privacy_and_robustness/label_noise_robust_loss.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/fairness_privacy_and_robustness/mnar_missingness_bias.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/fairness_privacy_and_robustness/randomized_response.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/geospatial_and_spatial/convex_hull_graham.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/geospatial_and_spatial/douglas_peucker.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/geospatial_and_spatial/grid_density_binning.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/geospatial_and_spatial/point_in_polygon.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/geospatial_and_spatial/polygon_area_centroid.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/geospatial_and_spatial/quadtree_point_index.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/geospatial_and_spatial/spatial_radius_join.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/information_theory_and_probability/entropy_estimators.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/information_theory_and_probability/hmm_forward_backward.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/information_theory_and_probability/kl_divergence_cross_entropy.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/information_theory_and_probability/markov_chain_stationary.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/information_theory_and_probability/nonlinear_dependence_mi.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/linear_algebra/conjugate_gradient.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/linear_algebra/gauss_seidel_vs_jacobi.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/linear_algebra/householder_reflection.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/linear_algebra/jacobi_eigen_symmetric.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/linear_algebra/least_squares_qr.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/linear_algebra/lu_decomposition_pivoting.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/linear_algebra/matrix_condition_number.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/linear_algebra/power_iteration_shifted.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/linear_algebra/qr_gram_schmidt.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/linear_algebra/woodbury_rank1_update.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/model_diagnostics/bias_variance_decomposition.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/model_diagnostics/learning_curve.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/model_diagnostics/rank_correlation.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/model_diagnostics/residual_analysis.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/model_understanding_and_tuning/grid_vs_random_search.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/model_understanding_and_tuning/model_persistence_roundtrip.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/model_understanding_and_tuning/permutation_feature_importance.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/model_understanding_and_tuning/shapley_value_sampling.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/model_understanding_and_tuning/successive_halving.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/neural_networks_from_scratch/conv1d_feature_detector.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/neural_networks_from_scratch/softmax_regression.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/numerical_methods/adaptive_simpson.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/numerical_methods/bisection_newton_hybrid.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/numerical_methods/cubic_spline_interpolation.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/numerical_methods/euler_vs_rk4_error_order.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/numerical_methods/fixed_point_iteration.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/numerical_methods/gauss_legendre_quadrature_lite.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/numerical_methods/rk4_ode_solver.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/numerical_methods/romberg_integration.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/numerical_methods/secant_method.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/optimization_and_distances/distance_metrics_toolkit.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/optimization_and_distances/dtw_dynamic_time_warping.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/optimization_and_distances/epsilon_greedy_bandit.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/optimization_and_distances/feature_scaling_toolkit.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/optimization_and_distances/genetic_algorithm.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/optimization_and_distances/mahalanobis_distance.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/optimization_and_distances/simulated_annealing.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/preprocessing_and_eda/covariance_matrix.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/preprocessing_and_eda/data_profiling_summary.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/preprocessing_and_eda/histogram_builder.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/preprocessing_and_eda/missing_value_imputation.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/preprocessing_and_eda/one_hot_encoding.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/preprocessing_and_eda/pearson_correlation_matrix.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/preprocessing_and_eda/quantile_binning.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/preprocessing_and_eda/three_way_stratified_split.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/probabilistic_modeling/dirichlet_multinomial.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/probabilistic_modeling/empirical_bayes_shrinkage.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/probabilistic_modeling/hmm_baum_welch.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/probability_iii/quantile_mapping_bias_correction.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/rankings_and_information_retrieval/ab_interleaving.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/rankings_and_information_retrieval/bm25_ranking.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/rankings_and_information_retrieval/inverted_index_search.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/rankings_and_information_retrieval/ndcg_evaluation.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/rankings_and_information_retrieval/position_bias_click_model.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/rankings_and_information_retrieval/query_expansion_prf.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/rankings_and_information_retrieval/rank_fusion_rrf.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/recommenders_and_graph_sampling/apriori_frequent_itemsets.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/recommenders_and_graph_sampling/iqr_outlier_detection.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/recommenders_and_graph_sampling/item_based_cf.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/recommenders_and_graph_sampling/matrix_factorization_sgd.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/recommenders_and_graph_sampling/monte_carlo_estimation.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/recommenders_and_graph_sampling/mutual_information_feature_selection.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/recommenders_and_graph_sampling/pagerank_power_iteration.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/recommenders_and_graph_sampling/user_based_cf.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/recommenders_ii_kept_survivors/catalog_coverage_diversity.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/recommenders_ii_kept_survivors/content_tfidf_rec.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/recommenders_ii_kept_survivors/intra_list_diversity.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/recommenders_ii_kept_survivors/novelty_serendipity.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/autocovariance_spectrum.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/convolution_filtering.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/cross_correlation_lag.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/discrete_fourier_transform.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/dynamic_range_compression.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/fft_cooley_tukey.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/peak_detection.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/resampling_interpolation.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/simulation_and_decision_science/discrete_event_simulation.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/simulation_and_decision_science/kelly_criterion.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/simulation_and_decision_science/mm1_queue_littles_law.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/simulation_and_decision_science/monte_carlo_var_es.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/simulation_and_decision_science/newsvendor_critical_fractile.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/simulation_and_decision_science/q_learning_gridworld.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/simulation_and_decision_science/schelling_segregation.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/simulation_and_decision_science/sir_epidemic_model.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/simulation_and_decision_science/tornado_sensitivity.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/statistical_modeling/importance_sampling.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/statistical_modeling/kaplan_meier_survival.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/statistical_modeling/polynomial_regression.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/statistics_and_testing/bootstrap_confidence_interval.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/statistics_and_testing/chi_square_independence.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/statistics_and_testing/permutation_test.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/statistics_and_testing/reservoir_sampling.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/statistics_and_testing/roc_auc_from_scratch.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_and_sketches/count_min_sketch.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_and_sketches/online_covariance.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_and_sketches/p2_quantile_estimator.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_and_sketches/page_hinkley_drift.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_and_sketches/space_saving_heavy_hitters.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_and_sketches/streaming_histogram_merge.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_and_sketches/streaming_kmeans.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_and_sketches/weighted_reservoir_sampling.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/adwin_drift_detector.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/bloom_filter_fpr.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/concept_drift_ensemble.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/ddm_error_drift.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/frugal_streaming_median.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/gk_quantile_summary.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/hoeffding_tree_lite.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/hyperloglog_distinct.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/kswin_drift.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/lossy_counting_frequent.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/misra_gries_heavy_hitters.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/online_bagging_poisson.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/robust_streaming_mad.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/sliding_window_quantile.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/sliding_window_regression.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/weighted_reservoir_ares.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/welford_decayed_moments.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/streaming_iii/windowed_distinct_count.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/survival_and_reliability/accelerated_failure_time_lite.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/survival_and_reliability/censoring_bias_demo.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/survival_and_reliability/hazard_vs_survival_conversion.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/survival_and_reliability/nelson_aalen_cumhazard.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/survival_and_reliability/reliability_series_parallel.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp/bag_of_words.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp/bpe_tokenizer_lite.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp/cosine_similarity_search.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp/edit_distance.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp/markov_chain_text.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp/minhash_dedup.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp/ngram_language_model.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp/rake_keyword_extraction.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp/tfidf_vectorizer.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp/viterbi_hmm.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp_ii/char_ngram_language_id.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp_ii/naive_bayes_complement.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp_ii/porter_stemmer_lite.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp_ii/sentence_boundary_detection.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp_ii/soundex_phonetic.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp_ii/textrank_lite.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp_ii/tf_idf_bm25_comparison.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/text_nlp_ii/zipf_law_fit.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/time_series/autoregressive_model.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/time_series/differencing_stationarity.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/time_series/moving_average_smoothing.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/data-science/time_series/seasonal_decomposition.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/architecture/cqrs_bus.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/architecture/event_bus.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/architecture/event_sourcing_store.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/architecture/message_encoder.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/architecture/plugin_registry.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/architecture/saga_coordinator.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/architecture/state_machine.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/async/async_task_queue.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/async/cancellable_task_group.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/async/priority_queue_scheduler.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/async/pubsub_broker.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/async/reactive_signals.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/avl_tree.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/binary_indexed_tree.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/bloom_filter.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/fenwick_tree.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/interval_tree.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/kd_tree.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/merkle_tree.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/ordered_map.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/persistent_deque.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/priority_task_scheduler.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/radix_tree.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/red_black_tree.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/segment_tree.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/skip_list.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/suffix_array.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/treap.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/trie.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/data_structures/union_find.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/distributed/consistent_hash_ring.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/distributed/crdt_sets.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/distributed/distributed_lock_manager.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/distributed/g_counter_crdt.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/distributed/gossip_protocol.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/distributed/quorum_consensus.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/distributed/raft_consensus.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/distributed/service_registry.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/distributed/vector_clock.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/io/arg_parser.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/io/chunked_reader.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/io/csv_to_json.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/io/csv_validator.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/io/diff_engine.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/io/ini_parser.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/io/log_parser.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/io/template_engine.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/monitoring/alert_manager.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/monitoring/event_logger.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/monitoring/log_pattern_matcher.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/monitoring/metric_aggregation_engine.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/monitoring/metric_aggregator.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/monitoring/metrics_formatter.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/monitoring/time_series_db.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/monitoring/timer_stack.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/monitoring/trace_collector.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/monitoring/trace_sampler.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/monitoring/trace_span_collector.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/monitoring/window_sampler.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/networking/connection_pool.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/networking/connection_pool_health_checks.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/networking/dns_cache.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/networking/http_retry_client.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/networking/http_router.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/networking/packet_parser.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/networking/rate_limiter.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/networking/rtt_estimator.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/networking/url_router.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/performance/batch_controller.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/performance/budget_allocator.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/performance/free_list_allocator.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/performance/hyperloglog.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/performance/job_scheduler.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/performance/lru_cache.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/performance/object_pool_allocator.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/performance/resource_budget_allocator.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/performance/rw_lock.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/performance/token_bucket.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/performance/work_stealing_queue.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/persistence/lsm_tree.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/persistence/segmented_wal.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/persistence/write_ahead_log.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/reasoning/astar_pathfinding.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/reasoning/bayesian_network.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/reasoning/csp_solver.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/reasoning/decision_tree.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/reasoning/dependency_graph.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/reasoning/expression_evaluator.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/reasoning/minimax_game_search.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/reasoning/rule_engine.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/reasoning/sat_solver.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/resilience/bulkhead_isolator.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/resilience/circuit_breaker.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/resilience/dead_letter_queue.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/resilience/timeout_guard.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/security/capability_access.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/security/hotp_totp.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/security/secure_envelope.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/programming/vision/image_stats.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/access-control-audit/append_only_audit.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/access-control-audit/command_allowlist.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/access-control-audit/immutable_audit.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/access-control-audit/least_privilege_verify.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/access-control-audit/permission_matrix.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/access-control-audit/priv_escalation_detect.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/access-control-audit/rbac_check.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/access-control-audit/session_record.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/access-control-audit/sudo_self_body_guard.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/access-control-audit/tamper_evident_chain.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/backup-disaster-recovery/backup_catalog.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/backup-disaster-recovery/backup_dedup.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/backup-disaster-recovery/backup_encryption.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/backup-disaster-recovery/full_incremental_backup.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/backup-disaster-recovery/offsite_integrity.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/backup-disaster-recovery/restore_drill.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/backup-disaster-recovery/restore_verify.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/backup-disaster-recovery/retention_policy.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/backup-disaster-recovery/rpo_rto_measure.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/backup-disaster-recovery/snapshot_chain.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/concurrency-locking/advisory_lock_timeout.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/concurrency-locking/atomic_append.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/concurrency-locking/cas_file_update.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/concurrency-locking/deadlock_timeout.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/concurrency-locking/double_launch_block.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/concurrency-locking/flock_singleton.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/concurrency-locking/idempotent_once_guard.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/concurrency-locking/named_mutex.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/concurrency-locking/reader_writer_lock.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/concurrency-locking/stale_lock_break.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/config-management/config_diff.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/config-management/config_versioning.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/config-management/dotenv_parse.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/config-management/env_load_defaults.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/config-management/hot_reload.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/config-management/layered_merge.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/config-management/multiformat_load.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/config-management/refuse_start_on_invalid.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/config-management/schema_validate.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/config-management/secret_separation.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/data-pipeline-ops/backfill_range.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/data-pipeline-ops/checkpoint_resume.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/data-pipeline-ops/exactly_once_dedup.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/data-pipeline-ops/idempotent_etl_step.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/data-pipeline-ops/lineage_track.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/data-pipeline-ops/partition_manage.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/data-pipeline-ops/pipeline_dead_letter.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/data-pipeline-ops/replay_safe.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/data-pipeline-ops/schema_drift_detect.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/data-pipeline-ops/watermark_track.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/deployment-rollback/atomic_symlink_swap.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/deployment-rollback/blue_green_deploy.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/deployment-rollback/canary_gate.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/deployment-rollback/config_drift_detect.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/deployment-rollback/deplock_verify.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/deployment-rollback/deploy_idempotency.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/deployment-rollback/health_gated_promote.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/deployment-rollback/immutable_release.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/deployment-rollback/rollback_on_failure.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/deployment-rollback/version_pin_verify.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/filesystem-integrity/atomic_snapshot.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/filesystem-integrity/atomic_write_temp_rename.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/filesystem-integrity/checksum_corruption_detect.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/filesystem-integrity/cow_backup.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/filesystem-integrity/dir_tree_diff.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/filesystem-integrity/disk_full_write_guard.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/filesystem-integrity/fsync_durability.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/filesystem-integrity/restore_from_backup.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/filesystem-integrity/safe_delete_trash.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/filesystem-integrity/symlink_escape_guard.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/log-management/crash_log_capture.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/log-management/log_compression.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/log-management/rate_limited_log.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/log-management/retention_prune.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/log-management/ring_buffer_log.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/log-management/rotate_by_size.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/log-management/rotate_by_time.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/log-management/secret_redaction.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/log-management/structured_json_log.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/log-management/tail_follow.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/mesh-distributed/consistent_hashing.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/mesh-distributed/gossip_membership.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/mesh-distributed/heartbeat_lease.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/mesh-distributed/idempotent_replication.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/mesh-distributed/lamport_clock.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/mesh-distributed/leader_election_lite.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/mesh-distributed/lease_distributed_lock.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/mesh-distributed/lww_conflict_resolve.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/mesh-distributed/partition_tolerance_demo.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/mesh-distributed/quorum_check.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/monitoring-metrics/counter_gauge_histogram.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/monitoring-metrics/heartbeat_miss_alert.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/monitoring-metrics/metric_export.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/monitoring-metrics/p2_percentile.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/monitoring-metrics/rate_calc.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/monitoring-metrics/sliding_aggregate.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/monitoring-metrics/slo_error_budget.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/monitoring-metrics/threshold_alert.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/monitoring-metrics/uptime_calc.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/monitoring-metrics/zscore_anomaly.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/network-health/dns_resolve_check.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/network-health/exponential_backoff.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/network-health/failover_switch.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/network-health/heartbeat_gossip.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/network-health/http_health_probe.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/network-health/latency_measure.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/network-health/reachability_matrix.py",
+   "bucket": "NUMERIC",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/network-health/retry_timeout.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/network-health/split_brain_detect.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/network-health/tcp_port_check.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/packaging-environment/binary_presence_check.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/packaging-environment/capability_probe.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/packaging-environment/depgraph_resolve.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/packaging-environment/deps_verify.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/packaging-environment/dryrun_installer.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/packaging-environment/env_diff.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/packaging-environment/lockfile_hash_integrity.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/packaging-environment/path_sanity.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/packaging-environment/reproducible_build_check.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/packaging-environment/version_constraint_solve.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/process-supervision/crash_loop_detector.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/process-supervision/graceful_shutdown_sigterm.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/process-supervision/heartbeat_liveness.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/process-supervision/keepalive_daemon.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/process-supervision/pidfile_singleton.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/process-supervision/readiness_vs_liveness.py",
+   "bucket": "INVARIANT",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/process-supervision/restart_backoff.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/process-supervision/supervised_child.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/process-supervision/watchdog_restart.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/process-supervision/zombie_reaper.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/resource-guards/backpressure_queue.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/resource-guards/circuit_breaker.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/resource-guards/cpu_throttle.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/resource-guards/disk_space_watchdog.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/resource-guards/fd_leak_detector.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/resource-guards/inode_guard.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/resource-guards/load_shedding.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/resource-guards/memory_cap_guard.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/resource-guards/tmp_cleanup.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/scheduling-jobs/cron_expr_next_fire.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/scheduling-jobs/dead_letter_queue.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/scheduling-jobs/idempotency_key.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/scheduling-jobs/interval_scheduler.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/scheduling-jobs/jitter_backoff.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/scheduling-jobs/job_dedup.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/scheduling-jobs/missed_run_catchup.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/scheduling-jobs/oneshot_at_time.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/scheduling-jobs/retry_with_backoff.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/scheduling-jobs/timeout_kill.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/secrets-credentials/enforce_600_perms.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/secrets-credentials/env_secret_load.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/secrets-credentials/expiry_check.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/secrets-credentials/keyring_store.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/secrets-credentials/leaked_secret_scan.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/secrets-credentials/least_privilege_check.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/secrets-credentials/log_redaction.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/secrets-credentials/secret_audit_trail.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/secrets-credentials/token_rotation.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/state-db-durability/backup_rotation.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/state-db-durability/corruption_repair.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/state-db-durability/crash_consistent_snapshot.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/state-db-durability/hot_copy.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/state-db-durability/integrity_check.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/state-db-durability/journaled_write.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/state-db-durability/migration_with_rollback.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/state-db-durability/point_in_time_restore.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/state-db-durability/transaction_rollback.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/state-db-durability/wal_checkpoint.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/system-introspection/load_avg_read.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/system-introspection/memory_pressure.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/system-introspection/mount_disk_usage.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/system-introspection/open_fd_count.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/system-introspection/orphan_detect.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/system-introspection/proc_parse_portable.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/system-introspection/process_tree.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/system-introspection/resource_usage.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/system-introspection/top_n_by_resource.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/system-introspection/uptime_read.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/text-stream-ops/ansi_strip.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/text-stream-ops/dedup_stream.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/text-stream-ops/field_extract.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/text-stream-ops/logline_parse.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/text-stream-ops/merge_sorted_streams.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/text-stream-ops/multiline_join.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/text-stream-ops/structured_diff.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/text-stream-ops/tail_follow_stream.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/text-stream-ops/throughput_meter.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/time-clock-correctness/clock_skew_detect.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/time-clock-correctness/deadline_ttl.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/time-clock-correctness/drift_compensation.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/time-clock-correctness/leap_safe_interval.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/time-clock-correctness/monotonic_vs_wall.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/time-clock-correctness/ntp_offset_check.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/time-clock-correctness/sliding_rate_window.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/time-clock-correctness/timeout_budget.py",
+   "bucket": "SELF_REF",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/time-clock-correctness/two_clocks_reconcile.py",
+   "bucket": "OPAQUE",
+   "lang": "python"
+  },
+  {
+   "file": "python/system-administration/time-clock-correctness/tz_safe_timestamp.py",
+   "bucket": "ROUNDTRIP",
+   "lang": "python"
+  },
+  {
+   "file": "r/data_wrangling_and_feature_engineering/date_features.R",
+   "bucket": "OPAQUE",
+   "lang": "r"
+  },
+  {
+   "file": "r/data_wrangling_and_feature_engineering/factor_onehot.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/data_wrangling_and_feature_engineering/group_aggregate.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/data_wrangling_and_feature_engineering/hash_join.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/data_wrangling_and_feature_engineering/long_wide_reshape.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/data_wrangling_and_feature_engineering/missing_pattern_matrix.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/data_wrangling_and_feature_engineering/na_imputation.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/data_wrangling_and_feature_engineering/rolling_stats.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/distributions_and_resampling/bootstrap_ci.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/distributions_and_resampling/ecdf_dkw_bands.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/distributions_and_resampling/kde_gaussian.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/distributions_and_resampling/outlier_iqr_mad.R",
+   "bucket": "INVARIANT",
+   "lang": "r"
+  },
+  {
+   "file": "r/distributions_and_resampling/quantile_type7.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/ab_power_analysis.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/anova_tukey.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/correlation_tests.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/ks_one_sample.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/one_way_anova.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/prop_test_two_sample.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/multivariate_and_applied_modeling/km_survival_lite.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/multivariate_and_applied_modeling/kmeans_lloyd.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/multivariate_and_applied_modeling/pca_power_iteration.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/multivariate_and_applied_modeling/stratified_split.R",
+   "bucket": "OPAQUE",
+   "lang": "r"
+  },
+  {
+   "file": "r/multivariate_and_applied_modeling/weighted_survey_mean.R",
+   "bucket": "INVARIANT",
+   "lang": "r"
+  },
+  {
+   "file": "r/nonparametric_and_categorical/chi_square_independence.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/nonparametric_and_categorical/cramers_v_effect.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/nonparametric_and_categorical/fisher_exact_2x2.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/nonparametric_and_categorical/kruskal_wallis.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/nonparametric_and_categorical/table_margins.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/nonparametric_and_categorical/wilcoxon_rank_sum.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/regression_and_glm/bootstrap_regression.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/regression_and_glm/cv_model_selection.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/regression_and_glm/hosmer_lemeshow_lite.R",
+   "bucket": "INVARIANT",
+   "lang": "r"
+  },
+  {
+   "file": "r/regression_and_glm/lm_diagnostics.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/regression_and_glm/logistic_regression_irls.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/regression_and_glm/poisson_regression_irls.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/regression_and_glm/ridge_regression.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/sampling_and_simulation/box_muller.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/sampling_and_simulation/inverse_cdf_sampling.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/sampling_and_simulation/mvn_cholesky.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/sampling_and_simulation/order_statistics.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/sampling_and_simulation/poisson_process_thinning.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/sampling_and_simulation/probability_integral_transform.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/sampling_and_simulation/rejection_sampling_beta.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/sampling_and_simulation/truncated_normal.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/acf_pacf_from_scratch.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/ar1_fit_forecast.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/ar_yule_walker.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/ccf_lag_detection.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/holt_winters_lite.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/ljung_box.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/seasonal_decompose.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/time_series_trend_spectral_and_smoothing/diff_seasonality_test.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/time_series_trend_spectral_and_smoothing/hampel_ts_outliers.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/time_series_trend_spectral_and_smoothing/mann_kendall_trend.R",
+   "bucket": "SELF_REF",
+   "lang": "r"
+  },
+  {
+   "file": "r/time_series_trend_spectral_and_smoothing/periodogram_spectral.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/time_series_trend_spectral_and_smoothing/rolling_origin_cv.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "r/time_series_trend_spectral_and_smoothing/sma_wma_filter.R",
+   "bucket": "NUMERIC",
+   "lang": "r"
+  },
+  {
+   "file": "rust/composed-systems/authenticated_message_channel.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/backup_snapshot_restore.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/bloom_backed_cache.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/compressed_block_store.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/content_addressed_blob_store.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/content_addressed_store.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/csv_typed_record_validator.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/dag_task_runner.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/delta_sync_lite.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/framed_message_router.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/health_checked_lb_router.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/idempotent_request_dedup.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/index_compaction_pipeline.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/log_ingest_dedup_index.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/lsm_write_read_path.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/merkle_tree.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/merkle_verified_sync.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/mvcc_snapshot_query_engine.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/rate_limited_request_pipeline.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/read_through_cache_store.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/replicated_log_quorum.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/retry_circuit_backoff_client.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/rotating_log_checksum.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/sharded_kv_rehash_router.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/signed_snapshot.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/streaming_bloom_distinct.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/streaming_percentile_monitor.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/tamper_evident_log.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/token_gated_priority_scheduler.rs",
+   "bucket": "SELF_REF",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/tokenizer_ast_evaluator.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/validated_config_loader.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/wal_append_replay.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/composed-systems/wal_backed_kv_store.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/atomic_counter_sharded.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/atomic_max_tracker.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/atomic_refcount.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/barrier_sync.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/broadcast_fanout.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/cas_stack_arena.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/circuit_breaker.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/concurrent_histogram.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/countdown_latch.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/deadline_guard.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/double_buffer.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/exponential_backoff.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/future_lite_executor.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/graceful_shutdown.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/mpmc_queue.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/once_init_guard.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/rendezvous_channel.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/retry_with_budget.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/reusable_phaser.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/rwlock_cache.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/rwlock_readers.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/semaphore_limit.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/seqlock_snapshot.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/spsc_ring_buffer.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/ticket_lock.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/token_bucket.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/wait_group.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/work_stealing_deque.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/concurrency-resilience/worker_pool_mpsc.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/cross-sphere-twins/count_min_sketch.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/cross-sphere-twins/crdt_gcounter.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/cross-sphere-twins/hyperloglog_lite.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/cross-sphere-twins/leader_lease.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/cross-sphere-twins/lru_cache.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/cross-sphere-twins/lsm_memtable_flush.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/cross-sphere-twins/misra_gries_topk.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/cross-sphere-twins/quorum_write.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/cross-sphere-twins/reservoir_sample.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/cross-sphere-twins/skip_list.rs",
+   "bucket": "SELF_REF",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/filesystem-process/atomic_write_rename.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/filesystem-process/df_capacity_forecast.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/filesystem-process/dir_size_aggregate.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/filesystem-process/file_dedup_hash.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/filesystem-process/lockfile_pid_guard.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/filesystem-process/path_normalize_guard.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/filesystem-process/proc_stat_cpu.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/filesystem-process/retention_gfs.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/filesystem-process/rolling_checksum.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/filesystem-process/supervisor_restart.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/metrics-scheduling/consistent_hash_ring.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/metrics-scheduling/cron_next_fire.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/metrics-scheduling/debounce_throttle.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/metrics-scheduling/ewma_gauge.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/metrics-scheduling/hdr_latency_lite.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/metrics-scheduling/histogram_quantile.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/metrics-scheduling/priority_scheduler.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/metrics-scheduling/rate_counter.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/metrics-scheduling/ring_buffer.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/metrics-scheduling/topo_job_order.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/backpressure_bounded_queue.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/bulkhead_isolation_limiter.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/cidr_allowlist_match.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/connection_pool_manager.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/count_min_sketch_ip_freq.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/dns_name_wire_parser.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/ewma_latency_tracker.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/failover_priority_list.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/gcra_rate_limiter.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/hedged_request_scheduler.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/http_status_retry_classifier.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/least_connections_lb.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/port_scan_detector.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/retry_after_header_parser.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/sliding_window_flow_control.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/sliding_window_rate_limiter.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/tcp_rto_estimator.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/url_authority_parser.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/networking-resilience/weighted_round_robin_lb.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/ansi_escape_stripper.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/backslash_escape_codec.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/balanced_delimiter_check.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/byte_unit_parse.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/chunked_transfer_decoder.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/cidr_ip_math.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/cli_args_parser.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/cobs_framing.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/crc_framed_packet.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/csv_quote_escape.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/csv_reader_typed.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/duration_parse.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/glob_match.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/handshake_typestate_fsm.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/http_header_parse.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/ini_config_parser.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/json_string_unescape.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/key_value_line_scanner.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/log_line_parser.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/query_string_parser.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/shell_word_split.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/slip_escape_framer.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/state_machine_tokenizer.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/tlv_parser.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/parsing-protocols/url_parse.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/base32_codec.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/base64_codec.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/bloom_filter.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/capability_bitset.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/constant_time_eq.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/crc32.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/csrf_double_submit.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/hex_codec.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/hmac_sha256.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/hmac_signed_url.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/hotp.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/jwt_hs256_verify.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/leaky_bucket_shaper.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/nonce_replay_guard.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/otp_lockout.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/password_hash_verify.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/pbkdf2_sha256.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/session_token_expiry.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/sha256.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/security-crypto/totp.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/arc_adaptive_cache.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/bitmap_free_space_manager.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/btree_node_split.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/checkpoint_truncate_log.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/clock_second_chance_cache.rs",
+   "bucket": "SELF_REF",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/copy_on_write_btree.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/crash_safe_atomic_write.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/double_write_buffer.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/extendible_hash_index.rs",
+   "bucket": "SELF_REF",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/free_list_coalescing_allocator.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/fsync_barrier_ordering.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/log_segment_gc_compaction.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/manifest_versioned_snapshot.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/mvcc_version_chain.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/redo_undo_log.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/slotted_page_layout.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/sstable_block_index.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/tombstone_deletion_merge.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/two_phase_commit_coordinator.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/storage-persistence/wal_group_commit.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/adler32.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/base58_codec.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/bit_reader_writer.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/crc16_ccitt.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/crc32c_castagnoli.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/delta_zigzag_encode.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/dynamic_bitset.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/fletcher16.rs",
+   "bucket": "INVARIANT",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/gcd_fraction_reduce.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/gray_code.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/hamming_distance.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/length_prefixed_framing.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/luhn_checksum.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/modexp.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/popcount_bits.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/reverse_bits.rs",
+   "bucket": "NUMERIC",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/roman_numeral.rs",
+   "bucket": "OPAQUE",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/run_length_encode.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/varint_leb128.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "rust/systems-math-encoding/zigzag_signed.rs",
+   "bucket": "ROUNDTRIP",
+   "lang": "rust"
+  },
+  {
+   "file": "tag_folders.py",
+   "bucket": "OPAQUE",
+   "lang": "tag_folders.py"
+  },
+  {
+   "file": "tools/census.py",
+   "bucket": "OPAQUE",
+   "lang": "tools"
+  }
+ ]
+}

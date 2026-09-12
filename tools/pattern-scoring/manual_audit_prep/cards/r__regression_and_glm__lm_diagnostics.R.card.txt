@@ -1,0 +1,12 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "lm_diagnostics.R",
+  "evidence": {
+    "ran": true,
+    "exit": 0,
+    "stdout": "[1] TRUE\nPASS: lm_diagnostics.R"
+  },
+  "file": "regression_and_glm/lm_diagnostics.R",
+  "sha": "f57aed5885e3"
+}

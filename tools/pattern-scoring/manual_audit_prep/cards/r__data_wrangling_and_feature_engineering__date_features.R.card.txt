@@ -1,0 +1,12 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "Date Feature Engineering",
+  "evidence": {
+    "ran": true,
+    "exit": 0,
+    "stdout": "date_features.R PASS"
+  },
+  "file": "data_wrangling_and_feature_engineering/date_features.R",
+  "sha": "368c997bd4be"
+}

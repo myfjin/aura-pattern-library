@@ -1,0 +1,174 @@
+{
+  "total": 13,
+  "correct": 13,
+  "accuracy": 1.0,
+  "false_pass_count": 0,
+  "false_reject_count": 0,
+  "false_pass_rate": 0.0,
+  "false_reject_rate": 0.0,
+  "mechanism_error_rate": 0.0,
+  "driver_errors": 0,
+  "details": [
+    {
+      "file": "valid_mean.py",
+      "expected": "ACCEPT",
+      "actual_status": "VERIFIED",
+      "U": null,
+      "flags": [
+        "A: missing evidence -> UNDEFINED",
+        "M: missing evidence -> UNDEFINED",
+        "R: missing evidence -> UNDEFINED",
+        "T: missing evidence -> UNDEFINED",
+        "validity_report_missing"
+      ],
+      "failing_column": null,
+      "match": true
+    },
+    {
+      "file": "valid_walk_forward.py",
+      "expected": "ACCEPT",
+      "actual_status": "VERIFIED",
+      "U": null,
+      "flags": [
+        "A: missing evidence -> UNDEFINED",
+        "M: missing evidence -> UNDEFINED",
+        "R: missing evidence -> UNDEFINED",
+        "T: missing evidence -> UNDEFINED",
+        "validity_report_missing"
+      ],
+      "failing_column": null,
+      "match": true
+    },
+    {
+      "file": "valid_imbalance_handler.py",
+      "expected": "ACCEPT",
+      "actual_status": "VERIFIED",
+      "U": null,
+      "flags": [
+        "A: missing evidence -> UNDEFINED",
+        "M: missing evidence -> UNDEFINED",
+        "R: missing evidence -> UNDEFINED",
+        "T: missing evidence -> UNDEFINED",
+        "validity_report_missing"
+      ],
+      "failing_column": null,
+      "match": true
+    },
+    {
+      "file": "valid_metric_tracker.py",
+      "expected": "ACCEPT",
+      "actual_status": "VERIFIED",
+      "U": null,
+      "flags": [
+        "A: missing evidence -> UNDEFINED",
+        "M: missing evidence -> UNDEFINED",
+        "R: missing evidence -> UNDEFINED",
+        "T: missing evidence -> UNDEFINED",
+        "validity_report_missing"
+      ],
+      "failing_column": null,
+      "match": true
+    },
+    {
+      "file": "no_description.py",
+      "expected": "REJECT",
+      "actual_status": "quarantine_no_description",
+      "U": null,
+      "flags": [
+        "no_description: auto-quarantine, gets one rewrite attempt"
+      ],
+      "failing_column": "no_description",
+      "match": true
+    },
+    {
+      "file": "fake_robust_mean.py",
+      "expected": "REJECT",
+      "actual_status": "invalid",
+      "U": 0.0,
+      "flags": [
+        "abuse_silent_wrong:abuse_silent_output"
+      ],
+      "failing_column": "abuse_silent_output",
+      "match": true
+    },
+    {
+      "file": "fake_robust_sum.py",
+      "expected": "REJECT",
+      "actual_status": "invalid",
+      "U": 0.0,
+      "flags": [
+        "abuse_silent_wrong:abuse_silent_output"
+      ],
+      "failing_column": "abuse_silent_output",
+      "match": true
+    },
+    {
+      "file": "fake_robust_classifier.py",
+      "expected": "REJECT",
+      "actual_status": "invalid",
+      "U": 0.0,
+      "flags": [
+        "abuse_silent_wrong:abuse_silent_output"
+      ],
+      "failing_column": "abuse_silent_output",
+      "match": true
+    },
+    {
+      "file": "sklearn_wrapper.py",
+      "expected": "REJECT",
+      "actual_status": "senseless",
+      "U": null,
+      "flags": [
+        "senseless: Trivial wrapper: function body is only a return call to a banned prefix."
+      ],
+      "failing_column": "success_run_failed",
+      "match": true
+    },
+    {
+      "file": "numpy_mean_wrapper.py",
+      "expected": "REJECT",
+      "actual_status": "senseless",
+      "U": null,
+      "flags": [
+        "senseless: Trivial wrapper: function body is only a return call to a banned prefix."
+      ],
+      "failing_column": "success_run_failed",
+      "match": true
+    },
+    {
+      "file": "hollow_assert.py",
+      "expected": "REJECT",
+      "actual_status": "senseless",
+      "U": null,
+      "flags": [
+        "senseless: hollow_assert: all assertions are tautologies (assert True / 1==1)"
+      ],
+      "failing_column": "abuse_silent_output",
+      "match": true
+    },
+    {
+      "file": "valid_no_domain.py",
+      "expected": "REJECT",
+      "actual_status": "quarantine_undefined_domain",
+      "U": null,
+      "flags": [
+        "undefined_domain: no declared valid-input domain"
+      ],
+      "failing_column": "domain_undefined",
+      "match": true
+    },
+    {
+      "file": "short_nonsense_description.py",
+      "expected": "REJECT",
+      "actual_status": "senseless",
+      "U": null,
+      "flags": [
+        "senseless: File too short to be a meaningful pattern."
+      ],
+      "failing_column": "domain_undefined",
+      "match": true
+    }
+  ],
+  "false_passes": [],
+  "false_rejects": []
+}

@@ -1,0 +1,21 @@
+PATTERN: python/system-administration/backup-disaster-recovery/restore_drill.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: restore_drill: regular restore tests to verify backup recoverability.
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "\u2713 restore_drill passed",
+  "stderr": "",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

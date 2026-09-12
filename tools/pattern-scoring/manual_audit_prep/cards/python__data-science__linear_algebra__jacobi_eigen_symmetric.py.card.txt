@@ -1,0 +1,21 @@
+PATTERN: python/data-science/linear_algebra/jacobi_eigen_symmetric.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: converges to diagonal matrix of eigenvalues; eigenvectors are
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "PASS",
+  "stderr": "",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

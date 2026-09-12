@@ -1,0 +1,2809 @@
+{
+  "lang": "rust",
+  "count": 200,
+  "distribution": {
+    "VERIFIED": 200
+  },
+  "patterns": [
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "authenticated_message_channel: PASS"
+      },
+      "file": "composed-systems/authenticated_message_channel.rs",
+      "sha": "934255bb20fe"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "backup_snapshot_restore: PASS"
+      },
+      "file": "composed-systems/backup_snapshot_restore.rs",
+      "sha": "e33a47423e75"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "bloom_backed_cache: bloom gate ensures zero false negatives \u2014 PASS"
+      },
+      "file": "composed-systems/bloom_backed_cache.rs",
+      "sha": "5855b4163e8e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "checkpoint_resume_crc: real crash recovery, exactly-once, CRC detects corruption \u2014 PASS"
+      },
+      "file": "composed-systems/checkpoint_resume_crc.rs",
+      "sha": "f36bba481503"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "compressed_block_store: PASS"
+      },
+      "file": "composed-systems/compressed_block_store.rs",
+      "sha": "3d78514e18e3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "content_addressed_blob_store: PASS"
+      },
+      "file": "composed-systems/content_addressed_blob_store.rs",
+      "sha": "957fe4127543"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "content_addressed_store: SHA-256 keying detects corruption; dedups identical \u2014 PASS"
+      },
+      "file": "composed-systems/content_addressed_store.rs",
+      "sha": "1ab542c1f462"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "csv_typed_record_validator: PASS"
+      },
+      "file": "composed-systems/csv_typed_record_validator.rs",
+      "sha": "9ebcfaa94c2b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "dag_task_runner: parallel worker pool honors deps, all-once, aggregate exact \u2014 PASS"
+      },
+      "file": "composed-systems/dag_task_runner.rs",
+      "sha": "26a6076bf109"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "delta_sync_lite: 10 copies + 4 literals reconstruct NEW exactly \u2014 PASS"
+      },
+      "file": "composed-systems/delta_sync_lite.rs",
+      "sha": "89463ecdd32a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "framed_message_router: PASS"
+      },
+      "file": "composed-systems/framed_message_router.rs",
+      "sha": "645a24e557e1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "health_checked_lb_router: PASS"
+      },
+      "file": "composed-systems/health_checked_lb_router.rs",
+      "sha": "71c8f3681738"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "idempotent_request_dedup: PASS"
+      },
+      "file": "composed-systems/idempotent_request_dedup.rs",
+      "sha": "dd801665f39d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "index_compaction_pipeline: PASS"
+      },
+      "file": "composed-systems/index_compaction_pipeline.rs",
+      "sha": "97271e9573ac"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "log_ingest_dedup_index: PASS"
+      },
+      "file": "composed-systems/log_ingest_dedup_index.rs",
+      "sha": "2282fd01dfc4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "lsm_write_read_path: PASS"
+      },
+      "file": "composed-systems/lsm_write_read_path.rs",
+      "sha": "bb28cb6f355c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "merkle_tree: tampering leaf changes root; inclusion proof verifies \u2014 PASS"
+      },
+      "file": "composed-systems/merkle_tree.rs",
+      "sha": "18d0c553b95e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "merkle_verified_sync: PASS"
+      },
+      "file": "composed-systems/merkle_verified_sync.rs",
+      "sha": "1e228e0bce27"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "mvcc_snapshot_query_engine: PASS"
+      },
+      "file": "composed-systems/mvcc_snapshot_query_engine.rs",
+      "sha": "47cb38dd9aa8"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "rate_limited_request_pipeline: PASS"
+      },
+      "file": "composed-systems/rate_limited_request_pipeline.rs",
+      "sha": "5252d2b7d3f9"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "read_through_cache_store: PASS"
+      },
+      "file": "composed-systems/read_through_cache_store.rs",
+      "sha": "1485b4037913"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "replicated_log_quorum: PASS"
+      },
+      "file": "composed-systems/replicated_log_quorum.rs",
+      "sha": "4a90811d8c80"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "retry_circuit_backoff_client: PASS"
+      },
+      "file": "composed-systems/retry_circuit_backoff_client.rs",
+      "sha": "312f8f48232f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "rotating_log_checksum: per-segment stored CRC isolates corruption to one segment \u2014 PASS"
+      },
+      "file": "composed-systems/rotating_log_checksum.rs",
+      "sha": "0ba75b1a24fe"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "sharded_kv_rehash_router: PASS"
+      },
+      "file": "composed-systems/sharded_kv_rehash_router.rs",
+      "sha": "33f9968f1808"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "signed_snapshot: HMAC protects integrity; tampering detected \u2014 PASS"
+      },
+      "file": "composed-systems/signed_snapshot.rs",
+      "sha": "c3f6692c6045"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "streaming_bloom_distinct: PASS"
+      },
+      "file": "composed-systems/streaming_bloom_distinct.rs",
+      "sha": "2e4d07801897"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "streaming_percentile_monitor: PASS"
+      },
+      "file": "composed-systems/streaming_percentile_monitor.rs",
+      "sha": "839db297c2dd"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "tamper_evident_log: hash chain detects tampering at exact point \u2014 PASS"
+      },
+      "file": "composed-systems/tamper_evident_log.rs",
+      "sha": "275af71afc55"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "token_gated_priority_scheduler: PASS"
+      },
+      "file": "composed-systems/token_gated_priority_scheduler.rs",
+      "sha": "61d5ff0d3ae1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "tokenizer_ast_evaluator: PASS"
+      },
+      "file": "composed-systems/tokenizer_ast_evaluator.rs",
+      "sha": "2e7c8a5f557f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "validated_config_loader: PASS"
+      },
+      "file": "composed-systems/validated_config_loader.rs",
+      "sha": "b9f9d46fa5b7"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "wal_append_replay: crash mid-record, recover committed, detect torn tail \u2014 PASS"
+      },
+      "file": "composed-systems/wal_append_replay.rs",
+      "sha": "e53348115eda"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "wal_backed_kv_store: PASS"
+      },
+      "file": "composed-systems/wal_backed_kv_store.rs",
+      "sha": "c00cae79a661"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "atomic_counter_sharded: 400000 increments across 4 shards \u2014 PASS"
+      },
+      "file": "concurrency-resilience/atomic_counter_sharded.rs",
+      "sha": "224be6ff0f25"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "atomic_max_tracker: 8 threads, true max 9998 \u2014 PASS"
+      },
+      "file": "concurrency-resilience/atomic_max_tracker.rs",
+      "sha": "04201279844e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "atomic_refcount: 8 threads \u00d7 500 balanced pairs, baseline exact, final count 0 \u2014 PASS"
+      },
+      "file": "concurrency-resilience/atomic_refcount.rs",
+      "sha": "ed5773f66a55"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "atomic_spinlock: 8 threads \u00d7 1000 incr, final count 8000 \u2014 PASS"
+      },
+      "file": "concurrency-resilience/atomic_spinlock.rs",
+      "sha": "06a8378c3532"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "barrier_sync: 8 threads synchronized, none left before all arrived \u2014 PASS"
+      },
+      "file": "concurrency-resilience/barrier_sync.rs",
+      "sha": "1e19b6c93a17"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "broadcast_fanout: 1 producer \u2192 4 receivers, each saw [0..10) in order \u2014 PASS"
+      },
+      "file": "concurrency-resilience/broadcast_fanout.rs",
+      "sha": "9ae8d5715a1b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "cas_stack_arena: 4 threads pushed 120, all popped \u2014 PASS"
+      },
+      "file": "concurrency-resilience/cas_stack_arena.rs",
+      "sha": "a3023752ff54"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "circuit_breaker: state transitions verified, typestate valid \u2014 PASS"
+      },
+      "file": "concurrency-resilience/circuit_breaker.rs",
+      "sha": "a5b9f847ec01"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "concurrent_histogram: 4 threads, 20 buckets, 1000 total items \u2014 PASS"
+      },
+      "file": "concurrency-resilience/concurrent_histogram.rs",
+      "sha": "712cada773f6"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "countdown_latch: 5 workers, 3 waiters released only at count 0 \u2014 PASS"
+      },
+      "file": "concurrency-resilience/countdown_latch.rs",
+      "sha": "8123611a2699"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "deadline_guard: child tightened, expiry detected \u2014 PASS"
+      },
+      "file": "concurrency-resilience/deadline_guard.rs",
+      "sha": "ecc43db4b4b9"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "double_buffer: concurrent writer/readers, zero torn updates \u2014 PASS"
+      },
+      "file": "concurrency-resilience/double_buffer.rs",
+      "sha": "55528afee0d5"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "exponential_backoff: monotonic + bounded, 10 attempts \u2014 PASS"
+      },
+      "file": "concurrency-resilience/exponential_backoff.rs",
+      "sha": "9ac17fa01c21"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "future_lite_executor: 4 tasks executed in dependency order \u2014 PASS"
+      },
+      "file": "concurrency-resilience/future_lite_executor.rs",
+      "sha": "30be7cfa97ab"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "graceful_shutdown: 3 resources, cleanup order resource_1 \u2192 resource_2 \u2192 resource_3 \u2014 PASS"
+      },
+      "file": "concurrency-resilience/graceful_shutdown.rs",
+      "sha": "0f6c2076648a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "mpmc_queue: 4 producers \u00d7 3 consumers, sum exact \u2014 PASS"
+      },
+      "file": "concurrency-resilience/mpmc_queue.rs",
+      "sha": "50b6b0432ca4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "once_init_guard: 16 threads, init closure ran exactly 1 time \u2014 PASS"
+      },
+      "file": "concurrency-resilience/once_init_guard.rs",
+      "sha": "b34ab6ae4542"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "rendezvous_channel: 50 items exchanged in order \u2014 PASS"
+      },
+      "file": "concurrency-resilience/rendezvous_channel.rs",
+      "sha": "4a1f8199708e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "retry_with_budget: 100 initial \u2192 105 attempts, amplification 1.0500x (cap 1.0500x) \u2014 PASS"
+      },
+      "file": "concurrency-resilience/retry_with_budget.rs",
+      "sha": "8fab6f7d10e1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "reusable_phaser: 4 threads \u00d7 5 phases, none advanced before all arrived \u2014 PASS"
+      },
+      "file": "concurrency-resilience/reusable_phaser.rs",
+      "sha": "1c7d56fe1cdf"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "rwlock_cache: 16 readers, loader ran once, value 70 \u2014 PASS"
+      },
+      "file": "concurrency-resilience/rwlock_cache.rs",
+      "sha": "7df4dba07c52"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "rwlock_readers: max concurrent readers 8, writer exclusivity maintained \u2014 PASS"
+      },
+      "file": "concurrency-resilience/rwlock_readers.rs",
+      "sha": "cf959b1f4446"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "semaphore_limit: max in-flight 3 \u2264 capacity 3 \u2014 PASS"
+      },
+      "file": "concurrency-resilience/semaphore_limit.rs",
+      "sha": "3eaef4f43d9b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "seqlock_snapshot: 4 lock-free readers vs 1 writer, zero torn reads \u2014 PASS"
+      },
+      "file": "concurrency-resilience/seqlock_snapshot.rs",
+      "sha": "481e93d3d5a3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "spsc_ring_buffer: 50 items, FIFO order preserved \u2014 PASS"
+      },
+      "file": "concurrency-resilience/spsc_ring_buffer.rs",
+      "sha": "dba7599cc7f5"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "ticket_lock: 8 threads \u00d7 100 increments, count 800 exact \u2014 PASS"
+      },
+      "file": "concurrency-resilience/ticket_lock.rs",
+      "sha": "82999b30bf34"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "token_bucket: rate limiting verified, burst bounded \u2014 PASS"
+      },
+      "file": "concurrency-resilience/token_bucket.rs",
+      "sha": "8f38da6b37b0"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "wait_group: 10 tasks added and all completed \u2014 PASS"
+      },
+      "file": "concurrency-resilience/wait_group.rs",
+      "sha": "ba8372666bc3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "work_stealing_deque: owner took 0, 3 stealers took 100, 100 items each exactly once \u2014 PASS"
+      },
+      "file": "concurrency-resilience/work_stealing_deque.rs",
+      "sha": "0ed40c25bfb5"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "worker_pool_mpsc: 100 jobs across 4 workers, sum-of-squares 338350 \u2014 PASS"
+      },
+      "file": "concurrency-resilience/worker_pool_mpsc.rs",
+      "sha": "3654a9833d19"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "count_min_sketch: overestimate-only guarantee \u2014 PASS"
+      },
+      "file": "cross-sphere-twins/count_min_sketch.rs",
+      "sha": "372c83e8d533"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "crdt_gcounter: merge commutative, idempotent, convergent \u2014 PASS"
+      },
+      "file": "cross-sphere-twins/crdt_gcounter.rs",
+      "sha": "be1d339121b8"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hyperloglog_lite: est 49776 for 50000 distinct, error 0.45% \u2264 3\u00d7std 9.75% \u2014 PASS"
+      },
+      "file": "cross-sphere-twins/hyperloglog_lite.rs",
+      "sha": "1d8b41da0820"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "leader_lease: lease expiry triggers re-election; one leader at a time \u2014 PASS"
+      },
+      "file": "cross-sphere-twins/leader_lease.rs",
+      "sha": "2e48dae6539b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "lru_cache: eviction order exact vs brute-force reference \u2014 PASS"
+      },
+      "file": "cross-sphere-twins/lru_cache.rs",
+      "sha": "e8a7b09d1492"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "lsm_memtable_flush: read returns newest version \u2014 PASS"
+      },
+      "file": "cross-sphere-twins/lsm_memtable_flush.rs",
+      "sha": "872d101958a8"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "misra_gries_topk: heavy hitters guaranteed \u2014 PASS"
+      },
+      "file": "cross-sphere-twins/misra_gries_topk.rs",
+      "sha": "f523616026dc"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "quorum_write: majority required; minority refused \u2014 PASS"
+      },
+      "file": "cross-sphere-twins/quorum_write.rs",
+      "sha": "5bbf4d0c3b18"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "reservoir_sample: uniform k/i sampling (6000\u00b1<6% per element), deterministic \u2014 PASS"
+      },
+      "file": "cross-sphere-twins/reservoir_sample.rs",
+      "sha": "8ae53a71213f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "skip_list: 3 levels, express-lane search matches BTreeSet exactly \u2014 PASS"
+      },
+      "file": "cross-sphere-twins/skip_list.rs",
+      "sha": "8dba597bd925"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "atomic_write_rename: target never partially visible, full content after rename, cleanup verified \u2014 PASS"
+      },
+      "file": "filesystem-process/atomic_write_rename.rs",
+      "sha": "aa1c49c2c8f7"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "df_capacity_forecast: linear forecast matches trajectory hand math \u2014 PASS"
+      },
+      "file": "filesystem-process/df_capacity_forecast.rs",
+      "sha": "570b763d8282"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "dir_size_aggregate: recursive total matches brute force, empty dirs handled \u2014 PASS"
+      },
+      "file": "filesystem-process/dir_size_aggregate.rs",
+      "sha": "ddc11edc4091"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "file_dedup_hash: duplicates correctly grouped, singletons isolated, empty handled \u2014 PASS"
+      },
+      "file": "filesystem-process/file_dedup_hash.rs",
+      "sha": "760c6b793048"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "lockfile_pid_guard: stale reclaimed, dead-owner reclaimed, young+live respected \u2014 PASS"
+      },
+      "file": "filesystem-process/lockfile_pid_guard.rs",
+      "sha": "b596cf53610e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "path_normalize_guard: valid paths normalized, ../ escapes blocked \u2014 PASS"
+      },
+      "file": "filesystem-process/path_normalize_guard.rs",
+      "sha": "31b329b21d02"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "proc_stat_cpu: CPU% delta parsing matches hand math \u2014 PASS"
+      },
+      "file": "filesystem-process/proc_stat_cpu.rs",
+      "sha": "15d14ce5fd5a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "retention_gfs: kept set == independent expected set exactly (22 of 365) \u2014 PASS"
+      },
+      "file": "filesystem-process/retention_gfs.rs",
+      "sha": "d894a53dbecf"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "rolling_checksum: O(1) rolled hashes equal from-scratch recompute at every window \u2014 PASS"
+      },
+      "file": "filesystem-process/rolling_checksum.rs",
+      "sha": "ada403d71c84"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "supervisor_restart: exponential backoff, stability reset verified \u2014 PASS"
+      },
+      "file": "filesystem-process/supervisor_restart.rs",
+      "sha": "f6aa5eef87ea"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Initial distribution: node 1: 200, node 2: 590, node 3: 210\nconsistent_hash_ring: removing a node moves EXACTLY its 210 "
+      },
+      "file": "metrics-scheduling/consistent_hash_ring.rs",
+      "sha": "867c0c915080"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "cron_next_fire: expr parsing + next-fire logic verified, strictly increasing \u2014 PASS"
+      },
+      "file": "metrics-scheduling/cron_next_fire.rs",
+      "sha": "fe88642294a7"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "debounce_throttle: debounce quiet-period + throttle period verified, emitted set exact \u2014 PASS"
+      },
+      "file": "metrics-scheduling/debounce_throttle.rs",
+      "sha": "a7c53291c3b6"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "ewma_gauge: EWMA exact, hysteresis suppresses flapping, drift alert fires once \u2014 PASS"
+      },
+      "file": "metrics-scheduling/ewma_gauge.rs",
+      "sha": "ae785a1704b1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hdr_latency_lite: p99 933888\u00b5s (exact 946260\u00b5s, err 1.3%) within 12% \u2014 PASS"
+      },
+      "file": "metrics-scheduling/hdr_latency_lite.rs",
+      "sha": "066da76608b7"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "histogram_quantile: p50 error 0.2%, p99 error 0.2%, within tolerance \u2014 PASS"
+      },
+      "file": "metrics-scheduling/histogram_quantile.rs",
+      "sha": "4dbcded388ad"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "priority_scheduler: priority order, fairness via aging verified \u2014 PASS"
+      },
+      "file": "metrics-scheduling/priority_scheduler.rs",
+      "sha": "4abb532639b3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "rate_counter: reset-safe, steady rate verified, no spurious spikes \u2014 PASS"
+      },
+      "file": "metrics-scheduling/rate_counter.rs",
+      "sha": "4715cf008014"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "ring_buffer: windowed sum/mean match brute force over 50\u219220 samples \u2014 PASS"
+      },
+      "file": "metrics-scheduling/ring_buffer.rs",
+      "sha": "6874c547e110"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "topo_job_order: linear + diamond + cycle detection verified \u2014 PASS"
+      },
+      "file": "metrics-scheduling/topo_job_order.rs",
+      "sha": "9e3fd914ebe6"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "backpressure_bounded_queue: PASS"
+      },
+      "file": "networking-resilience/backpressure_bounded_queue.rs",
+      "sha": "b469f1aefa22"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "bulkhead_isolation_limiter: PASS"
+      },
+      "file": "networking-resilience/bulkhead_isolation_limiter.rs",
+      "sha": "74204be90a53"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "cidr_allowlist_match: PASS"
+      },
+      "file": "networking-resilience/cidr_allowlist_match.rs",
+      "sha": "cf236ace2603"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "connection_pool_manager: PASS"
+      },
+      "file": "networking-resilience/connection_pool_manager.rs",
+      "sha": "b389f917dd4b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "count_min_sketch_ip_freq: PASS"
+      },
+      "file": "networking-resilience/count_min_sketch_ip_freq.rs",
+      "sha": "f721c444a09c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "dns_name_wire_parser: PASS"
+      },
+      "file": "networking-resilience/dns_name_wire_parser.rs",
+      "sha": "e4d3d0803d5c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "ewma_latency_tracker: PASS"
+      },
+      "file": "networking-resilience/ewma_latency_tracker.rs",
+      "sha": "9a4e188f9bac"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "failover_priority_list: PASS"
+      },
+      "file": "networking-resilience/failover_priority_list.rs",
+      "sha": "ba38f7fbf729"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "gcra_rate_limiter: PASS"
+      },
+      "file": "networking-resilience/gcra_rate_limiter.rs",
+      "sha": "6ddcc611ebfc"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hedged_request_scheduler: PASS"
+      },
+      "file": "networking-resilience/hedged_request_scheduler.rs",
+      "sha": "c0037117d6bc"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "http_status_retry_classifier: PASS"
+      },
+      "file": "networking-resilience/http_status_retry_classifier.rs",
+      "sha": "b22b9df1729a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "least_connections_lb: PASS"
+      },
+      "file": "networking-resilience/least_connections_lb.rs",
+      "sha": "a0676ae7a3fb"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "port_scan_detector: PASS"
+      },
+      "file": "networking-resilience/port_scan_detector.rs",
+      "sha": "9cef5805ada4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "rendezvous_hash_hrw: PASS"
+      },
+      "file": "networking-resilience/rendezvous_hash_hrw.rs",
+      "sha": "c23529a078e3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "retry_after_header_parser: PASS"
+      },
+      "file": "networking-resilience/retry_after_header_parser.rs",
+      "sha": "91976176fd5e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "sliding_window_flow_control: PASS"
+      },
+      "file": "networking-resilience/sliding_window_flow_control.rs",
+      "sha": "dce582cf376b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "sliding_window_rate_limiter: PASS"
+      },
+      "file": "networking-resilience/sliding_window_rate_limiter.rs",
+      "sha": "556182eb7af6"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "tcp_rto_estimator: PASS"
+      },
+      "file": "networking-resilience/tcp_rto_estimator.rs",
+      "sha": "6dd9c47d87af"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "url_authority_parser: PASS"
+      },
+      "file": "networking-resilience/url_authority_parser.rs",
+      "sha": "be723552a110"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "weighted_round_robin_lb: PASS"
+      },
+      "file": "networking-resilience/weighted_round_robin_lb.rs",
+      "sha": "3289230f193e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "ansi_escape_stripper: PASS"
+      },
+      "file": "parsing-protocols/ansi_escape_stripper.rs",
+      "sha": "ac1681b95832"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "backslash_escape_codec: PASS"
+      },
+      "file": "parsing-protocols/backslash_escape_codec.rs",
+      "sha": "023063f8aaf2"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "balanced_delimiter_check: PASS"
+      },
+      "file": "parsing-protocols/balanced_delimiter_check.rs",
+      "sha": "7c9fd382097a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "byte_unit_parse: round-trip exact, ordering preserved \u2014 PASS"
+      },
+      "file": "parsing-protocols/byte_unit_parse.rs",
+      "sha": "a9561b898946"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "chunked_transfer_decoder: PASS"
+      },
+      "file": "parsing-protocols/chunked_transfer_decoder.rs",
+      "sha": "6869b4d4ad80"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "cidr_ip_math: containment exact, /16 split into disjoint /17s verified \u2014 PASS"
+      },
+      "file": "parsing-protocols/cidr_ip_math.rs",
+      "sha": "cb422b43366b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "cli_args_parser: mixed flags and positionals exact \u2014 PASS"
+      },
+      "file": "parsing-protocols/cli_args_parser.rs",
+      "sha": "087fa5b6b307"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "cobs_framing: PASS"
+      },
+      "file": "parsing-protocols/cobs_framing.rs",
+      "sha": "e395f2d9d8c2"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "crc_framed_packet: PASS"
+      },
+      "file": "parsing-protocols/crc_framed_packet.rs",
+      "sha": "579d33d97a76"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "csv_quote_escape: PASS"
+      },
+      "file": "parsing-protocols/csv_quote_escape.rs",
+      "sha": "f398b9cc27bf"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "csv_reader_typed: 4 rows parsed, quoted fields exact \u2014 PASS"
+      },
+      "file": "parsing-protocols/csv_reader_typed.rs",
+      "sha": "e0f96ef64c25"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "duration_parse: round-trip exact, arithmetic verified \u2014 PASS"
+      },
+      "file": "parsing-protocols/duration_parse.rs",
+      "sha": "3a291b4853d7"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "glob_match: 17 cases tested, all exact \u2014 PASS"
+      },
+      "file": "parsing-protocols/glob_match.rs",
+      "sha": "3bb16f31a8c1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "handshake_typestate_fsm: PASS"
+      },
+      "file": "parsing-protocols/handshake_typestate_fsm.rs",
+      "sha": "8804cc7990b4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "http_header_parse: case-insensitive lookups exact, folding handled \u2014 PASS"
+      },
+      "file": "parsing-protocols/http_header_parse.rs",
+      "sha": "435cff7e3e29"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "http_request_line_parser: PASS"
+      },
+      "file": "parsing-protocols/http_request_line_parser.rs",
+      "sha": "ac0e63bf95e8"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "ini_config_parser: round-trip exact, all values preserved \u2014 PASS"
+      },
+      "file": "parsing-protocols/ini_config_parser.rs",
+      "sha": "0505e3739898"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "json_string_unescape: PASS"
+      },
+      "file": "parsing-protocols/json_string_unescape.rs",
+      "sha": "ce11d8ca5128"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "key_value_line_scanner: PASS"
+      },
+      "file": "parsing-protocols/key_value_line_scanner.rs",
+      "sha": "4a5d8f32560d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "log_line_parser: 3 lines parsed, malformed rejected \u2014 PASS"
+      },
+      "file": "parsing-protocols/log_line_parser.rs",
+      "sha": "e7fcff12607c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "query_string_parser: PASS"
+      },
+      "file": "parsing-protocols/query_string_parser.rs",
+      "sha": "15ac82be3aa4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "shell_word_split: PASS"
+      },
+      "file": "parsing-protocols/shell_word_split.rs",
+      "sha": "69528b12d645"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "slip_escape_framer: PASS"
+      },
+      "file": "parsing-protocols/slip_escape_framer.rs",
+      "sha": "1b7ac76ae379"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "state_machine_tokenizer: PASS"
+      },
+      "file": "parsing-protocols/state_machine_tokenizer.rs",
+      "sha": "e7e536895701"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "tlv_parser: PASS"
+      },
+      "file": "parsing-protocols/tlv_parser.rs",
+      "sha": "11b5170f94b1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "url_parse: 4 URLs decomposed correctly \u2014 PASS"
+      },
+      "file": "parsing-protocols/url_parse.rs",
+      "sha": "be3f2e28ca4a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "base32_codec ... PASS"
+      },
+      "file": "security-crypto/base32_codec.rs",
+      "sha": "67b3021ad9f0"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "base64_codec ... PASS"
+      },
+      "file": "security-crypto/base64_codec.rs",
+      "sha": "f00dc8a45c4c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "bloom_filter ... PASS"
+      },
+      "file": "security-crypto/bloom_filter.rs",
+      "sha": "3459bbff400b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "capability_bitset ... PASS"
+      },
+      "file": "security-crypto/capability_bitset.rs",
+      "sha": "dafdbd1e71d4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "constant_time_eq ... PASS"
+      },
+      "file": "security-crypto/constant_time_eq.rs",
+      "sha": "4b0f5cdab524"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "crc32 ... PASS"
+      },
+      "file": "security-crypto/crc32.rs",
+      "sha": "91c80412ec47"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "csrf_double_submit ... PASS"
+      },
+      "file": "security-crypto/csrf_double_submit.rs",
+      "sha": "65535513d014"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hex_codec ... PASS"
+      },
+      "file": "security-crypto/hex_codec.rs",
+      "sha": "9ff8b43a1b67"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hmac_sha256 ... PASS"
+      },
+      "file": "security-crypto/hmac_sha256.rs",
+      "sha": "419fe94c52f0"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hmac_signed_url ... PASS"
+      },
+      "file": "security-crypto/hmac_signed_url.rs",
+      "sha": "dd618ec1b5d8"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hotp ... PASS"
+      },
+      "file": "security-crypto/hotp.rs",
+      "sha": "b61266543a81"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "jwt_hs256_verify ... PASS"
+      },
+      "file": "security-crypto/jwt_hs256_verify.rs",
+      "sha": "63a7c18d0261"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "leaky_bucket_shaper ... PASS"
+      },
+      "file": "security-crypto/leaky_bucket_shaper.rs",
+      "sha": "870796246f3d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "nonce_replay_guard ... PASS"
+      },
+      "file": "security-crypto/nonce_replay_guard.rs",
+      "sha": "1dba0cf15a2a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "otp_lockout ... PASS"
+      },
+      "file": "security-crypto/otp_lockout.rs",
+      "sha": "95ba9c44a7ab"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "password_hash_verify ... PASS"
+      },
+      "file": "security-crypto/password_hash_verify.rs",
+      "sha": "2e89284dde00"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "pbkdf2_sha256 ... PASS"
+      },
+      "file": "security-crypto/pbkdf2_sha256.rs",
+      "sha": "54ee13ed4917"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "session_token_expiry ... PASS"
+      },
+      "file": "security-crypto/session_token_expiry.rs",
+      "sha": "c0ca2e52b8d9"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "sha256 ... PASS"
+      },
+      "file": "security-crypto/sha256.rs",
+      "sha": "2f0f8fb20e24"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "totp ... PASS"
+      },
+      "file": "security-crypto/totp.rs",
+      "sha": "ee00202a866b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "arc_adaptive_cache: PASS"
+      },
+      "file": "storage-persistence/arc_adaptive_cache.rs",
+      "sha": "6fdeffe45976"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "bitmap_free_space_manager: PASS"
+      },
+      "file": "storage-persistence/bitmap_free_space_manager.rs",
+      "sha": "33d4b86e31d3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "btree_node_split: PASS"
+      },
+      "file": "storage-persistence/btree_node_split.rs",
+      "sha": "1e4061bc5008"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "checkpoint_truncate_log: PASS"
+      },
+      "file": "storage-persistence/checkpoint_truncate_log.rs",
+      "sha": "95fed3d1ad78"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "clock_second_chance_cache: PASS"
+      },
+      "file": "storage-persistence/clock_second_chance_cache.rs",
+      "sha": "cf151ed66984"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "copy_on_write_btree: PASS"
+      },
+      "file": "storage-persistence/copy_on_write_btree.rs",
+      "sha": "e045e9148a3d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "crash_safe_atomic_write: PASS"
+      },
+      "file": "storage-persistence/crash_safe_atomic_write.rs",
+      "sha": "ffc65cf195ca"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "double_write_buffer: PASS"
+      },
+      "file": "storage-persistence/double_write_buffer.rs",
+      "sha": "501cb6d05250"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "extendible_hash_index: PASS"
+      },
+      "file": "storage-persistence/extendible_hash_index.rs",
+      "sha": "02a7f5de70ae"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "free_list_coalescing_allocator: PASS"
+      },
+      "file": "storage-persistence/free_list_coalescing_allocator.rs",
+      "sha": "e2cd27e28f99"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "fsync_barrier_ordering: PASS"
+      },
+      "file": "storage-persistence/fsync_barrier_ordering.rs",
+      "sha": "6995d14d4f37"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "log_segment_gc_compaction: PASS"
+      },
+      "file": "storage-persistence/log_segment_gc_compaction.rs",
+      "sha": "b247a4da91b6"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "manifest_versioned_snapshot: PASS"
+      },
+      "file": "storage-persistence/manifest_versioned_snapshot.rs",
+      "sha": "d6853c5c0da1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "mvcc_version_chain: PASS"
+      },
+      "file": "storage-persistence/mvcc_version_chain.rs",
+      "sha": "8bb946eed581"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "redo_undo_log: PASS"
+      },
+      "file": "storage-persistence/redo_undo_log.rs",
+      "sha": "3b8d8a0cabbc"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "slotted_page_layout: PASS"
+      },
+      "file": "storage-persistence/slotted_page_layout.rs",
+      "sha": "9cacf4a2d951"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "sstable_block_index: PASS"
+      },
+      "file": "storage-persistence/sstable_block_index.rs",
+      "sha": "c3e568e99561"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "tombstone_deletion_merge: PASS"
+      },
+      "file": "storage-persistence/tombstone_deletion_merge.rs",
+      "sha": "60a6b144a6c6"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "two_phase_commit_coordinator: PASS"
+      },
+      "file": "storage-persistence/two_phase_commit_coordinator.rs",
+      "sha": "2e4841f9f469"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "wal_group_commit: PASS"
+      },
+      "file": "storage-persistence/wal_group_commit.rs",
+      "sha": "f27a820403b1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "adler32 ... PASS"
+      },
+      "file": "systems-math-encoding/adler32.rs",
+      "sha": "f9d5ab8f17a5"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "base58_codec ... PASS"
+      },
+      "file": "systems-math-encoding/base58_codec.rs",
+      "sha": "ce8acbb43c41"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "bit_reader_writer ... PASS"
+      },
+      "file": "systems-math-encoding/bit_reader_writer.rs",
+      "sha": "c531efeadb76"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "crc16_ccitt ... PASS"
+      },
+      "file": "systems-math-encoding/crc16_ccitt.rs",
+      "sha": "f9bdc0b97ed1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "crc32c_castagnoli ... PASS"
+      },
+      "file": "systems-math-encoding/crc32c_castagnoli.rs",
+      "sha": "bdce36e83f52"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "delta_zigzag_encode ... PASS"
+      },
+      "file": "systems-math-encoding/delta_zigzag_encode.rs",
+      "sha": "0de130d95b9f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "dynamic_bitset ... PASS"
+      },
+      "file": "systems-math-encoding/dynamic_bitset.rs",
+      "sha": "62fcf29449bb"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "fletcher16 ... PASS"
+      },
+      "file": "systems-math-encoding/fletcher16.rs",
+      "sha": "921e43e2f9af"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "gcd_fraction_reduce ... PASS"
+      },
+      "file": "systems-math-encoding/gcd_fraction_reduce.rs",
+      "sha": "8f1b99d7f8d3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "gray_code ... PASS"
+      },
+      "file": "systems-math-encoding/gray_code.rs",
+      "sha": "248331b6389c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hamming_distance ... PASS"
+      },
+      "file": "systems-math-encoding/hamming_distance.rs",
+      "sha": "76a37ca6c4a1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "length_prefixed_framing ... PASS"
+      },
+      "file": "systems-math-encoding/length_prefixed_framing.rs",
+      "sha": "d4b4ba02a625"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "luhn_checksum ... PASS"
+      },
+      "file": "systems-math-encoding/luhn_checksum.rs",
+      "sha": "ea30326c7a0d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "modexp ... PASS"
+      },
+      "file": "systems-math-encoding/modexp.rs",
+      "sha": "553a713323d2"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "popcount_bits ... PASS"
+      },
+      "file": "systems-math-encoding/popcount_bits.rs",
+      "sha": "c080ff7d4fd5"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "reverse_bits ... PASS"
+      },
+      "file": "systems-math-encoding/reverse_bits.rs",
+      "sha": "62cd52d39223"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "roman_numeral ... PASS"
+      },
+      "file": "systems-math-encoding/roman_numeral.rs",
+      "sha": "df0d9ca8ad6a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "run_length_encode ... PASS"
+      },
+      "file": "systems-math-encoding/run_length_encode.rs",
+      "sha": "4e7fa98665bb"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "varint_leb128 ... PASS"
+      },
+      "file": "systems-math-encoding/varint_leb128.rs",
+      "sha": "a294182f6569"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "compiled": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "zigzag_signed ... PASS"
+      },
+      "file": "systems-math-encoding/zigzag_signed.rs",
+      "sha": "24773d6aaf7e"
+    }
+  ]
+}

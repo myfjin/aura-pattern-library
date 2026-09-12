@@ -1,0 +1,72 @@
+[
+ {
+  "file": "go/programming/monitoring/event_logger.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/programming/networking/connection_pool.go",
+  "kind": "declstyle",
+  "current": "Connection represents a single connection with health tracking."
+ },
+ {
+  "file": "go/programming/networking/dns_cache.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/programming/performance/budget_allocator.go",
+  "kind": "declstyle",
+  "current": "BatchRequest represents a batched request with its identifier and arguments."
+ },
+ {
+  "file": "go/programming/performance/free_list_allocator.go",
+  "kind": "short+decl",
+  "current": "Block represents a memory block."
+ },
+ {
+  "file": "go/programming/reasoning/bayesian_network.go",
+  "kind": "declstyle",
+  "current": "CPT represents a Conditional Probability Table for a Bayesian Network node."
+ },
+ {
+  "file": "go/programming/reasoning/expression_evaluator.go",
+  "kind": "short+decl",
+  "current": "Token represents a single token."
+ },
+ {
+  "file": "go/programming/reasoning/sat_solver.go",
+  "kind": "short+decl",
+  "current": "Literal represents a Boolean literal."
+ },
+ {
+  "file": "go/programming/resilience/circuit_breaker.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/append_only_audit.go",
+  "kind": "declstyle",
+  "current": "entry represents one append-only audit log entry."
+ },
+ {
+  "file": "go/system-administration/sysadmin/atomic_snapshot.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/atomic_symlink_swap.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/capability_probe.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/cas_file_update.go",
+  "kind": "missing",
+  "current": null
+ }
+]

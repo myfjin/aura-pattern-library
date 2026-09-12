@@ -1,0 +1,1536 @@
+{
+ "counts": {
+  "FABRICATED_CERTAINTY": 23,
+  "DOMAIN_SILENT": 18,
+  "VISIBLE_POISON": 100,
+  "NO_OP_ATTACK": 3,
+  "GUARDED": 7
+ },
+ "rows": [
+  {
+   "file": "python/data-science/applied_ds_practice/drift_detection_psi.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "bin_with_edges",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "edges",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "[0, 0, 0, 0, 0]",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "kolmogorov_smirnov_statistic",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "ref_vals",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "0.20000000000000007",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "kolmogorov_smirnov_statistic",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "curr_vals",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "0.20000000000000007",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "population_stability_index",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "ref_bins",
+     "attack_value": "[nan, 1, 0, 1, 1, 0]",
+     "output": "0.017980129528236303",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "population_stability_index",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "curr_bins",
+     "attack_value": "[nan, 1, 0, 1, 1, 0]",
+     "output": "0.017980129528236306",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/applied_ds_practice/target_encoding_smoothing.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "fit_encoding",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "alpha",
+     "attack_value": "1.5",
+     "output": "{1.0: 0.3, 2.0: 0.7, 3.0: 0.3, 4.0: 0.7, 5.0: 0.7}",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/applied_ds_practice/welford_online_stats.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "naive_variance",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "values",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "0.0",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/bayesian_iii_approximate_inference/meanfield_vi_gaussian.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/bayesian_iii_approximate_inference/posterior_predictive_pvalue.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "posterior_predictive_pvalue",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "posterior_samples",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "0.8",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/bayesian_iii_modeling_and_selection/bayesian_linreg_conjugate.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "bayesian_linreg_posterior",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "x_vals",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "(0.0, 0.19607843137254904)",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/bayesian_iii_modeling_and_selection/beta_binomial_overdispersion.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "beta_binomial_loglik",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "alpha",
+     "attack_value": "1.5",
+     "output": "-22.458649989900834",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "moment_match_beta_binomial",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "n_trials",
+     "attack_value": "-1.0",
+     "output": "(-0.9999999999999998, 2.999999999999999)",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/bayesian_iii_modeling_and_selection/bic_selects_true_degree.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/bayesian_iii_modeling_and_selection/crp_table_growth.py",
+   "class": "NO_OP_ATTACK",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/bayesian_iii_modeling_and_selection/dirichlet_multinomial_posterior.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "dirichlet_posterior_concentration",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "prior_alpha",
+     "attack_value": "1.5",
+     "output": "[0.125, 0.20833333333333334, 0.125, 0.20833333333333334, 0.20833333333333334, 0.125]",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/bayesian_iii_modeling_and_selection/gp_regression_marginal_likelihood.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/bayesian_iii_modeling_and_selection/kalman_rts_smoother.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/causal_inference_and_experimentation/ab_test_srm_check.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/causal_inference_and_experimentation/cuped_variance_reduction.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/causal_inference_and_experimentation/difference_in_differences.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/causal_inference_and_experimentation/instrumental_variable_lite.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/causal_inference_and_experimentation/interrupted_time_series.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "fit_segmented_regression",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "cutoff",
+     "attack_value": "-1.0",
+     "output": "(2.0, 1.6666666666666667, 0.0, 0.0)",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/causal_inference_and_experimentation/propensity_score_matching.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/causal_inference_and_experimentation/regression_discontinuity.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/causal_inference_and_experimentation/sequential_probability_ratio.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "fixed_n_test",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "data",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "'H0'",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "sprt",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "alpha",
+     "attack_value": "1.5",
+     "output": "('H1', 1)",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/causal_inference_ii/backdoor_vs_collider_adjustment.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/causal_inference_ii/doubly_robust_aipw.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/causal_inference_ii/ipw_ate.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/causal_inference_ii/negative_control_outcome.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/causal_inference_ii/stratification_subclassification.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "stratify_by_propensity",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "t",
+     "attack_value": "[nan, 1, 0, 1, 1, 0]",
+     "output": "(0.0, 0.6666666666666665)",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/composed_tools/dtw_shape_drift_monitor.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/composed_tools/forest_size_by_variance.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/composed_tools/kde_seeded_gmm.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/composed_tools/latency_percentile_monitor.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/composed_tools/rare_event_option_pricing.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/composed_tools/rolling_ols_update.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/core_ml/kmeans_clustering.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/core_ml/knn_classifier.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/econometrics_and_finance/black_scholes_monte_carlo.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "monte_carlo_call",
+     "recipe": "R9_degenerate_param",
+     "e_class": "E009",
+     "param": "K",
+     "attack_value": "0",
+     "output": "(0.4375099627904945, 0.0866458459863577)",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/econometrics_and_finance/bootstrap_portfolio_var.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/econometrics_and_finance/cointegration_engle_granger_lite.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/econometrics_and_finance/fixed_effects_within.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "pooled_ols",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "x",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "0.0",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/econometrics_and_finance/garch_lite_volatility_clustering.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/econometrics_and_finance/instrumental_2sls.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "ols_simple",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "x",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "0.0",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "tsls",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "x",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "0.0",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "tsls",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "z",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "0.0",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/econometrics_and_finance/logit_marginal_effects.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "average_marginal_effect",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "beta",
+     "attack_value": "-2.0",
+     "output": "-0.050201373754660036",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "average_marginal_effect",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "beta",
+     "attack_value": "0.0",
+     "output": "0.0",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "logit_marginal_effect",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "beta",
+     "attack_value": "-2.0",
+     "output": "-0.3932238664829637",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "logit_marginal_effect",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "beta",
+     "attack_value": "0.0",
+     "output": "0.0",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "logit_predict",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "beta",
+     "attack_value": "-2.0",
+     "output": "0.2689414213699951",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "logit_predict",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "beta",
+     "attack_value": "0.0",
+     "output": "0.5",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "numerical_gradient",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "beta",
+     "attack_value": "-2.0",
+     "output": "-0.3932238664683396",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "numerical_gradient",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "beta",
+     "attack_value": "0.0",
+     "output": "0.0",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/econometrics_and_finance/sharpe_sortino_ratios.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "sharpe_ratio",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "returns",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "0.0",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/econometrics_and_finance/value_averaging_vs_dca.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/ensembles_and_robust_methods/bagging_variance_reduction.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "fit_bagged",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "y",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "[(2.0, 0.0, 0.0), (4.0, 0.0, 0.0), (1.0, 0.0, 0.0), (3.0, 0.0, 0.0), (2.0, 0.0, 0.0), (4.0",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "fit_stump",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "y",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "(3.0, 0.0, 0.0)",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/ensembles_and_robust_methods/huber_robust_regression.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/ensembles_and_robust_methods/random_forest.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/ensembles_and_robust_methods/theil_sen_estimator.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/experiments_ii/minimum_detectable_effect.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/experiments_ii/multi_armed_holm_correction.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "bonferroni_threshold",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "alpha",
+     "attack_value": "-0.05",
+     "output": "-0.01",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "bonferroni_threshold",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "alpha",
+     "attack_value": "1.5",
+     "output": "0.3",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "bonferroni_threshold",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "num_tests",
+     "attack_value": "-1.0",
+     "output": "-0.5",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "holm_thresholds",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "alpha",
+     "attack_value": "-0.05",
+     "output": "[-0.01, -0.0125, -0.016666666666666666, -0.025, -0.05]",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "holm_thresholds",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "alpha",
+     "attack_value": "1.5",
+     "output": "[0.3, 0.375, 0.5, 0.75, 1.5]",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/experiments_ii/novelty_effect_decay.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "simulate_novelty_decay",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "true_long_run_effect",
+     "attack_value": "-1.0",
+     "output": "[[-0.5720451647889642, -0.7831864703094429, -0.87171821019811, -0.5374430573763536, -0.996",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/experiments_ii/switchback_experiment_lite.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/geospatial_and_spatial/great_circle_waypoints.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/geospatial_and_spatial/grid_density_binning.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/geospatial_and_spatial/haversine_bearing.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/information_theory_and_probability/bayes_diagnostic_test.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/information_theory_and_probability/conjugate_priors.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "beta_mean_variance",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "alpha",
+     "attack_value": "1.5",
+     "output": "(0.75, 0.0625)",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/information_theory_and_probability/hmm_forward_backward.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/information_theory_and_probability/kl_divergence_cross_entropy.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/information_theory_and_probability/nonlinear_dependence_mi.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "binned_entropy",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "num_bins",
+     "attack_value": "-1.0",
+     "output": "0.0",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "binned_mutual_information",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "num_bins",
+     "attack_value": "-1.0",
+     "output": "0.0",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "independent_mutual_information_baseline",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "num_bins",
+     "attack_value": "-1.0",
+     "output": "0.0",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/linear_algebra/householder_reflection.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "apply_householder",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "beta",
+     "attack_value": "-2.0",
+     "output": "[111.0, 222.0, 333.0, 444.0, 555.0]",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "apply_householder",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "beta",
+     "attack_value": "0.0",
+     "output": "[1.0, 2.0, 3.0, 4.0, 5.0]",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/model_diagnostics/calibration_curve.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/model_diagnostics/learning_curve.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/model_diagnostics/lift_gain_chart.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "generate_scored_labels",
+     "recipe": "R15_scalar_nan_inf",
+     "e_class": "E008",
+     "param": "signal_strength",
+     "attack_value": "nan",
+     "output": "[(1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0)]",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "generate_scored_labels",
+     "recipe": "R15_scalar_nan_inf",
+     "e_class": "E008",
+     "param": "signal_strength",
+     "attack_value": "inf",
+     "output": "[(1, 1), (1, 1), (1, 1), (1, 1), (1, 1), (0, 0), (0, 0), (0, 0), (0, 0), (0, 0)]",
+     "class": "INF_ABSORBED"
+    },
+    {
+     "fn": "lift_gain_chart",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "scores",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "([10, 20, 30, 40, 50, 60, 70, 80, 90, 100], [33.33333333333333, 33.33333333333333, 33.3333",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "lift_gain_chart",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "labels",
+     "attack_value": "[nan, 1, 0, 1, 1, 0]",
+     "output": "([10, 20, 30, 40, 50, 60, 70, 80, 90, 100], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [1.0, 1.0, 1.0",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/model_diagnostics/precision_recall_curve.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "compute_pr_curve",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "labels",
+     "attack_value": "[nan, 1, 0, 1, 1, 0]",
+     "output": "([5.0, 4.0, 3.0, 2.0, 1.0, 0.0], [1.0, 1.0, 0.6666666666666666, 0.75, 0.6, 0.6], [0.0, 0.0",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/model_diagnostics/residual_analysis.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/model_understanding_and_tuning/class_weight_imbalance.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "precision_recall",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "y_true",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "(0.0, 0.0)",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "precision_recall",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "y_pred",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "(0.0, 0.0)",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/model_understanding_and_tuning/conformal_prediction_intervals.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/model_understanding_and_tuning/permutation_feature_importance.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/model_understanding_and_tuning/platt_scaling_calibration.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/model_understanding_and_tuning/shapley_value_sampling.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/model_understanding_and_tuning/threshold_tuning_cost.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "compute_total_cost",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "y_scores",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "5.0",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "find_optimal_threshold",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "y_scores",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "(0.0, 5.0)",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/neural_networks_from_scratch/conv1d_feature_detector.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/neural_networks_from_scratch/dropout_regularization_sim.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/neural_networks_from_scratch/early_stopping.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/neural_networks_from_scratch/learning_rate_schedules.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/neural_networks_from_scratch/mlp_backprop.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/neural_networks_from_scratch/numerical_gradient_check.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/neural_networks_from_scratch/tiny_autoencoder.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/neural_networks_from_scratch/weight_initialization_comparison.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/neural_networks_from_scratch/word2vec_skipgram.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/numerical_methods/cubic_spline_interpolation.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/numerical_methods/richardson_extrapolation.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/optimization_and_distances/distance_metrics_toolkit.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/optimization_and_distances/dtw_dynamic_time_warping.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/optimization_and_distances/feature_scaling_toolkit.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/optimization_and_distances/genetic_algorithm.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/optimization_and_distances/gradient_descent_momentum.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/optimization_and_distances/hill_climbing_restarts.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/optimization_and_distances/newton_method_optimization.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/optimization_and_distances/simulated_annealing.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/preprocessing_and_eda/quantile_binning.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "equal_width_binning",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "n_bins",
+     "attack_value": "-1.0",
+     "output": "[0, 0, 0, 0, -2.0]",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/preprocessing_and_eda/random_oversampling_balance.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/preprocessing_and_eda/winsorize_clip_outliers.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/probabilistic_modeling/bayesian_linear_regression.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/probabilistic_modeling/bayesian_two_segment_changepoint.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/probabilistic_modeling/dirichlet_multinomial.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/probabilistic_modeling/gamma_poisson_conjugate.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "gamma_poisson_ll",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "alpha",
+     "attack_value": "1.5",
+     "output": "0.06495374259594433",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "gamma_posterior_mean",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "alpha",
+     "attack_value": "1.5",
+     "output": "3.0",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "gamma_posterior_var",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "alpha",
+     "attack_value": "1.5",
+     "output": "6.0",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/probabilistic_modeling/particle_filter_1d.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "particle_filter_step",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "weights",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "([1.1209491547871222, 2.036566836455074, 3.127092543354009, 3.963231935473561, 5.016605430",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "particle_filter_step",
+     "recipe": "R15_scalar_nan_inf",
+     "e_class": "E008",
+     "param": "observation",
+     "attack_value": "nan",
+     "output": "([0.5394871241339926, 2.1717265818903413, 2.9345468381324573, 3.850740144991669, 5.1929417",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "particle_filter_step",
+     "recipe": "R15_scalar_nan_inf",
+     "e_class": "E008",
+     "param": "observation",
+     "attack_value": "inf",
+     "output": "([1.0153199119558463, 1.9055903936533798, 2.996403866550515, 3.6427320434151307, 5.0347480",
+     "class": "INF_ABSORBED"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/probabilistic_modeling/rejection_sampling.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/probabilistic_modeling/rts_kalman_smoother.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/probability_iii/banach_matchbox_or_gambler_ruin.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/probability_iii/birthday_paradox_exact_vs_sim.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/probability_iii/copula_gaussian_lite.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/probability_iii/extreme_value_block_maxima.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/probability_iii/polya_urn_reinforcement.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/probability_iii/quantile_mapping_bias_correction.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "quantile_mapping_correct",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "data_biased",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "[1.0, 1.0, 2.0, 3.0, 3.0]",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/rankings_and_information_retrieval/ab_interleaving.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/rankings_and_information_retrieval/elo_rating.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/rankings_and_information_retrieval/ndcg_evaluation.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/rankings_and_information_retrieval/rank_fusion_rrf.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "ndcg_simple",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "ranking",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "0.6608397947263839",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "ndcg_simple",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "ideal_order",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "0.6608397947263839",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/recommenders_and_graph_sampling/thompson_sampling_bandit.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "sample_beta",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "alpha",
+     "attack_value": "1.5",
+     "output": "0.8834043303156243",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "thompson_sampling_bandit",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "true_probabilities",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "{'cumulative_reward': 5.0, 'pulls_per_arm': [0, 0, 0, 0, 5], 'alpha_final': [1.0, 1.0, 1.0",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/recommenders_ii_kept_survivors/content_tfidf_rec.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/autocovariance_spectrum.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/convolution_filtering.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/cross_correlation_lag.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/discrete_fourier_transform.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/dynamic_range_compression.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/hampel_filter_outliers.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/resampling_interpolation.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/savitzky_golay_lite.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/statistical_modeling/gibbs_sampling_bivariate.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "gibbs_bivariate_normal",
+     "recipe": "R9_degenerate_param",
+     "e_class": "E009",
+     "param": "n_iter",
+     "attack_value": "0",
+     "output": "([], [])",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/statistical_modeling/kernel_density_estimation.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/statistical_modeling/loess_local_regression.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "tricube_weight",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "u",
+     "attack_value": "1.5",
+     "output": "0.0",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "tricube_weight",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "u",
+     "attack_value": "1.0",
+     "output": "0.0",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "tricube_weight",
+     "recipe": "R15_scalar_nan_inf",
+     "e_class": "E008",
+     "param": "u",
+     "attack_value": "inf",
+     "output": "0.0",
+     "class": "INF_ABSORBED"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/statistical_modeling/polynomial_regression.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/statistical_modeling/quantile_regression_pinball.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "count_below_line",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "x_vals",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "0.0",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "count_below_line",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "y_vals",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "0.0",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/statistics_and_testing/bootstrap_confidence_interval.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/statistics_and_testing/confusion_matrix_metrics.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "confusion_matrix",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "y_true",
+     "attack_value": "[nan, 1, 0, 1, 1, 0]",
+     "output": "(3, 0, 2, 0)",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "confusion_matrix",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "y_pred",
+     "attack_value": "[nan, 1, 0, 1, 1, 0]",
+     "output": "(3, 0, 2, 0)",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/statistics_and_testing/permutation_test.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/statistics_and_testing/train_test_split_kfold.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/streaming_and_sketches/sliding_window_extrema.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/streaming_iii/frugal_streaming_median.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "frugal_streaming_median",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "step",
+     "attack_value": "-1.0",
+     "output": "-1.0",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/streaming_iii/tdigest_lite.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/streaming_iii/welford_decayed_moments.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/survival_and_reliability/accelerated_failure_time_lite.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/survival_and_reliability/censoring_bias_demo.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "kaplan_meier_mean",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "times",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "2.625",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/survival_and_reliability/competing_risks_naive_bias.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/survival_and_reliability/cox_partial_likelihood_lite.py",
+   "class": "NO_OP_ATTACK",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/survival_and_reliability/exponential_reliability_mtbf.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/survival_and_reliability/nelson_aalen_cumhazard.py",
+   "class": "NO_OP_ATTACK",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/survival_and_reliability/reliability_series_parallel.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "simulate_series",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "component_reliabilities",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "0.0",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/survival_and_reliability/weibull_mle.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/text_nlp/bag_of_words.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/text_nlp/tfidf_vectorizer.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/text_nlp_ii/textrank_lite.py",
+   "class": "FABRICATED_CERTAINTY",
+   "evidence": [
+    {
+     "fn": "jaccard_similarity",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "sent1",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "0.6666666666666666",
+     "class": "FABRICATED_CERTAINTY"
+    },
+    {
+     "fn": "jaccard_similarity",
+     "recipe": "R8_nan_inf_poison",
+     "e_class": "E008",
+     "param": "sent2",
+     "attack_value": "[nan, 2.0, 3.0, 4.0, 5.0]",
+     "output": "0.6666666666666666",
+     "class": "FABRICATED_CERTAINTY"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/time_series/cusum_changepoint.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/time_series/differencing_stationarity.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/time_series/exponential_smoothing.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "forecast_holt",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "level",
+     "attack_value": "-0.05",
+     "output": "[0.45, 0.95, 1.45, 1.95, 2.45]",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "forecast_holt",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "level",
+     "attack_value": "1.5",
+     "output": "[2.0, 2.5, 3.0, 3.5, 4.0]",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/time_series/kalman_filter_1d.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/time_series/moving_average_smoothing.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/time_series/rolling_zscore_anomaly.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "rolling_zscore",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "threshold",
+     "attack_value": "-1.0",
+     "output": "([0.0, 1.0, 1.224744871391589, 1.3416407864998738, 1.414213562373095], [0, 1, 2, 3, 4])",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/time_series/seasonal_decomposition.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/time_series/walk_forward_validation.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  }
+ ]
+}

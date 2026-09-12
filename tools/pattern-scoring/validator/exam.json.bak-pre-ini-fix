@@ -1,0 +1,402 @@
+{
+  "_doc": "The answer key. Illia's hand-verdicts = ground truth. FROZEN set never flips (regression detector). EXPANSION set may flip as tool learns (5S proposal 4). verdict: PASS | INVALID | FLAG.",
+  "frozen": [
+    {
+      "file": "FIXTURE:bayesian_ab_beta.BROKEN.py",
+      "verdict": "INVALID",
+      "note": "E004/E005 impossible data -> confident PASS (fake-robust) — PRESERVED broken snapshot",
+      "moved": "fix-channel 2026-07-21: live file FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "python/data-science/recommenders_and_graph_sampling/bayesian_ab_beta.py",
+      "verdict": "PASS",
+      "note": "FIXED: _validate_ab rejects successes>trials/negative/degenerate; positive oracle = P(B>A)>0.95 when B clearly wins",
+      "moved": "fix-channel 2026-07-21: impossible-data defect repaired + B-better oracle"
+    },
+    {
+      "file": "python/system-administration/text-stream-ops/robust_csv_parse.py",
+      "verdict": "PASS",
+      "note": "first contract-quality catch; E006 None-coercion flag"
+    },
+    {
+      "file": "FIXTURE:stacking_ensemble.BROKEN.py",
+      "verdict": "INVALID",
+      "note": "E008 NaN trained silently, output==clean — PRESERVED broken snapshot (regression_fixtures/)",
+      "moved": "fix-channel 2026-07-21: live file FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "python/data-science/ensembles_and_robust_methods/stacking_ensemble.py",
+      "verdict": "PASS",
+      "note": "FIXED: _validate_fit rejects NaN/Inf + shape at both fit() entries; positive oracle = clean threshold separates classes",
+      "moved": "fix-channel 2026-07-21: NaN-silent defect repaired + separation oracle"
+    },
+    {
+      "file": "python/data-science/composed_tools/dedup_pipeline.py",
+      "verdict": "PASS",
+      "note": "E009 k=0 degenerate flag; unicode dedup genuine"
+    },
+    {
+      "file": "FIXTURE:bayes_factor_normal_means.BROKEN.py",
+      "verdict": "INVALID",
+      "note": "E010 WRONG MATH sign-flip — PRESERVED broken snapshot (regression_fixtures/); the tool must forever detect this defect even after the library copy was fixed",
+      "moved": "fix-channel 2026-07-21: live file FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "python/data-science/bayesian_iii_approximate_inference/bayes_factor_normal_means.py",
+      "verdict": "PASS",
+      "note": "FIXED: evidence term now carries full tau2*S^2/denom; numeric oracle matches brute-force integration exactly (2.96e24); + input contract",
+      "moved": "fix-channel 2026-07-21: wrong-math repaired, proven vs brute-force"
+    },
+    {
+      "file": "python/data-science/bayesian_iii_modeling_and_selection/dirichlet_stick_breaking.py",
+      "verdict": "PASS",
+      "note": "E011 overclaimed invariant flag"
+    },
+    {
+      "file": "python/data-science/ensembles_and_robust_methods/gradient_boosting_stumps.py",
+      "verdict": "PASS",
+      "note": "empty/NaN degenerate flags"
+    },
+    {
+      "file": "python/data-science/composed_tools/walk_forward_early_stopping.py",
+      "verdict": "PASS",
+      "note": "silent length-mismatch flag; exemplary harness"
+    },
+    {
+      "file": "python/data-science/survival_and_reliability/log_rank_test.py",
+      "verdict": "PASS",
+      "note": "asymmetric mismatch + mutation-coverage flag"
+    },
+    {
+      "file": "rust/networking-resilience/rendezvous_hash_hrw.rs",
+      "verdict": "PASS",
+      "note": "core invariant genuine; disclosed skew flag"
+    },
+    {
+      "file": "rust/composed-systems/checkpoint_resume_crc.rs",
+      "verdict": "PASS",
+      "note": "survived 3 hard corruption probes"
+    },
+    {
+      "file": "r/regression_and_glm/linear_regression_normal_eq.R",
+      "verdict": "PASS",
+      "note": "self-oracle; NA-propagation flag"
+    },
+    {
+      "file": "r/hypothesis_testing_parametric/welch_t_test.R",
+      "verdict": "PASS",
+      "note": "self-oracle; degenerate masked flag"
+    },
+    {
+      "file": "FIXTURE:token_bucket_limiter.BROKEN.py",
+      "verdict": "INVALID",
+      "note": "unbounded burst after idle; no capacity concept — PRESERVED broken snapshot",
+      "moved": "fix-channel 2026-07-21: live file FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "python/system-administration/resource-guards/token_bucket_limiter.py",
+      "verdict": "PASS",
+      "note": "FIXED: added burst_cap (bucket depth) — idle burst now bounded by cap; positive oracle = idle-100s burst <= cap; + rate>0 guard",
+      "moved": "fix-channel 2026-07-21: unbounded-burst defect repaired + cap invariant"
+    },
+    {
+      "file": "FIXTURE:inverse_transform_sampling.BROKEN.py",
+      "verdict": "INVALID",
+      "note": "rate unguarded: silent negative waiting-time on rate<0 — PRESERVED broken snapshot (regression_fixtures/)",
+      "moved": "fix-channel 2026-07-21: live file FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "python/data-science/information_theory_and_probability/inverse_transform_sampling.py",
+      "verdict": "PASS",
+      "note": "FIXED: rate>0 guard added (mirrors u-guard); positive oracle F(Finv(u))==u round-trip holds",
+      "moved": "fix-channel 2026-07-21: rate<0 defect repaired + round-trip positive oracle"
+    },
+    {
+      "file": "FIXTURE:ttl_cache.BROKEN.py",
+      "verdict": "FLAG",
+      "note": "STRONG-FLAG: size() docstring-lie (raw len, not live count) + lazy-expiry leak — PRESERVED broken snapshot",
+      "moved": "fix-channel 2026-07-21: live file FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "python/system-administration/secrets-credentials/ttl_cache.py",
+      "verdict": "PASS",
+      "note": "FIXED: size() counts only non-expired (truthful) + purge() frees leak + ttl>0 guard; positive oracle = size()==live count after expiry",
+      "moved": "fix-channel 2026-07-21: size-lie + leak repaired + truthfulness oracle"
+    },
+    {
+      "file": "FIXTURE:calibration_curve.BROKEN.cpp",
+      "verdict": "INVALID",
+      "note": "garbage labels {7,-3} accepted + OOB-UB on mismatch — PRESERVED broken snapshot",
+      "moved": "fix-channel 2026-07-21: live file FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "cpp/data-science/model_diagnostics/calibration_curve.cpp",
+      "verdict": "PASS",
+      "note": "FIXED: _validate_cal enforces equal length + binary labels at both entries; positive oracle = garbage + mismatch both rejected",
+      "moved": "fix-channel 2026-07-21: garbage-label + OOB-UB defects repaired"
+    },
+    {
+      "file": "FIXTURE:bayes_factor_normal_means.BROKEN.cpp",
+      "verdict": "INVALID",
+      "twin_of": "python/.../bayes_factor_normal_means.py",
+      "note": "wrong-math inherited; off by 10^24 — PRESERVED broken snapshot (regression_fixtures/)",
+      "moved": "fix-channel 2026-07-21: live twin FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "cpp/data-science/bayesian_iii_approximate_inference/bayes_factor_normal_means.cpp",
+      "verdict": "PASS",
+      "note": "FIXED twin: same formula repair as python (full tau2*S^2/denom); in-harness brute-force matches exactly (2.96e24)",
+      "moved": "fix-channel 2026-07-21: cpp wrong-math twin repaired"
+    },
+    {
+      "file": "FIXTURE:stacking_ensemble.BROKEN.cpp",
+      "verdict": "INVALID",
+      "twin_of": "python stacking",
+      "note": "NaN-silent inherited; std::sort UB — PRESERVED broken snapshot (regression_fixtures/)",
+      "moved": "fix-channel 2026-07-21: live twin FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "cpp/data-science/ensembles_robust_methods/stacking_ensemble.cpp",
+      "verdict": "PASS",
+      "note": "FIXED twin: _validate_fit throws on NaN/Inf/empty before std::sort; positive oracle = NaN rejected",
+      "moved": "fix-channel 2026-07-21: cpp NaN-silent twin repaired"
+    },
+    {
+      "file": "FIXTURE:log_rank_test.BROKEN.cpp",
+      "verdict": "FLAG",
+      "twin_of": "python log_rank",
+      "note": "math exact but mismatch = OOB-UB (silent garbage z) — PRESERVED broken snapshot",
+      "moved": "fix-channel 2026-07-21: live twin FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "cpp/data-science/survival_reliability/log_rank_test.cpp",
+      "verdict": "PASS",
+      "note": "FIXED twin: length-mismatch now throws (was OOB-UB); positive oracle = hand-z exact + mismatch rejected",
+      "moved": "fix-channel 2026-07-21: cpp UB-hole repaired"
+    },
+    {
+      "file": "cpp/data-science/ensembles_robust_methods/gradient_boosting_stumps.cpp",
+      "verdict": "PASS",
+      "twin_of": "python gradient_boosting",
+      "note": "DIVERGED twin (guards python lacked); exact-split + mse 6e-19 evidence",
+      "moved": "expansion->frozen 2026-07-21: Illia ruled evidence=audit, FLAG->PASS (logged ruling)"
+    },
+    {
+      "file": "FIXTURE:deadline_ttl.BROKEN.go",
+      "verdict": "FLAG",
+      "note": "STRONG-FLAG: NaN TTL immortal + clock-rewind resurrection — PRESERVED broken snapshot",
+      "moved": "fix-channel 2026-07-21: live file FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "go/system-administration/sysadmin/deadline_ttl.go",
+      "verdict": "PASS",
+      "note": "FIXED (Illia ruled fix-both->PASS): monotonic high-water-mark clock (rewind can't resurrect) + NaN/Inf TTL rejected; positive oracle = no resurrection + NaN panics",
+      "moved": "fix-channel 2026-07-21: STRONG-FLAG healed to PASS per Illia ruling"
+    },
+    {
+      "file": "FIXTURE:exponential_backoff.BROKEN.go",
+      "verdict": "INVALID",
+      "note": "base*2^n Duration wraps to 0 -> backoff vanishes — PRESERVED broken snapshot (regression_fixtures/)",
+      "moved": "fix-channel 2026-07-21: live file FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "go/system-administration/sysadmin/exponential_backoff.go",
+      "verdict": "PASS",
+      "note": "FIXED: guard baseDelayMs in (0,60000] + maxAttempts>0 + shift/product cap; absurd base panics instead of silently vanishing",
+      "moved": "fix-channel 2026-07-21: overflow-vanish defect repaired"
+    },
+    {
+      "file": "FIXTURE:csv_validator.BROKEN.go",
+      "verdict": "INVALID",
+      "note": "NaN/Inf pass float validation; failed coercion -> raw string in int column — PRESERVED broken snapshot",
+      "moved": "fix-channel 2026-07-21: live file FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "go/programming/io/csv_validator.go",
+      "verdict": "PASS",
+      "note": "FIXED: float validation rejects NaN/Inf; failed coercion emits nil not a mixed-type string; positive oracle = NaN fails + typed columns stay typed",
+      "moved": "fix-channel 2026-07-21: NaN-passes + mixed-type defects repaired"
+    },
+    {
+      "file": "FIXTURE:circuit_breaker.BROKEN.go",
+      "verdict": "INVALID",
+      "note": "failureCount never resets on success -> 50%-healthy trips permanently OPEN — PRESERVED broken snapshot",
+      "moved": "fix-channel 2026-07-21: live file FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "go/programming/resilience/circuit_breaker.go",
+      "verdict": "PASS",
+      "note": "FIXED: success in CLOSED resets failureCount (consecutive counting); positive oracle = 50%-healthy service stays CLOSED",
+      "moved": "fix-channel 2026-07-21: cumulative-count defect repaired"
+    },
+    {
+      "file": "FIXTURE:bloom_filter.BROKEN.go",
+      "verdict": "FLAG",
+      "note": "STRONG-FLAG: Resize keeps itemCount -> FPR describes nonexistent filter — PRESERVED broken snapshot",
+      "moved": "fix-channel 2026-07-21: live file FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "go/programming/data_structures/bloom_filter.go",
+      "verdict": "PASS",
+      "note": "FIXED: Resize resets itemCount (state accounting matches cleared bits); positive oracle = itemCount==0 + FPR==0 after resize",
+      "moved": "fix-channel 2026-07-21: itemCount state-lie repaired (ttl_cache size-lie kin)"
+    }
+  ],
+  "expansion": [
+    {
+      "file": "python/data-science/statistical_modeling/power_analysis_sample_size.py",
+      "verdict": "FLAG",
+      "note": "flags E001-3 accidental catches; no kill",
+      "moved": "TOOL-TAUGHT 2026-07-20 ticket001: silent p1=1.5 acceptance"
+    },
+    {
+      "file": "FIXTURE:http_request_line_parser.BROKEN.rs",
+      "verdict": "INVALID",
+      "note": "E012 validation-theater; malformed accepted — PRESERVED broken snapshot",
+      "moved": "fix-channel 2026-07-21: live file FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "rust/parsing-protocols/http_request_line_parser.rs",
+      "verdict": "PASS",
+      "note": "FIXED: validates version NUMBER (digits.digits) not just HTTP/ prefix + rejects empty header name; positive oracle = malformed rejected, well-formed accepted",
+      "moved": "fix-channel 2026-07-21: validation-theater defect repaired"
+    },
+    {
+      "file": "rust/concurrency-resilience/atomic_spinlock.rs",
+      "verdict": "FLAG",
+      "note": "execution PASS but ordering UN-RUNNABLE -> capped at FLAG"
+    },
+    {
+      "file": "python/data-science/geospatial_and_spatial/geohash_encode_decode.py",
+      "verdict": "PASS",
+      "note": "round-trip oracle: decode(encode(lat,lon)) within error bounds 6/6",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "python/data-science/text_nlp/bpe_tokenizer_lite.py",
+      "verdict": "PASS",
+      "note": "round-trip oracle: decode(encode(text))==text trained/in-vocab 6/6",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "python/programming/architecture/message_encoder.py",
+      "verdict": "PASS",
+      "note": "round-trip oracle: Decoder.decode(Encoder.encode(data))==data 6/6",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "python/data-science/model_understanding_and_tuning/model_persistence_roundtrip.py",
+      "verdict": "PASS",
+      "note": "round-trip oracle: from_dict(to_dict).predict == model.predict 6/6",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "rust/parsing-protocols/backslash_escape_codec.rs",
+      "verdict": "PASS",
+      "note": "round-trip oracle: decode(encode(bytes))==bytes all-byte-range 6/6",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "rust/parsing-protocols/cobs_framing.rs",
+      "verdict": "PASS",
+      "note": "round-trip oracle: Cobs::decode(Cobs::encode(bytes))==bytes 6/6",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "rust/parsing-protocols/slip_escape_framer.rs",
+      "verdict": "PASS",
+      "note": "round-trip oracle: SlipCodec decode(encode(bytes))==bytes all-byte-range 6/6",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "rust/parsing-protocols/cidr_ip_math.rs",
+      "verdict": "PASS",
+      "note": "round-trip oracle: IPv4::from_u32(x).to_u32()==x 6/6",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "rust/parsing-protocols/crc_framed_packet.rs",
+      "verdict": "PASS",
+      "note": "round-trip oracle: Packet serialize->deserialize->serialize stable 6/6",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "rust/composed-systems/backup_snapshot_restore.rs",
+      "verdict": "PASS",
+      "note": "round-trip oracle: State deserialize(serialize).data==data 3/3",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "FIXTURE:compressed_block_store.BROKEN.rs",
+      "verdict": "FLAG",
+      "note": "rle_decode panics on empty input (encoded.len()-1 underflow) — PRESERVED broken snapshot",
+      "moved": "fix-channel 2026-07-21: live file FIXED->PASS, broken version frozen as fixture"
+    },
+    {
+      "file": "rust/composed-systems/compressed_block_store.rs",
+      "verdict": "PASS",
+      "note": "FIXED: rle_decode uses i+1<len (empty-safe); round-trip oracle now 6/6 including empty input",
+      "moved": "fix-channel 2026-07-21: RLE empty-panic repaired"
+    },
+    {
+      "file": "rust/security-crypto/base32_codec.rs",
+      "verdict": "PASS",
+      "note": "round-trip oracle: base32_decode(base32_encode(bytes))==bytes 6/6",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "rust/security-crypto/base64_codec.rs",
+      "verdict": "PASS",
+      "note": "round-trip oracle: base64_decode(base64_encode(bytes))==bytes 6/6",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "rust/security-crypto/hex_codec.rs",
+      "verdict": "PASS",
+      "note": "round-trip oracle: hex_decode(hex_encode(bytes))==bytes 6/6",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "rust/systems-math-encoding/base58_codec.rs",
+      "verdict": "PASS",
+      "note": "round-trip oracle: base58_decode(base58_encode(bytes))==bytes 6/6",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "rust/security-crypto/jwt_hs256_verify.rs",
+      "verdict": "PASS",
+      "note": "round-trip oracle: base64url_decode(base64url_encode(bytes))==bytes 6/6",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "rust/systems-math-encoding/run_length_encode.rs",
+      "verdict": "PASS",
+      "note": "round-trip oracle: rle_decode(rle_encode(bytes))==bytes 6/6 (Option-returning, empty-safe — contrast compressed_block_store)",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "rust/systems-math-encoding/varint_leb128.rs",
+      "verdict": "PASS",
+      "note": "round-trip oracle: varint_decode(varint_encode(n)).0==n 8/8 incl u64::MAX",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "rust/systems-math-encoding/zigzag_signed.rs",
+      "verdict": "PASS",
+      "note": "round-trip oracle: zigzag_decode(zigzag_encode(n))==n 9/9 incl i64::MIN/MAX",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "rust/systems-math-encoding/delta_zigzag_encode.rs",
+      "verdict": "PASS",
+      "note": "round-trip oracle: delta_zigzag_decode(delta_zigzag_encode(seq))==seq 6/6 incl i64 extremes",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    },
+    {
+      "file": "rust/systems-math-encoding/length_prefixed_framing.rs",
+      "verdict": "PASS",
+      "note": "round-trip oracle: decode_frames(concat encode_frame(m))==msgs 6/6 multi-frame incl empty",
+      "moved": "assisted round-trip lane 2026-07-21 — real semantic PASS candidate for frozen"
+    }
+  ]
+}

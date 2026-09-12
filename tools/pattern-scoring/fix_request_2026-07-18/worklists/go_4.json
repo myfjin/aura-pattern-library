@@ -1,0 +1,62 @@
+[
+ {
+  "file": "go/system-administration/sysadmin/disk_full_write_guard.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/disk_space_watchdog.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/dns_resolve_check.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/dotenv_parse.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/exactly_once_dedup.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/expiry_check.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/exponential_backoff.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/fd_leak_detector.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/field_extract.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/fsync_durability.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/full_incremental_backup.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/system-administration/sysadmin/timeout_kill.go",
+  "kind": "missing",
+  "current": null
+ }
+]

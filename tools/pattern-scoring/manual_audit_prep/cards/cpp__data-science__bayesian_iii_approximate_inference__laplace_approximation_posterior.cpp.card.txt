@@ -1,0 +1,15 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "Laplace approximation: approximate posterior p(\u03b8|data) with Gaussian at MAP.",
+  "evidence": {
+    "gcc": true,
+    "clang": true,
+    "ran": true,
+    "exit": 0,
+    "pass_marker": true,
+    "stdout": "laplace_approximation_posterior.cpp PASS"
+  },
+  "file": "data-science/bayesian_iii_approximate_inference/laplace_approximation_posterior.cpp",
+  "sha": "3f385260cb32"
+}

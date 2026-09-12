@@ -1,0 +1,14 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "",
+  "evidence": {
+    "compiled": true,
+    "ran": true,
+    "exit": 0,
+    "pass_marker": true,
+    "stdout": "sharded_kv_rehash_router: PASS"
+  },
+  "file": "composed-systems/sharded_kv_rehash_router.rs",
+  "sha": "33f9968f1808"
+}

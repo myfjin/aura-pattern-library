@@ -1,0 +1,19 @@
+{
+  "pattern": "python/system-administration/resource-guards/token_bucket_limiter.py",
+  "probe": "probe_token_bucket",
+  "severity": "medium",
+  "class": "oracle-weakness",
+  "technique": "XMT",
+  "fixture": "body-wipe mutant of allow_op -> always False -> idle burst = 0",
+  "expected": "probe rejects a limiter that grants nothing (killed)",
+  "actual": "probe PASSed at burst=0 because oracle was one-sided (burst <= 11)",
+  "why": "positive oracle only bounded burst from above; a zero-granting limiter is broken but slipped through",
+  "verdict": "FLAG",
+  "verdict_target": "PROBE",
+  "resolution": "two-sided oracle: 8 <= burst <= 11 (grants ~cap AND bounded); re-run 12/12 SOLID",
+  "confidence": "high",
+  "repro_cmd": "python3 xmt_scan.py",
+  "oracle_coverage_kind": "mutation",
+  "status": "RESOLVED",
+  "exam_after": "67/67"
+}

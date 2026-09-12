@@ -1,0 +1,729 @@
+{
+  "lang": "r",
+  "count": 60,
+  "distribution": {
+    "VERIFIED": 60
+  },
+  "patterns": [
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Date Feature Engineering",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "date_features.R PASS"
+      },
+      "file": "data_wrangling_and_feature_engineering/date_features.R",
+      "sha": "368c997bd4be"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "One-Hot Encoding from Factors",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "factor_onehot.R PASS"
+      },
+      "file": "data_wrangling_and_feature_engineering/factor_onehot.R",
+      "sha": "28bc0ff046e9"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Group-by Aggregation (Multi-key)",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "group_aggregate.R PASS"
+      },
+      "file": "data_wrangling_and_feature_engineering/group_aggregate.R",
+      "sha": "65014f61d19c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Hash Join (Environment as Hashmap)",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "hash_join.R PASS"
+      },
+      "file": "data_wrangling_and_feature_engineering/hash_join.R",
+      "sha": "8f02394a03d2"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Long-Wide Reshape (Both Directions)",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "long_wide_reshape.R PASS"
+      },
+      "file": "data_wrangling_and_feature_engineering/long_wide_reshape.R",
+      "sha": "0c3cd45693b2"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "missing_pattern_matrix.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "[1] TRUE\n[1] TRUE\nPASS: missing_pattern_matrix.R"
+      },
+      "file": "data_wrangling_and_feature_engineering/missing_pattern_matrix.R",
+      "sha": "0a4b3c89c292"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "NA Imputation (Mean/Median/Mode)",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "na_imputation.R PASS"
+      },
+      "file": "data_wrangling_and_feature_engineering/na_imputation.R",
+      "sha": "dce90929b4ba"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Rolling Statistics (Mean & SD)",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "rolling_stats.R PASS"
+      },
+      "file": "data_wrangling_and_feature_engineering/rolling_stats.R",
+      "sha": "b1f11f5d66e8"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Bootstrap Confidence Interval",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "bootstrap_ci.R PASS"
+      },
+      "file": "distributions_and_resampling/bootstrap_ci.R",
+      "sha": "97b3a3c5ac35"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "ECDF and DKW Confidence Bands: empirical CDF with probability coverage",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "ecdf_dkw_bands: single sample coverage= 1 , avg coverage over 100 reps= 0.997"
+      },
+      "file": "distributions_and_resampling/ecdf_dkw_bands.R",
+      "sha": "7980480e2181"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Kernel Density Estimation (Gaussian KDE)",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "kde_gaussian.R PASS"
+      },
+      "file": "distributions_and_resampling/kde_gaussian.R",
+      "sha": "ca8c229dbf4e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Outlier Detection (IQR & MAD)",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "clean-data flags: 2/200\noutlier_iqr_mad.R PASS"
+      },
+      "file": "distributions_and_resampling/outlier_iqr_mad.R",
+      "sha": "897c8e6b9eaa"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Quantile Type 7: R's default interpolation method (linear between order statistics)",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "quantile_type7: all quantiles match oracle (0.25, 0.5, 0.75, 0.95) PASS"
+      },
+      "file": "distributions_and_resampling/quantile_type7.R",
+      "sha": "61d16e218fb1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "ab_power_analysis.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "PASS: ab_power_analysis.R"
+      },
+      "file": "hypothesis_testing_parametric/ab_power_analysis.R",
+      "sha": "6a90c68713dd"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "anova_tukey.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "PASS: anova_tukey.R"
+      },
+      "file": "hypothesis_testing_parametric/anova_tukey.R",
+      "sha": "5f6e037a530f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Correlation Tests (Pearson & Spearman)",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "correlation_tests.R PASS"
+      },
+      "file": "hypothesis_testing_parametric/correlation_tests.R",
+      "sha": "8caecfd0e4fa"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Kolmogorov-Smirnov One-Sample Test: D statistic vs known CDF",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "ks_one_sample: D_normal= 0.07701121 (accept), D_exp= 0.5280915"
+      },
+      "file": "hypothesis_testing_parametric/ks_one_sample.R",
+      "sha": "78738e0c5368"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "One-Way ANOVA",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "one_way_anova.R PASS"
+      },
+      "file": "hypothesis_testing_parametric/one_way_anova.R",
+      "sha": "7aafb865339b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Two-Proportion Z-Test with Pooled Variance",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "prop_test_two_sample: z= -2.089277 , \u03c7\u00b2= 4.365079 , p= 0.03668277  (oracle p= 0.03668277"
+      },
+      "file": "hypothesis_testing_parametric/prop_test_two_sample.R",
+      "sha": "29e9603c5d05"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Welch's t-test (unequal variance)",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "welch_t_test.R PASS"
+      },
+      "file": "hypothesis_testing_parametric/welch_t_test.R",
+      "sha": "ef763c37eb88"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "km_survival_lite.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "PASS: km_survival_lite.R"
+      },
+      "file": "multivariate_and_applied_modeling/km_survival_lite.R",
+      "sha": "1e3780665d5f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "K-Means via Lloyd's Algorithm",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "kmeans_lloyd.R PASS"
+      },
+      "file": "multivariate_and_applied_modeling/kmeans_lloyd.R",
+      "sha": "8934c6b4c5a8"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "PCA via Power Iteration (with deflation) \u2014 oracle-verified against prcomp()",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "PC1: max dev 2.15e-13 \u00b7 eigenvalue 16.4122 vs oracle 16.4122\nPC2: max dev 8.44e-13 \u00b7 eigenvalue 4.1775 vs oracle 4.1775\npca_power_iteration."
+      },
+      "file": "multivariate_and_applied_modeling/pca_power_iteration.R",
+      "sha": "1efb457d4756"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Stratified Train-Test Split",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "stratified_split.R PASS"
+      },
+      "file": "multivariate_and_applied_modeling/stratified_split.R",
+      "sha": "56b99bc471e0"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "weighted_survey_mean.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "PASS: weighted_survey_mean.R"
+      },
+      "file": "multivariate_and_applied_modeling/weighted_survey_mean.R",
+      "sha": "4f99ef90a62b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Chi-Square Test of Independence",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "chi_square_independence.R PASS"
+      },
+      "file": "nonparametric_and_categorical/chi_square_independence.R",
+      "sha": "c4c115508746"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "cramers_v_effect.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "[1] TRUE\nPASS: cramers_v_effect.R"
+      },
+      "file": "nonparametric_and_categorical/cramers_v_effect.R",
+      "sha": "1327f8a4c368"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Fisher's Exact Test: hypergeometric enumeration for 2x2 contingency tables",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "fisher_exact_2x2: p_one_tail= 0.0008475235 , oracle_p= 0.0008475235"
+      },
+      "file": "nonparametric_and_categorical/fisher_exact_2x2.R",
+      "sha": "2b80778abd40"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Kruskal-Wallis Test: H statistic from ranks (k\u22653 groups)",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "kruskal_wallis: H= 13.35393 , p= 0.001259596 , oracle_H= 13.35393"
+      },
+      "file": "nonparametric_and_categorical/kruskal_wallis.R",
+      "sha": "036cd170da05"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Contingency Table with Margins",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "table_margins.R PASS"
+      },
+      "file": "nonparametric_and_categorical/table_margins.R",
+      "sha": "06bc66d04d88"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Wilcoxon Rank-Sum Test: U statistic + normal approximation p-value from scratch",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "wilcoxon_rank_sum: W= 0 , p_approx= 7.612502e-05 , oracle_p= 7.612502e-05"
+      },
+      "file": "nonparametric_and_categorical/wilcoxon_rank_sum.R",
+      "sha": "476b462545fa"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "bootstrap_regression.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "95% bootstrap CI: 2.223 to 2.520 (true slope 2.50)\nCI width: n-small 0.2970 vs n-large 0.1928\nPASS: bootstrap_regression.R"
+      },
+      "file": "regression_and_glm/bootstrap_regression.R",
+      "sha": "2248ebf0f76b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "cv_model_selection.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "PASS: cv_model_selection.R"
+      },
+      "file": "regression_and_glm/cv_model_selection.R",
+      "sha": "ee1a67d03385"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "hosmer_lemeshow_lite.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "well-calibrated: chi2 3.577, p 0.8931 \u00b7 badly calibrated: chi2 156.557, p 0.0000\nPASS: hosmer_lemeshow_lite.R"
+      },
+      "file": "regression_and_glm/hosmer_lemeshow_lite.R",
+      "sha": "a95cfc37b902"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Linear Regression via Normal Equations",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "linear_regression_normal_eq.R PASS"
+      },
+      "file": "regression_and_glm/linear_regression_normal_eq.R",
+      "sha": "eca5606d41cf"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "lm_diagnostics.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "[1] TRUE\nPASS: lm_diagnostics.R"
+      },
+      "file": "regression_and_glm/lm_diagnostics.R",
+      "sha": "f57aed5885e3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Logistic Regression via IRLS (Iteratively Reweighted Least Squares)",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "logistic_regression_irls.R PASS"
+      },
+      "file": "regression_and_glm/logistic_regression_irls.R",
+      "sha": "31c49a71276b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Poisson Regression via Iteratively Reweighted Least Squares (IRLS) with log link",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "poisson_regression_irls: beta= -0.780457 1.426772 , oracle_coef= -0.780457 1.426772"
+      },
+      "file": "regression_and_glm/poisson_regression_irls.R",
+      "sha": "52e054a1a449"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Ridge Regression: closed-form (X'X + \u03bbI)^-1 X'y",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "ridge_regression: \u03bb=0 matches lm(), coef norms shrink: 1.7621 1.759 1.7312 1.4998 0.6708"
+      },
+      "file": "regression_and_glm/ridge_regression.R",
+      "sha": "ece2aeb9fa5d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Box-Muller Transform: generate bivariate independent gaussians from uniforms",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "box_muller: ks p= 0.9116 , mean= -0.0839 , sd= 1.0326"
+      },
+      "file": "sampling_and_simulation/box_muller.R",
+      "sha": "addd9e8da5ed"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Inverse-Transform Sampling: generate samples via F^{-1}(U)",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "inverse_cdf_sampling: exp ks p= 0.6815 , logistic ks p= 0.3674"
+      },
+      "file": "sampling_and_simulation/inverse_cdf_sampling.R",
+      "sha": "04a9830051d6"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Multivariate Normal via Cholesky: \u03a3 = LL', X = \u03bc + L*Z with Z~N(0,I)",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "mvn_cholesky: L matches chol(), sample cov within tolerance PASS"
+      },
+      "file": "sampling_and_simulation/mvn_cholesky.R",
+      "sha": "4c947fc9ef13"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Order Statistics: distribution of min/max/median of n uniforms",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "order_statistics: min ks p= 0.6004  (mean= 0.0805 ),  max ks p= 0.5169  (mean= 0.9037"
+      },
+      "file": "sampling_and_simulation/order_statistics.R",
+      "sha": "be2f94b83e1a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Poisson Process Thinning: inhomogeneous Poisson via thinning of homogeneous process",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "poisson_process_thinning: homogeneous ks p= 0.4778 , #original= 18 , #thinned= 11"
+      },
+      "file": "sampling_and_simulation/poisson_process_thinning.R",
+      "sha": "ba39cee226fd"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Probability Integral Transform: U = F(X) ~ Uniform(0,1) under correct F",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "probability_integral_transform: correct F ks p= 0.9779 , wrong F ks p= 0 , mean(u_wrong)= 0.2278"
+      },
+      "file": "sampling_and_simulation/probability_integral_transform.R",
+      "sha": "2e46dd7820e4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Rejection Sampling for Beta(2,5): use uniform envelope, accept/reject via density ratio",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "rejection_sampling_beta: acceptance rate= 0.2 , ks p= 0.7048"
+      },
+      "file": "sampling_and_simulation/rejection_sampling_beta.R",
+      "sha": "f8ac0b8feff7"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Truncated Normal: N(\u03bc,\u03c3\u00b2) on [a,b] via acceptance-rejection",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "truncated_normal: mean_analytic= 0.7228 , mean_sample= 0.7113 , var_analytic= 0.2513 , var_sample= 0.244"
+      },
+      "file": "sampling_and_simulation/truncated_normal.R",
+      "sha": "fd44cfab7c9c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "ACF and PACF from Scratch: Durbin-Levinson algorithm for partial autocorrelation",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "acf_pacf_from_scratch: ACF lags 1-3 match, PACF lags 1-3 match PASS"
+      },
+      "file": "time_series_models_and_autocorrelation/acf_pacf_from_scratch.R",
+      "sha": "1531e1e64caf"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "ar1_fit_forecast.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "PASS: ar1_fit_forecast.R"
+      },
+      "file": "time_series_models_and_autocorrelation/ar1_fit_forecast.R",
+      "sha": "0c0b5ea99e37"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "AR(p) via Yule-Walker Equations: solve from sample autocovariance",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "ar_yule_walker: \u03c6_est= 0.6733 -0.3318 , \u03c6_true= 0.7 -0.3 , oracle_\u03c6= 0.6733 -0.3318"
+      },
+      "file": "time_series_models_and_autocorrelation/ar_yule_walker.R",
+      "sha": "b64561a0130d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "ccf_lag_detection.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "PASS: ccf_lag_detection.R"
+      },
+      "file": "time_series_models_and_autocorrelation/ccf_lag_detection.R",
+      "sha": "a82b1ede1783"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "holt_winters_lite.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "PASS: holt_winters_lite.R"
+      },
+      "file": "time_series_models_and_autocorrelation/holt_winters_lite.R",
+      "sha": "deb929fe1a95"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "ljung_box.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "PASS: ljung_box.R"
+      },
+      "file": "time_series_models_and_autocorrelation/ljung_box.R",
+      "sha": "f6f0ac3c46ce"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "seasonal_decompose.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "PASS: seasonal_decompose.R"
+      },
+      "file": "time_series_models_and_autocorrelation/seasonal_decompose.R",
+      "sha": "eea392d4a405"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "diff_seasonality_test.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "[1] TRUE\nPASS: diff_seasonality_test.R"
+      },
+      "file": "time_series_trend_spectral_and_smoothing/diff_seasonality_test.R",
+      "sha": "baa2b6bc1a64"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "hampel_ts_outliers.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "[1] TRUE\nPASS: hampel_ts_outliers.R"
+      },
+      "file": "time_series_trend_spectral_and_smoothing/hampel_ts_outliers.R",
+      "sha": "617a19a6c642"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Mann-Kendall Trend Test: Kendall's S statistic over time index",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "mann_kendall_trend: \u03c4_trend= 0.7793 , \u03c4_noise= 0.0483"
+      },
+      "file": "time_series_trend_spectral_and_smoothing/mann_kendall_trend.R",
+      "sha": "1a8143418d2e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "periodogram_spectral.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "PASS: periodogram_spectral.R"
+      },
+      "file": "time_series_trend_spectral_and_smoothing/periodogram_spectral.R",
+      "sha": "1587b87b1abe"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "rolling_origin_cv.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "[1] TRUE\nPASS: rolling_origin_cv.R"
+      },
+      "file": "time_series_trend_spectral_and_smoothing/rolling_origin_cv.R",
+      "sha": "f38d165b6015"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "sma_wma_filter.R",
+      "evidence": {
+        "ran": true,
+        "exit": 0,
+        "stdout": "PASS: sma_wma_filter.R"
+      },
+      "file": "time_series_trend_spectral_and_smoothing/sma_wma_filter.R",
+      "sha": "00b154d2a592"
+    }
+  ]
+}

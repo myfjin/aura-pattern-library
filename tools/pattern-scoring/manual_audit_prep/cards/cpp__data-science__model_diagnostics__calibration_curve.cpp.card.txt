@@ -1,0 +1,15 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "Calibration Curve & Brier Score",
+  "evidence": {
+    "gcc": true,
+    "clang": true,
+    "ran": true,
+    "exit": 0,
+    "pass_marker": true,
+    "stdout": "calibration_curve.cpp PASS"
+  },
+  "file": "data-science/model_diagnostics/calibration_curve.cpp",
+  "sha": "43edc43a32c5"
+}

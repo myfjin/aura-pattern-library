@@ -1,0 +1,14 @@
+"""
+Forward Euler vs RK4 — measure convergence order difference.
+
+WHAT IT DOES: Solves dy/dt = −y, y(0) = 1 with both methods. Euler error ratio ~2 (O(h)).
+RK4 error ratio ~16 (O(h⁴)). Matches theory.
+
+WHEN TO USE: Understanding numerical ODE solver accuracy and step-size selection.
+
+GUARANTEES: Euler ratio 1.5-2.5. RK4 ratio 10-20.
+
+NOT: A stiff ODE solver. Both methods may diverge on stiff systems.
+"""
+# △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
+_AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"

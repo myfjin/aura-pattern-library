@@ -1,0 +1,23 @@
+PATTERN: python/data-science/model_diagnostics/residual_analysis.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: Residual Analysis
+
+Fits a linear model to data with a planted quadratic term.
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "residual_analysis.py: PASS",
+  "stderr": "",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

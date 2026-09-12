@@ -1,0 +1,752 @@
+{
+ "counts": {
+  "VISIBLE_POISON": 8,
+  "NO_EVIDENCE": 88,
+  "GUARDED": 20,
+  "DOMAIN_SILENT": 2,
+  "INF_ABSORBED": 2,
+  "NO_OP_ATTACK": 2
+ },
+ "rows": [
+  {
+   "file": "python/data-science/causal_inference_and_experimentation/ab_test_srm_check.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/acf_pacf_from_scratch.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/anova_tukey.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/recommenders_and_graph_sampling/apriori_frequent_itemsets.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/ar1_fit_forecast.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/ar_yule_walker.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/system-administration/filesystem-integrity/atomic_snapshot.py",
+   "class": "NO_EVIDENCE",
+   "evidence": []
+  },
+  {
+   "file": "rust/concurrency-resilience/atomic_spinlock.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/system-administration/filesystem-integrity/atomic_write_temp_rename.py",
+   "class": "NO_EVIDENCE",
+   "evidence": []
+  },
+  {
+   "file": "rust/composed-systems/authenticated_message_channel.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/parsing-protocols/backslash_escape_codec.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/composed-systems/backup_snapshot_restore.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/security-crypto/base32_codec.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/systems-math-encoding/base58_codec.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/security-crypto/base64_codec.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/bayesian_iii_approximate_inference/bayes_factor_normal_means.py",
+   "class": "NO_EVIDENCE",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/recommenders_and_graph_sampling/bayesian_ab_beta.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "bayesian_ab_test",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "prior_alpha",
+     "attack_value": "1.5",
+     "output": "(0.5045, 0.865484734194582, 0.8661613748163972)",
+     "class": "DOMAIN_SILENT"
+    },
+    {
+     "fn": "bayesian_ab_test",
+     "recipe": "R15_scalar_nan_inf",
+     "e_class": "E008",
+     "param": "prior_alpha",
+     "attack_value": "inf",
+     "output": "(0.0, 1.0, 1.0)",
+     "class": "INF_ABSORBED"
+    },
+    {
+     "fn": "bayesian_ab_test",
+     "recipe": "R15_scalar_nan_inf",
+     "e_class": "E008",
+     "param": "prior_beta",
+     "attack_value": "inf",
+     "output": "(0.3684, 0.0202181807583495, 0.020038357699176626)",
+     "class": "INF_ABSORBED"
+    }
+   ]
+  },
+  {
+   "file": "rust/security-crypto/bloom_filter.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "r/sampling_and_simulation/box_muller.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/text_nlp/bpe_tokenizer_lite.py",
+   "class": "NO_EVIDENCE",
+   "reason": "no entry function",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/composed_tools/broker_term_extraction.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/model_diagnostics/calibration_curve.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/system-administration/data-pipeline-ops/checkpoint_resume.py",
+   "class": "NO_EVIDENCE",
+   "evidence": []
+  },
+  {
+   "file": "rust/composed-systems/checkpoint_resume_crc.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "r/nonparametric_and_categorical/chi_square_independence.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/parsing-protocols/cidr_ip_math.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/concurrency-resilience/circuit_breaker.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/parsing-protocols/cobs_framing.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/composed-systems/compressed_block_store.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/composed-systems/content_addressed_blob_store.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/composed-systems/content_addressed_store.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/correlation_tests.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "r/nonparametric_and_categorical/cramers_v_effect.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/security-crypto/crc32.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/parsing-protocols/crc_framed_packet.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/programming/io/csv_validator.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/system-administration/time-clock-correctness/deadline_ttl.py",
+   "class": "NO_EVIDENCE",
+   "reason": "no entry function",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/core_ml/decision_tree_id3.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/composed_tools/dedup_pipeline.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "rust/systems-math-encoding/delta_zigzag_encode.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "r/time_series_trend_spectral_and_smoothing/diff_seasonality_test.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/bayesian_iii_modeling_and_selection/dirichlet_stick_breaking.py",
+   "class": "DOMAIN_SILENT",
+   "evidence": [
+    {
+     "fn": "stick_breaking_process",
+     "recipe": "R2_domain_aware",
+     "e_class": "E001/E003",
+     "param": "alpha",
+     "attack_value": "1.5",
+     "output": "[0.28094740908061067, 0.5188426945006256, 0.046825443172230696, 0.07925477747213418, 0.054",
+     "class": "DOMAIN_SILENT"
+    }
+   ]
+  },
+  {
+   "file": "rust/concurrency-resilience/double_buffer.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/text_nlp/edit_distance.py",
+   "class": "NO_EVIDENCE",
+   "reason": "no entry function",
+   "evidence": []
+  },
+  {
+   "file": "rust/concurrency-resilience/exponential_backoff.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "r/nonparametric_and_categorical/fisher_exact_2x2.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/geospatial_and_spatial/geohash_encode_decode.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/ensembles_and_robust_methods/gradient_boosting_stumps.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "rust/security-crypto/hex_codec.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/security-crypto/hmac_sha256.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/security-crypto/hmac_signed_url.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/holt_winters_lite.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/parsing-protocols/http_request_line_parser.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/system-administration/data-pipeline-ops/idempotent_etl_step.py",
+   "class": "NO_EVIDENCE",
+   "evidence": []
+  },
+  {
+   "file": "python/system-administration/concurrency-locking/idempotent_once_guard.py",
+   "class": "NO_EVIDENCE",
+   "evidence": []
+  },
+  {
+   "file": "python/system-administration/mesh-distributed/idempotent_replication.py",
+   "class": "NO_EVIDENCE",
+   "reason": "no entry function",
+   "evidence": []
+  },
+  {
+   "file": "rust/parsing-protocols/ini_config_parser.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/system-administration/state-db-durability/integrity_check.py",
+   "class": "NO_EVIDENCE",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/information_theory_and_probability/inverse_transform_sampling.py",
+   "class": "INF_ABSORBED",
+   "evidence": [
+    {
+     "fn": "exponential_inverse_cdf",
+     "recipe": "R15_scalar_nan_inf",
+     "e_class": "E008",
+     "param": "rate",
+     "attack_value": "inf",
+     "output": "0.0",
+     "class": "INF_ABSORBED"
+    }
+   ]
+  },
+  {
+   "file": "python/system-administration/state-db-durability/journaled_write.py",
+   "class": "NO_EVIDENCE",
+   "evidence": []
+  },
+  {
+   "file": "rust/security-crypto/jwt_hs256_verify.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "r/distributions_and_resampling/kde_gaussian.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/system-administration/secrets-credentials/keyring_store.py",
+   "class": "NO_EVIDENCE",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/core_ml/kmeans_clustering.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/core_ml/knn_classifier.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/ks_one_sample.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/clustering_graph_and_anomaly/label_propagation_communities.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "rust/systems-math-encoding/length_prefixed_framing.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/core_ml/linear_regression_gd.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "r/regression_and_glm/linear_regression_normal_eq.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/ljung_box.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "r/regression_and_glm/lm_diagnostics.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/survival_and_reliability/log_rank_test.py",
+   "class": "NO_OP_ATTACK",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/core_ml/logistic_regression.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "r/regression_and_glm/logistic_regression_irls.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/cross-sphere-twins/lru_cache.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/data_wrangling_from_scratch/melt_unpivot.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/programming/architecture/message_encoder.py",
+   "class": "NO_EVIDENCE",
+   "evidence": []
+  },
+  {
+   "file": "python/system-administration/state-db-durability/migration_with_rollback.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/model_understanding_and_tuning/model_persistence_roundtrip.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/core_ml/naive_bayes_text.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/one_way_anova.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/recommenders_and_graph_sampling/pagerank_power_iteration.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "r/multivariate_and_applied_modeling/pca_power_iteration.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/core_ml/perceptron.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "r/time_series_trend_spectral_and_smoothing/periodogram_spectral.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/system-administration/state-db-durability/point_in_time_restore.py",
+   "class": "NO_EVIDENCE",
+   "evidence": []
+  },
+  {
+   "file": "r/sampling_and_simulation/poisson_process_thinning.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "r/regression_and_glm/poisson_regression_irls.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/statistical_modeling/polynomial_regression.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/statistical_modeling/power_analysis_sample_size.py",
+   "class": "INF_ABSORBED",
+   "evidence": [
+    {
+     "fn": "normal_cdf_approx",
+     "recipe": "R15_scalar_nan_inf",
+     "e_class": "E008",
+     "param": "z",
+     "attack_value": "inf",
+     "output": "1.0",
+     "class": "INF_ABSORBED"
+    }
+   ]
+  },
+  {
+   "file": "python/data-science/probability_iii/quantile_mapping_bias_correction.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "r/distributions_and_resampling/quantile_type7.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/rankings_and_information_retrieval/query_expansion_prf.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/composed_tools/queue_capacity_planner.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "rust/networking-resilience/rendezvous_hash_hrw.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/system-administration/filesystem-integrity/restore_from_backup.py",
+   "class": "NO_EVIDENCE",
+   "evidence": []
+  },
+  {
+   "file": "r/regression_and_glm/ridge_regression.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/core_ml/ridge_regression_normal_eq.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/system-administration/text-stream-ops/robust_csv_parse.py",
+   "class": "NO_EVIDENCE",
+   "evidence": []
+  },
+  {
+   "file": "r/time_series_trend_spectral_and_smoothing/rolling_origin_cv.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/composed-systems/rotating_log_checksum.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/systems-math-encoding/run_length_encode.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/programming/persistence/segmented_wal.py",
+   "class": "NO_EVIDENCE",
+   "evidence": []
+  },
+  {
+   "file": "rust/concurrency-resilience/seqlock_snapshot.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/security-crypto/sha256.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/composed-systems/signed_snapshot.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "go/programming/concurrency/singleflight_dedup.go",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/parsing-protocols/slip_escape_framer.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/ensembles_and_robust_methods/spectral_clustering_lite.py",
+   "class": "GUARDED",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/ensembles_and_robust_methods/stacking_ensemble.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "rust/composed-systems/tamper_evident_log.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/system-administration/resource-guards/token_bucket_limiter.py",
+   "class": "NO_EVIDENCE",
+   "evidence": []
+  },
+  {
+   "file": "python/system-administration/state-db-durability/transaction_rollback.py",
+   "class": "NO_OP_ATTACK",
+   "evidence": []
+  },
+  {
+   "file": "python/system-administration/secrets-credentials/ttl_cache.py",
+   "class": "NO_EVIDENCE",
+   "evidence": []
+  },
+  {
+   "file": "rust/systems-math-encoding/varint_leb128.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "rust/composed-systems/wal_append_replay.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/data-science/composed_tools/walk_forward_early_stopping.py",
+   "class": "VISIBLE_POISON",
+   "evidence": []
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/welch_t_test.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "r/nonparametric_and_categorical/wilcoxon_rank_sum.R",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  },
+  {
+   "file": "python/programming/persistence/write_ahead_log.py",
+   "class": "NO_EVIDENCE",
+   "reason": "no entry function",
+   "evidence": []
+  },
+  {
+   "file": "rust/systems-math-encoding/zigzag_signed.rs",
+   "class": "NO_EVIDENCE",
+   "reason": "probe error: AttributeError: 'NoneType' object has no attribute 'loader'",
+   "evidence": []
+  }
+ ]
+}

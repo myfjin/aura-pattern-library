@@ -1,0 +1,77 @@
+[
+ {
+  "file": "cpp/data-science/recommenders_graph_sampling/user_based_cf.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/signal_processing_sequences/fft_cooley_tukey.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/signal_processing_sequences/resampling_interpolation.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/simulation_decision_science/q_learning_gridworld.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/simulation_decision_science/tornado_sensitivity.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/statistical_modeling/polynomial_regression.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/statistical_modeling/quantile_regression_pinball.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/statistics_testing/reservoir_sampling.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/statistics_testing/train_test_split_kfold.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/streaming_iii/exponential_histogram_count.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/streaming_iii/tdigest_lite.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/streaming_sketches/online_covariance.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/streaming_sketches/online_sgd_classifier.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/streaming_sketches/p2_quantile_estimator.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/streaming_sketches/page_hinkley_drift.cpp",
+  "kind": "missing",
+  "current": null
+ }
+]

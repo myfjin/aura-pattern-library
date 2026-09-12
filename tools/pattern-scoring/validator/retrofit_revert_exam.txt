@@ -1,0 +1,6 @@
+python/data-science/bayesian_iii_modeling_and_selection/dirichlet_stick_breaking.py
+python/data-science/composed_tools/dedup_pipeline.py
+python/data-science/ensembles_and_robust_methods/gradient_boosting_stumps.py
+python/data-science/information_theory_and_probability/inverse_transform_sampling.py
+python/data-science/recommenders_and_graph_sampling/bayesian_ab_beta.py
+python/data-science/statistical_modeling/power_analysis_sample_size.py

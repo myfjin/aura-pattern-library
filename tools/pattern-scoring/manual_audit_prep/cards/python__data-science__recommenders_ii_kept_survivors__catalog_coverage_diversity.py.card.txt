@@ -1,0 +1,21 @@
+PATTERN: python/data-science/recommenders_ii_kept_survivors/catalog_coverage_diversity.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: Catalog coverage and diversity of recommendations.
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "PASS",
+  "stderr": "",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

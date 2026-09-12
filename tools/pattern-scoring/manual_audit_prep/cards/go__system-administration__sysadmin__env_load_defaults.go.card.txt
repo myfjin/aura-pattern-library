@@ -1,0 +1,14 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "EnvLoadDefaults loads environment variables.",
+  "evidence": {
+    "built": true,
+    "ran": true,
+    "exit": 0,
+    "pass_marker": true,
+    "stdout": "env_load_defaults: 5/5 asserts passed"
+  },
+  "file": "system-administration/sysadmin/env_load_defaults.go",
+  "sha": "741fbfc80229"
+}

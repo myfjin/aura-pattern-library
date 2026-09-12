@@ -1,0 +1,67 @@
+[
+ {
+  "file": "rust/parsing-protocols/http_request_line_parser.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/parsing-protocols/json_string_unescape.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/parsing-protocols/key_value_line_scanner.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/parsing-protocols/query_string_parser.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/parsing-protocols/shell_word_split.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/parsing-protocols/slip_escape_framer.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/parsing-protocols/state_machine_tokenizer.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/parsing-protocols/tlv_parser.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/storage-persistence/bitmap_free_space_manager.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/storage-persistence/btree_node_split.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/storage-persistence/checkpoint_truncate_log.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/storage-persistence/clock_second_chance_cache.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/storage-persistence/crash_safe_atomic_write.rs",
+  "kind": "missing",
+  "current": null
+ }
+]

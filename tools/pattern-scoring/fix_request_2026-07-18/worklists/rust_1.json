@@ -1,0 +1,67 @@
+[
+ {
+  "file": "rust/networking-resilience/backpressure_bounded_queue.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/networking-resilience/bulkhead_isolation_limiter.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/networking-resilience/cidr_allowlist_match.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/networking-resilience/connection_pool_manager.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/networking-resilience/count_min_sketch_ip_freq.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/networking-resilience/dns_name_wire_parser.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/networking-resilience/ewma_latency_tracker.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/networking-resilience/failover_priority_list.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/networking-resilience/hedged_request_scheduler.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/networking-resilience/http_status_retry_classifier.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/networking-resilience/least_connections_lb.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/networking-resilience/port_scan_detector.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/networking-resilience/rendezvous_hash_hrw.rs",
+  "kind": "short",
+  "current": "Seeded LCG for deterministic hashing"
+ }
+]

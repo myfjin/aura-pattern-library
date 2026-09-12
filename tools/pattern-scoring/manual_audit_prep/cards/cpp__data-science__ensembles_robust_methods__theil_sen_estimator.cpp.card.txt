@@ -1,0 +1,15 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "",
+  "evidence": {
+    "gcc": true,
+    "clang": true,
+    "ran": true,
+    "exit": 0,
+    "pass_marker": true,
+    "stdout": "ols_slope_error=0.5712 ts_slope_error=0.0376\nPASS"
+  },
+  "file": "data-science/ensembles_robust_methods/theil_sen_estimator.cpp",
+  "sha": "c56541a1497e"
+}

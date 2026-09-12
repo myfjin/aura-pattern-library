@@ -1,0 +1,24 @@
+{
+ "passes": [
+  "python/data-science/geospatial_and_spatial/geohash_encode_decode.py",
+  "python/data-science/text_nlp/bpe_tokenizer_lite.py",
+  "python/programming/architecture/message_encoder.py",
+  "python/data-science/model_understanding_and_tuning/model_persistence_roundtrip.py",
+  "rust/parsing-protocols/backslash_escape_codec.rs",
+  "rust/parsing-protocols/cobs_framing.rs",
+  "rust/parsing-protocols/slip_escape_framer.rs",
+  "rust/parsing-protocols/cidr_ip_math.rs",
+  "rust/parsing-protocols/crc_framed_packet.rs",
+  "rust/composed-systems/backup_snapshot_restore.rs",
+  "rust/security-crypto/base32_codec.rs",
+  "rust/security-crypto/base64_codec.rs",
+  "rust/security-crypto/hex_codec.rs",
+  "rust/systems-math-encoding/base58_codec.rs",
+  "rust/security-crypto/jwt_hs256_verify.rs",
+  "rust/systems-math-encoding/run_length_encode.rs",
+  "rust/systems-math-encoding/varint_leb128.rs",
+  "rust/systems-math-encoding/zigzag_signed.rs",
+  "rust/systems-math-encoding/delta_zigzag_encode.rs",
+  "rust/systems-math-encoding/length_prefixed_framing.rs"
+ ]
+}

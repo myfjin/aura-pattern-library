@@ -99,6 +99,10 @@ Standard single-sphere 100-lists · composed/unique lists · **free for
 universities/teaching with attribution**. Copy-count tiers (cooperative limiter):
 Personal 1–3 · Team 0–9 · Enterprise (alphanumeric >10). See `CATALOG.md`.
 
+## Adjacent trees
+
+**`../aura-pattern-library-pending/`** — an *unsigned* queue of patterns salvaged from harvest-workspace dup folders that (a) are not in this library and (b) have real value worth review before ingest. Each candidate carries its own `.md` note explaining tier (A = ingest-ready modulo review; B = needs listed fixes), origin folder, and the specific defects blocking canonical entry. When a pattern there is fixed + reviewer-approved, it enters this library via `ingest.py` / `ingest_cpp_native.py` (Illia's yes only) and gets signed here.
+
 ## License
 
 Apache-2.0 (see `LICENSE`). Attribution required; the trademark/owner mark is

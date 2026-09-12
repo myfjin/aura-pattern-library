@@ -1,0 +1,15 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "Character N-gram Language Identification",
+  "evidence": {
+    "gcc": true,
+    "clang": true,
+    "ran": true,
+    "exit": 0,
+    "pass_marker": true,
+    "stdout": "char_ngram_language_id.cpp PASS"
+  },
+  "file": "data-science/text_nlp_ii/char_ngram_language_id.cpp",
+  "sha": "c966d9bb5d23"
+}

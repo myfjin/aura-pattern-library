@@ -1,0 +1,93 @@
+{
+  "pattern": "polynomial_regression",
+  "oracle": "python/data-science/statistical_modeling/polynomial_regression.py",
+  "n_samples": 100,
+  "ratified": false,
+  "note": "MINED CANDIDATE \u2014 a human sets ratified=true after review; unratified = zero verdict weight",
+  "invariants": {
+    "mse": {
+      "observed": [
+        0.0025,
+        0.01797
+      ],
+      "mean": 0.00844,
+      "sd": 0.0029,
+      "contract": [
+        -0.0232,
+        0.0401
+      ],
+      "sign": "positive",
+      "kind": "scalar"
+    },
+    "coeff_0": {
+      "observed": [
+        1.86658,
+        2.19115
+      ],
+      "mean": 2.00395,
+      "sd": 0.06316,
+      "contract": [
+        1.7313,
+        2.2766
+      ],
+      "sign": "positive",
+      "kind": "scalar"
+    },
+    "coeff_1": {
+      "observed": [
+        2.90864,
+        3.06733
+      ],
+      "mean": 2.99782,
+      "sd": 0.03137,
+      "contract": [
+        2.8523,
+        3.1433
+      ],
+      "sign": "positive",
+      "kind": "scalar"
+    },
+    "coeff_2": {
+      "observed": [
+        0.49319,
+        0.50747
+      ],
+      "mean": 0.50026,
+      "sd": 0.00314,
+      "contract": [
+        0.4677,
+        0.5328
+      ],
+      "sign": "positive",
+      "kind": "scalar"
+    },
+    "ratio_c0_c1": {
+      "observed": [
+        0.61057,
+        0.75332
+      ],
+      "mean": 0.66873,
+      "sd": 0.02735,
+      "contract": [
+        0.5393,
+        0.7981
+      ],
+      "sign": "positive",
+      "kind": "relational"
+    },
+    "ratio_c1_c2": {
+      "observed": [
+        5.73161,
+        6.20952
+      ],
+      "mean": 5.99315,
+      "sd": 0.09928,
+      "contract": [
+        5.576,
+        6.4103
+      ],
+      "sign": "positive",
+      "kind": "relational"
+    }
+  }
+}

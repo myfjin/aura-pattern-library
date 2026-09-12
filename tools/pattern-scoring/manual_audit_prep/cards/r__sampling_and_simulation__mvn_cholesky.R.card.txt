@@ -1,0 +1,12 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "Multivariate Normal via Cholesky: \u03a3 = LL', X = \u03bc + L*Z with Z~N(0,I)",
+  "evidence": {
+    "ran": true,
+    "exit": 0,
+    "stdout": "mvn_cholesky: L matches chol(), sample cov within tolerance PASS"
+  },
+  "file": "sampling_and_simulation/mvn_cholesky.R",
+  "sha": "4c947fc9ef13"
+}

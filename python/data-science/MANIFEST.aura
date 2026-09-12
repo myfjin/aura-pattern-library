@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-09-08",
+  "created": "2026-09-12",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -3157,8 +3157,8 @@
     },
     {
       "path": "statistical_modeling/power_analysis_sample_size.py",
-      "sha256": "aa1f8e640e2d017b6989358e564cdfd970a137daa193fd65cecc08501e1256c7",
-      "bytes": 8633
+      "sha256": "056016a17add849643106c77d4172f0702e81482d8a9907f6b8ca9e041cc3b56",
+      "bytes": 8963
     },
     {
       "path": "statistical_modeling/quantile_regression_pinball.md",

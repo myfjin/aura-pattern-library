@@ -1,0 +1,67 @@
+[
+ {
+  "file": "python/programming/distributed/distributed_lock_manager.py",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "python/programming/distributed/service_registry.py",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "python/programming/io/arg_parser.py",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "python/programming/io/template_engine.py",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "python/programming/monitoring/alert_manager.py",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "python/programming/monitoring/log_pattern_matcher.py",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "python/programming/monitoring/metrics_formatter.py",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "python/programming/monitoring/timer_stack.py",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "python/programming/monitoring/trace_collector.py",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "python/programming/networking/dns_cache.py",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "python/programming/networking/packet_parser.py",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "python/programming/networking/rate_limiter.py",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "python/programming/networking/url_router.py",
+  "kind": "missing",
+  "current": null
+ }
+]

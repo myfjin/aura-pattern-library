@@ -1,0 +1,21 @@
+PATTERN: python/data-science/signal_processing_and_sequences/peak_detection.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: Peak Detection via Prominence.
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "Detected peaks at indices: [25, 75] | Prominences: ['4.4', '3.6'] | Noise rejection rate: 100% | PASS",
+  "stderr": "",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

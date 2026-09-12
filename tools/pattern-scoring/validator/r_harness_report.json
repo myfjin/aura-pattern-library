@@ -1,0 +1,468 @@
+{
+ "counts": {
+  "NO_EVIDENCE": 57,
+  "VISIBLE_POISON": 3
+ },
+ "rows": [
+  {
+   "file": "r/data_wrangling_and_feature_engineering/date_features.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/data_wrangling_and_feature_engineering/factor_onehot.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/data_wrangling_and_feature_engineering/group_aggregate.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/data_wrangling_and_feature_engineering/hash_join.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/data_wrangling_and_feature_engineering/long_wide_reshape.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/data_wrangling_and_feature_engineering/missing_pattern_matrix.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/data_wrangling_and_feature_engineering/na_imputation.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/data_wrangling_and_feature_engineering/rolling_stats.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/distributions_and_resampling/bootstrap_ci.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/distributions_and_resampling/ecdf_dkw_bands.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/distributions_and_resampling/kde_gaussian.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/distributions_and_resampling/outlier_iqr_mad.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/distributions_and_resampling/quantile_type7.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "quantile_type7",
+     "why": "baseline itself degenerate (num NA) \u2014 not validly driven"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/ab_power_analysis.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/anova_tukey.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/correlation_tests.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/ks_one_sample.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/one_way_anova.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/prop_test_two_sample.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/welch_t_test.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/multivariate_and_applied_modeling/km_survival_lite.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/multivariate_and_applied_modeling/kmeans_lloyd.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/multivariate_and_applied_modeling/pca_power_iteration.R",
+   "class": "VISIBLE_POISON",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "power_iterate",
+     "why": "baseline call errored \u2014 cannot attack honestly"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "r/multivariate_and_applied_modeling/stratified_split.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/multivariate_and_applied_modeling/weighted_survey_mean.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/nonparametric_and_categorical/chi_square_independence.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/nonparametric_and_categorical/cramers_v_effect.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "cramers_v",
+     "why": "baseline call errored \u2014 cannot attack honestly"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "r/nonparametric_and_categorical/fisher_exact_2x2.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "hypergeo_prob",
+     "why": "5 params \u2014 baseline ladder not attempted"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "r/nonparametric_and_categorical/kruskal_wallis.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/nonparametric_and_categorical/table_margins.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/nonparametric_and_categorical/wilcoxon_rank_sum.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/regression_and_glm/bootstrap_regression.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/regression_and_glm/cv_model_selection.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/regression_and_glm/hosmer_lemeshow_lite.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "hl_test",
+     "why": "baseline call errored \u2014 cannot attack honestly"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "r/regression_and_glm/linear_regression_normal_eq.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/regression_and_glm/lm_diagnostics.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/regression_and_glm/logistic_regression_irls.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/regression_and_glm/poisson_regression_irls.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/regression_and_glm/ridge_regression.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/sampling_and_simulation/box_muller.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/sampling_and_simulation/inverse_cdf_sampling.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/sampling_and_simulation/mvn_cholesky.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/sampling_and_simulation/order_statistics.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/sampling_and_simulation/poisson_process_thinning.R",
+   "class": "VISIBLE_POISON",
+   "drivable": 1,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/sampling_and_simulation/probability_integral_transform.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/sampling_and_simulation/rejection_sampling_beta.R",
+   "class": "VISIBLE_POISON",
+   "drivable": 1,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/sampling_and_simulation/truncated_normal.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/acf_pacf_from_scratch.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/ar1_fit_forecast.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/ar_yule_walker.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/ccf_lag_detection.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/holt_winters_lite.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/ljung_box.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/time_series_models_and_autocorrelation/seasonal_decompose.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/time_series_trend_spectral_and_smoothing/diff_seasonality_test.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "compute_acf",
+     "why": "baseline call errored \u2014 cannot attack honestly"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "r/time_series_trend_spectral_and_smoothing/hampel_ts_outliers.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "hampel_outliers",
+     "why": "baseline call errored \u2014 cannot attack honestly"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "r/time_series_trend_spectral_and_smoothing/mann_kendall_trend.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "mk_test",
+     "why": "baseline call errored \u2014 cannot attack honestly"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "r/time_series_trend_spectral_and_smoothing/periodogram_spectral.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/time_series_trend_spectral_and_smoothing/rolling_origin_cv.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "r/time_series_trend_spectral_and_smoothing/sma_wma_filter.R",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  }
+ ]
+}

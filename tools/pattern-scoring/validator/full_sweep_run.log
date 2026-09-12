@@ -1,0 +1,71 @@
+HEALTH-CHECK + DS-TRIAGE (not full verification) — 1399 patterns across 5 languages
+  25/1399  (21s)    last=cpp:BASELINE-OK
+  50/1399  (44s)    last=cpp:BASELINE-OK
+  75/1399  (69s)    last=cpp:BASELINE-OK
+  100/1399  (94s)    last=cpp:BASELINE-OK
+  125/1399  (118s)    last=cpp:BASELINE-OK
+  150/1399  (140s)    last=cpp:BASELINE-OK
+  175/1399  (161s)    last=cpp:BASELINE-OK
+  200/1399  (181s)    last=cpp:BASELINE-OK
+  225/1399  (200s)    last=cpp:BASELINE-OK
+  250/1399  (221s)    last=cpp:BASELINE-OK
+  275/1399  (241s)    last=cpp:BASELINE-OK
+  300/1399  (261s)    last=cpp:BASELINE-OK
+  325/1399  (282s)    last=cpp:BASELINE-OK
+  350/1399  (303s)    last=cpp:BASELINE-OK
+  375/1399  (323s)    last=go:BASELINE-OK
+  400/1399  (329s)    last=go:BASELINE-OK
+  425/1399  (332s)    last=go:BASELINE-OK
+  450/1399  (338s)    last=go:BASELINE-OK
+  475/1399  (341s)    last=python:BASELINE-OK
+  500/1399  (342s)    last=python:BASELINE-OK
+  525/1399  (343s)    last=python:BASELINE-OK
+  550/1399  (348s)    last=python:BASELINE-OK
+  575/1399  (349s)    last=python:BASELINE-OK
+  600/1399  (351s)    last=python:BASELINE-OK
+  625/1399  (352s)    last=python:BASELINE-OK
+  650/1399  (382s)    last=python:BASELINE-OK
+  675/1399  (384s)    last=python:BASELINE-OK
+  700/1399  (386s)    last=python:BASELINE-OK
+  725/1399  (387s)    last=python:BASELINE-OK
+  750/1399  (388s)    last=python:BASELINE-OK
+  775/1399  (389s)    last=python:BASELINE-OK
+  800/1399  (391s)    last=python:BASELINE-OK
+  825/1399  (392s)    last=python:BASELINE-OK
+  850/1399  (394s)    last=python:BASELINE-OK
+  875/1399  (399s)    last=python:BASELINE-OK
+  900/1399  (400s)    last=python:BASELINE-OK
+  925/1399  (403s)    last=python:BASELINE-OK
+  950/1399  (405s)    last=python:BASELINE-OK
+  975/1399  (411s)    last=python:BASELINE-OK
+  1000/1399  (412s)    last=python:BASELINE-OK
+  1025/1399  (413s)    last=python:BASELINE-OK
+  1050/1399  (415s)    last=python:BASELINE-OK
+  1075/1399  (421s)    last=python:BASELINE-OK
+  1100/1399  (430s)    last=python:BASELINE-OK
+  1125/1399  (432s)    last=python:BASELINE-OK
+  1150/1399  (434s)    last=r:BASELINE-OK
+  1175/1399  (438s)    last=r:BASELINE-OK
+  1200/1399  (442s)    last=rust:BASELINE-OK
+  1225/1399  (458s)    last=rust:BASELINE-OK
+  1250/1399  (474s)    last=rust:BASELINE-OK
+  1275/1399  (490s)    last=rust:BASELINE-OK
+  1300/1399  (504s)    last=rust:BASELINE-OK
+  1325/1399  (519s)    last=rust:BASELINE-OK
+  1350/1399  (533s)    last=rust:BASELINE-OK
+  1375/1399  (549s)    last=rust:BASELINE-OK
+======================================================================
+SWEPT 1399 patterns in 562s
+
+HEALTH by language (self-test compiles + runs clean?):
+  python   676/676  BASELINE-OK  |  
+  cpp      370/370  BASELINE-OK  |  
+  rust     200/200  BASELINE-OK  |  
+  go        93/93   BASELINE-OK  |  
+  r         60/60   BASELINE-OK  |  
+
+PYTHON deep attack-triage (on the healthy ones):
+  {'FLAG': 332, 'SKIP': 42, 'INVALID': 3}
+  (FLAG = ran but no positive oracle / silently accepted a domain attack -> human review)
+
+report: /Users/s_dio/ai-lab/pattern-scoring/validator/full_sweep_report.json

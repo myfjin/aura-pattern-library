@@ -1,0 +1,46 @@
+{
+ "cards": [
+  {
+   "pattern": "python/system-administration/filesystem-integrity/atomic_write_temp_rename.py",
+   "technique": "chaos-fault-injection",
+   "severity": "info",
+   "class": "chaos-survival",
+   "fixture": "crash before rename commit",
+   "expected": "dest==OLD (no partial) & no temp litter",
+   "actual": "survival predicate held",
+   "verdict": "PASS",
+   "verdict_target": "PATTERN",
+   "confidence": "high",
+   "repro_cmd": "python3 chaos_scan.py atomic_write_temp_rename",
+   "oracle_coverage_kind": "chaos"
+  },
+  {
+   "pattern": "python/programming/persistence/write_ahead_log.py",
+   "technique": "chaos-fault-injection",
+   "severity": "info",
+   "class": "chaos-survival",
+   "fixture": "torn tail (crash mid-append)",
+   "expected": "replay recovers complete records, drops torn tail, no crash",
+   "actual": "survival predicate held",
+   "verdict": "PASS",
+   "verdict_target": "PATTERN",
+   "confidence": "high",
+   "repro_cmd": "python3 chaos_scan.py write_ahead_log",
+   "oracle_coverage_kind": "chaos"
+  },
+  {
+   "pattern": "python/system-administration/data-pipeline-ops/checkpoint_resume.py",
+   "technique": "chaos-fault-injection",
+   "severity": "info",
+   "class": "chaos-survival",
+   "fixture": "crash after batch 0 commit",
+   "expected": "resume processes every record EXACTLY once",
+   "actual": "survival predicate held",
+   "verdict": "PASS",
+   "verdict_target": "PATTERN",
+   "confidence": "high",
+   "repro_cmd": "python3 chaos_scan.py checkpoint_resume",
+   "oracle_coverage_kind": "chaos"
+  }
+ ]
+}

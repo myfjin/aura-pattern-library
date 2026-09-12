@@ -1,0 +1,21 @@
+PATTERN: python/data-science/data_wrangling_from_scratch/hash_join_merge.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: Hash Join: Inner and Left Join.
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "Inner join: 2 rows | Left join: 3 rows | Unmatched id=3: True | PASS",
+  "stderr": "",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

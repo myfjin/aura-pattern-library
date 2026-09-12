@@ -1,0 +1,14 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "CanaryGate gradually shifts traffic to a new version and rolls back if the",
+  "evidence": {
+    "built": true,
+    "ran": true,
+    "exit": 0,
+    "pass_marker": true,
+    "stdout": "\u2713 canary_gate passed"
+  },
+  "file": "system-administration/sysadmin/canary_gate.go",
+  "sha": "20087e10aef6"
+}

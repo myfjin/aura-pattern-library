@@ -1,0 +1,2 @@
+NOTE    python/data-science/rankings_and_information_retrieval/inverted_index_search.py  — all pass but stdout varies across runs (non-deterministic output)
+--- OK 675 · NOTE 1 · REJECT 0 ---

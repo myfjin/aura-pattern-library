@@ -1,0 +1,9 @@
+file,status
+python/data-science/recommenders_ii_kept_survivors/catalog_coverage_diversity.py,VERIFIED
+python/data-science/recommenders_ii_kept_survivors/intra_list_diversity.py,VERIFIED
+python/data-science/recommenders_ii_kept_survivors/novelty_serendipity.py,VERIFIED
+python/system-administration/process-supervision/graceful_shutdown_sigterm.py,VERIFIED
+python/system-administration/state-db-durability/corruption_repair.py,VERIFIED
+python/system-administration/state-db-durability/hot_copy.py,VERIFIED
+python/system-administration/state-db-durability/transaction_rollback.py,VERIFIED
+python/system-administration/state-db-durability/migration_with_rollback.py,VERIFIED

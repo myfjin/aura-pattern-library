@@ -1,0 +1,14 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "",
+  "evidence": {
+    "compiled": true,
+    "ran": true,
+    "exit": 0,
+    "pass_marker": true,
+    "stdout": "deadline_guard: child tightened, expiry detected \u2014 PASS"
+  },
+  "file": "concurrency-resilience/deadline_guard.rs",
+  "sha": "ecc43db4b4b9"
+}

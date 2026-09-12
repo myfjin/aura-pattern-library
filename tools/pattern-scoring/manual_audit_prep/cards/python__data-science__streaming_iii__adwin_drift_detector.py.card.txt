@@ -1,0 +1,21 @@
+PATTERN: python/data-science/streaming_iii/adwin_drift_detector.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: ADWIN0 adaptive-windowing drift detector (Bifet & Gavalda, 2007).
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "stationary: detected=False at -1 (want False)\nshift: detected=True at 392 (want True, soon after 300)\nADWIN PASS",
+  "stderr": "",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

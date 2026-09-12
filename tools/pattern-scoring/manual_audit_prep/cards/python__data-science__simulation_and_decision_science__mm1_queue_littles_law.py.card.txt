@@ -1,0 +1,21 @@
+PATTERN: python/data-science/simulation_and_decision_science/mm1_queue_littles_law.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: M/M/1 Queue: verify Little's Law and analytic formulas.
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "PASS",
+  "stderr": "",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

@@ -1,0 +1,52 @@
+{
+ "cards": [
+  {
+   "pattern": "python/data-science/core_ml/linear_regression_gd.py",
+   "technique": "daikon-invariant-mining",
+   "severity": "info",
+   "class": "mined-invariant-proposal",
+   "fixture": "100 deterministic seeds over signed oracle",
+   "expected": "ratifiable invariant candidates (scalar ranges + relational ratios/signs)",
+   "actual": "mined 5 candidates (1 relational: ['ratio_w0_w1'])",
+   "why": "relational invariants (ratios/signs) catch what scalar thresholds miss; feeds the invariant-probe grid",
+   "verdict": "PROPOSAL",
+   "verdict_target": "HUMAN-RATIFICATION",
+   "ratified": false,
+   "confidence": "candidate",
+   "repro_cmd": "python3 invariant_mine.py harvest linear_regression_gd",
+   "oracle_coverage_kind": "invariant"
+  },
+  {
+   "pattern": "python/data-science/statistical_modeling/polynomial_regression.py",
+   "technique": "daikon-invariant-mining",
+   "severity": "info",
+   "class": "mined-invariant-proposal",
+   "fixture": "100 deterministic seeds over signed oracle",
+   "expected": "ratifiable invariant candidates (scalar ranges + relational ratios/signs)",
+   "actual": "mined 6 candidates (2 relational: ['ratio_c0_c1', 'ratio_c1_c2'])",
+   "why": "relational invariants (ratios/signs) catch what scalar thresholds miss; feeds the invariant-probe grid",
+   "verdict": "PROPOSAL",
+   "verdict_target": "HUMAN-RATIFICATION",
+   "ratified": false,
+   "confidence": "candidate",
+   "repro_cmd": "python3 invariant_mine.py harvest polynomial_regression",
+   "oracle_coverage_kind": "invariant"
+  },
+  {
+   "pattern": "python/data-science/core_ml/ridge_regression_normal_eq.py",
+   "technique": "daikon-invariant-mining",
+   "severity": "info",
+   "class": "mined-invariant-proposal",
+   "fixture": "100 deterministic seeds over signed oracle",
+   "expected": "ratifiable invariant candidates (scalar ranges + relational ratios/signs)",
+   "actual": "mined 6 candidates (2 relational: ['ratio_w0_w1', 'ratio_w1_w2'])",
+   "why": "relational invariants (ratios/signs) catch what scalar thresholds miss; feeds the invariant-probe grid",
+   "verdict": "PROPOSAL",
+   "verdict_target": "HUMAN-RATIFICATION",
+   "ratified": false,
+   "confidence": "candidate",
+   "repro_cmd": "python3 invariant_mine.py harvest ridge_regression_normal_eq",
+   "oracle_coverage_kind": "invariant"
+  }
+ ]
+}

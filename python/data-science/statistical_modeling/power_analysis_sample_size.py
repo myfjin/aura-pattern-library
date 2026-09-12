@@ -46,12 +46,17 @@ def _aura_domain_two_proportion_power(alpha):
     if v:
         raise AuraInputError(v)
 
-def _aura_domain_sample_size_two_proportion(alpha):
+def _aura_domain_sample_size_two_proportion(alpha, p1, p2):
     v = []
     if isinstance(alpha, (int, float)) and not math.isfinite(alpha):
         v.append(f"AURA-E008: alpha must be finite, got {alpha}")
     elif isinstance(alpha, (int, float)) and not (0.0 < alpha < 1.0):
         v.append(f"AURA-E001: alpha must be in (0,1), got {alpha}")
+    for name, p in (("p1", p1), ("p2", p2)):
+        if isinstance(p, (int, float)) and not math.isfinite(p):
+            v.append(f"AURA-E008: {name} must be finite, got {p}")
+        elif isinstance(p, (int, float)) and not (0.0 <= p <= 1.0):
+            v.append(f"AURA-E001: {name} must be in [0,1], got {p}")
     if v:
         raise AuraInputError(v)
 
@@ -111,7 +116,7 @@ def sample_size_two_proportion(
     Returns:
         Required n per group
     """
-    _aura_domain_sample_size_two_proportion(alpha)
+    _aura_domain_sample_size_two_proportion(alpha, p1, p2)
     # Initial guess using normal approximation
     z_alpha = normal_quantile(1.0 - alpha / 2.0)
     z_beta = normal_quantile(target_power)

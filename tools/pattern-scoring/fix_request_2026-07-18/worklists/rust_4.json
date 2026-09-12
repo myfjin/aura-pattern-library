@@ -1,0 +1,62 @@
+[
+ {
+  "file": "rust/storage-persistence/double_write_buffer.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/storage-persistence/free_list_coalescing_allocator.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/storage-persistence/fsync_barrier_ordering.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/storage-persistence/log_segment_gc_compaction.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/storage-persistence/manifest_versioned_snapshot.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/storage-persistence/mvcc_version_chain.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/storage-persistence/redo_undo_log.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/storage-persistence/slotted_page_layout.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/storage-persistence/sstable_block_index.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/storage-persistence/tombstone_deletion_merge.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/storage-persistence/two_phase_commit_coordinator.rs",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "rust/storage-persistence/wal_group_commit.rs",
+  "kind": "missing",
+  "current": null
+ }
+]

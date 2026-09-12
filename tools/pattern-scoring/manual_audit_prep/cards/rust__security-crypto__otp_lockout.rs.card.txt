@@ -1,0 +1,14 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "",
+  "evidence": {
+    "compiled": true,
+    "ran": true,
+    "exit": 0,
+    "pass_marker": true,
+    "stdout": "otp_lockout ... PASS"
+  },
+  "file": "security-crypto/otp_lockout.rs",
+  "sha": "95ba9c44a7ab"
+}

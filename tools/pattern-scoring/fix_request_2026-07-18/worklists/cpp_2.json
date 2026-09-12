@@ -1,0 +1,77 @@
+[
+ {
+  "file": "cpp/data-science/composed_tools_bridge_born/dtw_shape_drift_monitor.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/composed_tools_bridge_born/walk_forward_early_stopping.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/data_wrangling_from_scratch/group_by_aggregate.cpp",
+  "kind": "short",
+  "current": "Group-By Aggregation (Multi-Key)."
+ },
+ {
+  "file": "cpp/data-science/data_wrangling_from_scratch/hash_join_merge.cpp",
+  "kind": "short",
+  "current": "Hash Join: Inner and Left Join."
+ },
+ {
+  "file": "cpp/data-science/data_wrangling_from_scratch/resample_timeseries_bins.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/econometrics_finance/value_averaging_vs_dca.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/ensembles_robust_methods/gradient_boosting_stumps.cpp",
+  "kind": "short",
+  "current": "Gradient Boosting with Decision Stumps."
+ },
+ {
+  "file": "cpp/data-science/ensembles_robust_methods/huber_robust_regression.cpp",
+  "kind": "short",
+  "current": "Huber Loss Robust Regression."
+ },
+ {
+  "file": "cpp/data-science/ensembles_robust_methods/theil_sen_estimator.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/ensembles_robust_methods/voting_classifier.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/experiments_ii/post_stratification_variance.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/experiments_ii/stratified_randomization.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/geospatial_spatial/point_in_polygon.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/geospatial_spatial/polygon_area_centroid.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/geospatial_spatial/quadtree_point_index.cpp",
+  "kind": "missing",
+  "current": null
+ }
+]

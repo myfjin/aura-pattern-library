@@ -1,0 +1,25 @@
+PATTERN: python/programming/reasoning/bayesian_network.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: Bayesian Belief Network Implementation
+
+This module provides a complete implementation of a Bayesian Belief Network
+with support for conditional probability tables, inference by enumeration,
+and condi
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "bayesian_network: joints 0.0396/0.2/0.324 exact, joint sums to 1, P(W|R)=0.9162, P(C|W)=0.5758, P(R|W,\u00acS)=1 exactly \u2014 PASS",
+  "stderr": "",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

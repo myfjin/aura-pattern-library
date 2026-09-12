@@ -1,0 +1,33 @@
+version: "1.0.0"
+description: |
+  Generalization & correctness priority for data-science patterns.
+  Frozen rubric. Change version when any field changes.
+
+weights:
+  A: 0.35  # Appropriateness
+  M: 0.35  # Model/Metric improvement + reliability
+  R: 0.15  # Reusability
+  T: 0.15  # Tradeoff / cost
+
+thresholds:
+  reject_measured_m: 0.30   # reject valid patterns only when M is measured and below this
+  flag_missing_evidence: true
+  library_min_u: 0.75        # U >= 0.75 -> ready for library inclusion
+  review_min_u: 0.50         # 0.50 <= U < 0.75 -> needs human review
+
+reference_dataset:
+  name: "none"
+  version: "none"
+  note: |
+    M must be measured against a named reference dataset.
+    When a reference is adopted, pin its name and version here.
+
+sense_filter:
+  banned_prefixes:
+    - "sklearn."
+    - "scipy."
+    - "statsmodels."
+    - "numpy.mean"
+    - "pandas.DataFrame"
+  min_docstring_lines: 3
+  min_function_lines: 5

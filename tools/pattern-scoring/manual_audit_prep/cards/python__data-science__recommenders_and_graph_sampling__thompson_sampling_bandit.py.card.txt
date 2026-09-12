@@ -1,0 +1,21 @@
+PATTERN: python/data-science/recommenders_and_graph_sampling/thompson_sampling_bandit.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: Thompson sampling for multi-armed bandits.
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "thompson_sampling_bandit.py: pulls=[997, 1, 2], reward=790.0 PASS",
+  "stderr": "",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

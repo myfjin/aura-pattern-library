@@ -1,0 +1,5559 @@
+{
+  "lang": "cpp",
+  "count": 370,
+  "distribution": {
+    "VERIFIED": 370
+  },
+  "patterns": [
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Cohort Retention Analysis",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "cohort_retention_analysis.cpp PASS"
+      },
+      "file": "data-science/applied_ds_practice/cohort_retention_analysis.cpp",
+      "sha": "58d7f70c1d7f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Cross-validation leakage: feature selection before CV inflates accuracy.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/applied_ds_practice/cross_validation_leakage.cpp",
+      "sha": "9b50b4fce794"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Scenario 1: No drift (same distribution)\n  PSI:  0.0587926 (threshold: 0.25)\n  KS:   0.086 (threshold: 0.1)\n  Drift: No\n"
+      },
+      "file": "data-science/applied_ds_practice/drift_detection_psi.cpp",
+      "sha": "c85594123453"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "ewma_streaming_metrics PASS"
+      },
+      "file": "data-science/applied_ds_practice/ewma_streaming_metrics.cpp",
+      "sha": "bba02623180d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Feature hashing for dimensionality reduction of high-dimensional sparse features.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Feature hashing classification performance\n  Dimensions: 64\n  Accuracy:       1\n  Collision rate: 0.32 (32-dim), 0.16 (1"
+      },
+      "file": "data-science/applied_ds_practice/feature_hashing_trick.cpp",
+      "sha": "584564b0181c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Multi-step funnel conversion analysis with Wilson confidence intervals.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Multi-step funnel conversion analysis\n\nvisit: rate=80% | 95% CI [77.4081%, 82.3623%]\nsignup: rate=75% | 95% CI [71.8847%"
+      },
+      "file": "data-science/applied_ds_practice/funnel_conversion_analysis.cpp",
+      "sha": "ac5510e20208"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "RFM Customer Segmentation\nwhale          : 16 customers\nregular        : 40 customers\nat_risk        :  4 customers\nchur"
+      },
+      "file": "data-science/applied_ds_practice/rfm_customer_segmentation.cpp",
+      "sha": "13a2bebd6795"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "simpsons_paradox_demo PASS\n  Stratum 1: A=0.8 B=0.9\n  Stratum 2: A=0.1 B=0.12\n  Aggregate: A=0.736364 B=0.190909"
+      },
+      "file": "data-science/applied_ds_practice/simpsons_paradox_demo.cpp",
+      "sha": "d8e98c43c637"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "target_encoding_smoothing: PASS"
+      },
+      "file": "data-science/applied_ds_practice/target_encoding_smoothing.cpp",
+      "sha": "85ccda520f01"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Test 1: Welford variance=1.10289 batch=1.10289\nTest 2: naive=0 batch=1.00011 welford=1.00011\nwelford_online_stats PASS"
+      },
+      "file": "data-science/applied_ds_practice/welford_online_stats.cpp",
+      "sha": "ae62148d1125"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Approximate Bayesian Computation (ABC): rejection sampling for intractable likelihoods.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Loose (\u03b5=0.5): mean=3.031, accept_rate=0.130\nTight (\u03b5=0.2): mean=3.030, accept_rate=0.042\nPASS"
+      },
+      "file": "data-science/bayesian_iii_approximate_inference/abc_rejection_sampler.cpp",
+      "sha": "e41a25463faf"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Bayes Factor for Comparing Two Normal Means",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "bayes_factor_normal_means.cpp PASS"
+      },
+      "file": "data-science/bayesian_iii_approximate_inference/bayes_factor_normal_means.cpp",
+      "sha": "385bab5154b4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "ELBO monotonicity in coordinate-ascent variational inference.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "elbo_monotone_vi PASS"
+      },
+      "file": "data-science/bayesian_iii_approximate_inference/elbo_monotone_vi.cpp",
+      "sha": "b719bbf083e4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Hierarchical shrinkage (James-Stein): partial-pooling beats no-pooling on MSE.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hierarchical_shrinkage_2level.cpp PASS"
+      },
+      "file": "data-science/bayesian_iii_approximate_inference/hierarchical_shrinkage_2level.cpp",
+      "sha": "067fe2b99f2b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Laplace approximation: approximate posterior p(\u03b8|data) with Gaussian at MAP.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "laplace_approximation_posterior.cpp PASS"
+      },
+      "file": "data-science/bayesian_iii_approximate_inference/laplace_approximation_posterior.cpp",
+      "sha": "3f385260cb32"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Mean-field variational inference for a Gaussian with unknown mean AND precision.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "meanfield_vi_gaussian.cpp PASS"
+      },
+      "file": "data-science/bayesian_iii_approximate_inference/meanfield_vi_gaussian.cpp",
+      "sha": "73f4dce9b985"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/bayesian_iii_approximate_inference/posterior_contraction_rate.cpp",
+      "sha": "65ebd20360aa"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/bayesian_iii_approximate_inference/posterior_predictive_pvalue.cpp",
+      "sha": "ad05940b4a43"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "rhat_good=1.7156 rhat_bad=28.6657 PASS"
+      },
+      "file": "data-science/bayesian_iii_approximate_inference/rhat_convergence_diagnostic.cpp",
+      "sha": "346b9cbbb9e5"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "SBC correct chi2=8.7 biased chi2=125.2\nSBC_RANK_UNIFORMITY PASS"
+      },
+      "file": "data-science/bayesian_iii_approximate_inference/sbc_rank_uniformity.cpp",
+      "sha": "fbe9e0a70615"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Bayesian Changepoint Detection",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "bayesian_changepoint_offline.cpp PASS"
+      },
+      "file": "data-science/bayesian_iii_modeling_selection/bayesian_changepoint_offline.cpp",
+      "sha": "2ea7ed7236c1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Bayesian Linear Regression with Conjugate Prior",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "bayesian_linreg_conjugate.cpp PASS"
+      },
+      "file": "data-science/bayesian_iii_modeling_selection/bayesian_linreg_conjugate.cpp",
+      "sha": "d99ab33d60f2"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Beta-Binomial Overdispersion",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "beta_binomial_overdispersion.cpp PASS"
+      },
+      "file": "data-science/bayesian_iii_modeling_selection/beta_binomial_overdispersion.cpp",
+      "sha": "badb25eeaed3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "BIC Model Selection Picks True Polynomial Degree",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "bic_selects_true_degree.cpp PASS"
+      },
+      "file": "data-science/bayesian_iii_modeling_selection/bic_selects_true_degree.cpp",
+      "sha": "cf7be027f6c6"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Chinese Restaurant Process (CRP): expected number of tables \u2248 \u03b1\u00b7ln(n).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/bayesian_iii_modeling_selection/crp_table_growth.cpp",
+      "sha": "39eaf3c1b368"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/bayesian_iii_modeling_selection/dirichlet_multinomial_posterior.cpp",
+      "sha": "0a91db86bb13"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/bayesian_iii_modeling_selection/dirichlet_stick_breaking.cpp",
+      "sha": "4d8c5fe5819e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/bayesian_iii_modeling_selection/evidence_ranks_true_model.cpp",
+      "sha": "44e5e3b90eae"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Gaussian-process regression: the marginal likelihood peaks at the true lengthscale.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "gp_regression_marginal_likelihood.cpp PASS"
+      },
+      "file": "data-science/bayesian_iii_modeling_selection/gp_regression_marginal_likelihood.cpp",
+      "sha": "9a93f0eb2efe"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Kalman filter + Rauch-Tung-Striebel (RTS) smoother.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "kalman_rts_smoother.cpp PASS: filt=0.500833 smooth=0.341215"
+      },
+      "file": "data-science/bayesian_iii_modeling_selection/kalman_rts_smoother.cpp",
+      "sha": "739f95cbb066"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Sample Ratio Mismatch (SRM) Check for A/B Tests.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Clean split: 4947/10000 (49.47%) | chi_sq=1.12 (p=1.00) | Skewed split: 5049/9031 (55.91%) | chi_sq=126.06 (p=0.00) | PA"
+      },
+      "file": "data-science/causal_inference_experimentation/ab_test_srm_check.cpp",
+      "sha": "8b3ef0d9d80e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "CUPED variance reduction: use covariates to reduce variance in A/B tests.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/causal_inference_experimentation/cuped_variance_reduction.cpp",
+      "sha": "6330ed00cc23"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "True treatment effect: 20 | DiD estimate: 20.0915 | Bias: 0.0914879 | Pre-period DiD: 0 | PASS"
+      },
+      "file": "data-science/causal_inference_experimentation/difference_in_differences.cpp",
+      "sha": "d9816dc9e0d4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Instrumental Variable (IV) Estimation.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "instrumental_variable_lite.cpp PASS: naive=7.43895 iv=7.1202"
+      },
+      "file": "data-science/causal_inference_experimentation/instrumental_variable_lite.cpp",
+      "sha": "e845c05dd999"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Interrupted Time Series (ITS) Segmented Regression.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "interrupted_time_series.cpp PASS"
+      },
+      "file": "data-science/causal_inference_experimentation/interrupted_time_series.cpp",
+      "sha": "c043d8c3fade"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "True assignment effect: 3.01768 | Avg permuted: 0.00188157 | Max permuted: 0.542459 | P-value: 0 | PASS"
+      },
+      "file": "data-science/causal_inference_experimentation/placebo_test_causal.cpp",
+      "sha": "4b1c0eb66b0f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "True ATE: 5 | Naive: 7.18754 (bias=2.18754) | PSM: 5.33696 (bias=0.336959) | Matched pairs: 75 | PASS"
+      },
+      "file": "data-science/causal_inference_experimentation/propensity_score_matching.cpp",
+      "sha": "a8ca226de197"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "True RD effect: 3.00 | RD estimate: 3.21 | Bias: 0.21 | Left obs: 64 | Right obs: 65 | PASS"
+      },
+      "file": "data-science/causal_inference_experimentation/regression_discontinuity.cpp",
+      "sha": "b63f87241bda"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "alpha",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "sequential_probability_ratio PASS (avg SPRT samples: 40.4124, n=97, fixed H1 rate: 1)"
+      },
+      "file": "data-science/causal_inference_experimentation/sequential_probability_ratio.cpp",
+      "sha": "067b65e88380"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "synthetic_control_lite: PASS"
+      },
+      "file": "data-science/causal_inference_experimentation/synthetic_control_lite.cpp",
+      "sha": "65ba16a5e1ad"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Backdoor vs Collider Adjustment",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "backdoor_vs_collider_adjustment.cpp PASS"
+      },
+      "file": "data-science/causal_inference_ii/backdoor_vs_collider_adjustment.cpp",
+      "sha": "e06d56945d8f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Caliper Matching",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "caliper_matching.cpp PASS"
+      },
+      "file": "data-science/causal_inference_ii/caliper_matching.cpp",
+      "sha": "e1fde954b12c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/causal_inference_ii/doubly_robust_aipw.cpp",
+      "sha": "52239fd1f49d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/causal_inference_ii/e_value_sensitivity.cpp",
+      "sha": "380010aca9f3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Frontdoor criterion: identify a causal effect when the backdoor is unblockable.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "frontdoor_criterion_lite.cpp PASS"
+      },
+      "file": "data-science/causal_inference_ii/frontdoor_criterion_lite.cpp",
+      "sha": "49b851efa3e8"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Heterogeneous treatment effects (CATE): treatment effect varies by subgroup.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "heterogeneous_effects_subgroups.cpp PASS"
+      },
+      "file": "data-science/causal_inference_ii/heterogeneous_effects_subgroups.cpp",
+      "sha": "b6a07252559d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Inverse Propensity Weighting (IPW) for the Average Treatment Effect (ATE).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "ipw_ate.cpp PASS: ipw=2.45255 naive=2.99324"
+      },
+      "file": "data-science/causal_inference_ii/ipw_ate.cpp",
+      "sha": "0089f1d8cc95"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Mediation analysis: decompose a total effect into direct + indirect via a mediator.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "mediation_effects_decomposition.cpp PASS"
+      },
+      "file": "data-science/causal_inference_ii/mediation_effects_decomposition.cpp",
+      "sha": "e9fb692cbc30"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Negative control outcome: a known-null outcome stays null under clean analysis",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "real_clean=2.19631 null_clean=0.145063 real_conf=2.7782 null_conf=0.380542\nnegative_control_outcome PASS"
+      },
+      "file": "data-science/causal_inference_ii/negative_control_outcome.cpp",
+      "sha": "8d3f58bdbafb"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "stratification_subclassification: PASS"
+      },
+      "file": "data-science/causal_inference_ii/stratification_subclassification.cpp",
+      "sha": "f4d993c10d48"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Betweenness Centrality",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "betweenness_centrality.cpp: bridge node 5 identified (score 1.28571) PASS"
+      },
+      "file": "data-science/clustering_graph_anomaly/betweenness_centrality.cpp",
+      "sha": "9ce9d6606cbd"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Classical Multidimensional Scaling (MDS)",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "classic_mds.cpp: 40 points embedded, correlation -0.0253974 PASS"
+      },
+      "file": "data-science/clustering_graph_anomaly/classic_mds.cpp",
+      "sha": "859f43370308"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "DBSCAN clustering: density-based spatial clustering.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/clustering_graph_anomaly/dbscan_clustering.cpp",
+      "sha": "3b716f9babf2"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "elbow_method_kmeans.cpp: knee detected at k=3 PASS"
+      },
+      "file": "data-science/clustering_graph_anomaly/elbow_method_kmeans.cpp",
+      "sha": "390066330b1c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Hierarchical Agglomerative Clustering from scratch.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hierarchical_agglomerative.cpp PASS"
+      },
+      "file": "data-science/clustering_graph_anomaly/hierarchical_agglomerative.cpp",
+      "sha": "e51e9c43f7d7"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Isolation Forest (Lite) Anomaly Detection from scratch.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "isolation_tree_anomaly.cpp PASS: normal=8.45633 outlier=2.78667"
+      },
+      "file": "data-science/clustering_graph_anomaly/isolation_tree_anomaly.cpp",
+      "sha": "37f1ac1c2a37"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Label Propagation for Community Detection from scratch.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "label_propagation_communities.cpp PASS"
+      },
+      "file": "data-science/clustering_graph_anomaly/label_propagation_communities.cpp",
+      "sha": "67ddcb9fd421"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Linear Discriminant Analysis (LDA) from scratch.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "linear_discriminant_analysis.cpp PASS: accuracy=1"
+      },
+      "file": "data-science/clustering_graph_anomaly/linear_discriminant_analysis.cpp",
+      "sha": "dbb83afdd253"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "random_projection_jl.cpp: distance correlation 0.996\nPASS"
+      },
+      "file": "data-science/clustering_graph_anomaly/random_projection_jl.cpp",
+      "sha": "61790cfca354"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "silhouette_score PASS (correct=0.905252, wrong=0.905252, scrambled=0.115101)"
+      },
+      "file": "data-science/clustering_graph_anomaly/silhouette_score.cpp",
+      "sha": "7445c6235626"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Broker-Term Extraction",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "broker_term_extraction.cpp PASS"
+      },
+      "file": "data-science/composed_tools_bridge_born/broker_term_extraction.cpp",
+      "sha": "932ad1b4f709"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "docs: 30 all-pairs 435 MinHash candidates 4 verified near-dups 4\nexplanation for pair (0,1): -the +a +today\ndedup_pipeli"
+      },
+      "file": "data-science/composed_tools_bridge_born/dedup_pipeline.cpp",
+      "sha": "129c6f0661c4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "point-statistic alarms on shape-drift days: \nshape alarms: first at day 21 (change at day 20) - fence 9.05738 - calib DT"
+      },
+      "file": "data-science/composed_tools_bridge_born/dtw_shape_drift_monitor.cpp",
+      "sha": "3c9d58ab9f6c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "KDE-Seeded Gaussian Mixture \u2014 the nonparametric scout guides the parametric army.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "kde_seeded_gmm.cpp PASS: seeded_ll=-95.2533"
+      },
+      "file": "data-science/composed_tools_bridge_born/kde_seeded_gmm.cpp",
+      "sha": "3c1c70187d5d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "KD-Tree Accelerated k-NN \u2014 the search engine meets the classifier.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "knn_kdtree_accelerated.cpp PASS: ratio=0.01827"
+      },
+      "file": "data-science/composed_tools_bridge_born/knn_kdtree_accelerated.cpp",
+      "sha": "45f939af6a47"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Latency Percentile Monitor \u2014 p99 tracking in five floats per quantile.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "latency_percentile_monitor.cpp PASS"
+      },
+      "file": "data-science/composed_tools_bridge_born/latency_percentile_monitor.cpp",
+      "sha": "0f59df611201"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "A \u2194 B_linear |pearson|=0.884485 norm-MI=0.304875\nA \u2194 C_square |pearson|=0.00951108 norm-MI=0.325208\nA \u2194 D_noise  |pearso"
+      },
+      "file": "data-science/composed_tools_bridge_born/mutual_information_matrix.cpp",
+      "sha": "75382e9cc0ed"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "M/M/1 validation: simulated Wq 0.1513 vs theory 0.1500 (rel err 0.9%)\ncapacity plan: 7 workers (wait curve: 5->144ms, 6-"
+      },
+      "file": "data-science/composed_tools_bridge_born/queue_capacity_planner.cpp",
+      "sha": "fe92eb0a2ed4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Black-Scholes truth: 0.002759\nnaive MC  (n=2000): 0.000000  rel err 100%\nIS MC     (n=2000): 0.002755  rel err 0.1% \u00b7 SE"
+      },
+      "file": "data-science/composed_tools_bridge_born/rare_event_option_pricing.cpp",
+      "sha": "d229c01055c3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "train MAE at round 120: 0.459891\nforward MAE: best 0.810339 @ round 27 \u00b7 final 0.88892 @ round 120 \u00b7 early-stopped @ 42\n"
+      },
+      "file": "data-science/composed_tools_bridge_born/walk_forward_early_stopping.cpp",
+      "sha": "9925c510050d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Decision tree (ID3): greedy information-gain-based classifier.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/core_ml/decision_tree_id3.cpp",
+      "sha": "49d39ff69e6a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Gaussian Mixture Model (1D) via Expectation-Maximization.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "gaussian_mixture_em.cpp PASS: means = [0.0964533, 4.93728]"
+      },
+      "file": "data-science/core_ml/gaussian_mixture_em.cpp",
+      "sha": "33632aa03308"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "k-Means Clustering (from scratch).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "kmeans_clustering.cpp PASS: intra=0.644892"
+      },
+      "file": "data-science/core_ml/kmeans_clustering.cpp",
+      "sha": "8ef61d07fd15"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "k-Nearest Neighbors Classifier (from scratch).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "knn_classifier.cpp PASS: accuracy=1"
+      },
+      "file": "data-science/core_ml/knn_classifier.cpp",
+      "sha": "5bc065814a1f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Linear Regression via Batch Gradient Descent (from scratch).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "linear_regression_gd.cpp PASS: R\u00b2=0.998223"
+      },
+      "file": "data-science/core_ml/linear_regression_gd.cpp",
+      "sha": "808e934182cf"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Binary Logistic Regression via Gradient Descent (from scratch).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "logistic_regression.cpp PASS: accuracy=1"
+      },
+      "file": "data-science/core_ml/logistic_regression.cpp",
+      "sha": "ed5aeee86f4e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Multinomial Naive Bayes for Text Classification (from scratch).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "naive_bayes_text.cpp PASS: accuracy=1"
+      },
+      "file": "data-science/core_ml/naive_bayes_text.cpp",
+      "sha": "d1aa1dd741aa"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PCA_POWER_ITERATION PASS: ev1 = 6.75993, ev2 = 0.213834"
+      },
+      "file": "data-science/core_ml/pca_power_iteration.cpp",
+      "sha": "01ce066a24f2"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PERCEPTRON PASS: accuracy = 1, weights = -7.88035 7.79133"
+      },
+      "file": "data-science/core_ml/perceptron.cpp",
+      "sha": "7b8e4d5a3ed8"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "RIDGE_REGRESSION_NORMAL_EQ PASS: R2 = 0.998283, weights = [1.96975, 2.96892, -0.963814]"
+      },
+      "file": "data-science/core_ml/ridge_regression_normal_eq.cpp",
+      "sha": "9c3138acce12"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "CSV Type Inference: Detect column types from string values.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/data_wrangling_from_scratch/csv_type_inference.cpp",
+      "sha": "f6d547d20fa5"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Records: 5 | Clusters: 3 | Deduped: 3 | Kept ids: 1,3,5 | PASS"
+      },
+      "file": "data-science/data_wrangling_from_scratch/dedupe_records_fuzzy.cpp",
+      "sha": "8a8fde74b6ad"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Group-By Aggregation (Multi-Key).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "group_by_aggregate.cpp PASS"
+      },
+      "file": "data-science/data_wrangling_from_scratch/group_by_aggregate.cpp",
+      "sha": "a146e7c79406"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Hash Join: Inner and Left Join.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hash_join_merge.cpp PASS"
+      },
+      "file": "data-science/data_wrangling_from_scratch/hash_join_merge.cpp",
+      "sha": "6397767314f5"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Melt (Unpivot): Wide to Long Format.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "melt_unpivot.cpp PASS"
+      },
+      "file": "data-science/data_wrangling_from_scratch/melt_unpivot.cpp",
+      "sha": "509c02db6ebe"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Pivot: A/US=150 | B/EU=125 | Row totals: A=225 B=155 | Grand total: 380 | PASS"
+      },
+      "file": "data-science/data_wrangling_from_scratch/pivot_table.cpp",
+      "sha": "c70e836ec1b0"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Records: 5 | Hourly bins: 3 | Daily bins: 2 | PASS"
+      },
+      "file": "data-science/data_wrangling_from_scratch/resample_timeseries_bins.cpp",
+      "sha": "634a6cf9a7b5"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "key",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "ROLLING_JOIN_ASOF PASS"
+      },
+      "file": "data-science/data_wrangling_from_scratch/rolling_join_asof.cpp",
+      "sha": "8eb7044d566d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/data_wrangling_from_scratch/sort_multi_key.cpp",
+      "sha": "a223f80a1eb3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Records: 5 | Category A: 3 | Running sum: [5,15,35] | PASS"
+      },
+      "file": "data-science/data_wrangling_from_scratch/window_functions.cpp",
+      "sha": "4f5ad02e2a42"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Black-Scholes Monte Carlo: European Option Pricing via Simulation",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "black_scholes_monte_carlo.cpp PASS"
+      },
+      "file": "data-science/econometrics_finance/black_scholes_monte_carlo.cpp",
+      "sha": "203f56a34d85"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Portfolio Value-at-Risk via Bootstrap",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "bootstrap_portfolio_var.cpp PASS"
+      },
+      "file": "data-science/econometrics_finance/bootstrap_portfolio_var.cpp",
+      "sha": "e6a3d55b3513"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Engle-Granger Cointegration Test",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "cointegration_engle_granger_lite.cpp PASS"
+      },
+      "file": "data-science/econometrics_finance/cointegration_engle_granger_lite.cpp",
+      "sha": "1a6fe85c56f8"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Fixed-effects estimator (within): removes time-invariant entity effects.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "fixed_effects_within.cpp PASS"
+      },
+      "file": "data-science/econometrics_finance/fixed_effects_within.cpp",
+      "sha": "675312e0f449"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "GARCH(1,1): volatility clustering via autoregressive conditional heteroskedasticity.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "garch_lite_volatility_clustering.cpp PASS"
+      },
+      "file": "data-science/econometrics_finance/garch_lite_volatility_clustering.cpp",
+      "sha": "5972abcf1b9f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Two-stage least squares (2SLS): correct inference with endogenous regressor.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "instrumental_2sls.cpp PASS"
+      },
+      "file": "data-science/econometrics_finance/instrumental_2sls.cpp",
+      "sha": "6f162856d704"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Logit marginal effects: average partial derivatives of predicted probability.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "logit_marginal_effects.cpp PASS"
+      },
+      "file": "data-science/econometrics_finance/logit_marginal_effects.cpp",
+      "sha": "4ea686ac2dc9"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/econometrics_finance/ols_robust_se_white.cpp",
+      "sha": "de1466265806"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "sharpe_sortino_ratios PASS (sharpe=0.214968, sortino=0.35917)"
+      },
+      "file": "data-science/econometrics_finance/sharpe_sortino_ratios.cpp",
+      "sha": "63186faef758"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "value_averaging_vs_dca PASS"
+      },
+      "file": "data-science/econometrics_finance/value_averaging_vs_dca.cpp",
+      "sha": "3a7ce4ce23b4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "AdaBoost Classification with Decision Stumps.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "adaboost: single_stump_acc=0.9125, ensemble_acc=0.9250\nPASS"
+      },
+      "file": "data-science/ensembles_robust_methods/adaboost.cpp",
+      "sha": "0c67e9b452fc"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Bagging for Variance Reduction",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "bagging_variance_reduction: retraining variance 5.95041 -> 2.13347 (35.8542% of single) PASS"
+      },
+      "file": "data-science/ensembles_robust_methods/bagging_variance_reduction.cpp",
+      "sha": "ae60a7cbb72f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Gradient Boosting with Decision Stumps.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "gradient_boosting_stumps.cpp PASS"
+      },
+      "file": "data-science/ensembles_robust_methods/gradient_boosting_stumps.cpp",
+      "sha": "5cd0186e9834"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Huber Loss Robust Regression.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "huber_robust_regression.cpp PASS"
+      },
+      "file": "data-science/ensembles_robust_methods/huber_robust_regression.cpp",
+      "sha": "8b0e1f07d81c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "random_forest: single_tree_acc=0.9875, forest_acc=0.9875\nrandom_forest PASS"
+      },
+      "file": "data-science/ensembles_robust_methods/random_forest.cpp",
+      "sha": "5892c00a4a18"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "ransac_robust_regression: ols_slope_error=0.4197, ransac_slope_error=0.0121\nPASS"
+      },
+      "file": "data-science/ensembles_robust_methods/ransac_robust_regression.cpp",
+      "sha": "9b2fc038062f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS (kmeans=0.725, spectral=1)"
+      },
+      "file": "data-science/ensembles_robust_methods/spectral_clustering_lite.cpp",
+      "sha": "896df0a2f2cb"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "stacking_ensemble: base1_acc=0.933333, base2_acc=0.966667, stack_acc=0.966667 PASS"
+      },
+      "file": "data-science/ensembles_robust_methods/stacking_ensemble.cpp",
+      "sha": "d8028a137de7"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "ols_slope_error=0.5712 ts_slope_error=0.0376\nPASS"
+      },
+      "file": "data-science/ensembles_robust_methods/theil_sen_estimator.cpp",
+      "sha": "c56541a1497e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "voting_classifier: avg_individual=0.770833, ensemble=0.85 PASS"
+      },
+      "file": "data-science/ensembles_robust_methods/voting_classifier.cpp",
+      "sha": "d667c3942f3c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Cluster Randomized ICC (Intracluster Correlation)",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "cluster_randomized_icc.cpp PASS"
+      },
+      "file": "data-science/experiments_ii/cluster_randomized_icc.cpp",
+      "sha": "21d581a6d1d8"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Minimum Detectable Effect (MDE): smallest effect size detectable with given n, \u03b1, power.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "minimum_detectable_effect.cpp PASS"
+      },
+      "file": "data-science/experiments_ii/minimum_detectable_effect.cpp",
+      "sha": "e8e5314085ad"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "mSPRT (mixture Sequential Probability Ratio Test): an always-valid test.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "msprt_lite.cpp PASS"
+      },
+      "file": "data-science/experiments_ii/msprt_lite.cpp",
+      "sha": "1c7a35c6bb1b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Holm correction (step-down Bonferroni) for multiple comparisons.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "multi_armed_holm_correction.cpp PASS"
+      },
+      "file": "data-science/experiments_ii/multi_armed_holm_correction.cpp",
+      "sha": "7cb3be161a07"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "network_interference_demo.cpp: PASS (high=1.9945 low=2.7011)"
+      },
+      "file": "data-science/experiments_ii/network_interference_demo.cpp",
+      "sha": "a1a4e987c551"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/experiments_ii/novelty_effect_decay.cpp",
+      "sha": "60f62cb93a5e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS \u2014 no_peek=0.057  peek=0.165  (2.9x inflation)"
+      },
+      "file": "data-science/experiments_ii/peeking_alpha_inflation.cpp",
+      "sha": "5b6ac1d2aa32"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/experiments_ii/post_stratification_variance.cpp",
+      "sha": "a9886e230c9a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "stratified_randomization: PASS"
+      },
+      "file": "data-science/experiments_ii/stratified_randomization.cpp",
+      "sha": "c186decca87f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "switchback_experiment_lite: PASS"
+      },
+      "file": "data-science/experiments_ii/switchback_experiment_lite.cpp",
+      "sha": "26e33d1e40cb"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Adversarial Perturbation: gradient-sign attack on logistic classifier.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Original pred: 0.549834, Adversarial: 0.112771, Random flips: 4/10\nPASS"
+      },
+      "file": "data-science/fairness_privacy_robustness/adversarial_perturbation_lite.cpp",
+      "sha": "bd16ab320df5"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Covariate Shift Reweighting",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "covariate_shift_reweighting.cpp PASS"
+      },
+      "file": "data-science/fairness_privacy_robustness/covariate_shift_reweighting.cpp",
+      "sha": "53efaad380c4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/fairness_privacy_robustness/demographic_parity_metrics.cpp",
+      "sha": "31cf3d512553"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/fairness_privacy_robustness/differential_privacy_laplace.cpp",
+      "sha": "6ab5874a667d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Equalized Odds: per-group thresholds equalize TPR across groups.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/fairness_privacy_robustness/equalized_odds_thresholds.cpp",
+      "sha": "c6efee2a5693"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Group Calibration Audit: verify per-group reliability of predicted probabilities.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "group_calibration_audit.cpp PASS"
+      },
+      "file": "data-science/fairness_privacy_robustness/group_calibration_audit.cpp",
+      "sha": "eb6c1a9f09e3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "k-Anonymity: generalize quasi-identifiers until each combination appears >= k times.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "k_anonymity_generalization.cpp PASS"
+      },
+      "file": "data-science/fairness_privacy_robustness/k_anonymity_generalization.cpp",
+      "sha": "34558cc5ccd7"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Label Noise Robustness: MAE degrades less than cross-entropy under label noise.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "label_noise_robust_loss.cpp PASS"
+      },
+      "file": "data-science/fairness_privacy_robustness/label_noise_robust_loss.cpp",
+      "sha": "099b7fc3667c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Missing Not At Random (MNAR): bias in naive complete-case analysis.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "mnar_missingness_bias.cpp PASS"
+      },
+      "file": "data-science/fairness_privacy_robustness/mnar_missingness_bias.cpp",
+      "sha": "4558908a9b9b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "randomized_response: observed=0.422 unbiased=0.389 true=0.40\nPASS"
+      },
+      "file": "data-science/fairness_privacy_robustness/randomized_response.cpp",
+      "sha": "96b41958052b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Graham Scan: Compute Convex Hull",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "convex_hull_graham.cpp PASS"
+      },
+      "file": "data-science/geospatial_spatial/convex_hull_graham.cpp",
+      "sha": "41d25a6c62de"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Douglas-Peucker line simplification: reduce points while preserving shape.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "douglas_peucker.cpp: simplification_correct PASS"
+      },
+      "file": "data-science/geospatial_spatial/douglas_peucker.cpp",
+      "sha": "5cbd2b3fd0ba"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Geohash: encode/decode lat/lon as interleaved bit string, base-32 encoded.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "geohash_encode_decode.cpp PASS"
+      },
+      "file": "data-science/geospatial_spatial/geohash_encode_decode.cpp",
+      "sha": "d32784374e20"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Great-circle intermediate waypoints via spherical linear interpolation (slerp).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "great_circle_waypoints.cpp PASS"
+      },
+      "file": "data-science/geospatial_spatial/great_circle_waypoints.cpp",
+      "sha": "5402afd6988d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "2D grid density binning: partition points into cells, count per-cell density.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "grid_density_binning.cpp PASS"
+      },
+      "file": "data-science/geospatial_spatial/grid_density_binning.cpp",
+      "sha": "f31c5948010e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Haversine great-circle distance and initial bearing.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "haversine_bearing.cpp PASS"
+      },
+      "file": "data-science/geospatial_spatial/haversine_bearing.cpp",
+      "sha": "c25947554375"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/geospatial_spatial/point_in_polygon.cpp",
+      "sha": "4fec5d4b68a1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/geospatial_spatial/polygon_area_centroid.cpp",
+      "sha": "335b37b4aa9a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/geospatial_spatial/quadtree_point_index.cpp",
+      "sha": "b0b9cea53efc"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/geospatial_spatial/spatial_radius_join.cpp",
+      "sha": "03263be9a694"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Bayes' Theorem for Diagnostic Testing",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Bayes' theorem diagnostic test (PPV/NPV): all assertions PASS"
+      },
+      "file": "data-science/information_theory_probability/bayes_diagnostic_test.cpp",
+      "sha": "e0ccd2a2fb2d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Box-Muller Transform: Generate Gaussian-Distributed Samples",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Box-Muller Gaussian generation: all assertions PASS"
+      },
+      "file": "data-science/information_theory_probability/box_muller_gaussian.cpp",
+      "sha": "9e1a80ef39b8"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Conjugate Priors: Beta-Binomial and Normal-Normal (known variance)",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Conjugate priors (Beta-Binomial + Normal-Normal): all assertions PASS"
+      },
+      "file": "data-science/information_theory_probability/conjugate_priors.cpp",
+      "sha": "5b9caf4b50b3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Entropy estimators (naive plug-in vs Miller-Madow): all assertions PASS"
+      },
+      "file": "data-science/information_theory_probability/entropy_estimators.cpp",
+      "sha": "efa4304fce81"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "HMM forward-backward algorithm: sequence likelihood and smoothed state posteriors.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hmm_forward_backward.cpp PASS"
+      },
+      "file": "data-science/information_theory_probability/hmm_forward_backward.cpp",
+      "sha": "4b6ae118bc2d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Inverse-transform sampling: generate samples from an arbitrary distribution via inverse CDF.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "inverse_transform_sampling.cpp PASS"
+      },
+      "file": "data-science/information_theory_probability/inverse_transform_sampling.cpp",
+      "sha": "f45522357af9"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "KL divergence, cross-entropy, and Jensen-Shannon divergence between discrete distributions.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "kl_divergence_cross_entropy.cpp PASS"
+      },
+      "file": "data-science/information_theory_probability/kl_divergence_cross_entropy.cpp",
+      "sha": "8fc25a2f369a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Law of Large Numbers and Central Limit Theorem: asymptotic behavior of sample means.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "lln_clt_demo.cpp PASS"
+      },
+      "file": "data-science/information_theory_probability/lln_clt_demo.cpp",
+      "sha": "8a55d4dacd69"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Markov chain stationary distribution via power iteration.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "markov_chain_stationary.cpp PASS"
+      },
+      "file": "data-science/information_theory_probability/markov_chain_stationary.cpp",
+      "sha": "a614c3d50623"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Nonlinear y=x^2: Pearson r = 0.0168125, MI = 1.4658 bits\nLinear y=2x: Pearson r = 0.998728, MI = 2.70308 bits\nPASS"
+      },
+      "file": "data-science/information_theory_probability/nonlinear_dependence_mi.cpp",
+      "sha": "3f8115c0bd8a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Conjugate Gradient: Iterative Solver for SPD Systems",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "conjugate_gradient.cpp PASS"
+      },
+      "file": "data-science/linear_algebra/conjugate_gradient.cpp",
+      "sha": "a3a4db7b2b66"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Gauss\u2013Seidel vs Jacobi: convergence rate comparison.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "gauss_seidel_vs_jacobi.cpp PASS"
+      },
+      "file": "data-science/linear_algebra/gauss_seidel_vs_jacobi.cpp",
+      "sha": "bf89193121fb"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Householder reflection: zeros out components via hyperplane reflection.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "householder_reflection.cpp PASS"
+      },
+      "file": "data-science/linear_algebra/householder_reflection.cpp",
+      "sha": "0c7cf315349f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Jacobi eigenvalue algorithm: iterative diagonalization of symmetric matrix.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "jacobi_eigen_symmetric.cpp PASS"
+      },
+      "file": "data-science/linear_algebra/jacobi_eigen_symmetric.cpp",
+      "sha": "64cd3dca6db4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Least-squares via QR: solve A\u00b7x \u2248 b using numerically stable QR factorization.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "least_squares_qr.cpp PASS: residual=1.34164"
+      },
+      "file": "data-science/linear_algebra/least_squares_qr.cpp",
+      "sha": "0d7474e8e023"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "LU decomposition with partial pivoting: PA = LU factorization.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "lu_decomposition_pivoting.cpp PASS"
+      },
+      "file": "data-science/linear_algebra/lu_decomposition_pivoting.cpp",
+      "sha": "0d6cf1c68a7c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Matrix condition number: measure sensitivity to perturbations in A and b.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "matrix_condition_number.cpp PASS: good=4.5557 bad=60001.3"
+      },
+      "file": "data-science/linear_algebra/matrix_condition_number.cpp",
+      "sha": "ec074e18166a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/linear_algebra/power_iteration_shifted.cpp",
+      "sha": "af4b1cf9e792"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/linear_algebra/qr_gram_schmidt.cpp",
+      "sha": "e50d3b3108f0"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/linear_algebra/woodbury_rank1_update.cpp",
+      "sha": "8cbd31a2a38e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Bias-Variance Decomposition",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "bias_variance_decomposition.cpp: PASS"
+      },
+      "file": "data-science/model_diagnostics/bias_variance_decomposition.cpp",
+      "sha": "57328d3a9f89"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Bootstrap Model Comparison",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Bootstrap model comparison PASSED"
+      },
+      "file": "data-science/model_diagnostics/bootstrap_model_comparison.cpp",
+      "sha": "6242ea123fd4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Calibration Curve & Brier Score",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "calibration_curve.cpp PASS"
+      },
+      "file": "data-science/model_diagnostics/calibration_curve.cpp",
+      "sha": "43edc43a32c5"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Gaussian Naive Bayes Classifier",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "gaussian_naive_bayes.cpp PASS"
+      },
+      "file": "data-science/model_diagnostics/gaussian_naive_bayes.cpp",
+      "sha": "361bfddae3b2"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Learning Curve Analysis.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "learning_curve.cpp PASS"
+      },
+      "file": "data-science/model_diagnostics/learning_curve.cpp",
+      "sha": "26798b92d28c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Lift & Gain Chart.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "lift_gain_chart.cpp PASS"
+      },
+      "file": "data-science/model_diagnostics/lift_gain_chart.cpp",
+      "sha": "674ca18206a8"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "precision_recall_curve.cpp: PASS (ap_strong=0.985051, ap_weak=0.432669)"
+      },
+      "file": "data-science/model_diagnostics/precision_recall_curve.cpp",
+      "sha": "06d52cabb4aa"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "rank_correlation.cpp: PASS"
+      },
+      "file": "data-science/model_diagnostics/rank_correlation.cpp",
+      "sha": "c1f1b14103cb"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "residual_analysis.cpp: PASS | corr_lin=0.966 corr_quad=0.167"
+      },
+      "file": "data-science/model_diagnostics/residual_analysis.cpp",
+      "sha": "db1aa4b87d58"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "ucb_bandit.py: PASS"
+      },
+      "file": "data-science/model_diagnostics/ucb_bandit.cpp",
+      "sha": "b3129cd02a46"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Class Weights for Imbalanced Classification",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Unweighted: Precision 0, Recall 0\nWeighted: Precision 0.137931, Recall 0.888889\nClass Weight Imbalance: PASS"
+      },
+      "file": "data-science/model_understanding_tuning/class_weight_imbalance.cpp",
+      "sha": "6c31dbc97730"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Split-Conformal Prediction Intervals for Regression",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Conformal Prediction Intervals: PASS"
+      },
+      "file": "data-science/model_understanding_tuning/conformal_prediction_intervals.cpp",
+      "sha": "ecf001fc3e85"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Grid Search vs Random Search: Demonstrating Random Search Efficiency",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "grid_vs_random_search.cpp PASS"
+      },
+      "file": "data-science/model_understanding_tuning/grid_vs_random_search.cpp",
+      "sha": "4ed93b1df0d6"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Model Persistence Roundtrip (Save and Reload).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "model_persistence_roundtrip.cpp PASS"
+      },
+      "file": "data-science/model_understanding_tuning/model_persistence_roundtrip.cpp",
+      "sha": "3b9798427fed"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PD Feature 1: [10.30, 11.29, 12.29, 13.29, 14.29, 15.29, 16.29, 17.29, 18.29, 19.28, 20.28]\nPD Feature 2: [15.85, 15.70,"
+      },
+      "file": "data-science/model_understanding_tuning/partial_dependence_data.cpp",
+      "sha": "50f4da7de4f3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Feature 1 importance: 19.4944, Feature 2 importance: -0.0397418\nPermutation Feature Importance: PASS"
+      },
+      "file": "data-science/model_understanding_tuning/permutation_feature_importance.cpp",
+      "sha": "0e584a842880"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Baseline Brier: 0.475\nCalibrated Brier: 0.247726\nImprovement: 47.8472%\nPlatt Scaling Calibration: PASS"
+      },
+      "file": "data-science/model_understanding_tuning/platt_scaling_calibration.cpp",
+      "sha": "2e64d50a69df"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Feature 0: Sampled 2, Analytic 2, Error 0\nFeature 1: Sampled 6, Analytic 6, Error 0\nFeature 2: Sampled 4.5, Analytic 4.5"
+      },
+      "file": "data-science/model_understanding_tuning/shapley_value_sampling.cpp",
+      "sha": "f647c6734c61"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "successive_halving: PASS"
+      },
+      "file": "data-science/model_understanding_tuning/successive_halving.cpp",
+      "sha": "df7a4048727f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Default cost: 53.0 | Optimal threshold: 0.46 cost: 38.0 improvement: 28.3%\nPASS"
+      },
+      "file": "data-science/model_understanding_tuning/threshold_tuning_cost.cpp",
+      "sha": "0bf1ede6a5c7"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "1D Convolution Layer Learning to Detect a Planted Motif",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "conv1d_feature_detector.cpp PASS"
+      },
+      "file": "data-science/neural_networks_from_scratch/conv1d_feature_detector.cpp",
+      "sha": "9f011fbe96f5"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Training without dropout:\nTraining with dropout:\nNo dropout:  train_loss=0.0135563, val_loss=0.174282, accuracy=59/100\nW"
+      },
+      "file": "data-science/neural_networks_from_scratch/dropout_regularization_sim.cpp",
+      "sha": "4610b9408688"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Without early stopping: epochs=100, train_loss=0.0407279, val_loss=0.0365649\nWith early stopping: epochs=48, train_loss="
+      },
+      "file": "data-science/neural_networks_from_scratch/early_stopping.cpp",
+      "sha": "866a7a7eb0bb"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Learning rate schedules: constant vs step-decay vs cosine annealing.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "learning_rate_schedules.cpp PASS"
+      },
+      "file": "data-science/neural_networks_from_scratch/learning_rate_schedules.cpp",
+      "sha": "21736bae25de"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "2-Layer MLP trained by hand-derived backpropagation on XOR.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "mlp_backprop.cpp PASS: loss=4.39815e-05"
+      },
+      "file": "data-science/neural_networks_from_scratch/mlp_backprop.cpp",
+      "sha": "8aedc3032165"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Gradient checks:\n  w1[0][0]: analytic=-0.002057, numerical=-0.002057, rel_err=6.134409e-11\n  w1[0][1]: analytic=0.001234"
+      },
+      "file": "data-science/neural_networks_from_scratch/numerical_gradient_check.cpp",
+      "sha": "352c69371f76"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS (accuracy=1)"
+      },
+      "file": "data-science/neural_networks_from_scratch/softmax_regression.cpp",
+      "sha": "4db0648db05a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Random reconstruction error: 0.95097\nTrained reconstruction error: 0.0342295\nImprovement: 27.7822x\nPASS"
+      },
+      "file": "data-science/neural_networks_from_scratch/tiny_autoencoder.cpp",
+      "sha": "1b5e35f9fe42"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "small: loss=0.124489\nlarge: loss=0.125593\nxavier: loss=0.124484\nweight_initialization_comparison PASS"
+      },
+      "file": "data-science/neural_networks_from_scratch/weight_initialization_comparison.cpp",
+      "sha": "827d57acbf7e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Skip-gram word2vec with negative sampling on a tiny corpus.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "dog <-> cat: 0.340223\n  dog <-> animal: 0.0776255\n  king <-> queen: 0.176644\n  king <-> royal: 0.0734416\n  good <-> bad:"
+      },
+      "file": "data-science/neural_networks_from_scratch/word2vec_skipgram.cpp",
+      "sha": "fa8f9391b3fe"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Adaptive Simpson's rule: automatic step refinement via error estimation.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Integral of sin(x) from 0 to \u03c0 = 2.00000000\nPASS"
+      },
+      "file": "data-science/numerical_methods/adaptive_simpson.cpp",
+      "sha": "fc9da5fb2e9f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Hybrid Bisection\u2013Newton Root-Finding",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "bisection_newton_hybrid.cpp PASS"
+      },
+      "file": "data-science/numerical_methods/bisection_newton_hybrid.cpp",
+      "sha": "c00ac11d1216"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Natural cubic spline: piecewise cubic interpolation with C\u00b2 continuity.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/numerical_methods/cubic_spline_interpolation.cpp",
+      "sha": "79b59ca0d614"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/numerical_methods/euler_vs_rk4_error_order.cpp",
+      "sha": "6b44dfa98365"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Fixed-point iteration: find x where g(x) = x.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "fixed_point_iteration PASS"
+      },
+      "file": "data-science/numerical_methods/fixed_point_iteration.cpp",
+      "sha": "b9b1ade9e421"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Gauss\u2013Legendre quadrature: optimal node placement for polynomial integration.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "gauss_legendre_quadrature_lite.cpp PASS"
+      },
+      "file": "data-science/numerical_methods/gauss_legendre_quadrature_lite.cpp",
+      "sha": "005c95ced570"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS | direct=0.248750000000 extrapolated=0.250000000000 error_after=5.55e-17"
+      },
+      "file": "data-science/numerical_methods/richardson_extrapolation.cpp",
+      "sha": "629651efc744"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "RK4_ODE_SOLVER PASS: y(1) = 0.135335 expected 0.135335"
+      },
+      "file": "data-science/numerical_methods/rk4_ode_solver.cpp",
+      "sha": "b721fc4d9d01"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "ROMBERG_INTEGRATION PASS: integral = 2"
+      },
+      "file": "data-science/numerical_methods/romberg_integration.cpp",
+      "sha": "26d7d3aa7ed4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "secant_method PASS (root=1.25992)"
+      },
+      "file": "data-science/numerical_methods/secant_method.cpp",
+      "sha": "4671950e54da"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Distance metrics toolkit: Euclidean, Manhattan, Minkowski, Chebyshev, Cosine.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "distance_metrics_toolkit.cpp: all_metrics_correct all_symmetric PASS"
+      },
+      "file": "data-science/optimization_distances/distance_metrics_toolkit.cpp",
+      "sha": "76d45b535d01"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "dtw_dynamic_time_warping.cpp: identical_dtw=0 warped_dtw=0 PASS"
+      },
+      "file": "data-science/optimization_distances/dtw_dynamic_time_warping.cpp",
+      "sha": "53ce2c70be55"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "epsilon_greedy_bandit.cpp: greedy_reward=2030.37 epsilon_reward=1939.12 best_arm_pulls=919 PASS"
+      },
+      "file": "data-science/optimization_distances/epsilon_greedy_bandit.cpp",
+      "sha": "fb00ccd59b9e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Feature scaling toolkit: min-max, z-score, robust scaling.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "feature_scaling_toolkit.cpp: all_scalers_correct PASS"
+      },
+      "file": "data-science/optimization_distances/feature_scaling_toolkit.cpp",
+      "sha": "ed90e07914df"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Genetic Algorithm (Selection, Crossover, Mutation)",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "genetic_algorithm.cpp PASS"
+      },
+      "file": "data-science/optimization_distances/genetic_algorithm.cpp",
+      "sha": "22d1c3c61178"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Gradient Descent with Momentum",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "gradient_descent_momentum.cpp PASS"
+      },
+      "file": "data-science/optimization_distances/gradient_descent_momentum.cpp",
+      "sha": "9597ab08e0f5"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Hill Climbing with Random Restarts",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hill_climbing_restarts.cpp PASS"
+      },
+      "file": "data-science/optimization_distances/hill_climbing_restarts.cpp",
+      "sha": "b00546e2afd3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Mahalanobis Distance.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "mahalanobis_distance.cpp PASS"
+      },
+      "file": "data-science/optimization_distances/mahalanobis_distance.cpp",
+      "sha": "168b7a3f9812"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "x",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "newton_method_optimization.cpp: newton_iters=1 gd_iters=28 PASS"
+      },
+      "file": "data-science/optimization_distances/newton_method_optimization.cpp",
+      "sha": "919e7de64070"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "initialTemp=",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "simulated_annealing PASS (bestValue=1.1182, distanceFromOpt=0.0755194)"
+      },
+      "file": "data-science/optimization_distances/simulated_annealing.cpp",
+      "sha": "973d4af82f64"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Covariance Matrix",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "covariance_matrix.cpp: PASS"
+      },
+      "file": "data-science/preprocessing_eda/covariance_matrix.cpp",
+      "sha": "e66ff1f6baca"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Data Profiling Summary Pattern.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "data_profiling_summary.cpp PASS"
+      },
+      "file": "data-science/preprocessing_eda/data_profiling_summary.cpp",
+      "sha": "ce0d31654966"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Histogram Builder Pattern.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "histogram_builder.cpp PASS"
+      },
+      "file": "data-science/preprocessing_eda/histogram_builder.cpp",
+      "sha": "4b5b3b263078"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Missing Value Imputation Pattern.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "missing_value_imputation.cpp PASS"
+      },
+      "file": "data-science/preprocessing_eda/missing_value_imputation.cpp",
+      "sha": "320ee5c48a90"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "one_hot_encoding.cpp: PASS"
+      },
+      "file": "data-science/preprocessing_eda/one_hot_encoding.cpp",
+      "sha": "6806c7be7d4b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "pearson_correlation_matrix.cpp: PASS"
+      },
+      "file": "data-science/preprocessing_eda/pearson_correlation_matrix.cpp",
+      "sha": "c92479881ad2"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "quantile_binning.cpp: PASS"
+      },
+      "file": "data-science/preprocessing_eda/quantile_binning.cpp",
+      "sha": "3c0e4de2bb00"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "random_oversampling_balance.cpp: PASS"
+      },
+      "file": "data-science/preprocessing_eda/random_oversampling_balance.cpp",
+      "sha": "16278853cd9c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "three_way_stratified_split.cpp: PASS"
+      },
+      "file": "data-science/preprocessing_eda/three_way_stratified_split.cpp",
+      "sha": "cf89056e6682"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "winsorize_clip_outliers: PASS"
+      },
+      "file": "data-science/preprocessing_eda/winsorize_clip_outliers.cpp",
+      "sha": "fcab5892c13b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Bayesian Linear Regression (Conjugate Normal Prior)",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "bayesian_linear_regression.cpp PASS"
+      },
+      "file": "data-science/probabilistic_modeling_bayes_ii/bayesian_linear_regression.cpp",
+      "sha": "33c488bbf5e8"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Bayesian Two-Segment Changepoint",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "bayesian_two_segment_changepoint.cpp PASS"
+      },
+      "file": "data-science/probabilistic_modeling_bayes_ii/bayesian_two_segment_changepoint.cpp",
+      "sha": "89045c501933"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/probabilistic_modeling_bayes_ii/dirichlet_multinomial.cpp",
+      "sha": "0c7626384582"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "replications: 400 mean SE raw 1.00835 vs shrunken 0.965425 shrinkage wins 0.6925\nown-weight: heterogeneous 0.916187 vs h"
+      },
+      "file": "data-science/probabilistic_modeling_bayes_ii/empirical_bayes_shrinkage.cpp",
+      "sha": "42b3f9554a4d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Gamma-Poisson conjugate prior: Gamma prior on Poisson rate parameter.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "gamma_poisson_conjugate.cpp PASS"
+      },
+      "file": "data-science/probabilistic_modeling_bayes_ii/gamma_poisson_conjugate.cpp",
+      "sha": "e375ea45714c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Gaussian process regression (lite): RBF kernel, small n, direct Cholesky solve.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "gaussian_process_lite.cpp PASS"
+      },
+      "file": "data-science/probabilistic_modeling_bayes_ii/gaussian_process_lite.cpp",
+      "sha": "bd3940462cab"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "HMM Baum-Welch (EM) training: recover emission and transition probabilities.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hmm_baum_welch.cpp PASS (eA=0.0496652, eB=0.067255, epi=0.125938)"
+      },
+      "file": "data-science/probabilistic_modeling_bayes_ii/hmm_baum_welch.cpp",
+      "sha": "173e3c825ada"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS: particle_rmse=0.3025 obs_rmse=0.5487 avg_ess=60.19 mean_diff=0.3540"
+      },
+      "file": "data-science/probabilistic_modeling_bayes_ii/particle_filter_1d.cpp",
+      "sha": "765842883036"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS | samples=1000 mean=1.0263 var=3.4289 acc_rate=1.0000"
+      },
+      "file": "data-science/probabilistic_modeling_bayes_ii/rejection_sampling.cpp",
+      "sha": "1beb343d787e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "RTS_KALMAN_SMOOTHER PASS: raw=0.945562 filt=0.558449 smooth=0.37751"
+      },
+      "file": "data-science/probabilistic_modeling_bayes_ii/rts_kalman_smoother.cpp",
+      "sha": "23d2beb3d6ec"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Gambler's Ruin",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "gambler's_ruin.cpp PASS"
+      },
+      "file": "data-science/probability_iii/banach_matchbox_or_gambler_ruin.cpp",
+      "sha": "7231797a8a86"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Benford's Law Test",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "benford_law_test.cpp PASS"
+      },
+      "file": "data-science/probability_iii/benford_law_test.cpp",
+      "sha": "76334e5ea3be"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Birthday Paradox: Analytical vs Simulated Collision Probability",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "birthday_paradox_exact_vs_sim.cpp PASS"
+      },
+      "file": "data-science/probability_iii/birthday_paradox_exact_vs_sim.cpp",
+      "sha": "be2265702449"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Gaussian Copula",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "copula_gaussian_lite.cpp PASS"
+      },
+      "file": "data-science/probability_iii/copula_gaussian_lite.cpp",
+      "sha": "632e2b5bcdef"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Coupon Collector Problem",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "coupon_collector.cpp PASS"
+      },
+      "file": "data-science/probability_iii/coupon_collector.cpp",
+      "sha": "d43b5e15aa37"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/probability_iii/extreme_value_block_maxima.cpp",
+      "sha": "eb83deb5ae6d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Inclusion-exclusion: count derangements (permutations with no fixed points).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "inclusion_exclusion_derangements.cpp PASS"
+      },
+      "file": "data-science/probability_iii/inclusion_exclusion_derangements.cpp",
+      "sha": "f7f4437f466e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/probability_iii/polya_urn_reinforcement.cpp",
+      "sha": "234a591c2cef"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/probability_iii/quantile_mapping_bias_correction.cpp",
+      "sha": "25df0c4db9a7"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "stirling_approximation_error: PASS"
+      },
+      "file": "data-science/probability_iii/stirling_approximation_error.cpp",
+      "sha": "43df2c0febf5"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Team-Draft Interleaving for A/B Testing Rankers.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Interleaved results: 10 docs | A wins: 144 | B wins: 113 | A win ratio: 56.0311% | PASS"
+      },
+      "file": "data-science/rankings_information_retrieval/ab_interleaving.cpp",
+      "sha": "dfe1ab78a85b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "BM25 Ranking (Okapi BM25)",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "BM25 ranking: [0, 2, 1] PASS"
+      },
+      "file": "data-science/rankings_information_retrieval/bm25_ranking.cpp",
+      "sha": "9b97dca3d258"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "After 100 matches (true 55-45 split): Elo A=1612.61 | Elo B=1588.26 | Diff=24.351 | Expected(1700 vs 1600)=0.640065 | PA"
+      },
+      "file": "data-science/rankings_information_retrieval/elo_rating.cpp",
+      "sha": "b695317b20fb"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Inverted Index and Boolean Search.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "inverted_index_search.cpp PASS"
+      },
+      "file": "data-science/rankings_information_retrieval/inverted_index_search.cpp",
+      "sha": "88913f25a71f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Ranking metrics suite: Mean Reciprocal Rank, Precision@K, Recall@K.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "mean_reciprocal_rank.cpp PASS"
+      },
+      "file": "data-science/rankings_information_retrieval/mean_reciprocal_rank.cpp",
+      "sha": "86dd3bdac7a9"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "NDCG (Normalized Discounted Cumulative Gain).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "ndcg_evaluation.cpp PASS"
+      },
+      "file": "data-science/rankings_information_retrieval/ndcg_evaluation.cpp",
+      "sha": "fdd144efab23"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "True order: [A, B, C, D, E] | Predicted: [A, B, C, D, E] | Weight=0.38 | Bias=0.00 | Kendall tau=1.00 | PASS"
+      },
+      "file": "data-science/rankings_information_retrieval/pairwise_ranking_learn.cpp",
+      "sha": "e3538ca10ce2"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "True ranking: ABDC | Naive (biased): DACB | IPW (corrected): ACDB | PASS"
+      },
+      "file": "data-science/rankings_information_retrieval/position_bias_click_model.cpp",
+      "sha": "cbcfb1d1dede"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "query_expansion_prf.cpp: PASS"
+      },
+      "file": "data-science/rankings_information_retrieval/query_expansion_prf.cpp",
+      "sha": "34a4e65236dc"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Ranker1 NDCG: 0.64 | Ranker2 NDCG: 0.49 | Avg individual: 0.57 | Fused: 1.00 | PASS"
+      },
+      "file": "data-science/rankings_information_retrieval/rank_fusion_rrf.cpp",
+      "sha": "e54848b35c8a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Apriori algorithm for frequent itemsets and association rules.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "apriori_frequent_itemsets: 10 itemsets, 7 rules PASS"
+      },
+      "file": "data-science/recommenders_graph_sampling/apriori_frequent_itemsets.cpp",
+      "sha": "671b1cdbf00a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Bayesian A/B Testing with Beta-Binomial Posteriors",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "bayesian_ab_beta.cpp: P(B>A)=0.7573, means A=0.598094 B=0.647239 PASS"
+      },
+      "file": "data-science/recommenders_graph_sampling/bayesian_ab_beta.cpp",
+      "sha": "05681ab9476c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "IQR-based outlier detection.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "iqr_outlier_detection.cpp PASS: detected=3 iqr=12.1768"
+      },
+      "file": "data-science/recommenders_graph_sampling/iqr_outlier_detection.cpp",
+      "sha": "dff0f04c9851"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Item-based collaborative filtering.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "item_based_cf.cpp PASS: recommendations=[(2, -4), (4, -5)]"
+      },
+      "file": "data-science/recommenders_graph_sampling/item_based_cf.cpp",
+      "sha": "25df2e1dfa4c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Matrix factorization via stochastic gradient descent.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "matrix_factorization_sgd.cpp PASS: rmse=0.0472679"
+      },
+      "file": "data-science/recommenders_graph_sampling/matrix_factorization_sgd.cpp",
+      "sha": "dbf565ea171a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Monte Carlo estimation: pi and definite integrals.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "monte_carlo_estimation.cpp PASS"
+      },
+      "file": "data-science/recommenders_graph_sampling/monte_carlo_estimation.cpp",
+      "sha": "e0c9e0c8d1d3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Mutual information for feature selection.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "mutual_information_feature_selection.cpp PASS"
+      },
+      "file": "data-science/recommenders_graph_sampling/mutual_information_feature_selection.cpp",
+      "sha": "349f7d41fef4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "pagerank_power_iteration.cpp: ranks={0: 0.3322, 4: 0.3123}, mean=0.2000 PASS"
+      },
+      "file": "data-science/recommenders_graph_sampling/pagerank_power_iteration.cpp",
+      "sha": "64513cd60ee6"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "pulls=[821,164,15] reward=755 random_reward=587\nPASS"
+      },
+      "file": "data-science/recommenders_graph_sampling/thompson_sampling_bandit.cpp",
+      "sha": "05cb89c75e90"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "user_based_cf.py: predicted=4.27099, true=4.5, error=0.229007 PASS"
+      },
+      "file": "data-science/recommenders_graph_sampling/user_based_cf.cpp",
+      "sha": "c13fdad8cf24"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Catalog Coverage and Diversity of Recommendations",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "catalog_coverage_diversity.cpp PASS"
+      },
+      "file": "data-science/recommenders_ii_kept_survivors/catalog_coverage_diversity.cpp",
+      "sha": "11fcafb23e9c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Content-Based TF-IDF Recommendation",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "content_tfidf_rec.cpp PASS"
+      },
+      "file": "data-science/recommenders_ii_kept_survivors/content_tfidf_rec.cpp",
+      "sha": "489578341423"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Intra-list diversity (ILD) of a recommendation list.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "intra_list_diversity.cpp PASS"
+      },
+      "file": "data-science/recommenders_ii_kept_survivors/intra_list_diversity.cpp",
+      "sha": "3ea5fd8df6a5"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/recommenders_ii_kept_survivors/novelty_serendipity.cpp",
+      "sha": "508b09f820fe"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Autocovariance and Power Spectral Density (Periodogram)",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Planted frequency: 10 Hz | Detected frequency: 9.80392 Hz | Peak value: 9.70778 | Error: 0.196078 Hz | PASS"
+      },
+      "file": "data-science/signal_processing_sequences/autocovariance_spectrum.cpp",
+      "sha": "298d9534ca79"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Convolution and Filtering",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "convolution_filtering.cpp PASS"
+      },
+      "file": "data-science/signal_processing_sequences/convolution_filtering.cpp",
+      "sha": "b8e2461f183a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Cross-Correlation and Lag Detection",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "cross_correlation_lag.cpp PASS"
+      },
+      "file": "data-science/signal_processing_sequences/cross_correlation_lag.cpp",
+      "sha": "f64343c87fa6"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Discrete Fourier Transform: detect frequency components in signal.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/signal_processing_sequences/discrete_fourier_transform.cpp",
+      "sha": "9e46d46cb05c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Original range: 1e+06x | Log compressed: 72.4776x (0.00724776%) | u-law compressed: 54.8088x (0.00548088%) | Log error: "
+      },
+      "file": "data-science/signal_processing_sequences/dynamic_range_compression.cpp",
+      "sha": "a4646427eb90"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "FFT via Cooley-Tukey Algorithm.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "N=256 | Naive ops: 65536 | FFT ops: 2048 | Speedup: 32x | Max error: 1.99673e-12 | PASS"
+      },
+      "file": "data-science/signal_processing_sequences/fft_cooley_tukey.cpp",
+      "sha": "08d9fa739145"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Hampel Filter for Outlier Detection and Removal.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hampel_filter_outliers.cpp PASS"
+      },
+      "file": "data-science/signal_processing_sequences/hampel_filter_outliers.cpp",
+      "sha": "46e0cd8b17ff"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Detected peaks at indices: 25 75 | Prominences: 4.60329 3.44009 | Noise rejection rate: 100% | PASS"
+      },
+      "file": "data-science/signal_processing_sequences/peak_detection.cpp",
+      "sha": "d59ac1a9101c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Original: 50 | Upsampled: 148 | Linear RMSE: 0.0391 | Nearest RMSE: 0.0974 | Improvement: 59.8% | PASS"
+      },
+      "file": "data-science/signal_processing_sequences/resampling_interpolation.cpp",
+      "sha": "e40655db9467"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "SAVITZKY_GOLAY_LITE PASS: true=9.25 sg=8.84506 ma=7.50963"
+      },
+      "file": "data-science/signal_processing_sequences/savitzky_golay_lite.cpp",
+      "sha": "6d87a037673c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/simulation_decision_science/discrete_event_simulation.cpp",
+      "sha": "abec1bf52f47"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Kelly Criterion: optimal betting fraction for long-run log-growth.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "kelly_criterion.cpp PASS: med_K=7.48987 med_2K=0.782947"
+      },
+      "file": "data-science/simulation_decision_science/kelly_criterion.cpp",
+      "sha": "abea7919bac1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "M/M/1 Queue: verify Little's Law and analytic formulas.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "mm1_queue_littles_law.cpp PASS"
+      },
+      "file": "data-science/simulation_decision_science/mm1_queue_littles_law.cpp",
+      "sha": "6ac7d9da15df"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Monte Carlo VaR & ES: Value-at-Risk and Expected Shortfall on returns.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "monte_carlo_var_es.cpp PASS"
+      },
+      "file": "data-science/simulation_decision_science/monte_carlo_var_es.cpp",
+      "sha": "f50121f8355a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "newsvendor_critical_fractile.cpp: PASS (opt=382.6 under=359.8 over=366.7)"
+      },
+      "file": "data-science/simulation_decision_science/newsvendor_critical_fractile.cpp",
+      "sha": "60189c0db06d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/simulation_decision_science/q_learning_gridworld.cpp",
+      "sha": "254f0f638aec"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "schelling_segregation PASS (initial=0.51462, final=0.795322)"
+      },
+      "file": "data-science/simulation_decision_science/schelling_segregation.cpp",
+      "sha": "ff95177f1eae"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/simulation_decision_science/sir_epidemic_model.cpp",
+      "sha": "d67097706da8"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/simulation_decision_science/tornado_sensitivity.cpp",
+      "sha": "4323feb23a8c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "EM two coins: recover biased coin probabilities from incomplete data.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/statistical_modeling/em_two_coins.cpp",
+      "sha": "8f92ac66d6d2"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Gibbs Sampling for Bivariate Normal Distribution.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "gibbs_sampling_bivariate.cpp PASS"
+      },
+      "file": "data-science/statistical_modeling/gibbs_sampling_bivariate.cpp",
+      "sha": "5e0a986ff018"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Importance Sampling for Expectation Estimation.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "importance_sampling.cpp PASS"
+      },
+      "file": "data-science/statistical_modeling/importance_sampling.cpp",
+      "sha": "7cabd0146503"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Kaplan-Meier Survival Curve with Censored Observations.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "kaplan_meier_survival.cpp PASS"
+      },
+      "file": "data-science/statistical_modeling/kaplan_meier_survival.cpp",
+      "sha": "5976763d78d0"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Kernel Density Estimation (KDE) with Gaussian Kernel & Silverman Bandwidth.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "kernel_density_estimation.cpp PASS"
+      },
+      "file": "data-science/statistical_modeling/kernel_density_estimation.cpp",
+      "sha": "f7aa91749cc2"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "LOESS-Lite: Locally Weighted Linear Regression.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "loess_local_regression.cpp PASS"
+      },
+      "file": "data-science/statistical_modeling/loess_local_regression.cpp",
+      "sha": "58bd8262a730"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Metropolis-Hastings MCMC Sampling.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "metropolis_hastings_mcmc.cpp PASS: mean=0.11987 var=5.28638 acc=0.592167"
+      },
+      "file": "data-science/statistical_modeling/metropolis_hastings_mcmc.cpp",
+      "sha": "71e782c30892"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "polynomial_regression.cpp: fitted_coeffs=[2.04288, 2.96346, 0.503609], mse_2=0.00387268, mse_1=13.9182 PASS"
+      },
+      "file": "data-science/statistical_modeling/polynomial_regression.cpp",
+      "sha": "acda60e9767b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "power_analysis_sample_size.cpp: n_computed=185, achieved_power=0.97984, target=0.8 PASS"
+      },
+      "file": "data-science/statistical_modeling/power_analysis_sample_size.cpp",
+      "sha": "417e266873f3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "quantile_regression_pinball.cpp: frac_below_median=0.56, frac_below_90=0.92 PASS"
+      },
+      "file": "data-science/statistical_modeling/quantile_regression_pinball.cpp",
+      "sha": "9218fcb13ac6"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "A/B Test for Two Proportions",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Null case: z=-0.231, p=0.818, Cohen's h=-0.016\nAlt case: z=2.374, p=0.018, Cohen's h=0.120\n\u2713 A/B test for proportions PA"
+      },
+      "file": "data-science/statistics_testing/ab_test_proportions.cpp",
+      "sha": "01066641e03a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Benjamini-Hochberg False Discovery Rate Correction",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Benjamini-Hochberg FDR PASSED"
+      },
+      "file": "data-science/statistics_testing/benjamini_hochberg.cpp",
+      "sha": "ac5213ec4a22"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Bootstrap Confidence Interval for Sample Mean",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Sample mean: 99.4225, 95% CI: [94.5851, 104.237]\nBootstrap CI test PASSED"
+      },
+      "file": "data-science/statistics_testing/bootstrap_confidence_interval.cpp",
+      "sha": "cdc237158c26"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Chi-Square Test of Independence",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Chi-square test PASSED"
+      },
+      "file": "data-science/statistics_testing/chi_square_independence.cpp",
+      "sha": "a2422272cdef"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Confusion Matrix and Classification Metrics",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Confusion matrix metrics PASSED"
+      },
+      "file": "data-science/statistics_testing/confusion_matrix_metrics.cpp",
+      "sha": "1f83ebd1c39a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Null case: diff=0.410195, p=0.4578\nAlt case: diff=-4.59715, p=0\nPermutation test PASSED"
+      },
+      "file": "data-science/statistics_testing/permutation_test.cpp",
+      "sha": "08eaf9253fe6"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Reservoir sampling PASSED"
+      },
+      "file": "data-science/statistics_testing/reservoir_sampling.cpp",
+      "sha": "567885d4a08c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Perfect: rank=1 trap=1\nWeak: rank=0.9375 trap=0.9375\nStrong: rank=1 trap=1\nROC_AUC_FROM_SCRATCH PASS"
+      },
+      "file": "data-science/statistics_testing/roc_auc_from_scratch.cpp",
+      "sha": "20cd2a4139aa"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "X_train",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Train/test split: train=80, test=20\nTrain/test MSE: 40.5435\n5-Fold CV MSE (avg): 34.3438\n\u2713 Train/test split and k-fold C"
+      },
+      "file": "data-science/statistics_testing/train_test_split_kfold.cpp",
+      "sha": "9a4681df1f83"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "ADWIN0 adaptive-windowing drift detector (Bifet & Gavalda, 2007).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "stationary: detected=0 at -1 (want False)\nshift: detected=1 at 360 (want True, soon after 300)\nADWIN PASS"
+      },
+      "file": "data-science/streaming_iii/adwin_drift_detector.cpp",
+      "sha": "bcf804a66fcb"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Bloom Filter with Measured False-Positive Rate",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Bloom filter FPR: 0.12\nbloom_filter_fpr.cpp PASS"
+      },
+      "file": "data-science/streaming_iii/bloom_filter_fpr.cpp",
+      "sha": "0a088e2cce06"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Concept Drift Ensemble",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Concept-drift ensemble PASS"
+      },
+      "file": "data-science/streaming_iii/concept_drift_ensemble.cpp",
+      "sha": "a252d3f00179"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "DDM (Drift Detection Method): detect concept drift via error rate monitoring.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "DDM PASS"
+      },
+      "file": "data-science/streaming_iii/ddm_error_drift.cpp",
+      "sha": "ac174d2d047d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Exponential histogram / DGIM count of 1s in a sliding window (Datar-Gionis-Indyk-Motwani).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "DGIM windowed count: est=324, true=310, rel_err=0.0451613 (eps=0.1)\nExponential histogram (DGIM) PASS"
+      },
+      "file": "data-science/streaming_iii/exponential_histogram_count.cpp",
+      "sha": "77056bde6a48"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Frugal streaming median (Ma, Muthukrishnan, Sandler) -- Frugal-1, one integer of state.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Frugal-1 median: est=48, true=49.9428, err=1.94283\nFrugal median PASS"
+      },
+      "file": "data-science/streaming_iii/frugal_streaming_median.cpp",
+      "sha": "4a76a35ed12e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Greenwald-Khanna \u03b5-approximate quantile summary.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "gk_quantile_summary.cpp PASS"
+      },
+      "file": "data-science/streaming_iii/gk_quantile_summary.cpp",
+      "sha": "d602aa095562"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Hoeffding tree (VFDT) lite -- a streaming decision stump with a Hoeffding-bound split test.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hoeffding_tree_lite.cpp PASS"
+      },
+      "file": "data-science/streaming_iii/hoeffding_tree_lite.cpp",
+      "sha": "9e6a3efc7d64"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "HyperLogLog cardinality estimation (Flajolet et al.).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "est=7916 true=8000 rel_err=0.0105\nhyperloglog_distinct.cpp PASS"
+      },
+      "file": "data-science/streaming_iii/hyperloglog_distinct.cpp",
+      "sha": "12705008a9a7"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "KSWIN (Kolmogorov-Smirnov Windowing) drift detector using KS test on sliding windows.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "kswin_drift.cpp PASS"
+      },
+      "file": "data-science/streaming_iii/kswin_drift.cpp",
+      "sha": "4b23cfcae03f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Lossy Counting for frequent items (Manku & Motwani, 2002).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "lossy_counting_frequent.cpp PASS"
+      },
+      "file": "data-science/streaming_iii/lossy_counting_frequent.cpp",
+      "sha": "e4f989378b5f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Misra-Gries heavy hitters (k-1 counters).",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "misra_gries_heavy_hitters.cpp PASS"
+      },
+      "file": "data-science/streaming_iii/misra_gries_heavy_hitters.cpp",
+      "sha": "428f660dd82d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Online bagging via Poisson(1) weighting \u2014 Oza & Russell convergence demo.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "online=0.814 batch=0.814 single=0.749 ob_agree=1 bs_agree=0.571 distinct=6\nOnline bagging (Poisson) PASS"
+      },
+      "file": "data-science/streaming_iii/online_bagging_poisson.cpp",
+      "sha": "cdcd67f9dd00"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "planted=30 true_positives=30 false_positives=0\nROBUST_STREAMING_MAD PASS"
+      },
+      "file": "data-science/streaming_iii/robust_streaming_mad.cpp",
+      "sha": "86649bd7ada9"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS (median=50.4611)"
+      },
+      "file": "data-science/streaming_iii/sliding_window_quantile.cpp",
+      "sha": "9800468acbf3"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS (final slope=0.509381)"
+      },
+      "file": "data-science/streaming_iii/sliding_window_regression.cpp",
+      "sha": "531c6acfecbd"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "p99 est=73.103 true=73.080 err=0.023 | p01 est=26.902 true=26.899 err=0.003 | centroids=757\nt-digest PASS"
+      },
+      "file": "data-science/streaming_iii/tdigest_lite.cpp",
+      "sha": "399b90e86b56"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "max deviation = 0.0013\nWeighted reservoir (A-Res) PASS"
+      },
+      "file": "data-science/streaming_iii/weighted_reservoir_ares.cpp",
+      "sha": "1f7bb2644222"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "decayed_mean=10.0477 global_mean=5.03417 recent=10.1026\nWelford decayed moments PASS"
+      },
+      "file": "data-science/streaming_iii/welford_decayed_moments.cpp",
+      "sha": "cde4c203d982"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": false,
+        "stdout": "Windowed distinct: 42, True: 42"
+      },
+      "file": "data-science/streaming_iii/windowed_distinct_count.cpp",
+      "sha": "996003599a1f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Count-Min Sketch for Frequency Estimation",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Count-Min Sketch: PASS"
+      },
+      "file": "data-science/streaming_sketches/count_min_sketch.cpp",
+      "sha": "2d6b7cca967a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Batch covariance:\n1.109293 0.743449 \n0.743449 0.771042 \nOnline covariance:\n1.109293 0.743449 \n0.743449 0.771042 \nMax cov"
+      },
+      "file": "data-science/streaming_sketches/online_covariance.cpp",
+      "sha": "d302ba475b7c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Online SGD loss (1 epoch): 0.0860\nBatch SGD loss (5 epochs): 0.0312\nOnline accuracy: 0.9950\nBatch accuracy: 0.9950\nOnlin"
+      },
+      "file": "data-science/streaming_sketches/online_sgd_classifier.cpp",
+      "sha": "add3fa07baf6"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "median: exact 100.16 P2 100.20 err 0.04\np90:    exact 119.48 P2 119.56 err 0.08\nmemory: 5 markers\nP2 Quantile Estimator:"
+      },
+      "file": "data-science/streaming_sketches/p2_quantile_estimator.cpp",
+      "sha": "9d5f8a2213fd"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Scenario 1: Stable stream (mean = 100)\n  Alarms in stable stream: 0\nScenario 2: Stream with mean shift at step 100\n  Dri"
+      },
+      "file": "data-science/streaming_sketches/page_hinkley_drift.cpp",
+      "sha": "50600986bcab"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/streaming_sketches/sliding_window_extrema.cpp",
+      "sha": "418070f078d1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/streaming_sketches/space_saving_heavy_hitters.cpp",
+      "sha": "8d053f8d75af"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "streaming_histogram_merge: PASS"
+      },
+      "file": "data-science/streaming_sketches/streaming_histogram_merge.cpp",
+      "sha": "fcfd8f505805"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "streaming_kmeans: PASS"
+      },
+      "file": "data-science/streaming_sketches/streaming_kmeans.cpp",
+      "sha": "203a07306556"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "rare1 (weight 10): 1.71\nrare2 (weight 8): 1.27\ncommon1 (weight 1): 0.01\ncommon2 (weight 0.5): 0.01\ncommon3 (weight 0.5):"
+      },
+      "file": "data-science/streaming_sketches/weighted_reservoir_sampling.cpp",
+      "sha": "6fe8ccc56cc9"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Accelerated failure time (AFT): log-linear regression on survival times.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Fitted: \u03bc=1.9334, \u03b2=0.5024, \u03c3=0.2775\nPASS"
+      },
+      "file": "data-science/survival_reliability/accelerated_failure_time_lite.cpp",
+      "sha": "467dcf154a1e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Censoring Bias Demo",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "censoring_bias_demo.cpp PASS"
+      },
+      "file": "data-science/survival_reliability/censoring_bias_demo.cpp",
+      "sha": "fd36c6105e8d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Competing Risks: Naive KM vs Aalen-Johansen CIF",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "competing_risks_naive_bias.cpp PASS"
+      },
+      "file": "data-science/survival_reliability/competing_risks_naive_bias.cpp",
+      "sha": "2e05a6ff29fd"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Cox Partial Likelihood: Semiparametric Survival Model",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "cox_partial_likelihood_lite.cpp PASS"
+      },
+      "file": "data-science/survival_reliability/cox_partial_likelihood_lite.cpp",
+      "sha": "53ade71da7c2"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Exponential reliability: MTBF and survival function from failure times.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "MTBF estimated: 111.161 (true 100)\nS(MTBF)=0.367879, expected=0.367879\nexponential_reliability_mtbf PASS"
+      },
+      "file": "data-science/survival_reliability/exponential_reliability_mtbf.cpp",
+      "sha": "f92b260f8a2b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Hazard-survival conversion: verify duality h(t) = -d/dt[log S(t)].",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "hazard_vs_survival_conversion.cpp PASS"
+      },
+      "file": "data-science/survival_reliability/hazard_vs_survival_conversion.cpp",
+      "sha": "9b7928e09751"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Log-rank test: nonparametric test for equality of survival curves.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "log_rank_test.cpp PASS"
+      },
+      "file": "data-science/survival_reliability/log_rank_test.cpp",
+      "sha": "7cc4c4bce642"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "nelson_aalen_cumhazard.cpp: PASS (cumhazard=4.4992)"
+      },
+      "file": "data-science/survival_reliability/nelson_aalen_cumhazard.cpp",
+      "sha": "fa9a7ac4b1e6"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Series analytic=0.6561 sim=0.6608 | Parallel analytic=0.9999 sim=0.9999 | PASS"
+      },
+      "file": "data-science/survival_reliability/reliability_series_parallel.cpp",
+      "sha": "8f35cddb28a8"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "weibull_mle PASS"
+      },
+      "file": "data-science/survival_reliability/weibull_mle.cpp",
+      "sha": "ebb5f3ee6ae1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Bag-of-Words Vectorizer",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS: Bag-of-Words vectorizer learns vocabulary, encodes documents as count vectors, similar docs rank higher"
+      },
+      "file": "data-science/text_nlp/bag_of_words.cpp",
+      "sha": "735a5923d39a"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Simplified Byte-Pair Encoding (BPE) Tokenizer",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS: BPE tokenizer learns merges, encodes words to IDs, decodes back, round-trips correctly"
+      },
+      "file": "data-science/text_nlp/bpe_tokenizer_lite.cpp",
+      "sha": "61080983ab5d"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Cosine Similarity Search: TF-IDF Search Engine",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "Cosine similarity search PASS"
+      },
+      "file": "data-science/text_nlp/cosine_similarity_search.cpp",
+      "sha": "7f2e751edaa4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Edit distance: Levenshtein distance with operation tracking.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "edit_distance.cpp: all_cases_correct PASS"
+      },
+      "file": "data-science/text_nlp/edit_distance.cpp",
+      "sha": "159db33dd8b0"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Word-Level Markov Chain Text Generator.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "markov_chain_text.cpp PASS"
+      },
+      "file": "data-science/text_nlp/markov_chain_text.cpp",
+      "sha": "cec69a3b5fc0"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "MinHash Signatures for Near-Duplicate Detection.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "minhash_dedup.cpp PASS"
+      },
+      "file": "data-science/text_nlp/minhash_dedup.cpp",
+      "sha": "fbf76d091f61"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "ngram_language_model.cpp: PASS (train_perp=6.414 random_perp=13.619)"
+      },
+      "file": "data-science/text_nlp/ngram_language_model.cpp",
+      "sha": "23d88153c66b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS: RAKE extracts phrases, scores by degree/frequency, ranks technical terms higher"
+      },
+      "file": "data-science/text_nlp/rake_keyword_extraction.cpp",
+      "sha": "036edc1cc118"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS: TF-IDF vectorizer learns IDF, ranks distinctive terms higher, queries match relevant documents"
+      },
+      "file": "data-science/text_nlp/tfidf_vectorizer.cpp",
+      "sha": "4c25ee62c797"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS: Viterbi decoding finds optimal state sequence, matches brute-force enumeration"
+      },
+      "file": "data-science/text_nlp/viterbi_hmm.cpp",
+      "sha": "f5fbcfd4e52b"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Character N-gram Language Identification",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "char_ngram_language_id.cpp PASS"
+      },
+      "file": "data-science/text_nlp_ii/char_ngram_language_id.cpp",
+      "sha": "c966d9bb5d23"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Complement Naive Bayes: robust on imbalanced text via the negative-class model.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "naive_bayes_complement.cpp PASS"
+      },
+      "file": "data-science/text_nlp_ii/naive_bayes_complement.cpp",
+      "sha": "5379c6980df4"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/text_nlp_ii/porter_stemmer_lite.cpp",
+      "sha": "0d08f342338e"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "sentence_boundary_detection PASS"
+      },
+      "file": "data-science/text_nlp_ii/sentence_boundary_detection.cpp",
+      "sha": "6236c76243ea"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/text_nlp_ii/soundex_phonetic.cpp",
+      "sha": "2a45400833ed"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "rank[0]=0.315859\nrank[1]=0.486441\nrank[2]=0.197700\nPASS"
+      },
+      "file": "data-science/text_nlp_ii/textrank_lite.cpp",
+      "sha": "7fe46683eae1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "TF-IDF short=-1.2164 long=-0.4055\nBM25   short=0.3907 long=0.1302\nPASS"
+      },
+      "file": "data-science/text_nlp_ii/tf_idf_bm25_comparison.cpp",
+      "sha": "531efc8c4bc6"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Zipf's law: rank-frequency relationship in natural language.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "natural slope=1.2 uniform slope=-4.98898e-31\nzipf_law_fit PASS"
+      },
+      "file": "data-science/text_nlp_ii/zipf_law_fit.cpp",
+      "sha": "ce693061c79f"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Autocorrelation Function (ACF)",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "autocorrelation_function.cpp PASS"
+      },
+      "file": "data-science/time_series/autocorrelation_function.cpp",
+      "sha": "562eabb2bd21"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Autoregressive (AR) Model",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "autoregressive_model.cpp PASS"
+      },
+      "file": "data-science/time_series/autoregressive_model.cpp",
+      "sha": "aed7fbd0502c"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "CUSUM changepoint detector: detect mean shifts in time series.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "PASS"
+      },
+      "file": "data-science/time_series/cusum_changepoint.cpp",
+      "sha": "cb0d51cedeef"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "differencing_stationarity.cpp PASS"
+      },
+      "file": "data-science/time_series/differencing_stationarity.cpp",
+      "sha": "08bddf878145"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Exponential Smoothing: SES and Holt's double exponential smoothing.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "exponential_smoothing.cpp PASS"
+      },
+      "file": "data-science/time_series/exponential_smoothing.cpp",
+      "sha": "b43dff3c54a1"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "1D Kalman Filter.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "kalman_filter_1d.cpp PASS"
+      },
+      "file": "data-science/time_series/kalman_filter_1d.cpp",
+      "sha": "0cd72dc2a884"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "Moving Average Smoothing.",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "moving_average_smoothing.cpp PASS"
+      },
+      "file": "data-science/time_series/moving_average_smoothing.cpp",
+      "sha": "85086c2bd0eb"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "ROLLING_ZSCORE_ANOMALY PASS"
+      },
+      "file": "data-science/time_series/rolling_zscore_anomaly.cpp",
+      "sha": "41aa8c2bf072"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "seasonal_decomposition PASS (trendVar=11.066, residualVar=0.236417)"
+      },
+      "file": "data-science/time_series/seasonal_decomposition.cpp",
+      "sha": "24aba4435513"
+    },
+    {
+      "status": "VERIFIED",
+      "failing_column": null,
+      "claim": "",
+      "evidence": {
+        "gcc": true,
+        "clang": true,
+        "ran": true,
+        "exit": 0,
+        "pass_marker": true,
+        "stdout": "walk_forward_validation.py PASS"
+      },
+      "file": "data-science/time_series/walk_forward_validation.cpp",
+      "sha": "abe01f33ee54"
+    }
+  ]
+}

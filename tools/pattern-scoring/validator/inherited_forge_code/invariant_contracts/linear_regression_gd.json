@@ -1,0 +1,74 @@
+{
+  "pattern": "linear_regression_gd",
+  "n_samples": 100,
+  "ratified": true,
+  "note": "human sets ratified=true after reviewing contracts",
+  "invariants": {
+    "r2": {
+      "observed": [
+        0.995,
+        0.99916
+      ],
+      "mean": 0.99769,
+      "sd": 0.00082,
+      "contract": [
+        0.9744,
+        1.021
+      ],
+      "sign": "positive"
+    },
+    "weight_0": {
+      "observed": [
+        1.92725,
+        2.08325
+      ],
+      "mean": 2.003,
+      "sd": 0.03363,
+      "contract": [
+        1.8485,
+        2.1575
+      ],
+      "sign": "positive"
+    },
+    "weight_1": {
+      "observed": [
+        2.91519,
+        3.09289
+      ],
+      "mean": 2.99906,
+      "sd": 0.03219,
+      "contract": [
+        2.8503,
+        3.1478
+      ],
+      "sign": "positive"
+    },
+    "bias": {
+      "observed": [
+        -0.19178,
+        0.24467
+      ],
+      "mean": 0.00017,
+      "sd": 0.0945,
+      "contract": [
+        -0.3979,
+        0.3982
+      ],
+      "sign": "mixed"
+    },
+    "ratio_w0_w1": {
+      "observed": [
+        0.63285,
+        0.69464
+      ],
+      "mean": 0.66795,
+      "sd": 0.01304,
+      "contract": [
+        0.5958,
+        0.7401
+      ],
+      "sign": "positive"
+    }
+  },
+  "ratified_by": "opus+illia 2026-07-22"
+}

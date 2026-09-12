@@ -1,0 +1,275 @@
+{
+ "version": "0.1-exam-seed",
+ "patterns": [
+  {
+   "file": "python/data-science/statistical_modeling/power_analysis_sample_size.py",
+   "entry_fn": "normal_quantile",
+   "args": [
+    {
+     "name": "p",
+     "type": "float",
+     "domain": "TBD"
+    }
+   ],
+   "returns": "?"
+  },
+  {
+   "file": "python/data-science/ensembles_and_robust_methods/stacking_ensemble.py",
+   "entry_fn": "fit_linear_model",
+   "args": [
+    {
+     "name": "X_base",
+     "type": "List[List[float]]",
+     "domain": "TBD"
+    },
+    {
+     "name": "y",
+     "type": "List[float]",
+     "domain": "TBD"
+    }
+   ],
+   "returns": "?"
+  },
+  {
+   "file": "python/data-science/ensembles_and_robust_methods/gradient_boosting_stumps.py",
+   "entry_fn": "gini_split",
+   "args": [
+    {
+     "name": "y",
+     "type": "List[float]",
+     "domain": "TBD"
+    }
+   ],
+   "returns": "?"
+  },
+  {
+   "file": "python/data-science/bayesian_iii_approximate_inference/bayes_factor_normal_means.py",
+   "entry_fn": "bayes_factor_normal",
+   "args": [
+    {
+     "name": "data",
+     "type": "?",
+     "domain": "TBD"
+    },
+    {
+     "name": "prior_var_h1",
+     "type": "?",
+     "domain": "TBD"
+    }
+   ],
+   "returns": "?"
+  },
+  {
+   "file": "python/data-science/recommenders_and_graph_sampling/bayesian_ab_beta.py",
+   "entry_fn": "bayesian_ab_test",
+   "args": [
+    {
+     "name": "successes_a",
+     "type": "int",
+     "domain": "TBD"
+    },
+    {
+     "name": "trials_a",
+     "type": "int",
+     "domain": "TBD"
+    },
+    {
+     "name": "successes_b",
+     "type": "int",
+     "domain": "TBD"
+    },
+    {
+     "name": "trials_b",
+     "type": "int",
+     "domain": "TBD"
+    },
+    {
+     "name": "prior_alpha",
+     "type": "float",
+     "domain": "TBD"
+    },
+    {
+     "name": "prior_beta",
+     "type": "float",
+     "domain": "TBD"
+    },
+    {
+     "name": "num_samples",
+     "type": "int",
+     "domain": "TBD"
+    }
+   ],
+   "returns": "?"
+  },
+  {
+   "file": "python/data-science/bayesian_iii_modeling_and_selection/dirichlet_stick_breaking.py",
+   "entry_fn": "stick_breaking_process",
+   "args": [
+    {
+     "name": "alpha",
+     "type": "float",
+     "domain": "TBD"
+    },
+    {
+     "name": "num_breaks",
+     "type": "int",
+     "domain": "TBD"
+    }
+   ],
+   "returns": "?"
+  },
+  {
+   "file": "python/data-science/composed_tools/walk_forward_early_stopping.py",
+   "entry_fn": "fit_stump_to_residuals",
+   "args": [
+    {
+     "name": "X",
+     "type": "List[List[float]]",
+     "domain": "TBD"
+    },
+    {
+     "name": "r",
+     "type": "List[float]",
+     "domain": "TBD"
+    }
+   ],
+   "returns": "?"
+  },
+  {
+   "file": "python/data-science/composed_tools/dedup_pipeline.py",
+   "entry_fn": "shingles",
+   "args": [
+    {
+     "name": "text",
+     "type": "str",
+     "domain": "TBD"
+    },
+    {
+     "name": "k",
+     "type": "int",
+     "domain": "TBD"
+    }
+   ],
+   "returns": "?"
+  },
+  {
+   "file": "python/data-science/model_understanding_and_tuning/partial_dependence_data.py",
+   "entry_fn": "train_linear_model",
+   "args": [
+    {
+     "name": "X",
+     "type": "List[List[float]]",
+     "domain": "TBD"
+    },
+    {
+     "name": "y",
+     "type": "List[float]",
+     "domain": "TBD"
+    }
+   ],
+   "returns": "?"
+  },
+  {
+   "file": "python/data-science/signal_processing_and_sequences/savitzky_golay_lite.py",
+   "entry_fn": "fit_polynomial_window",
+   "args": [
+    {
+     "name": "window",
+     "type": "List[float]",
+     "domain": "TBD"
+    },
+    {
+     "name": "poly_order",
+     "type": "int",
+     "domain": "TBD"
+    }
+   ],
+   "returns": "?"
+  },
+  {
+   "file": "python/data-science/streaming_and_sketches/online_sgd_classifier.py",
+   "entry_fn": "logistic",
+   "args": [
+    {
+     "name": "z",
+     "type": "float",
+     "domain": "TBD"
+    }
+   ],
+   "returns": "?"
+  },
+  {
+   "file": "python/data-science/model_diagnostics/learning_curve.py",
+   "entry_fn": "generate_linear_data",
+   "args": [
+    {
+     "name": "n",
+     "type": "int",
+     "domain": "TBD"
+    },
+    {
+     "name": "seed",
+     "type": "int",
+     "domain": "TBD"
+    }
+   ],
+   "returns": "?"
+  },
+  {
+   "file": "python/data-science/information_theory_and_probability/inverse_transform_sampling.py",
+   "entry_fn": "exponential_inverse_cdf",
+   "args": [
+    {
+     "name": "u",
+     "type": "float",
+     "domain": "TBD"
+    },
+    {
+     "name": "rate",
+     "type": "float",
+     "domain": "TBD"
+    }
+   ],
+   "returns": "?"
+  },
+  {
+   "file": "python/data-science/experiments_ii/cluster_randomized_icc.py",
+   "entry_fn": "_var",
+   "args": [
+    {
+     "name": "z",
+     "type": "List[float]",
+     "domain": "TBD"
+    }
+   ],
+   "returns": "?"
+  },
+  {
+   "file": "python/data-science/survival_and_reliability/log_rank_test.py",
+   "entry_fn": "log_rank_test",
+   "args": [
+    {
+     "name": "times_g1",
+     "type": "List[float]",
+     "domain": "TBD"
+    },
+    {
+     "name": "events_g1",
+     "type": "List[int]",
+     "domain": "TBD"
+    },
+    {
+     "name": "times_g2",
+     "type": "List[float]",
+     "domain": "TBD"
+    },
+    {
+     "name": "events_g2",
+     "type": "List[int]",
+     "domain": "TBD"
+    }
+   ],
+   "returns": "?"
+  }
+ ]
+}

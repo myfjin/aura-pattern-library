@@ -1,0 +1,1988 @@
+{
+ "counts": {
+  "NO_EVIDENCE": 64,
+  "GUARDED": 6,
+  "VALUE_PRESERVED": 14,
+  "FABRICATED_CERTAINTY": 3,
+  "VISIBLE_POISON": 5,
+  "NO_OP_ATTACK": 11
+ },
+ "driven": 72,
+ "skipped_fns": 282,
+ "rows": [
+  {
+   "file": "go/programming/architecture/cqrs_bus.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewCommandBus",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "NewQueryBus",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "expectPanic",
+     "why": "unconstructible signature: (fn func()"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/architecture/event_bus.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewChannel",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "NewEventBus",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/architecture/event_sourcing_store.go",
+   "class": "GUARDED",
+   "drivable": 3,
+   "skipped": [
+    {
+     "fn": "eventFromDict",
+     "why": "unconstructible signature: (data map[string]interface{})"
+    },
+    {
+     "fn": "snapshotFromDict",
+     "why": "unconstructible signature: (data map[string]interface{})"
+    },
+    {
+     "fn": "newEventStore",
+     "why": "unconstructible signature: (snapshotInterval int, applier func(map[string]interface{}, E)"
+    },
+    {
+     "fn": "applyToState",
+     "why": "unconstructible signature: (state map[string]interface{}, event Event)"
+    },
+    {
+     "fn": "newEventID",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/async/async_task_queue.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewTaskQueue",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "nowSeconds",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "NewWorker",
+     "why": "unconstructible signature: (queue *TaskQueue, name string)"
+    },
+    {
+     "fn": "priorityName",
+     "why": "unconstructible signature: (p Priority)"
+    },
+    {
+     "fn": "generateID",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "NewTask",
+     "why": "unconstructible signature: (fn func(context.Context, ...interface{})"
+    },
+    {
+     "fn": "demoTaskSuccess",
+     "why": "unconstructible signature: (ctx context.Context, args ...interface{})"
+    },
+    {
+     "fn": "demoTaskFailure",
+     "why": "unconstructible signature: (ctx context.Context, args ...interface{})"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/async/cancellable_task_group.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewTaskGroup",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "NewCancellationToken",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "exampleTask",
+     "why": "unconstructible signature: (name string, duration float64, token *CancellationToken)"
+    },
+    {
+     "fn": "failingTask",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "quickTask",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "wrapQuick",
+     "why": "unconstructible signature: (args ...interface{})"
+    },
+    {
+     "fn": "wrapFailing",
+     "why": "unconstructible signature: (args ...interface{})"
+    },
+    {
+     "fn": "wrapExample",
+     "why": "unconstructible signature: (args ...interface{})"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/concurrency/copy_on_write_config.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "go/programming/concurrency/cyclic_barrier.go",
+   "class": "VALUE_PRESERVED",
+   "drivable": 1,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "go/programming/concurrency/errgroup_first_error.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewErrGroup",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/concurrency/fan_in_multiplexer.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "fanIn",
+     "why": "unconstructible signature: (inputs ...<-chan int)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/concurrency/graceful_shutdown_drain.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 1,
+   "skipped": [],
+   "results": [],
+   "reason": "timeout"
+  },
+  {
+   "file": "go/programming/concurrency/once_init_with_retry.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewOnceInitWithRetry",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/concurrency/pipeline_cancellation.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "go/programming/concurrency/sharded_counter.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewShardedCounter",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/concurrency/singleflight_dedup.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewSingleflight",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/concurrency/treiber_lock_free_stack.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "go/programming/data_structures/avl_tree.go",
+   "class": "VALUE_PRESERVED",
+   "drivable": 3,
+   "skipped": [
+    {
+     "fn": "NewAVLTree",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "sortedKeys",
+     "why": "unconstructible signature: (m map[int]struct{})"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/data_structures/binary_indexed_tree.go",
+   "class": "GUARDED",
+   "drivable": 2,
+   "skipped": [
+    {
+     "fn": "NewQuery",
+     "why": "unconstructible signature: (bit *BinaryIndexedTree)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/data_structures/bloom_filter.go",
+   "class": "FABRICATED_CERTAINTY",
+   "drivable": 5,
+   "skipped": [],
+   "results": [
+    {
+     "fn": "calculateBitCount",
+     "param": "capacity",
+     "attack": "overflow",
+     "output": "-6653256548922161151",
+     "class": "OVERFLOW_WRAP",
+     "baseline": "-3"
+    },
+    {
+     "fn": "calculateBitCount",
+     "param": "errorRate",
+     "attack": "nan",
+     "output": "1",
+     "class": "FABRICATED_CERTAINTY",
+     "baseline": "-3"
+    }
+   ]
+  },
+  {
+   "file": "go/programming/data_structures/fenwick_tree.go",
+   "class": "GUARDED",
+   "drivable": 2,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "go/programming/distributed/consistent_hash_ring.go",
+   "class": "VALUE_PRESERVED",
+   "drivable": 1,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "go/programming/distributed/crdt_sets.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "assert",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "setEqual",
+     "why": "unconstructible signature: (a, b map[string]struct{})"
+    },
+    {
+     "fn": "setOf",
+     "why": "unconstructible signature: (items ...string)"
+    },
+    {
+     "fn": "newAWORSet",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "newAddWinsSet",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "newRemoveWinsSet",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/distributed/distributed_lock_manager.go",
+   "class": "GUARDED",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "NewLockManager",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/distributed/g_counter_crdt.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewGCounter",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "NewPNCounter",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "contains",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/io/arg_parser.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewOption",
+     "why": "unconstructible signature: (name, shortName, longName, helpText string, def interface{},)"
+    },
+    {
+     "fn": "normalizeShort",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "normalizeLong",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "NewArgument",
+     "why": "unconstructible signature: (name, helpText string, def interface{}, required bool, nargs)"
+    },
+    {
+     "fn": "NewArgParser",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "sumInts",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/io/chunked_reader.go",
+   "class": "VALUE_PRESERVED",
+   "drivable": 3,
+   "skipped": [
+    {
+     "fn": "splitBytes",
+     "why": "unconstructible signature: (data []byte, sep byte)"
+    },
+    {
+     "fn": "createTestFile",
+     "why": "void return \u2014 nothing to observe but a panic"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/io/csv_to_json.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewColumnMapper",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "inferAndConvert",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "setNestedValue",
+     "why": "unconstructible signature: (obj map[string]interface{}, path []string, value interface{})"
+    },
+    {
+     "fn": "processRow",
+     "why": "unconstructible signature: (headers []string, row []string, mapper *ColumnMapper)"
+    },
+    {
+     "fn": "readCSVString",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "convertString",
+     "why": "unconstructible signature: (csvContent string, mapper *ColumnMapper)"
+    },
+    {
+     "fn": "NewCSVtoJSON",
+     "why": "unconstructible signature: (mapper *ColumnMapper)"
+    },
+    {
+     "fn": "readCSVFile",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "writeJSON",
+     "why": "unconstructible signature: (path string, data interface{})"
+    },
+    {
+     "fn": "streamConvert",
+     "why": "unconstructible signature: (input io.Reader, mapper *ColumnMapper)"
+    },
+    {
+     "fn": "failf",
+     "why": "unconstructible signature: (format string, args ...interface{})"
+    },
+    {
+     "fn": "jsonEqual",
+     "why": "unconstructible signature: (a, b interface{})"
+    },
+    {
+     "fn": "sortedJSONKeys",
+     "why": "unconstructible signature: (m map[string]interface{})"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/io/csv_validator.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewCSVValidator",
+     "why": "unconstructible signature: (schema []*FieldSchema)"
+    },
+    {
+     "fn": "NewRowTransformer",
+     "why": "unconstructible signature: (schema []*FieldSchema)"
+    },
+    {
+     "fn": "ValidateAndTransformCSV",
+     "why": "unconstructible signature: (csvData string, schema []*FieldSchema, delimiter rune)"
+    },
+    {
+     "fn": "findRow",
+     "why": "unconstructible signature: (rows []map[string]interface{}, name string)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/io/diff_engine.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewDiffEngine",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "reconstruct",
+     "why": "unconstructible signature: (edits []*Edit)"
+    },
+    {
+     "fn": "splitLinesKeepEnds",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/monitoring/alert_manager.go",
+   "class": "VISIBLE_POISON",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "now",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "generateID",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "newAlert",
+     "why": "unconstructible signature: (title, description string, severity AlertSeverity, source st)"
+    },
+    {
+     "fn": "newAlertManager",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "alertTitles",
+     "why": "unconstructible signature: (alerts []*Alert)"
+    },
+    {
+     "fn": "containsString",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/monitoring/event_logger.go",
+   "class": "VALUE_PRESERVED",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "NewLevelFilter",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "levelsCopy",
+     "why": "unconstructible signature: (m map[string]int)"
+    },
+    {
+     "fn": "NewKeywordFilter",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "NewEventLogger",
+     "why": "unconstructible signature: (filepath string, filters []LogFilter, rotator *LogRotator, a)"
+    },
+    {
+     "fn": "dirname",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "mustJSON",
+     "why": "unconstructible signature: (v interface{})"
+    },
+    {
+     "fn": "failf",
+     "why": "unconstructible signature: (format string, args ...interface{})"
+    },
+    {
+     "fn": "assert",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "readJSONL",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "findByLevel",
+     "why": "unconstructible signature: (events []Event, level string)"
+    },
+    {
+     "fn": "messages",
+     "why": "unconstructible signature: (events []Event)"
+    },
+    {
+     "fn": "cloneEvent",
+     "why": "unconstructible signature: (e Event)"
+    },
+    {
+     "fn": "sliceEqual",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/networking/connection_pool.go",
+   "class": "VALUE_PRESERVED",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "NewConnection",
+     "why": "unconstructible signature: (id int, now time.Time)"
+    },
+    {
+     "fn": "currentTime",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/networking/connection_pool_health_checks.go",
+   "class": "NO_OP_ATTACK",
+   "drivable": 2,
+   "skipped": [
+    {
+     "fn": "NewPooledConnection",
+     "why": "unconstructible signature: (connection *MockDatabaseConnection)"
+    },
+    {
+     "fn": "NewConnectionPool",
+     "why": "unconstructible signature: (maxConnections int, validationQuery string, connectionFactor)"
+    },
+    {
+     "fn": "defaultConnectionFactory",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/networking/dns_cache.go",
+   "class": "VALUE_PRESERVED",
+   "drivable": 2,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "go/programming/performance/batch_controller.go",
+   "class": "FABRICATED_CERTAINTY",
+   "drivable": 3,
+   "skipped": [],
+   "results": [
+    {
+     "fn": "mk",
+     "param": "throughput",
+     "attack": "nan",
+     "output": "{3 1 0 0}",
+     "class": "FABRICATED_CERTAINTY",
+     "baseline": "{3 1 2 0}"
+    }
+   ]
+  },
+  {
+   "file": "go/programming/performance/budget_allocator.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewCollapser",
+     "why": "unconstructible signature: (backendFunc func(ctx context.Context, args []interface{}, kw)"
+    },
+    {
+     "fn": "requestKey",
+     "why": "unconstructible signature: (args []interface{}, kwargs map[string]interface{})"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/performance/free_list_allocator.go",
+   "class": "VALUE_PRESERVED",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "newFreeList",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/reasoning/astar_pathfinding.go",
+   "class": "GUARDED",
+   "drivable": 2,
+   "skipped": [
+    {
+     "fn": "newAStar",
+     "why": "unconstructible signature: (grid *Grid)"
+    },
+    {
+     "fn": "bfsShortestSteps",
+     "why": "unconstructible signature: (maze [][]bool, start, end [2]int)"
+    },
+    {
+     "fn": "apply",
+     "why": "unconstructible signature: (grid *Grid, maze [][]bool)"
+    },
+    {
+     "fn": "validPath",
+     "why": "unconstructible signature: (path [][2]int, maze [][]bool, start, end [2]int)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/reasoning/bayesian_network.go",
+   "class": "NO_OP_ATTACK",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "newCPT",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "key",
+     "why": "unconstructible signature: (parentValues []any)"
+    },
+    {
+     "fn": "newNode",
+     "why": "unconstructible signature: (name string, values []any)"
+    },
+    {
+     "fn": "newBayesianNetwork",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "copyAssignment",
+     "why": "unconstructible signature: (m map[string]any)"
+    },
+    {
+     "fn": "createSampleNetwork",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "check",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "assert",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/reasoning/csp_solver.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewVariable",
+     "why": "unconstructible signature: (name string, domain []interface{})"
+    },
+    {
+     "fn": "equalValues",
+     "why": "unconstructible signature: (a, b interface{})"
+    },
+    {
+     "fn": "removeValue",
+     "why": "unconstructible signature: (domain []interface{}, value interface{})"
+    },
+    {
+     "fn": "countConflicts",
+     "why": "unconstructible signature: (csp *CSP, state *SolverState, variable *Variable, value inte)"
+    },
+    {
+     "fn": "NewSolverState",
+     "why": "unconstructible signature: (csp *CSP)"
+    },
+    {
+     "fn": "notEqual",
+     "why": "unconstructible signature: (values ...interface{})"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/reasoning/decision_tree.go",
+   "class": "VALUE_PRESERVED",
+   "drivable": 4,
+   "skipped": [
+    {
+     "fn": "uniqueValues",
+     "why": "unconstructible signature: (samples [][]float64, feature int)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/reasoning/expression_evaluator.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "newLexer",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "newParser",
+     "why": "unconstructible signature: (lexer *Lexer)"
+    },
+    {
+     "fn": "newEnvironment",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "newExpressionEvaluator",
+     "why": "unconstructible signature: (environment *Environment)"
+    },
+    {
+     "fn": "toFloat",
+     "why": "unconstructible signature: (v interface{})"
+    },
+    {
+     "fn": "isInt",
+     "why": "unconstructible signature: (v interface{})"
+    },
+    {
+     "fn": "pythonEval",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/reasoning/sat_solver.go",
+   "class": "VALUE_PRESERVED",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "newClause",
+     "why": "unconstructible signature: (literals []*Literal)"
+    },
+    {
+     "fn": "newFormula",
+     "why": "unconstructible signature: (clauses []*Clause)"
+    },
+    {
+     "fn": "unitPropagation",
+     "why": "unconstructible signature: (formula *Formula, assignment map[int]bool)"
+    },
+    {
+     "fn": "pureLiteralElimination",
+     "why": "unconstructible signature: (formula *Formula, assignment map[int]bool)"
+    },
+    {
+     "fn": "chooseVariable",
+     "why": "unconstructible signature: (formula *Formula, assignment map[int]bool)"
+    },
+    {
+     "fn": "dpll",
+     "why": "unconstructible signature: (formula *Formula, assignment map[int]bool)"
+    },
+    {
+     "fn": "solveSAT",
+     "why": "unconstructible signature: (formula *Formula)"
+    },
+    {
+     "fn": "build",
+     "why": "unconstructible signature: (clausesSpec [][][2]interface{})"
+    },
+    {
+     "fn": "bruteForceSat",
+     "why": "unconstructible signature: (clausesSpec [][][2]interface{}, nVars int)"
+    },
+    {
+     "fn": "formulaIsSatisfiedBySpec",
+     "why": "unconstructible signature: (clausesSpec [][][2]interface{}, assignment map[int]bool)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/resilience/bulkhead_isolator.go",
+   "class": "NO_OP_ATTACK",
+   "drivable": 2,
+   "skipped": [
+    {
+     "fn": "NewIsolatedExecutor",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "readFutureResult",
+     "why": "unconstructible signature: (ch <-chan futureResult, timeout time.Duration)"
+    },
+    {
+     "fn": "tracked",
+     "why": "unconstructible signature: (kind string, duration time.Duration, meter map[string]int, m)"
+    },
+    {
+     "fn": "holderFunc",
+     "why": "unconstructible signature: (hold chan struct{})"
+    },
+    {
+     "fn": "assert",
+     "why": "unconstructible signature: (cond bool, format string, args ...interface{})"
+    },
+    {
+     "fn": "count",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/programming/resilience/circuit_breaker.go",
+   "class": "NO_OP_ATTACK",
+   "drivable": 1,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "go/programming/resilience/dead_letter_queue.go",
+   "class": "VISIBLE_POISON",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "NewDLQMessage",
+     "why": "unconstructible signature: (id string, payload map[string]interface{})"
+    },
+    {
+     "fn": "NewDeadLetterQueue",
+     "why": "unconstructible signature: (retryPolicy *RetryPolicy)"
+    },
+    {
+     "fn": "nextID",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/advisory_lock_timeout.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "holderMode",
+     "why": "void return \u2014 nothing to observe but a panic"
+    },
+    {
+     "fn": "waiterMode",
+     "why": "void return \u2014 nothing to observe but a panic"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/ansi_strip.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "strip_ansi",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "strip_ansi_from_file",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "contains",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "indexOf",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/append_only_audit.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "sha256hex",
+     "why": "unconstructible signature: (data []byte)"
+    },
+    {
+     "fn": "computeHash",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "loadEntries",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "verifyChain",
+     "why": "unconstructible signature: (entries []entry)"
+    },
+    {
+     "fn": "writeEntries",
+     "why": "unconstructible signature: (logPath string, entries []entry)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/atomic_append.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "writerMode",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "set",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "contains",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/atomic_snapshot.go",
+   "class": "NO_OP_ATTACK",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "atomic_snapshot",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/atomic_symlink_swap.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "deploy",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "getTarget",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "linkExists",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "assert",
+     "why": "unconstructible signature: (cond bool, format string, args ...interface{})"
+    },
+    {
+     "fn": "contains",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "find",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/atomic_write_temp_rename.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "atomicWrite",
+     "why": "unconstructible signature: (targetPath string, content []byte)"
+    },
+    {
+     "fn": "waitUntil",
+     "why": "unconstructible signature: (pred func()"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/backfill_range.go",
+   "class": "GUARDED",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "backfillRange",
+     "why": "unconstructible signature: (records []Record, rangeStart, rangeEnd int, backfillPath str)"
+    },
+    {
+     "fn": "testBackfillRange",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "testBackfillIdempotent",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "testFailureNoBackfillTracking",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/backpressure_queue.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewBackpressureQ",
+     "why": "unconstructible signature: (size int, timeout time.Duration)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/backup_catalog.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "createBackupEntry",
+     "why": "unconstructible signature: (backupID string, metadata map[string]interface{})"
+    },
+    {
+     "fn": "buildBackupCatalog",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "backupNames",
+     "why": "unconstructible signature: (catalog map[string]map[string]interface{})"
+    },
+    {
+     "fn": "searchCatalog",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "getBackupStats",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "asInt",
+     "why": "unconstructible signature: (v interface{})"
+    },
+    {
+     "fn": "asFloat",
+     "why": "unconstructible signature: (v interface{})"
+    },
+    {
+     "fn": "testBackupCatalog",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "bytesRepeat",
+     "why": "unconstructible signature: (b byte, count int)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/backup_dedup.go",
+   "class": "NO_OP_ATTACK",
+   "drivable": 2,
+   "skipped": [
+    {
+     "fn": "restoreFromDedup",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/backup_encryption.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "xorEncrypt",
+     "why": "unconstructible signature: (data, key []byte)"
+    },
+    {
+     "fn": "createEncryptedBackup",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "decryptBackup",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/backup_rotation.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "survivingBackups",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/binary_presence_check.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "checkBinariesExist",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "contains",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "indexOf",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/blue_green_deploy.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewBlueGreenDeploy",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "testDeployToInactive",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "testAtomicSwitch",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "testSwitchBackOnFailure",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "testGetActiveDirectory",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "testZeroDowntimeDeploy",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/canary_gate.go",
+   "class": "VISIBLE_POISON",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "assertf",
+     "why": "unconstructible signature: (cond bool, format string, args ...interface{})"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/capability_probe.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "probeCapabilities",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/cas_file_update.go",
+   "class": "VALUE_PRESERVED",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "readCounter",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "casIncrement",
+     "why": "unconstructible signature: (counterPath string, results map[string]interface{}, updaterI)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/checkpoint_resume.go",
+   "class": "NO_OP_ATTACK",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "loadCheckpoint",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "processBatchWithCheckpoint",
+     "why": "unconstructible signature: (records []record, checkpointPath string)"
+    },
+    {
+     "fn": "assert",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "testCheckpointResume",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "testFailureMissingCheckpoint",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/circuit_breaker.go",
+   "class": "VISIBLE_POISON",
+   "drivable": 1,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/clock_skew_detect.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewSkewDetector",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "testDetectBackwardJump",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "testMultipleSkews",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "testNoFalsePositive",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/command_allowlist.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewCommandAllowlist",
+     "why": "unconstructible signature: (allowed map[string][]string)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/config_diff.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "configDiff",
+     "why": "unconstructible signature: (oldConfig, newConfig map[string]interface{})"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/config_drift_detect.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewConfigDriftDetect",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/config_versioning.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "computeConfigHash",
+     "why": "unconstructible signature: (configDict map[string]interface{})"
+    },
+    {
+     "fn": "validateConfigVersion",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "contains",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "lower",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "runValidateConfigVersion",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/corruption_repair.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 3,
+   "skipped": [
+    {
+     "fn": "writeGoodDB",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "copyFile",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "fileSize",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "truncateFile",
+     "why": "void return \u2014 nothing to observe but a panic"
+    },
+    {
+     "fn": "verifyRepairedDB",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "canOpenDB",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": [],
+   "reason": "timeout"
+  },
+  {
+   "file": "go/system-administration/sysadmin/cow_backup.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "cowBackup",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/cpu_throttle.go",
+   "class": "VALUE_PRESERVED",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "cpuWork",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/crash_consistent_snapshot.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "atomicSnapshot",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "validDB",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "initDB",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "fileExists",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/crash_log_capture.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 1,
+   "skipped": [],
+   "results": [],
+   "reason": "timeout"
+  },
+  {
+   "file": "go/system-administration/sysadmin/crash_loop_detector.go",
+   "class": "FABRICATED_CERTAINTY",
+   "drivable": 1,
+   "skipped": [],
+   "results": [
+    {
+     "fn": "newCrashLoopDetector",
+     "param": "windowSeconds",
+     "attack": "nan",
+     "output": "&{3 0 [] false}",
+     "class": "FABRICATED_CERTAINTY",
+     "baseline": "&{3 2000000000 [] false}"
+    }
+   ]
+  },
+  {
+   "file": "go/system-administration/sysadmin/cron_expr_next_fire.go",
+   "class": "NO_OP_ATTACK",
+   "drivable": 3,
+   "skipped": [
+    {
+     "fn": "nextFireInternal",
+     "why": "unconstructible signature: (cronExpr string, fromTime time.Time)"
+    },
+    {
+     "fn": "nextFire",
+     "why": "unconstructible signature: (cronExpr string, fromTime time.Time)"
+    },
+    {
+     "fn": "testCronNextFire",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/deadline_ttl.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewDeadlineChecker",
+     "why": "unconstructible signature: (clockFn func()"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/deadlock_timeout.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewTimeoutLock",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "acquirer",
+     "why": "unconstructible signature: (lock1, lock2 *TimeoutLock, order []int, results map[string]b)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/dedup_stream.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "dedupLines",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "dedupFromFile",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/deplock_verify.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewDeplockVerify",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "contains",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/deploy_idempotency.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewIdempotentDeploy",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/deps_verify.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "verifyDependencies",
+     "why": "unconstructible signature: (manifestPath string, actualVersions map[string]map[string]st)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/dir_tree_diff.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "treeChecksumIndex",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "treeDiff",
+     "why": "unconstructible signature: (tree1Index, tree2Index map[string][2]interface{})"
+    },
+    {
+     "fn": "containsString",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "writeFile",
+     "why": "unconstructible signature: (path string, content []byte)"
+    },
+    {
+     "fn": "bytesRepeat",
+     "why": "unconstructible signature: (b byte, count int)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/disk_full_write_guard.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "fileExists",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "bytesRepeat",
+     "why": "unconstructible signature: (b byte, count int)"
+    }
+   ],
+   "results": [],
+   "reason": "driver did not build: # auraharness\n./aura_driver.go:29:33: cannot use int(1) << 62 (constant 4611686018427387904 of type int) as int64 value in argument to NewQuotaGuard\n"
+  },
+  {
+   "file": "go/system-administration/sysadmin/disk_space_watchdog.go",
+   "class": "VALUE_PRESERVED",
+   "drivable": 1,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/dns_resolve_check.go",
+   "class": "NO_OP_ATTACK",
+   "drivable": 1,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/dotenv_parse.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "parseDotenv",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/double_launch_block.go",
+   "class": "NO_OP_ATTACK",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "NewServiceLauncher",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "launcherMode",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "unmarshalSimpleJSON",
+     "why": "unconstructible signature: (data string, out map[string]interface{})"
+    },
+    {
+     "fn": "splitJSONFields",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/drift_compensation.go",
+   "class": "VISIBLE_POISON",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "testFastClockCompensation",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "testSlowClockCompensation",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "testErrorCalculation",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "testSimulationFastClockCausesWrongMeasure",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/dryrun_installer.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "Install",
+     "why": "unconstructible signature: (installDir string, packages map[string]string, dryRun bool)"
+    },
+    {
+     "fn": "VerifyInstallation",
+     "why": "unconstructible signature: (installDir string, expectedPackages map[string]string)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/enforce_600_perms.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "enforce600Perms",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "fileMode",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/env_diff.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "EnvDiff",
+     "why": "unconstructible signature: (env1, env2 map[string]string)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/env_load_defaults.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "EnvLoadDefaults",
+     "why": "unconstructible signature: (requiredVars []string, optionalDefaults map[string]string)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/env_secret_load.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "EnvSecretLoad",
+     "why": "unconstructible signature: (envKey string, defaultValue *string)"
+    },
+    {
+     "fn": "LoadSecretsSafe",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "readAllString",
+     "why": "unconstructible signature: (r *os.File)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/exactly_once_dedup.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "deduplicateStream",
+     "why": "unconstructible signature: (records []Record, journalPath string)"
+    },
+    {
+     "fn": "uniqueSet",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "setEqual",
+     "why": "unconstructible signature: (a, b map[string]bool)"
+    },
+    {
+     "fn": "buggyProcess",
+     "why": "unconstructible signature: (records []Record)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/expiry_check.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "NewLogicalClock",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "expiryCheck",
+     "why": "unconstructible signature: (token string, expiryTime int, clock *LogicalClock)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/exponential_backoff.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "exponentialBackoff",
+     "why": "unconstructible signature: (operation func()"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/fd_leak_detector.go",
+   "class": "VALUE_PRESERVED",
+   "drivable": 2,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/field_extract.go",
+   "class": "NO_OP_ATTACK",
+   "drivable": 1,
+   "skipped": [],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/fsync_durability.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "durableWrite",
+     "why": "unconstructible signature: (path string, data []byte)"
+    },
+    {
+     "fn": "bytesRepeat",
+     "why": "unconstructible signature: (b byte, n int)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/full_incremental_backup.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 0,
+   "skipped": [
+    {
+     "fn": "computeChecksum",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "backupFull",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "backupIncremental",
+     "why": "unconstructible signature: (srcDir, backupDir string, levelNum int, lastManifest map[str)"
+    },
+    {
+     "fn": "restoreFromBackup",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "listFiles",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "copyFile",
+     "why": "no numeric parameter to poison"
+    },
+    {
+     "fn": "writeManifest",
+     "why": "unconstructible signature: (dir string, manifest map[string]string)"
+    }
+   ],
+   "results": []
+  },
+  {
+   "file": "go/system-administration/sysadmin/timeout_kill.go",
+   "class": "NO_EVIDENCE",
+   "drivable": 1,
+   "skipped": [
+    {
+     "fn": "testTimeoutKill",
+     "why": "no numeric parameter to poison"
+    }
+   ],
+   "results": [],
+   "reason": "driver did not build: Failed to run command: exec: \"a\": executable file not found in $PATH\nexit status 1\n"
+  }
+ ]
+}

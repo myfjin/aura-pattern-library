@@ -1,0 +1,14 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "",
+  "evidence": {
+    "compiled": true,
+    "ran": true,
+    "exit": 0,
+    "pass_marker": true,
+    "stdout": "session_token_expiry ... PASS"
+  },
+  "file": "security-crypto/session_token_expiry.rs",
+  "sha": "c0ca2e52b8d9"
+}

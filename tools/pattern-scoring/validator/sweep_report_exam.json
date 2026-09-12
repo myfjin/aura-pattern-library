@@ -1,0 +1,355 @@
+{
+ "counts": {
+  "PASS": 49,
+  "FLAG": 7,
+  "INVALID": 13,
+  "SKIP": 0
+ },
+ "rows": [
+  {
+   "file": "FIXTURE:bayesian_ab_beta.BROKEN.py",
+   "verdict": "INVALID",
+   "reason": "silent_wrong_on_invalid"
+  },
+  {
+   "file": "python/data-science/recommenders_and_graph_sampling/bayesian_ab_beta.py",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "python/system-administration/text-stream-ops/robust_csv_parse.py",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "FIXTURE:stacking_ensemble.BROKEN.py",
+   "verdict": "INVALID",
+   "reason": "silent_wrong_on_invalid"
+  },
+  {
+   "file": "python/data-science/ensembles_and_robust_methods/stacking_ensemble.py",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "python/data-science/composed_tools/dedup_pipeline.py",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "FIXTURE:bayes_factor_normal_means.BROKEN.py",
+   "verdict": "INVALID",
+   "reason": "numeric_oracle_mismatch"
+  },
+  {
+   "file": "python/data-science/bayesian_iii_approximate_inference/bayes_factor_normal_means.py",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "python/data-science/bayesian_iii_modeling_and_selection/dirichlet_stick_breaking.py",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "python/data-science/ensembles_and_robust_methods/gradient_boosting_stumps.py",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "python/data-science/composed_tools/walk_forward_early_stopping.py",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "python/data-science/survival_and_reliability/log_rank_test.py",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "rust/networking-resilience/rendezvous_hash_hrw.rs",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "rust/composed-systems/checkpoint_resume_crc.rs",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "r/regression_and_glm/linear_regression_normal_eq.R",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "r/hypothesis_testing_parametric/welch_t_test.R",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "FIXTURE:token_bucket_limiter.BROKEN.py",
+   "verdict": "INVALID",
+   "reason": "unbounded_burst_after_idle"
+  },
+  {
+   "file": "python/system-administration/resource-guards/token_bucket_limiter.py",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "FIXTURE:inverse_transform_sampling.BROKEN.py",
+   "verdict": "INVALID",
+   "reason": "silent_negative_waiting_time_on_rate_lt_0"
+  },
+  {
+   "file": "python/data-science/information_theory_and_probability/inverse_transform_sampling.py",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "FIXTURE:ttl_cache.BROKEN.py",
+   "verdict": "FLAG",
+   "reason": "invariant_broken"
+  },
+  {
+   "file": "python/system-administration/secrets-credentials/ttl_cache.py",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "FIXTURE:calibration_curve.BROKEN.cpp",
+   "verdict": "INVALID",
+   "reason": "garbage_label_accepted_silent_ub_on_mismatch"
+  },
+  {
+   "file": "cpp/data-science/model_diagnostics/calibration_curve.cpp",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "FIXTURE:bayes_factor_normal_means.BROKEN.cpp",
+   "verdict": "INVALID",
+   "reason": "wrong_math_inherited_from_python_twin"
+  },
+  {
+   "file": "cpp/data-science/bayesian_iii_approximate_inference/bayes_factor_normal_means.cpp",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "FIXTURE:stacking_ensemble.BROKEN.cpp",
+   "verdict": "INVALID",
+   "reason": "nan_trained_silently_inherited"
+  },
+  {
+   "file": "cpp/data-science/ensembles_robust_methods/stacking_ensemble.cpp",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "FIXTURE:log_rank_test.BROKEN.cpp",
+   "verdict": "FLAG",
+   "reason": "invariant_broken"
+  },
+  {
+   "file": "cpp/data-science/survival_reliability/log_rank_test.cpp",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "cpp/data-science/ensembles_robust_methods/gradient_boosting_stumps.cpp",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "FIXTURE:deadline_ttl.BROKEN.go",
+   "verdict": "FLAG",
+   "reason": "invariant_broken"
+  },
+  {
+   "file": "go/system-administration/sysadmin/deadline_ttl.go",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "FIXTURE:exponential_backoff.BROKEN.go",
+   "verdict": "INVALID",
+   "reason": "backoff_vanishes_on_duration_overflow"
+  },
+  {
+   "file": "go/system-administration/sysadmin/exponential_backoff.go",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "FIXTURE:csv_validator.BROKEN.go",
+   "verdict": "INVALID",
+   "reason": "nan_passes_validation_and_mixed_type_columns"
+  },
+  {
+   "file": "go/programming/io/csv_validator.go",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "FIXTURE:circuit_breaker.BROKEN.go",
+   "verdict": "INVALID",
+   "reason": "cumulative_count_trips_on_nonconsecutive_failures"
+  },
+  {
+   "file": "go/programming/resilience/circuit_breaker.go",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "FIXTURE:bloom_filter.BROKEN.go",
+   "verdict": "FLAG",
+   "reason": "invariant_broken"
+  },
+  {
+   "file": "go/programming/data_structures/bloom_filter.go",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "python/data-science/statistical_modeling/power_analysis_sample_size.py",
+   "verdict": "FLAG",
+   "reason": "confident_output_no_oracle"
+  },
+  {
+   "file": "FIXTURE:http_request_line_parser.BROKEN.rs",
+   "verdict": "INVALID",
+   "reason": "validation_theater_malformed_accepted"
+  },
+  {
+   "file": "rust/parsing-protocols/http_request_line_parser.rs",
+   "verdict": "PASS",
+   "reason": "survived all applicable recipes with oracle backing"
+  },
+  {
+   "file": "rust/concurrency-resilience/atomic_spinlock.rs",
+   "verdict": "FLAG",
+   "reason": "ordering_unverified_by_execution"
+  },
+  {
+   "file": "python/data-science/geospatial_and_spatial/geohash_encode_decode.py",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "python/data-science/text_nlp/bpe_tokenizer_lite.py",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "python/programming/architecture/message_encoder.py",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "python/data-science/model_understanding_and_tuning/model_persistence_roundtrip.py",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "rust/parsing-protocols/backslash_escape_codec.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "rust/parsing-protocols/cobs_framing.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "rust/parsing-protocols/slip_escape_framer.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "rust/parsing-protocols/cidr_ip_math.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "rust/parsing-protocols/crc_framed_packet.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "rust/composed-systems/backup_snapshot_restore.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 3/3"
+  },
+  {
+   "file": "FIXTURE:compressed_block_store.BROKEN.rs",
+   "verdict": "FLAG",
+   "reason": "invariant_broken"
+  },
+  {
+   "file": "rust/composed-systems/compressed_block_store.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "rust/security-crypto/base32_codec.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "rust/security-crypto/base64_codec.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "rust/security-crypto/hex_codec.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "rust/systems-math-encoding/base58_codec.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "rust/security-crypto/jwt_hs256_verify.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "rust/systems-math-encoding/run_length_encode.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "rust/systems-math-encoding/varint_leb128.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 8/8"
+  },
+  {
+   "file": "rust/systems-math-encoding/zigzag_signed.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 9/9"
+  },
+  {
+   "file": "rust/systems-math-encoding/delta_zigzag_encode.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "rust/systems-math-encoding/length_prefixed_framing.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 6/6"
+  },
+  {
+   "file": "FIXTURE:ini_config_parser.BROKEN.rs",
+   "verdict": "INVALID",
+   "reason": "serialize_order_nondeterministic_hashmap"
+  },
+  {
+   "file": "rust/parsing-protocols/ini_config_parser.rs",
+   "verdict": "PASS",
+   "reason": "round-trip identity oracle 5/5"
+  }
+ ]
+}

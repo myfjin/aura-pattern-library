@@ -1,0 +1,77 @@
+[
+ {
+  "file": "cpp/data-science/applied_ds_practice/drift_detection_psi.cpp",
+  "kind": "short",
+  "current": "Inlined from drift_detection_psi.h"
+ },
+ {
+  "file": "cpp/data-science/applied_ds_practice/ewma_streaming_metrics.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/applied_ds_practice/feature_hashing_trick.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/applied_ds_practice/funnel_conversion_analysis.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/applied_ds_practice/rfm_customer_segmentation.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/applied_ds_practice/target_encoding_smoothing.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/bayesian_iii_approximate_inference/posterior_contraction_rate.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/bayesian_iii_approximate_inference/posterior_predictive_pvalue.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/bayesian_iii_approximate_inference/rhat_convergence_diagnostic.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/causal_inference_experimentation/propensity_score_matching.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/causal_inference_experimentation/regression_discontinuity.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/causal_inference_experimentation/synthetic_control_lite.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/causal_inference_ii/doubly_robust_aipw.cpp",
+  "kind": "short",
+  "current": "Inlined from doubly_robust_aipw.h"
+ },
+ {
+  "file": "cpp/data-science/causal_inference_ii/e_value_sensitivity.cpp",
+  "kind": "short",
+  "current": "Inlined from e_value_sensitivity.h"
+ },
+ {
+  "file": "cpp/data-science/causal_inference_ii/stratification_subclassification.cpp",
+  "kind": "short",
+  "current": "Logistic function."
+ }
+]

@@ -1,0 +1,24 @@
+PATTERN: python/programming/performance/budget_allocator.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: Request Collapser Module
+
+This module implements a request collapser that batches identical requests
+within a time window to reduce backend load.
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "budget_allocator (request collapser): 5\u21921 collapsed, 3 distinct kept, failure fanned out to all waiters, sync path collapsed \u2014 PASS",
+  "stderr": "/var/folders/5v/vdfk_0jx6jv4smqtm6qytbl80000gq/T/tmp5czvopda.py:184: DeprecationWarning: 'asyncio.iscoroutinefunction' is deprecated and slated for removal in Python 3.16; use inspect.iscoroutinefunction() instead\n  if asyncio.iscoroutinefunction(self.backend_func):",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

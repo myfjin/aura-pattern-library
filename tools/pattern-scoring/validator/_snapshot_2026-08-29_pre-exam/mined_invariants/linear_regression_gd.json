@@ -1,0 +1,81 @@
+{
+  "pattern": "linear_regression_gd",
+  "oracle": "python/data-science/core_ml/linear_regression_gd.py",
+  "n_samples": 100,
+  "ratified": true,
+  "note": "MINED CANDIDATE \u2014 a human sets ratified=true after review; unratified = zero verdict weight",
+  "invariants": {
+    "r2": {
+      "observed": [
+        0.995,
+        0.99916
+      ],
+      "mean": 0.99769,
+      "sd": 0.00082,
+      "contract": [
+        0.9744,
+        1.021
+      ],
+      "sign": "positive",
+      "kind": "scalar"
+    },
+    "weight_0": {
+      "observed": [
+        1.92725,
+        2.08325
+      ],
+      "mean": 2.003,
+      "sd": 0.03363,
+      "contract": [
+        1.8485,
+        2.1575
+      ],
+      "sign": "positive",
+      "kind": "scalar"
+    },
+    "weight_1": {
+      "observed": [
+        2.91519,
+        3.09289
+      ],
+      "mean": 2.99906,
+      "sd": 0.03219,
+      "contract": [
+        2.8503,
+        3.1478
+      ],
+      "sign": "positive",
+      "kind": "scalar"
+    },
+    "bias": {
+      "observed": [
+        -0.19178,
+        0.24467
+      ],
+      "mean": 0.00017,
+      "sd": 0.0945,
+      "contract": [
+        -0.3979,
+        0.3982
+      ],
+      "sign": "mixed",
+      "kind": "scalar"
+    },
+    "ratio_w0_w1": {
+      "observed": [
+        0.63285,
+        0.69464
+      ],
+      "mean": 0.66795,
+      "sd": 0.01304,
+      "contract": [
+        0.5958,
+        0.7401
+      ],
+      "sign": "positive",
+      "kind": "relational"
+    }
+  },
+  "ratified_by": "human_agent_project (Illia) \u2014 hand-ratified 2026-07-23",
+  "ratification_note": "relational ratios verified against known generating coefficients; 4-sigma envelope kept as a low-false-positive regression tripwire"
+}

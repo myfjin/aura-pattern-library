@@ -1,0 +1,15 @@
+TWIN-CONSENSUS / DIVERGENCE (fold 4) — do a pattern's compiled language twins agree?
+============================================================================================
+negative control: agree=True status-diverge-caught=True metric-diverge-caught=True -> DETECTION WORKS
+--------------------------------------------------------------------------------------------
+  ...50/466 twin-sets checked, 0 divergent so far
+  ...100/466 twin-sets checked, 0 divergent so far
+  ...150/466 twin-sets checked, 0 divergent so far
+  ...200/466 twin-sets checked, 0 divergent so far
+  ...250/466 twin-sets checked, 0 divergent so far
+  ...300/466 twin-sets checked, 0 divergent so far
+  ...350/466 twin-sets checked, 0 divergent so far
+  ...400/466 twin-sets checked, 0 divergent so far
+  ...450/466 twin-sets checked, 0 divergent so far
+============================================================================================
+twin-sets checked: 466 · consensus: 466 · DIVERGENT: 0

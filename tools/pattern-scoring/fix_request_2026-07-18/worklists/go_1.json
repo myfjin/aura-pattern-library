@@ -1,0 +1,72 @@
+[
+ {
+  "file": "go/programming/architecture/cqrs_bus.go",
+  "kind": "short",
+  "current": "Command marker"
+ },
+ {
+  "file": "go/programming/architecture/event_bus.go",
+  "kind": "declstyle",
+  "current": "Event represents a base event with a typed payload."
+ },
+ {
+  "file": "go/programming/architecture/event_sourcing_store.go",
+  "kind": "declstyle",
+  "current": "Event represents a domain event in the event store."
+ },
+ {
+  "file": "go/programming/async/async_task_queue.go",
+  "kind": "declstyle",
+  "current": "TaskStatus represents possible task statuses."
+ },
+ {
+  "file": "go/programming/async/cancellable_task_group.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/programming/data_structures/avl_tree.go",
+  "kind": "short+decl",
+  "current": "AVLNode is a node class for AVL tree."
+ },
+ {
+  "file": "go/programming/data_structures/binary_indexed_tree.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/programming/data_structures/bloom_filter.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/programming/data_structures/fenwick_tree.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/programming/distributed/consistent_hash_ring.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/programming/io/arg_parser.go",
+  "kind": "declstyle",
+  "current": "Option represents a command-line option (flag or argument)."
+ },
+ {
+  "file": "go/programming/io/chunked_reader.go",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "go/programming/io/csv_validator.go",
+  "kind": "declstyle",
+  "current": "DataType represents supported data types for validation."
+ },
+ {
+  "file": "go/programming/monitoring/alert_manager.go",
+  "kind": "declstyle",
+  "current": "fakeNow is a deterministic clock for the self-test."
+ }
+]

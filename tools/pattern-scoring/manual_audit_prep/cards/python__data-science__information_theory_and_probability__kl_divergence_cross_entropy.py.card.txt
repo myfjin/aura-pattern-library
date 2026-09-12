@@ -1,0 +1,21 @@
+PATTERN: python/data-science/information_theory_and_probability/kl_divergence_cross_entropy.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: KL divergence, cross-entropy, and Jensen-Shannon divergence between discrete distributions.
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "KL divergence / cross-entropy / Jensen-Shannon: all assertions PASS",
+  "stderr": "",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

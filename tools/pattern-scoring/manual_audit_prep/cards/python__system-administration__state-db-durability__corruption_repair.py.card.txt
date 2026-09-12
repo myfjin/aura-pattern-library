@@ -1,0 +1,21 @@
+PATTERN: python/system-administration/state-db-durability/corruption_repair.py
+VERDICT: VERIFIED    (U=None; unmeasured dims stay null — honest)
+CLAIM: corruption_repair: detect and repair SQLite DB corruption (or mark unrecoverable).
+DECLARED DOMAIN: None
+
+── ✅ SUCCESS RUN (what success looks like) ──
+{
+  "returncode": 0,
+  "stdout": "corruption_repair: detected truncation-induced corruption, final DB consistent\ncorruption_repair PASS",
+  "stderr": "",
+  "ok": true
+}
+
+── 🗡 ADVERSARY RUN (the disaster, caused) ──
+null
+
+── 🧪 ABUSE (garbage in — what came out) ──
+null
+
+FAILING COLUMN: None
+DESCRIPTION GATE: pass=True (None)

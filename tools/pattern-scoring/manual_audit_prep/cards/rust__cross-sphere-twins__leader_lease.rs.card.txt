@@ -1,0 +1,14 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "",
+  "evidence": {
+    "compiled": true,
+    "ran": true,
+    "exit": 0,
+    "pass_marker": true,
+    "stdout": "leader_lease: lease expiry triggers re-election; one leader at a time \u2014 PASS"
+  },
+  "file": "cross-sphere-twins/leader_lease.rs",
+  "sha": "2e48dae6539b"
+}

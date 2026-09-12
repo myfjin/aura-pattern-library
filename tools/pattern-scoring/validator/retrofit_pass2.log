@@ -1,0 +1,36 @@
+RETROFIT GENERATOR — 18 patterns (sandbox: /Users/s_dio/ai-lab/pattern-scoring/validator/retrofit_gen_out)
+==========================================================================================
+  [JUDGE ] caliper_matching.py                          all auto-guards disproved by demo -> judgment lane
+  [JUDGE ] dtw_shape_drift_monitor.py                   all auto-guards disproved by demo -> judgment lane
+  [REVIEW] gaussian_mixture_em.py                       attacks_closed=3/3    selftest=RED rc=1: _mixture_em.py", line 69, in normal_pdf
+    _aura_validate_normal_pdf(x, var)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+TypeError: _aura_validate_normal_pdf() takes 1 positional argument but 2 were given
+ det=True  guards=1
+  [JUDGE ] sharpe_sortino_ratios.py                     all auto-guards disproved by demo -> judgment lane
+  [JUDGE ] novelty_effect_decay.py                      all auto-guards disproved by demo -> judgment lane
+  [REVIEW] peeking_alpha_inflation.py                   attacks_closed=3/3    selftest=RED rc=1:    _aura_validate_t_test_pvalue(var_t, var_c, n_t, n_c)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: _aura_validate_t_test_pvalue() takes 1 positional argument but 4 were given
+ det=True  guards=1
+  [JUDGE ] geohash_encode_decode.py                     all auto-guards disproved by demo -> judgment lane
+  [JUDGE ] great_circle_waypoints.py                    all auto-guards disproved by demo -> judgment lane
+  [JUDGE ] haversine_bearing.py                         all auto-guards disproved by demo -> judgment lane
+  [REVIEW] lift_gain_chart.py                           attacks_closed=3/3    selftest=RED rc=1: scored_labels(n_positive, n_negative)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: _aura_validate_generate_scored_labels() takes 1 positional argument but 2 were given
+ det=True  guards=1
+  [JUDGE ] distance_metrics_toolkit.py                  all auto-guards disproved by demo -> judgment lane
+  [JUDGE ] newton_method_optimization.py                all auto-guards disproved by demo -> judgment lane
+  [REVIEW] particle_filter_1d.py                        attacks_closed=3/3    selftest=RED rc=1: e_filter_step(process_noise, obs_noise)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: _aura_validate_particle_filter_step() takes 1 positional argument but 2 were given
+ det=True  guards=1
+  [JUDGE ] gibbs_sampling_bivariate.py                  all auto-guards disproved by demo -> judgment lane
+  [JUDGE ] kernel_density_estimation.py                 all auto-guards disproved by demo -> judgment lane
+  [JUDGE ] loess_local_regression.py                    all auto-guards disproved by demo -> judgment lane
+  [JUDGE ] confusion_matrix_metrics.py                  all auto-guards disproved by demo -> judgment lane
+  [JUDGE ] exponential_smoothing.py                     all auto-guards disproved by demo -> judgment lane
+==========================================================================================
+CLEAN CLOSURE: 0/18 patterns — attacks now raise, self-test green, deterministic
+diffs: diff <(sed -n /dev/null) ; compare /Users/s_dio/ai-lab/pattern-scoring/validator/retrofit_gen_out/<file> vs library original

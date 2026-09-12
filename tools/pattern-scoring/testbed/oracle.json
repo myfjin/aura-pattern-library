@@ -1,0 +1,20 @@
+{
+  "description": "Planted known-answer oracle for pattern-scoring mechanism testbed. verdict = ACCEPT or REJECT; mechanism output is judged against these labels, not against any persona opinion.",
+  "accept_statuses": ["library_ready", "review", "needs_validity", "VERIFIED"],
+  "reject_statuses": ["senseless", "invalid", "quarantine_no_description", "quarantine_undefined_domain", "rejected_low_m", "gone", "flagged"],
+  "patterns": [
+    {"file": "valid_mean.py", "verdict": "ACCEPT", "category": "valid"},
+    {"file": "valid_walk_forward.py", "verdict": "ACCEPT", "category": "valid"},
+    {"file": "valid_imbalance_handler.py", "verdict": "ACCEPT", "category": "valid"},
+    {"file": "valid_metric_tracker.py", "verdict": "ACCEPT", "category": "valid"},
+    {"file": "no_description.py", "verdict": "REJECT", "category": "no_description"},
+    {"file": "fake_robust_mean.py", "verdict": "REJECT", "category": "fake_robust"},
+    {"file": "fake_robust_sum.py", "verdict": "REJECT", "category": "fake_robust"},
+    {"file": "fake_robust_classifier.py", "verdict": "REJECT", "category": "fake_robust"},
+    {"file": "sklearn_wrapper.py", "verdict": "REJECT", "category": "trivial_wrapper"},
+    {"file": "numpy_mean_wrapper.py", "verdict": "REJECT", "category": "trivial_wrapper"},
+    {"file": "hollow_assert.py", "verdict": "REJECT", "category": "hollow_assert"},
+    {"file": "valid_no_domain.py", "verdict": "REJECT", "category": "undefined_domain"},
+    {"file": "short_nonsense_description.py", "verdict": "REJECT", "category": "undefined_domain"}
+  ]
+}

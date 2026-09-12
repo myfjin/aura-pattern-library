@@ -1,0 +1,15 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "",
+  "evidence": {
+    "gcc": true,
+    "clang": true,
+    "ran": true,
+    "exit": 0,
+    "pass_marker": true,
+    "stdout": "winsorize_clip_outliers: PASS"
+  },
+  "file": "data-science/preprocessing_eda/winsorize_clip_outliers.cpp",
+  "sha": "fcab5892c13b"
+}

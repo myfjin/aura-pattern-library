@@ -1,0 +1,15 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "",
+  "evidence": {
+    "gcc": true,
+    "clang": true,
+    "ran": true,
+    "exit": 0,
+    "pass_marker": true,
+    "stdout": "PASS"
+  },
+  "file": "data-science/text_nlp_ii/porter_stemmer_lite.cpp",
+  "sha": "0d08f342338e"
+}

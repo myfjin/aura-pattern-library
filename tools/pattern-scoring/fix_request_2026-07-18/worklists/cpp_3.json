@@ -1,0 +1,77 @@
+[
+ {
+  "file": "cpp/data-science/geospatial_spatial/spatial_radius_join.cpp",
+  "kind": "short",
+  "current": "Radius join via grid bucketing."
+ },
+ {
+  "file": "cpp/data-science/information_theory_probability/entropy_estimators.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/linear_algebra/power_iteration_shifted.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/linear_algebra/qr_gram_schmidt.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/model_diagnostics/precision_recall_curve.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/model_diagnostics/residual_analysis.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/model_diagnostics/ucb_bandit.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/model_understanding_tuning/successive_halving.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/model_understanding_tuning/threshold_tuning_cost.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/neural_networks_from_scratch/tiny_autoencoder.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/neural_networks_from_scratch/weight_initialization_comparison.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/numerical_methods/richardson_extrapolation.cpp",
+  "kind": "short",
+  "current": "Planted: \u222b\u2080\u00b9 x\u00b3 dx = 1/4."
+ },
+ {
+  "file": "cpp/data-science/numerical_methods/rk4_ode_solver.cpp",
+  "kind": "short",
+  "current": "Fourth-order Runge-Kutta ODE solver."
+ },
+ {
+  "file": "cpp/data-science/optimization_distances/dtw_dynamic_time_warping.cpp",
+  "kind": "missing",
+  "current": null
+ },
+ {
+  "file": "cpp/data-science/optimization_distances/epsilon_greedy_bandit.cpp",
+  "kind": "missing",
+  "current": null
+ }
+]

@@ -1,0 +1,12 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "missing_pattern_matrix.R",
+  "evidence": {
+    "ran": true,
+    "exit": 0,
+    "stdout": "[1] TRUE\n[1] TRUE\nPASS: missing_pattern_matrix.R"
+  },
+  "file": "data_wrangling_and_feature_engineering/missing_pattern_matrix.R",
+  "sha": "0a4b3c89c292"
+}

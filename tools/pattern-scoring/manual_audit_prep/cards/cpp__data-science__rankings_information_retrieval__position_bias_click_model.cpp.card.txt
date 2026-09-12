@@ -1,0 +1,15 @@
+{
+  "status": "VERIFIED",
+  "failing_column": null,
+  "claim": "",
+  "evidence": {
+    "gcc": true,
+    "clang": true,
+    "ran": true,
+    "exit": 0,
+    "pass_marker": true,
+    "stdout": "True ranking: ABDC | Naive (biased): DACB | IPW (corrected): ACDB | PASS"
+  },
+  "file": "data-science/rankings_information_retrieval/position_bias_click_model.cpp",
+  "sha": "cbcfb1d1dede"
+}

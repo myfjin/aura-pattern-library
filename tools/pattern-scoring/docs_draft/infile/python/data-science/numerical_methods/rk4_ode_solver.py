@@ -1,0 +1,14 @@
+"""
+RK4 ODE Solver — fourth-order Runge-Kutta explicit integrator.
+
+WHAT IT DOES: 4-stage RK scheme with O(h⁵) local error. Solves dy/dt = −2y, y(0) = 1
+to within 1e-5 of exact e⁻² with 100 steps.
+
+WHEN TO USE: Solving ODEs where high accuracy is needed.
+
+GUARANTEES: y(1) = e⁻² within 1e-5 with 100 steps. O(h⁴) global error.
+
+NOT: An implicit solver. May need very small steps for stiff ODEs.
+"""
+# △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
+_AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"

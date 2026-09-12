@@ -1,0 +1,372 @@
+{
+ "missing": [
+  "go/system-administration/sysadmin/atomic_snapshot.go",
+  "go/system-administration/sysadmin/atomic_symlink_swap.go",
+  "go/system-administration/sysadmin/capability_probe.go",
+  "go/system-administration/sysadmin/cas_file_update.go",
+  "go/system-administration/sysadmin/checkpoint_resume.go",
+  "go/system-administration/sysadmin/circuit_breaker.go",
+  "go/system-administration/sysadmin/clock_skew_detect.go",
+  "go/system-administration/sysadmin/command_allowlist.go",
+  "go/system-administration/sysadmin/config_diff.go",
+  "go/system-administration/sysadmin/config_drift_detect.go",
+  "go/system-administration/sysadmin/config_versioning.go",
+  "go/system-administration/sysadmin/corruption_repair.go",
+  "go/system-administration/sysadmin/deadline_ttl.go",
+  "go/system-administration/sysadmin/deadlock_timeout.go",
+  "go/system-administration/sysadmin/deplock_verify.go",
+  "go/system-administration/sysadmin/deploy_idempotency.go",
+  "go/system-administration/sysadmin/deps_verify.go",
+  "go/system-administration/sysadmin/dir_tree_diff.go",
+  "go/system-administration/sysadmin/disk_full_write_guard.go",
+  "go/system-administration/sysadmin/disk_space_watchdog.go",
+  "go/system-administration/sysadmin/dns_resolve_check.go",
+  "go/system-administration/sysadmin/dotenv_parse.go",
+  "go/system-administration/sysadmin/exactly_once_dedup.go",
+  "go/system-administration/sysadmin/expiry_check.go",
+  "go/system-administration/sysadmin/exponential_backoff.go",
+  "go/system-administration/sysadmin/fd_leak_detector.go",
+  "go/system-administration/sysadmin/field_extract.go",
+  "go/system-administration/sysadmin/fsync_durability.go",
+  "go/system-administration/sysadmin/full_incremental_backup.go",
+  "go/system-administration/sysadmin/timeout_kill.go",
+  "go/programming/data_structures/binary_indexed_tree.go",
+  "go/programming/data_structures/bloom_filter.go",
+  "go/programming/data_structures/fenwick_tree.go",
+  "go/programming/distributed/consistent_hash_ring.go",
+  "go/programming/networking/dns_cache.go",
+  "go/programming/async/cancellable_task_group.go",
+  "go/programming/io/chunked_reader.go",
+  "go/programming/resilience/circuit_breaker.go",
+  "go/programming/monitoring/event_logger.go",
+  "python/programming/data_structures/binary_indexed_tree.py",
+  "python/programming/data_structures/bloom_filter.py",
+  "python/programming/data_structures/interval_tree.py",
+  "python/programming/data_structures/ordered_map.py",
+  "python/programming/data_structures/persistent_deque.py",
+  "python/programming/data_structures/radix_tree.py",
+  "python/programming/data_structures/red_black_tree.py",
+  "python/programming/data_structures/segment_tree.py",
+  "python/programming/data_structures/skip_list.py",
+  "python/programming/data_structures/suffix_array.py",
+  "python/programming/data_structures/treap.py",
+  "python/programming/data_structures/union_find.py",
+  "python/programming/distributed/distributed_lock_manager.py",
+  "python/programming/distributed/service_registry.py",
+  "python/programming/networking/dns_cache.py",
+  "python/programming/networking/packet_parser.py",
+  "python/programming/networking/rate_limiter.py",
+  "python/programming/networking/url_router.py",
+  "python/programming/async/reactive_signals.py",
+  "python/programming/io/arg_parser.py",
+  "python/programming/io/template_engine.py",
+  "python/programming/reasoning/sat_solver.py",
+  "python/programming/resilience/circuit_breaker.py",
+  "python/programming/resilience/timeout_guard.py",
+  "python/programming/monitoring/alert_manager.py",
+  "python/programming/monitoring/log_pattern_matcher.py",
+  "python/programming/monitoring/metrics_formatter.py",
+  "python/programming/monitoring/timer_stack.py",
+  "python/programming/monitoring/trace_collector.py",
+  "python/programming/performance/free_list_allocator.py",
+  "python/programming/performance/lru_cache.py",
+  "python/programming/performance/object_pool_allocator.py",
+  "python/programming/performance/rw_lock.py",
+  "python/programming/performance/token_bucket.py",
+  "rust/storage-persistence/bitmap_free_space_manager.rs",
+  "rust/storage-persistence/btree_node_split.rs",
+  "rust/storage-persistence/checkpoint_truncate_log.rs",
+  "rust/storage-persistence/clock_second_chance_cache.rs",
+  "rust/storage-persistence/crash_safe_atomic_write.rs",
+  "rust/storage-persistence/double_write_buffer.rs",
+  "rust/storage-persistence/free_list_coalescing_allocator.rs",
+  "rust/storage-persistence/fsync_barrier_ordering.rs",
+  "rust/storage-persistence/log_segment_gc_compaction.rs",
+  "rust/storage-persistence/manifest_versioned_snapshot.rs",
+  "rust/storage-persistence/mvcc_version_chain.rs",
+  "rust/storage-persistence/redo_undo_log.rs",
+  "rust/storage-persistence/slotted_page_layout.rs",
+  "rust/storage-persistence/sstable_block_index.rs",
+  "rust/storage-persistence/tombstone_deletion_merge.rs",
+  "rust/storage-persistence/two_phase_commit_coordinator.rs",
+  "rust/storage-persistence/wal_group_commit.rs",
+  "rust/networking-resilience/backpressure_bounded_queue.rs",
+  "rust/networking-resilience/bulkhead_isolation_limiter.rs",
+  "rust/networking-resilience/cidr_allowlist_match.rs",
+  "rust/networking-resilience/connection_pool_manager.rs",
+  "rust/networking-resilience/count_min_sketch_ip_freq.rs",
+  "rust/networking-resilience/dns_name_wire_parser.rs",
+  "rust/networking-resilience/ewma_latency_tracker.rs",
+  "rust/networking-resilience/failover_priority_list.rs",
+  "rust/networking-resilience/hedged_request_scheduler.rs",
+  "rust/networking-resilience/http_status_retry_classifier.rs",
+  "rust/networking-resilience/least_connections_lb.rs",
+  "rust/networking-resilience/port_scan_detector.rs",
+  "rust/networking-resilience/sliding_window_flow_control.rs",
+  "rust/networking-resilience/sliding_window_rate_limiter.rs",
+  "rust/networking-resilience/tcp_rto_estimator.rs",
+  "rust/networking-resilience/url_authority_parser.rs",
+  "rust/networking-resilience/weighted_round_robin_lb.rs",
+  "rust/parsing-protocols/ansi_escape_stripper.rs",
+  "rust/parsing-protocols/backslash_escape_codec.rs",
+  "rust/parsing-protocols/balanced_delimiter_check.rs",
+  "rust/parsing-protocols/chunked_transfer_decoder.rs",
+  "rust/parsing-protocols/cobs_framing.rs",
+  "rust/parsing-protocols/crc_framed_packet.rs",
+  "rust/parsing-protocols/csv_quote_escape.rs",
+  "rust/parsing-protocols/http_request_line_parser.rs",
+  "rust/parsing-protocols/json_string_unescape.rs",
+  "rust/parsing-protocols/key_value_line_scanner.rs",
+  "rust/parsing-protocols/query_string_parser.rs",
+  "rust/parsing-protocols/shell_word_split.rs",
+  "rust/parsing-protocols/slip_escape_framer.rs",
+  "rust/parsing-protocols/state_machine_tokenizer.rs",
+  "rust/parsing-protocols/tlv_parser.rs",
+  "cpp/data-science/model_understanding_tuning/successive_halving.cpp",
+  "cpp/data-science/model_understanding_tuning/threshold_tuning_cost.cpp",
+  "cpp/data-science/data_wrangling_from_scratch/resample_timeseries_bins.cpp",
+  "cpp/data-science/rankings_information_retrieval/pairwise_ranking_learn.cpp",
+  "cpp/data-science/rankings_information_retrieval/position_bias_click_model.cpp",
+  "cpp/data-science/rankings_information_retrieval/query_expansion_prf.cpp",
+  "cpp/data-science/model_diagnostics/precision_recall_curve.cpp",
+  "cpp/data-science/model_diagnostics/residual_analysis.cpp",
+  "cpp/data-science/model_diagnostics/ucb_bandit.cpp",
+  "cpp/data-science/composed_tools_bridge_born/dtw_shape_drift_monitor.cpp",
+  "cpp/data-science/composed_tools_bridge_born/walk_forward_early_stopping.cpp",
+  "cpp/data-science/preprocessing_eda/one_hot_encoding.cpp",
+  "cpp/data-science/preprocessing_eda/quantile_binning.cpp",
+  "cpp/data-science/preprocessing_eda/three_way_stratified_split.cpp",
+  "cpp/data-science/statistics_testing/reservoir_sampling.cpp",
+  "cpp/data-science/statistics_testing/train_test_split_kfold.cpp",
+  "cpp/data-science/simulation_decision_science/q_learning_gridworld.cpp",
+  "cpp/data-science/simulation_decision_science/tornado_sensitivity.cpp",
+  "cpp/data-science/ensembles_robust_methods/theil_sen_estimator.cpp",
+  "cpp/data-science/ensembles_robust_methods/voting_classifier.cpp",
+  "cpp/data-science/streaming_iii/exponential_histogram_count.cpp",
+  "cpp/data-science/streaming_iii/tdigest_lite.cpp",
+  "cpp/data-science/optimization_distances/dtw_dynamic_time_warping.cpp",
+  "cpp/data-science/optimization_distances/epsilon_greedy_bandit.cpp",
+  "cpp/data-science/econometrics_finance/value_averaging_vs_dca.cpp",
+  "cpp/data-science/text_nlp_ii/porter_stemmer_lite.cpp",
+  "cpp/data-science/text_nlp_ii/textrank_lite.cpp",
+  "cpp/data-science/text_nlp_ii/tf_idf_bm25_comparison.cpp",
+  "cpp/data-science/bayesian_iii_approximate_inference/posterior_contraction_rate.cpp",
+  "cpp/data-science/bayesian_iii_approximate_inference/posterior_predictive_pvalue.cpp",
+  "cpp/data-science/bayesian_iii_approximate_inference/rhat_convergence_diagnostic.cpp",
+  "cpp/data-science/causal_inference_experimentation/propensity_score_matching.cpp",
+  "cpp/data-science/causal_inference_experimentation/regression_discontinuity.cpp",
+  "cpp/data-science/causal_inference_experimentation/synthetic_control_lite.cpp",
+  "cpp/data-science/experiments_ii/post_stratification_variance.cpp",
+  "cpp/data-science/experiments_ii/stratified_randomization.cpp",
+  "cpp/data-science/probability_iii/extreme_value_block_maxima.cpp",
+  "cpp/data-science/probability_iii/quantile_mapping_bias_correction.cpp",
+  "cpp/data-science/neural_networks_from_scratch/tiny_autoencoder.cpp",
+  "cpp/data-science/neural_networks_from_scratch/weight_initialization_comparison.cpp",
+  "cpp/data-science/applied_ds_practice/ewma_streaming_metrics.cpp",
+  "cpp/data-science/applied_ds_practice/feature_hashing_trick.cpp",
+  "cpp/data-science/applied_ds_practice/funnel_conversion_analysis.cpp",
+  "cpp/data-science/applied_ds_practice/rfm_customer_segmentation.cpp",
+  "cpp/data-science/applied_ds_practice/target_encoding_smoothing.cpp",
+  "cpp/data-science/signal_processing_sequences/fft_cooley_tukey.cpp",
+  "cpp/data-science/signal_processing_sequences/resampling_interpolation.cpp",
+  "cpp/data-science/information_theory_probability/entropy_estimators.cpp",
+  "cpp/data-science/streaming_sketches/online_covariance.cpp",
+  "cpp/data-science/streaming_sketches/online_sgd_classifier.cpp",
+  "cpp/data-science/streaming_sketches/p2_quantile_estimator.cpp",
+  "cpp/data-science/streaming_sketches/page_hinkley_drift.cpp",
+  "cpp/data-science/streaming_sketches/streaming_histogram_merge.cpp",
+  "cpp/data-science/streaming_sketches/streaming_kmeans.cpp",
+  "cpp/data-science/survival_reliability/exponential_reliability_mtbf.cpp",
+  "cpp/data-science/survival_reliability/weibull_mle.cpp",
+  "cpp/data-science/geospatial_spatial/point_in_polygon.cpp",
+  "cpp/data-science/geospatial_spatial/polygon_area_centroid.cpp",
+  "cpp/data-science/geospatial_spatial/quadtree_point_index.cpp",
+  "cpp/data-science/statistical_modeling/polynomial_regression.cpp",
+  "cpp/data-science/statistical_modeling/quantile_regression_pinball.cpp",
+  "cpp/data-science/time_series/walk_forward_validation.cpp",
+  "cpp/data-science/text_nlp/tfidf_vectorizer.cpp",
+  "cpp/data-science/text_nlp/viterbi_hmm.cpp",
+  "cpp/data-science/linear_algebra/power_iteration_shifted.cpp",
+  "cpp/data-science/linear_algebra/qr_gram_schmidt.cpp",
+  "cpp/data-science/recommenders_graph_sampling/pagerank_power_iteration.cpp",
+  "cpp/data-science/recommenders_graph_sampling/thompson_sampling_bandit.cpp",
+  "cpp/data-science/recommenders_graph_sampling/user_based_cf.cpp"
+ ],
+ "short": [
+  [
+   "go/programming/data_structures/avl_tree.go",
+   "AVLNode is a node class for AVL tree."
+  ],
+  [
+   "go/programming/reasoning/expression_evaluator.go",
+   "Token represents a single token."
+  ],
+  [
+   "go/programming/reasoning/sat_solver.go",
+   "Literal represents a Boolean literal."
+  ],
+  [
+   "go/programming/architecture/cqrs_bus.go",
+   "Command marker"
+  ],
+  [
+   "go/programming/performance/free_list_allocator.go",
+   "Block represents a memory block."
+  ],
+  [
+   "python/system-administration/time-clock-correctness/clock_skew_detect.py",
+   "Detect wall-clock backward jumps."
+  ],
+  [
+   "python/system-administration/time-clock-correctness/deadline_ttl.py",
+   "Check TTL expiration with deadline."
+  ],
+  [
+   "python/system-administration/time-clock-correctness/ntp_offset_check.py",
+   "Validate NTP offset is within bounds."
+  ],
+  [
+   "rust/networking-resilience/rendezvous_hash_hrw.rs",
+   "Seeded LCG for deterministic hashing"
+  ],
+  [
+   "rust/parsing-protocols/handshake_typestate_fsm.rs",
+   "Typestate markers"
+  ],
+  [
+   "cpp/data-science/data_wrangling_from_scratch/group_by_aggregate.cpp",
+   "Group-By Aggregation (Multi-Key)."
+  ],
+  [
+   "cpp/data-science/data_wrangling_from_scratch/hash_join_merge.cpp",
+   "Hash Join: Inner and Left Join."
+  ],
+  [
+   "cpp/data-science/preprocessing_eda/data_profiling_summary.cpp",
+   "Data Profiling Summary Pattern."
+  ],
+  [
+   "cpp/data-science/preprocessing_eda/histogram_builder.cpp",
+   "Histogram Builder Pattern."
+  ],
+  [
+   "cpp/data-science/ensembles_robust_methods/gradient_boosting_stumps.cpp",
+   "Gradient Boosting with Decision Stumps."
+  ],
+  [
+   "cpp/data-science/ensembles_robust_methods/huber_robust_regression.cpp",
+   "Huber Loss Robust Regression."
+  ],
+  [
+   "cpp/data-science/causal_inference_ii/doubly_robust_aipw.cpp",
+   "Inlined from doubly_robust_aipw.h"
+  ],
+  [
+   "cpp/data-science/causal_inference_ii/e_value_sensitivity.cpp",
+   "Inlined from e_value_sensitivity.h"
+  ],
+  [
+   "cpp/data-science/causal_inference_ii/stratification_subclassification.cpp",
+   "Logistic function."
+  ],
+  [
+   "cpp/data-science/optimization_distances/gradient_descent_momentum.cpp",
+   "Gradient Descent with Momentum"
+  ],
+  [
+   "cpp/data-science/optimization_distances/hill_climbing_restarts.cpp",
+   "Hill Climbing with Random Restarts"
+  ],
+  [
+   "cpp/data-science/numerical_methods/richardson_extrapolation.cpp",
+   "Planted: \u222b\u2080\u00b9 x\u00b3 dx = 1/4."
+  ],
+  [
+   "cpp/data-science/numerical_methods/rk4_ode_solver.cpp",
+   "Fourth-order Runge-Kutta ODE solver."
+  ],
+  [
+   "cpp/data-science/text_nlp_ii/soundex_phonetic.cpp",
+   "Soundex phonetic encoding."
+  ],
+  [
+   "cpp/data-science/probability_iii/stirling_approximation_error.cpp",
+   "Stirling's approximation for log(n!)."
+  ],
+  [
+   "cpp/data-science/applied_ds_practice/drift_detection_psi.cpp",
+   "Inlined from drift_detection_psi.h"
+  ],
+  [
+   "cpp/data-science/streaming_sketches/space_saving_heavy_hitters.cpp",
+   "Space-Saving top-k heavy hitters."
+  ],
+  [
+   "cpp/data-science/geospatial_spatial/spatial_radius_join.cpp",
+   "Radius join via grid bucketing."
+  ],
+  [
+   "cpp/data-science/time_series/rolling_zscore_anomaly.cpp",
+   "Rolling Z-Score Anomaly Detection."
+  ]
+ ],
+ "declstyle": [
+  [
+   "go/system-administration/sysadmin/append_only_audit.go",
+   "entry represents one append-only audit log entry."
+  ],
+  [
+   "go/programming/data_structures/avl_tree.go",
+   "AVLNode is a node class for AVL tree."
+  ],
+  [
+   "go/programming/networking/connection_pool.go",
+   "Connection represents a single connection with health tracking."
+  ],
+  [
+   "go/programming/async/async_task_queue.go",
+   "TaskStatus represents possible task statuses."
+  ],
+  [
+   "go/programming/io/arg_parser.go",
+   "Option represents a command-line option (flag or argument)."
+  ],
+  [
+   "go/programming/io/csv_validator.go",
+   "DataType represents supported data types for validation."
+  ],
+  [
+   "go/programming/reasoning/bayesian_network.go",
+   "CPT represents a Conditional Probability Table for a Bayesian Network node."
+  ],
+  [
+   "go/programming/reasoning/expression_evaluator.go",
+   "Token represents a single token."
+  ],
+  [
+   "go/programming/reasoning/sat_solver.go",
+   "Literal represents a Boolean literal."
+  ],
+  [
+   "go/programming/architecture/event_bus.go",
+   "Event represents a base event with a typed payload."
+  ],
+  [
+   "go/programming/architecture/event_sourcing_store.go",
+   "Event represents a domain event in the event store."
+  ],
+  [
+   "go/programming/monitoring/alert_manager.go",
+   "fakeNow is a deterministic clock for the self-test."
+  ],
+  [
+   "go/programming/performance/budget_allocator.go",
+   "BatchRequest represents a batched request with its identifier and arguments."
+  ],
+  [
+   "go/programming/performance/free_list_allocator.go",
+   "Block represents a memory block."
+  ]
+ ],
+ "syntax_bad": []
+}
