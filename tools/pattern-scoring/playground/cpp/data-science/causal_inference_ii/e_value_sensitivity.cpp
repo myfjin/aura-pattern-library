@@ -1,0 +1,83 @@
+// △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
+// ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
+static const char *_aura_mark = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO";
+/*
+E-value sensitivity analysis for unmeasured confounding: from an observed risk
+ratio it computes E = RR + sqrt(RR*(RR-1)), the minimum confounder-outcome and
+confounder-treatment association that could fully explain away the effect. Use
+to gauge how robust a causal claim is. Oracle: a strong 2x2 table (RR>2) gives
+an E-value both above 1.5 and more than 1.5x that of a weak table (RR<1.5),
+separating a robust association from a fragile one.
+*/
+#include <vector>
+static const std::vector<int> T_STRONG = {
+    0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,1,0,0,1,1,1,0,0,1,0,0,1,0,1,1,1,0,1,0,1,0,1,1,0,0,0,0,1,0,0,0,1,1,1,1,0,1,1,0,1,0,0,0,0,1,1,1,0,1,0,0,0,1,1,1,0,0,1,0,1,1,1,0,1,0,0,1,1,1,1,0,0,1,0,0,0,0,0,1,0,1,1,1,1,0,0,1,1,0,1,1,0,1,0,1,0,0,1,0,0,1,0,0,1,1,0,0,1,1,0,0,0,0,0,1,0,0,0,1,0,1,1,0,0,1,1,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,1,0,1,1,0,0,0,1,1,1,1,1,0,0,0,1,1,0,0,0,0,1,0,1,0,1,1,0,0,1,0
+};
+static const std::vector<int> Y_STRONG = {
+    1,0,0,0,0,0,1,0,1,0,1,0,0,0,0,0,1,0,0,1,0,1,1,0,1,0,0,1,0,0,0,1,0,1,1,0,0,0,1,0,1,1,0,0,0,0,0,0,0,0,1,0,1,1,0,1,1,0,0,1,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,1,1,1,1,0,0,0,0,0,1,1,0,0,1,1,0,1,0,0,0,0,0,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,0,0,1,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,1,1,1,0,0,0,0,1,0,0,0,1,0,1,0,0,1,1,0,0,0,1,0,0,1,0,1,0,0,0,0,0,1,1,0,1,0,0,0,1,1,0,0,0,1,1,0,0,0,0,1,0,1,1,0
+};
+static const std::vector<int> T_WEAK = {
+    1,1,1,1,0,1,0,0,1,1,0,0,1,0,0,0,0,0,0,1,0,1,1,0,1,1,1,0,0,0,0,1,0,0,1,0,0,0,1,0,1,1,1,1,1,0,1,1,1,0,1,1,0,1,1,0,1,0,1,1,1,0,0,0,0,1,0,0,0,1,1,1,1,1,0,0,1,1,0,1,1,0,1,1,1,1,0,1,0,1,1,1,0,1,1,1,0,1,0,0,1,0,0,1,0,1,0,0,1,1,1,0,1,1,1,1,1,1,1,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,1,0,0,0,1,0,0,1,1,1,0,0,0,0,1,0,0,1,1,1,0,1,0,1,1,0,1,1,1,0,1,0,1,1,1,1,1,1,0,0,1,1,0,1,1,1,0,1,1,0,1,0,1,1,1,1,1,0,0,0,0,1,1,0,1,1,1,0,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0,1,0,0,0,0,1,1,1,0,0,1,0,1,0,1,0,0,1,0,0,1,0,1,0,0,1,1,1,1,1,0,0,1,1,0,0,1,1,0,0,0,0,1,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,1,0,0,1,1
+};
+static const std::vector<int> Y_WEAK = {
+    0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,0,1,1,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,1,1,0,0,1,0,0,0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,1,0,0,0,1,1,0,0,1,0,1,0,1,1,1,0,0,0,1,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,1,0,0,0,1,1,0,0,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,1
+};
+#include <cassert>
+#include <cmath>
+#include <vector>
+#include <utility>
+#include <tuple>
+#include <limits>
+#include <iostream>
+
+double e_value(double rr) {
+    if (rr <= 1.0) return 1.0;
+    return rr + std::sqrt(rr * (rr - 1.0));
+}
+
+std::pair<double, double> risk_ratio_from_counts(int t1_y1, int t1_y0, int t0_y1, int t0_y0) {
+    double n_t1 = t1_y1 + t1_y0;
+    double n_t0 = t0_y1 + t0_y0;
+    double p_y1_t1 = n_t1 > 0.0 ? t1_y1 / n_t1 : 0.0;
+    double p_y1_t0 = n_t0 > 0.0 ? t0_y1 / n_t0 : 0.0;
+    if (p_y1_t0 == 0.0) return {std::numeric_limits<double>::infinity(), 0.0};
+    return {p_y1_t1 / p_y1_t0, 0.0};
+}
+
+std::tuple<int, int, int, int> build_2x2_table(const std::vector<int>& treatment, const std::vector<int>& outcome) {
+    int t1_y1 = 0, t1_y0 = 0, t0_y1 = 0, t0_y0 = 0;
+    for (size_t i = 0; i < treatment.size(); ++i) {
+        if (treatment[i] == 1) {
+            if (outcome[i] == 1) ++t1_y1; else ++t1_y0;
+        } else {
+            if (outcome[i] == 1) ++t0_y1; else ++t0_y0;
+        }
+    }
+    return {t1_y1, t1_y0, t0_y1, t0_y0};
+}
+
+int main() {
+    auto strong_counts = build_2x2_table(T_STRONG, Y_STRONG);
+    int t1_y1_s = std::get<0>(strong_counts);
+    int t1_y0_s = std::get<1>(strong_counts);
+    int t0_y1_s = std::get<2>(strong_counts);
+    int t0_y0_s = std::get<3>(strong_counts);
+    double rr_strong = std::get<0>(risk_ratio_from_counts(t1_y1_s, t1_y0_s, t0_y1_s, t0_y0_s));
+    double e_strong = e_value(rr_strong);
+
+    auto weak_counts = build_2x2_table(T_WEAK, Y_WEAK);
+    int t1_y1_w = std::get<0>(weak_counts);
+    int t1_y0_w = std::get<1>(weak_counts);
+    int t0_y1_w = std::get<2>(weak_counts);
+    int t0_y0_w = std::get<3>(weak_counts);
+    double rr_weak = std::get<0>(risk_ratio_from_counts(t1_y1_w, t1_y0_w, t0_y1_w, t0_y0_w));
+    double e_weak = e_value(rr_weak);
+
+    assert(rr_strong > 2.0);
+    assert(rr_weak < 1.5);
+    assert(e_strong > e_weak * 1.5);
+    assert(e_strong > 1.5);
+
+    std::cout << "PASS\n";
+    return 0;
+}

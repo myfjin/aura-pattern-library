@@ -1,0 +1,15 @@
+schema_version: '1.0'
+identity:
+  name: system-administration
+  being: collector
+  purpose: System Administration — 200 patterns / 20 subfolders
+director: false
+tags:
+- python
+- system-administration
+- verified
+memory:
+  created: '2026-07-12'
+  last_significant_change: '2026-07-12'
+  notable_events:
+  - '2026-07-12: semantic identity layer added (REQ-tag-library-folders)'

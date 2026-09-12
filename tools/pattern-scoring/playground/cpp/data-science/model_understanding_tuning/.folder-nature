@@ -1,0 +1,16 @@
+schema_version: '1.0'
+identity:
+  name: model_understanding_tuning
+  being: collector
+  purpose: Model Understanding & Tuning — 10 patterns
+director: false
+tags:
+- cpp
+- data-science
+- model-understanding-tuning
+- verified
+memory:
+  created: '2026-07-12'
+  last_significant_change: '2026-07-12'
+  notable_events:
+  - '2026-07-12: semantic identity layer added (REQ-tag-library-folders)'

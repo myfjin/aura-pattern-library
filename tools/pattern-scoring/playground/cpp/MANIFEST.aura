@@ -1,0 +1,2059 @@
+{
+  "manifest_version": 1,
+  "trademark": "AURA Pattern Library",
+  "created": "2026-07-18",
+  "algorithm": "ed25519",
+  "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
+  "files": [
+    {
+      "path": ".folder-mark.yaml",
+      "sha256": "db1c188ea0e884826594be4dc45f1d5c85451b82e4b488c0ced305bb226de2a4",
+      "bytes": 89
+    },
+    {
+      "path": ".folder-nature",
+      "sha256": "9f3fa3bc9b8a8749b60f903a95d8e3c2e912e06cc7cddf3658cdf5476ef9f9fc",
+      "bytes": 313
+    },
+    {
+      "path": "data-science/.folder-nature",
+      "sha256": "987a7824ee555afd51f4b5c891736b587da914eea53ecbdc5e53397e2284570c",
+      "bytes": 347
+    },
+    {
+      "path": "data-science/applied_ds_practice/.folder-nature",
+      "sha256": "6a2514a1e143f9d97a6a0c8ab695da502ac09fdb651d61cb9f707948359fcfe0",
+      "bytes": 366
+    },
+    {
+      "path": "data-science/applied_ds_practice/cohort_retention_analysis.cpp",
+      "sha256": "58d7f70c1d7fad51442175a596c269facdd3a67f79ac823ea1d94927ea441c1b",
+      "bytes": 7523
+    },
+    {
+      "path": "data-science/applied_ds_practice/cross_validation_leakage.cpp",
+      "sha256": "9b50b4fce79408e82a2ea3ad0ec1effe392eb4e8269c2d87dc02e5bb446b4732",
+      "bytes": 11367
+    },
+    {
+      "path": "data-science/applied_ds_practice/drift_detection_psi.cpp",
+      "sha256": "cc99bde437f6adfcb236e03d90ed5add6e75049983f253e5841e6b852648e0f1",
+      "bytes": 46607
+    },
+    {
+      "path": "data-science/applied_ds_practice/ewma_streaming_metrics.cpp",
+      "sha256": "e2ffe4bc954c746c14111505a94fb44ecc8a4e41dd2eb63c4b404b4df14f5ddf",
+      "bytes": 6743
+    },
+    {
+      "path": "data-science/applied_ds_practice/feature_hashing_trick.cpp",
+      "sha256": "584564b0181c0d8d2a7ba0bb6d2cb642cc0e6f37ae14c78bfe14c4fe4398e915",
+      "bytes": 26420
+    },
+    {
+      "path": "data-science/applied_ds_practice/funnel_conversion_analysis.cpp",
+      "sha256": "53b204732461b1fb668e68f6fe5c915dadc6685799698fa305f66d55fcd43a03",
+      "bytes": 7571
+    },
+    {
+      "path": "data-science/applied_ds_practice/rfm_customer_segmentation.cpp",
+      "sha256": "3cc9be3ceba8aedf2aa54ba92382ceb476aad4a6ede5cb1159770de440055a9d",
+      "bytes": 9976
+    },
+    {
+      "path": "data-science/applied_ds_practice/simpsons_paradox_demo.cpp",
+      "sha256": "d8e98c43c6373ad638d705cb8a42d6cce2d261a9776d4b3c9ff2bcfce23b9b56",
+      "bytes": 6100
+    },
+    {
+      "path": "data-science/applied_ds_practice/target_encoding_smoothing.cpp",
+      "sha256": "11afb9a1cd156aa121f1f9743a20d9b76b0c8388044c07bcc8c7aea3ed0f3daa",
+      "bytes": 9855
+    },
+    {
+      "path": "data-science/applied_ds_practice/welford_online_stats.cpp",
+      "sha256": "ae62148d1125ca8cc1c6312893d2733443cde9f6221d0e0c2bc74f720af42538",
+      "bytes": 6622
+    },
+    {
+      "path": "data-science/bayesian_iii_approximate_inference/.folder-nature",
+      "sha256": "71678975d329e62cade1b3306f4ce43b4b946277a6e435a20d4d492f0cc23d84",
+      "bytes": 411
+    },
+    {
+      "path": "data-science/bayesian_iii_approximate_inference/abc_rejection_sampler.cpp",
+      "sha256": "e41a25463fafadc2e7e54bf58da5386b4b6a7600532b32a7026fd3ba77575688",
+      "bytes": 7396
+    },
+    {
+      "path": "data-science/bayesian_iii_approximate_inference/bayes_factor_normal_means.cpp",
+      "sha256": "385bab5154b40eb4d5e0f0360f6d93c29274726a25d18d498194da1a583c5fd2",
+      "bytes": 6166
+    },
+    {
+      "path": "data-science/bayesian_iii_approximate_inference/elbo_monotone_vi.cpp",
+      "sha256": "b719bbf083e4576e42b9619b224b063e5da95df040746c5cb636f6008821391d",
+      "bytes": 6755
+    },
+    {
+      "path": "data-science/bayesian_iii_approximate_inference/hierarchical_shrinkage_2level.cpp",
+      "sha256": "067fe2b99f2b5c678f2017fcac43d84479cce8b0737cfcc1423e2c44f8bdaf93",
+      "bytes": 6557
+    },
+    {
+      "path": "data-science/bayesian_iii_approximate_inference/laplace_approximation_posterior.cpp",
+      "sha256": "3f385260cb32fc655385ca7f56226f8e734b469fb53e4ea5fe75a31df25f06da",
+      "bytes": 7012
+    },
+    {
+      "path": "data-science/bayesian_iii_approximate_inference/meanfield_vi_gaussian.cpp",
+      "sha256": "73f4dce9b985eeb0c471518eaaa0fb1ef4b7336e3146aa0cac71ffdf96bad3c7",
+      "bytes": 7054
+    },
+    {
+      "path": "data-science/bayesian_iii_approximate_inference/posterior_contraction_rate.cpp",
+      "sha256": "a9254f93b600e47ef32591c436f92313105268eba786b690f3abc52f75ecc40e",
+      "bytes": 5572
+    },
+    {
+      "path": "data-science/bayesian_iii_approximate_inference/posterior_predictive_pvalue.cpp",
+      "sha256": "31543ab520d0bc2fc954f57d2000bc471ef5428b603ef47a96cc09fa2e09ab46",
+      "bytes": 6039
+    },
+    {
+      "path": "data-science/bayesian_iii_approximate_inference/rhat_convergence_diagnostic.cpp",
+      "sha256": "9fae919de42c3ad03339bfbec2325e5ed0160855c6a6fdcdc5705e65b4561c4f",
+      "bytes": 6772
+    },
+    {
+      "path": "data-science/bayesian_iii_approximate_inference/sbc_rank_uniformity.cpp",
+      "sha256": "fbe9e0a70615188db5a10f1bb6713f995cbe508ace43fddb8d3894817c1ef237",
+      "bytes": 6800
+    },
+    {
+      "path": "data-science/bayesian_iii_modeling_selection/.folder-nature",
+      "sha256": "882ecf88058601a1a8d47a0f225a6bb40586d2bcfbeaf4ba5f7b544f6217dd30",
+      "bytes": 407
+    },
+    {
+      "path": "data-science/bayesian_iii_modeling_selection/bayesian_changepoint_offline.cpp",
+      "sha256": "2ea7ed7236c1b2ac91185d358bc99f77ca7590305d064501021294d6a53930c4",
+      "bytes": 6315
+    },
+    {
+      "path": "data-science/bayesian_iii_modeling_selection/bayesian_linreg_conjugate.cpp",
+      "sha256": "d99ab33d60f25a6338c58d4ca58f22ac054976547dfc359e00a8fe9c41ddaff2",
+      "bytes": 6314
+    },
+    {
+      "path": "data-science/bayesian_iii_modeling_selection/beta_binomial_overdispersion.cpp",
+      "sha256": "badb25eeaed37c206ba45501295d21fa8addca5c83ab3f116ef0c69859d9499f",
+      "bytes": 8026
+    },
+    {
+      "path": "data-science/bayesian_iii_modeling_selection/bic_selects_true_degree.cpp",
+      "sha256": "cf7be027f6c609a043002e6b25fbc8d8cf0df0a513a06d0ddcf3b516da671385",
+      "bytes": 8134
+    },
+    {
+      "path": "data-science/bayesian_iii_modeling_selection/crp_table_growth.cpp",
+      "sha256": "39eaf3c1b368e319c810ec88e47151853ef9d03a08c26f6def02bdad1a67ed2d",
+      "bytes": 5852
+    },
+    {
+      "path": "data-science/bayesian_iii_modeling_selection/dirichlet_multinomial_posterior.cpp",
+      "sha256": "0a91db86bb138a2997ede99f3687aa4b4bbdf2ba845e9e40885dc9d5a77e2798",
+      "bytes": 5692
+    },
+    {
+      "path": "data-science/bayesian_iii_modeling_selection/dirichlet_stick_breaking.cpp",
+      "sha256": "4d8c5fe5819e9e6bbd8f7cb9e64843f172b4fdf43e382a505eb7f9c7dd5c7c0c",
+      "bytes": 5923
+    },
+    {
+      "path": "data-science/bayesian_iii_modeling_selection/evidence_ranks_true_model.cpp",
+      "sha256": "44e5e3b90eae9e6ef2df423465ee0a9d85ba1e3a5115ef38350d666123698a17",
+      "bytes": 6386
+    },
+    {
+      "path": "data-science/bayesian_iii_modeling_selection/gp_regression_marginal_likelihood.cpp",
+      "sha256": "9a93f0eb2efe02546d558fe1aae7483d7a380ed46e05f6fa794e882cea2333c6",
+      "bytes": 7391
+    },
+    {
+      "path": "data-science/bayesian_iii_modeling_selection/kalman_rts_smoother.cpp",
+      "sha256": "739f95cbb066dff4cbd6385d5dbd11a53aac2658e4606500cf086998a4987211",
+      "bytes": 6605
+    },
+    {
+      "path": "data-science/causal_inference_experimentation/.folder-nature",
+      "sha256": "f95b0251f265b2459f17da2712752bf2ac654b96b397ca5056ed20cc3944a77b",
+      "bytes": 405
+    },
+    {
+      "path": "data-science/causal_inference_experimentation/ab_test_srm_check.cpp",
+      "sha256": "8b3ef0d9d80ea16bf23023d43aedb49f901d067267eb4cb1817c8df43bae4673",
+      "bytes": 7911
+    },
+    {
+      "path": "data-science/causal_inference_experimentation/cuped_variance_reduction.cpp",
+      "sha256": "6330ed00cc235d2a3704de7bb60bbac16fb63d9d072328a8a109f54356c71d12",
+      "bytes": 5929
+    },
+    {
+      "path": "data-science/causal_inference_experimentation/difference_in_differences.cpp",
+      "sha256": "d9816dc9e0d4ca80dbcce76017f1ab6a49c14d8168315309a6b1d096afdac44b",
+      "bytes": 6387
+    },
+    {
+      "path": "data-science/causal_inference_experimentation/instrumental_variable_lite.cpp",
+      "sha256": "e845c05dd999add61c84930ff39a36a121080c403db22f7e6255e692f94bee35",
+      "bytes": 23278
+    },
+    {
+      "path": "data-science/causal_inference_experimentation/interrupted_time_series.cpp",
+      "sha256": "c043d8c3fade14dde3a66619a00ab78ee9c4455bea99e833520be07e2ece5504",
+      "bytes": 8829
+    },
+    {
+      "path": "data-science/causal_inference_experimentation/placebo_test_causal.cpp",
+      "sha256": "4b1c0eb66b0f1bcb909cd4a5c2b92186ded95b66700f9402f194a60214781ee1",
+      "bytes": 6281
+    },
+    {
+      "path": "data-science/causal_inference_experimentation/propensity_score_matching.cpp",
+      "sha256": "f12637c2bf8c49fe8d3ba7f034722b5f3ac0502a1d1567d173bd55b2465b53d3",
+      "bytes": 8199
+    },
+    {
+      "path": "data-science/causal_inference_experimentation/regression_discontinuity.cpp",
+      "sha256": "a85952dc6679d9742ff156186d017b4a7e7af976a4a91563ea0f8d65d0201041",
+      "bytes": 7362
+    },
+    {
+      "path": "data-science/causal_inference_experimentation/sequential_probability_ratio.cpp",
+      "sha256": "067b65e88380ca6abd393bb8e59b23896b2ecf79e4818decd0d75375ae13e6b9",
+      "bytes": 7289
+    },
+    {
+      "path": "data-science/causal_inference_experimentation/synthetic_control_lite.cpp",
+      "sha256": "07a85981e5d20581ab79fe32d57520a75889f1222fd186d88f72bcfaf6962f8d",
+      "bytes": 7993
+    },
+    {
+      "path": "data-science/causal_inference_ii/.folder-nature",
+      "sha256": "03cd83df3c6bd685187bb6e486228976f1ac9563ce29e6406d0e74fa827b2cf9",
+      "bytes": 366
+    },
+    {
+      "path": "data-science/causal_inference_ii/backdoor_vs_collider_adjustment.cpp",
+      "sha256": "e06d56945d8f2fc5eb0669dc989e5ebb06645d3581bc732250b3033d201df82b",
+      "bytes": 8736
+    },
+    {
+      "path": "data-science/causal_inference_ii/caliper_matching.cpp",
+      "sha256": "e1fde954b12c57aa06f92194339f2cf2f060def8f1c6c1b2c0fe6520b32b182b",
+      "bytes": 7986
+    },
+    {
+      "path": "data-science/causal_inference_ii/doubly_robust_aipw.cpp",
+      "sha256": "77861ebe96dd5531cc3c4eaf2ac93f0cb96a05955a0035b94bc11d438b4d6699",
+      "bytes": 32327
+    },
+    {
+      "path": "data-science/causal_inference_ii/e_value_sensitivity.cpp",
+      "sha256": "233e01b5e46f500db837903d4cbb8ec6a84e675e4c431c8a20dc9c1317a71b50",
+      "bytes": 8723
+    },
+    {
+      "path": "data-science/causal_inference_ii/frontdoor_criterion_lite.cpp",
+      "sha256": "49b851efa3e885192528ffb66687193702c5e3e5762724ec5f3495840a7154ca",
+      "bytes": 19972
+    },
+    {
+      "path": "data-science/causal_inference_ii/heterogeneous_effects_subgroups.cpp",
+      "sha256": "b6a07252559d21728c1d8b827119eb7ec722e7a88a4c78b0fe1b60203bbd845d",
+      "bytes": 6323
+    },
+    {
+      "path": "data-science/causal_inference_ii/ipw_ate.cpp",
+      "sha256": "0089f1d8cc95615277d981e71f13fd82555f4b02cdea75d15b31de1422f3f50a",
+      "bytes": 16329
+    },
+    {
+      "path": "data-science/causal_inference_ii/mediation_effects_decomposition.cpp",
+      "sha256": "e9fb692cbc30cd65a06151968a2ef45768e27b5ad7ffaa5081560f13a4a3dba1",
+      "bytes": 7832
+    },
+    {
+      "path": "data-science/causal_inference_ii/negative_control_outcome.cpp",
+      "sha256": "8d3f58bdbafbdbe05244534479ffb51477070085b3a4e42c53bc47daf132d70c",
+      "bytes": 26189
+    },
+    {
+      "path": "data-science/causal_inference_ii/stratification_subclassification.cpp",
+      "sha256": "4caa7b5b5373537883d28487145150ed6a52ecf890c2d17c2ddf4e90a19246c9",
+      "bytes": 8104
+    },
+    {
+      "path": "data-science/clustering_graph_anomaly/.folder-nature",
+      "sha256": "4e0b1e7049a6d44c72c1889ef94ced7c001da5d72fd589ab844c247215174310",
+      "bytes": 384
+    },
+    {
+      "path": "data-science/clustering_graph_anomaly/betweenness_centrality.cpp",
+      "sha256": "9ce9d6606cbd31af07dbed4ed2cc78b3748bcb0f5549a6ce6b57f119174eec1b",
+      "bytes": 8065
+    },
+    {
+      "path": "data-science/clustering_graph_anomaly/classic_mds.cpp",
+      "sha256": "859f4337030835b5736746fc8ff3ea1be34ff76770c5580c226b90953097ec50",
+      "bytes": 9550
+    },
+    {
+      "path": "data-science/clustering_graph_anomaly/dbscan_clustering.cpp",
+      "sha256": "3b716f9babf2d1a96abf3e82edc1617b3f8b052babf246276b81de00dbbfaf16",
+      "bytes": 6978
+    },
+    {
+      "path": "data-science/clustering_graph_anomaly/elbow_method_kmeans.cpp",
+      "sha256": "390066330b1c3608f47281b797bd1e2fe3cacaac490936aabc266372402e401a",
+      "bytes": 11779
+    },
+    {
+      "path": "data-science/clustering_graph_anomaly/hierarchical_agglomerative.cpp",
+      "sha256": "e51e9c43f7d7edc5366b3040eca988f8ca2a98fb857120a7800e14462ff9a8f4",
+      "bytes": 7644
+    },
+    {
+      "path": "data-science/clustering_graph_anomaly/isolation_tree_anomaly.cpp",
+      "sha256": "37f1ac1c2a371f6b0cf05cd83b4b6ce38e4934f0d9ed73fd75bb7b404b8bb683",
+      "bytes": 8148
+    },
+    {
+      "path": "data-science/clustering_graph_anomaly/label_propagation_communities.cpp",
+      "sha256": "67ddcb9fd42135ef18fb26978a4d8d41924d7fb3a2befdd310a78c43ac6cb439",
+      "bytes": 6697
+    },
+    {
+      "path": "data-science/clustering_graph_anomaly/linear_discriminant_analysis.cpp",
+      "sha256": "dbb83afdd2534426d16fc921ded7694d59d04586d0579f95c1f9bdf3879ded17",
+      "bytes": 8563
+    },
+    {
+      "path": "data-science/clustering_graph_anomaly/random_projection_jl.cpp",
+      "sha256": "61790cfca35455fdbc8895a77e80ac9b9b30eda9e5867e7ebcf5c7298c6926fb",
+      "bytes": 7581
+    },
+    {
+      "path": "data-science/clustering_graph_anomaly/silhouette_score.cpp",
+      "sha256": "7445c623562640f64b1c49b9e54edfc7d728245957d837cfa5660c0cb9460729",
+      "bytes": 7692
+    },
+    {
+      "path": "data-science/composed_tools_bridge_born/.folder-nature",
+      "sha256": "068d981dd08ea1a011aff05eec0bec76863d8a0dab994744a06678260b07ca1e",
+      "bytes": 389
+    },
+    {
+      "path": "data-science/composed_tools_bridge_born/broker_term_extraction.cpp",
+      "sha256": "932ad1b4f70928f355dcc99c32ebf3517e6ac2805b88a003fe5d8e1444e593da",
+      "bytes": 9694
+    },
+    {
+      "path": "data-science/composed_tools_bridge_born/dedup_pipeline.cpp",
+      "sha256": "129c6f0661c47ff70dc46393cd504371d46203042940feeff53f6f47df61c1c6",
+      "bytes": 11802
+    },
+    {
+      "path": "data-science/composed_tools_bridge_born/dtw_shape_drift_monitor.cpp",
+      "sha256": "2c0e115b24131627e4ea738d27a4c7c8777062a47bb209e2650f309a99ab7683",
+      "bytes": 23448
+    },
+    {
+      "path": "data-science/composed_tools_bridge_born/kde_seeded_gmm.cpp",
+      "sha256": "3c1c70187d5d87b87fd5bf030f50d8e0957b60076f3338b73694df57a7a06d9d",
+      "bytes": 22850
+    },
+    {
+      "path": "data-science/composed_tools_bridge_born/knn_kdtree_accelerated.cpp",
+      "sha256": "45f939af6a47b1af6de0423a40b5d1dbb212fcfa7fff58f496c5d19140399783",
+      "bytes": 8583
+    },
+    {
+      "path": "data-science/composed_tools_bridge_born/latency_percentile_monitor.cpp",
+      "sha256": "0f59df611201c582b55bda40f882627d1ae1cceb69a7e61a4370466f74908361",
+      "bytes": 9175
+    },
+    {
+      "path": "data-science/composed_tools_bridge_born/mutual_information_matrix.cpp",
+      "sha256": "75382e9cc0eded9467467b4e50c776d0826058774147f0a7b001ae33dfb3789b",
+      "bytes": 156597
+    },
+    {
+      "path": "data-science/composed_tools_bridge_born/queue_capacity_planner.cpp",
+      "sha256": "fe92eb0a2ed459b9e271040fa961b0805b3a4ced21cbfc5f175b2262ae7abaa1",
+      "bytes": 7991
+    },
+    {
+      "path": "data-science/composed_tools_bridge_born/rare_event_option_pricing.cpp",
+      "sha256": "d229c01055c3f4cc5643cff0278997184bdd63d63d3fb66907b698648930829a",
+      "bytes": 6802
+    },
+    {
+      "path": "data-science/composed_tools_bridge_born/walk_forward_early_stopping.cpp",
+      "sha256": "207b4178ee284eff780a2c6cad1808f50e312fadb98e352a069eb174d0142f1d",
+      "bytes": 8824
+    },
+    {
+      "path": "data-science/core_ml/.folder-nature",
+      "sha256": "4a464b93725174121abf207c0812308206e551a47ee2c5d8c7f14b742c16fe65",
+      "bytes": 330
+    },
+    {
+      "path": "data-science/core_ml/decision_tree_id3.cpp",
+      "sha256": "49d39ff69e6a2a284a134bf5030f6edcfecd563078d9d2d7a9c2c8cc38fedc1e",
+      "bytes": 9555
+    },
+    {
+      "path": "data-science/core_ml/gaussian_mixture_em.cpp",
+      "sha256": "33632aa033085157128b17dd86808a0e001bf1c8c213c2a46179c3ebe5d7c844",
+      "bytes": 9341
+    },
+    {
+      "path": "data-science/core_ml/kmeans_clustering.cpp",
+      "sha256": "8ef61d07fd15a78fb10b0a4db2ea349f4ea69636dc0c96b253676de1789734e6",
+      "bytes": 7719
+    },
+    {
+      "path": "data-science/core_ml/knn_classifier.cpp",
+      "sha256": "5bc065814a1f895d8cfa97d9d36795c939aecef7baab5ac8f224fe51a0c14a12",
+      "bytes": 6333
+    },
+    {
+      "path": "data-science/core_ml/linear_regression_gd.cpp",
+      "sha256": "808e934182cfbb25e5f89feef083827e55c7944e1bf8c71988ee7dfc4aacd763",
+      "bytes": 8279
+    },
+    {
+      "path": "data-science/core_ml/logistic_regression.cpp",
+      "sha256": "ed5aeee86f4e7facd426050bc50d989db1e70b6a183d08ad89ba1b4f77c4be6f",
+      "bytes": 8011
+    },
+    {
+      "path": "data-science/core_ml/naive_bayes_text.cpp",
+      "sha256": "d1aa1dd741aa0b7274161b3dbe4c51c2674b630402210bede8aa9cd905b9e70e",
+      "bytes": 7954
+    },
+    {
+      "path": "data-science/core_ml/pca_power_iteration.cpp",
+      "sha256": "01ce066a24f2d0bc91c4a87533ae86f16a98309cffc7c9dcde2647ba006b57be",
+      "bytes": 8892
+    },
+    {
+      "path": "data-science/core_ml/perceptron.cpp",
+      "sha256": "7b8e4d5a3ed8ac869c33839f6a2a2828e34dcd0489ff31d9f9a9dcf25d7ebd3b",
+      "bytes": 6760
+    },
+    {
+      "path": "data-science/core_ml/ridge_regression_normal_eq.cpp",
+      "sha256": "9c3138acce12bbf62eb7d06ea96aa19edf90af61ec81e119e0d9a6192f677b81",
+      "bytes": 7887
+    },
+    {
+      "path": "data-science/data_wrangling_from_scratch/.folder-nature",
+      "sha256": "18d215343caa05f83c56dbc8909837189730cefced4ce9057004458645c9d402",
+      "bytes": 390
+    },
+    {
+      "path": "data-science/data_wrangling_from_scratch/csv_type_inference.cpp",
+      "sha256": "f6d547d20fa5a685f80ceba7638845c22e67ea5496ea453bfca255f04293260c",
+      "bytes": 6847
+    },
+    {
+      "path": "data-science/data_wrangling_from_scratch/dedupe_records_fuzzy.cpp",
+      "sha256": "8a8fde74b6ad1ec67a05544f8d15060110137f329a54d1dbf6c3e63a943038d0",
+      "bytes": 7678
+    },
+    {
+      "path": "data-science/data_wrangling_from_scratch/group_by_aggregate.cpp",
+      "sha256": "deb50902f202b9c722b08df42d59a4f6290e30b95542b72054af511a36fb7235",
+      "bytes": 8014
+    },
+    {
+      "path": "data-science/data_wrangling_from_scratch/hash_join_merge.cpp",
+      "sha256": "3a7cf46885550f202f61e4515ad9443d3641ea4b3549fb4bda63718e0646681c",
+      "bytes": 8882
+    },
+    {
+      "path": "data-science/data_wrangling_from_scratch/melt_unpivot.cpp",
+      "sha256": "509c02db6ebe565ae2000d81c050663bb393941dde404f2076949b45ef669041",
+      "bytes": 5553
+    },
+    {
+      "path": "data-science/data_wrangling_from_scratch/pivot_table.cpp",
+      "sha256": "c70e836ec1b05ea8fbca2483aac20762f0de243e060ef6a56a3f961818662c9b",
+      "bytes": 6354
+    },
+    {
+      "path": "data-science/data_wrangling_from_scratch/resample_timeseries_bins.cpp",
+      "sha256": "f45ebac3385f07e0e540f1553175b63daef9a10bf2cff2f4753913f6217592a1",
+      "bytes": 7238
+    },
+    {
+      "path": "data-science/data_wrangling_from_scratch/rolling_join_asof.cpp",
+      "sha256": "8eb7044d566d5605854f4f114f420834391e6dedd172404d5edd9a202da121be",
+      "bytes": 7346
+    },
+    {
+      "path": "data-science/data_wrangling_from_scratch/sort_multi_key.cpp",
+      "sha256": "a223f80a1eb3ec4084860855766aa1d6d2c20d7a3a1eb48faa1ecddfdef283e0",
+      "bytes": 5378
+    },
+    {
+      "path": "data-science/data_wrangling_from_scratch/window_functions.cpp",
+      "sha256": "4f5ad02e2a421b7bb0358f36393690f9a6d4c604d9614a6324832eefc7772e08",
+      "bytes": 6727
+    },
+    {
+      "path": "data-science/econometrics_finance/.folder-nature",
+      "sha256": "05a07bcd4f2937cb000478a32e4bcd6984e7f6e3e4445f42869c2f2b8f65218c",
+      "bytes": 371
+    },
+    {
+      "path": "data-science/econometrics_finance/black_scholes_monte_carlo.cpp",
+      "sha256": "203f56a34d8558e2992e12c7651336294aa4e8615fe339d4f5e7f87540c4d503",
+      "bytes": 6431
+    },
+    {
+      "path": "data-science/econometrics_finance/bootstrap_portfolio_var.cpp",
+      "sha256": "e6a3d55b3513a9983a08199c73d35a8b33913d81ef5685fa8300679a4d50f77b",
+      "bytes": 6890
+    },
+    {
+      "path": "data-science/econometrics_finance/cointegration_engle_granger_lite.cpp",
+      "sha256": "1a6fe85c56f844a8f74f5bbf2eba7f8a6c9fd7033710dcbf784e6cc0e790940f",
+      "bytes": 7642
+    },
+    {
+      "path": "data-science/econometrics_finance/fixed_effects_within.cpp",
+      "sha256": "675312e0f449de85169c631b42f8d2b03e48eed78a94e534780e9248853c82a6",
+      "bytes": 11837
+    },
+    {
+      "path": "data-science/econometrics_finance/garch_lite_volatility_clustering.cpp",
+      "sha256": "5972abcf1b9fe860d686f5fb8ff5b603fe7ebf53d3931ddeaa12ee1860849dde",
+      "bytes": 16144
+    },
+    {
+      "path": "data-science/econometrics_finance/instrumental_2sls.cpp",
+      "sha256": "6f162856d7045263b6d5a4f96d1d32de4e94b816fbe221e2825b114cf52b3fa4",
+      "bytes": 19262
+    },
+    {
+      "path": "data-science/econometrics_finance/logit_marginal_effects.cpp",
+      "sha256": "4ea686ac2dc9235302fca0b947ec190d216af965845a68d27046feace9eec46f",
+      "bytes": 6635
+    },
+    {
+      "path": "data-science/econometrics_finance/ols_robust_se_white.cpp",
+      "sha256": "de1466265806c0b79485811ff6a8f9aebab76b0a69c1ec9b0d6eab97a2ebd3e5",
+      "bytes": 7976
+    },
+    {
+      "path": "data-science/econometrics_finance/sharpe_sortino_ratios.cpp",
+      "sha256": "63186faef75860a84c130c6615586746b0e28639b7a4de834b6609a50a6c9284",
+      "bytes": 5751
+    },
+    {
+      "path": "data-science/econometrics_finance/value_averaging_vs_dca.cpp",
+      "sha256": "50f8a6527feea1132ec9561bb0a45bb5a1c14f69929236d3cc0ab49fb799065e",
+      "bytes": 6004
+    },
+    {
+      "path": "data-science/ensembles_robust_methods/.folder-nature",
+      "sha256": "302c06c89ca08e076c8c51c9c466dae879c2efb5d741014b0f34275d5fb44a55",
+      "bytes": 383
+    },
+    {
+      "path": "data-science/ensembles_robust_methods/adaboost.cpp",
+      "sha256": "0c67e9b452fcc93d3601351492fffe080f8ae904911a2031de8e0b33a5dcae71",
+      "bytes": 10469
+    },
+    {
+      "path": "data-science/ensembles_robust_methods/bagging_variance_reduction.cpp",
+      "sha256": "ae60a7cbb72fe1aab0b6d34c2f10b4739a63969b34b8bc88ca3c49341e0c7f24",
+      "bytes": 9152
+    },
+    {
+      "path": "data-science/ensembles_robust_methods/gradient_boosting_stumps.cpp",
+      "sha256": "2cb6e7c470ac47570fdede021c3f68d8c0cdb180fcc3f03a1d84d3440ccfb94b",
+      "bytes": 9658
+    },
+    {
+      "path": "data-science/ensembles_robust_methods/huber_robust_regression.cpp",
+      "sha256": "35e06d4c93fe51fb23f95dd63b50f3a40a02af3579fbb6a798b48f71735b2069",
+      "bytes": 9571
+    },
+    {
+      "path": "data-science/ensembles_robust_methods/random_forest.cpp",
+      "sha256": "5892c00a4a184c46f78ffa55f14188c91c3dc8b9f22c18ef697d2c0b581f141c",
+      "bytes": 11212
+    },
+    {
+      "path": "data-science/ensembles_robust_methods/ransac_robust_regression.cpp",
+      "sha256": "9b2fc038062fa0cb9d9238cb61c442724150777b9fdd26676d85291154b6e1ef",
+      "bytes": 7629
+    },
+    {
+      "path": "data-science/ensembles_robust_methods/spectral_clustering_lite.cpp",
+      "sha256": "896df0a2f2cb1bdcd5be6e110eb1955bde63ccabfdbc944bd40dbbb4ddbf69de",
+      "bytes": 10667
+    },
+    {
+      "path": "data-science/ensembles_robust_methods/stacking_ensemble.cpp",
+      "sha256": "d8028a137de75df66b3dd9675cd2ce3adf321d5f2a64f5d24a10750af087d182",
+      "bytes": 11451
+    },
+    {
+      "path": "data-science/ensembles_robust_methods/theil_sen_estimator.cpp",
+      "sha256": "560015231250280d472f89b696b62661dd15dc5c66492f9fa69e4ec47b954ab6",
+      "bytes": 7386
+    },
+    {
+      "path": "data-science/ensembles_robust_methods/voting_classifier.cpp",
+      "sha256": "4260db368dc506a7316ca91b247dc4f1d65b8ddd020ee86a91bc81865cf6b50e",
+      "bytes": 8630
+    },
+    {
+      "path": "data-science/experiments_ii/.folder-nature",
+      "sha256": "958bac0016f1baaf998d3201f8310414b86400ae43a42cac6fe83c4d03198210",
+      "bytes": 351
+    },
+    {
+      "path": "data-science/experiments_ii/cluster_randomized_icc.cpp",
+      "sha256": "21d581a6d1d85a19eb3fde5a3c94b350e8617a97ed1c463a99be893cf63aca5e",
+      "bytes": 8196
+    },
+    {
+      "path": "data-science/experiments_ii/minimum_detectable_effect.cpp",
+      "sha256": "e8e5314085ad2a9f506ed3b1f285830eae1e6d52aee299c297c60ce777798cfb",
+      "bytes": 6279
+    },
+    {
+      "path": "data-science/experiments_ii/msprt_lite.cpp",
+      "sha256": "1c7a35c6bb1bce8a6330490d9c8bb1484cd42c827bdc88a7a86cd2421dc18cc9",
+      "bytes": 6487
+    },
+    {
+      "path": "data-science/experiments_ii/multi_armed_holm_correction.cpp",
+      "sha256": "7cb3be161a07bb4318fb02bfbd70f191fbeccbd97217cc89b39c38222f23b467",
+      "bytes": 6660
+    },
+    {
+      "path": "data-science/experiments_ii/network_interference_demo.cpp",
+      "sha256": "a1a4e987c5512d37319814db7c7f907507eb31f5f679c683c47d57ed4ac47f2d",
+      "bytes": 6772
+    },
+    {
+      "path": "data-science/experiments_ii/novelty_effect_decay.cpp",
+      "sha256": "60f62cb93a5e2f15ada872c2a4c56376823aa67a64fa852cf196b3c4ea40b75e",
+      "bytes": 6142
+    },
+    {
+      "path": "data-science/experiments_ii/peeking_alpha_inflation.cpp",
+      "sha256": "5b6ac1d2aa32d3e8bc828591f30bcb2f6c06637c58a7731c6c0bb725e9b0d930",
+      "bytes": 10978
+    },
+    {
+      "path": "data-science/experiments_ii/post_stratification_variance.cpp",
+      "sha256": "ddfad3d4daaf7b227d37d72b73995bab9141b30760d6f21ce64642d791a2b2d1",
+      "bytes": 18583
+    },
+    {
+      "path": "data-science/experiments_ii/stratified_randomization.cpp",
+      "sha256": "56b28d180470d2e454dc82931bd9874d9d4a151bfc7c951ecf3a96833ceaba06",
+      "bytes": 8047
+    },
+    {
+      "path": "data-science/experiments_ii/switchback_experiment_lite.cpp",
+      "sha256": "26e33d1e40cb0c71426cafd72b2f80ab03886aa5dac6c62f24766073954a3744",
+      "bytes": 6287
+    },
+    {
+      "path": "data-science/fairness_privacy_robustness/.folder-nature",
+      "sha256": "609a0fde36aa2bae4f11498e88df49a346c32ab5e4c6c41c20c8af234c4fc50b",
+      "bytes": 393
+    },
+    {
+      "path": "data-science/fairness_privacy_robustness/adversarial_perturbation_lite.cpp",
+      "sha256": "bd16ab320df5c052be95d32f4cf116e5112b78df55e1b3d7d3705347dc9571d1",
+      "bytes": 6598
+    },
+    {
+      "path": "data-science/fairness_privacy_robustness/covariate_shift_reweighting.cpp",
+      "sha256": "53efaad380c41195cc5d469a3a730d893aaf2af308bd085e5c7fdb67a5858a7f",
+      "bytes": 24266
+    },
+    {
+      "path": "data-science/fairness_privacy_robustness/demographic_parity_metrics.cpp",
+      "sha256": "31cf3d5125538de337cb58f67d84bc716955e7ce87eb1aee7153124f92da80eb",
+      "bytes": 5741
+    },
+    {
+      "path": "data-science/fairness_privacy_robustness/differential_privacy_laplace.cpp",
+      "sha256": "6ab5874a667d2ba30ba89aae3669418a49001f84cffb715861fcd283f71530f1",
+      "bytes": 5454
+    },
+    {
+      "path": "data-science/fairness_privacy_robustness/equalized_odds_thresholds.cpp",
+      "sha256": "c6efee2a5693be3dcd15751f545c82668330c72a201113be60d53079cd81601a",
+      "bytes": 5670
+    },
+    {
+      "path": "data-science/fairness_privacy_robustness/group_calibration_audit.cpp",
+      "sha256": "eb6c1a9f09e3dfd80202d68e9230479653d35849811dd8eeac36b6e58665231b",
+      "bytes": 6494
+    },
+    {
+      "path": "data-science/fairness_privacy_robustness/k_anonymity_generalization.cpp",
+      "sha256": "34558cc5ccd731bb422b821524513a8a0c38d5a631644edeaab3d9ce54f046a1",
+      "bytes": 7248
+    },
+    {
+      "path": "data-science/fairness_privacy_robustness/label_noise_robust_loss.cpp",
+      "sha256": "099b7fc3667c1c6cdc719e063c9bfb7f932b29302ac74103de71156b4fecaa39",
+      "bytes": 6551
+    },
+    {
+      "path": "data-science/fairness_privacy_robustness/mnar_missingness_bias.cpp",
+      "sha256": "4558908a9b9bbba91a57933070d65a697de3d748823f9858a816238568986ce6",
+      "bytes": 5713
+    },
+    {
+      "path": "data-science/fairness_privacy_robustness/randomized_response.cpp",
+      "sha256": "96b41958052b307a08e7887a1b68e7138b48c4dc10dd2d5e5c12e5e266610c3b",
+      "bytes": 5528
+    },
+    {
+      "path": "data-science/geospatial_spatial/.folder-nature",
+      "sha256": "c27a979ad8a33380fde98f6d3e70d1a79ab4be32817f9269a50db91c99946088",
+      "bytes": 365
+    },
+    {
+      "path": "data-science/geospatial_spatial/convex_hull_graham.cpp",
+      "sha256": "41d25a6c62dec54235172156fabd51294cd11a7840ae6817821c691ce3a1472b",
+      "bytes": 7431
+    },
+    {
+      "path": "data-science/geospatial_spatial/douglas_peucker.cpp",
+      "sha256": "5cbd2b3fd0ba3d08833f1915b2aa9f118203c017f157043a98d10da5e08f13f8",
+      "bytes": 6974
+    },
+    {
+      "path": "data-science/geospatial_spatial/geohash_encode_decode.cpp",
+      "sha256": "d32784374e20d6e175dadb39ddb259cfab82eb4480637b321fefed153d5fb8fc",
+      "bytes": 7282
+    },
+    {
+      "path": "data-science/geospatial_spatial/great_circle_waypoints.cpp",
+      "sha256": "5402afd6988d2c61870f58ecc4096e04a2fab0c66cfa1b8fdfdde0ecef135a22",
+      "bytes": 7806
+    },
+    {
+      "path": "data-science/geospatial_spatial/grid_density_binning.cpp",
+      "sha256": "f31c5948010eac66e212c57886af7a595a1ce30aaf2e3fc12a0c2fc09791d794",
+      "bytes": 6946
+    },
+    {
+      "path": "data-science/geospatial_spatial/haversine_bearing.cpp",
+      "sha256": "c25947554375f1816562aea1e9f81e50bf38e663031c74333c9154f1b5bf2b7f",
+      "bytes": 5976
+    },
+    {
+      "path": "data-science/geospatial_spatial/point_in_polygon.cpp",
+      "sha256": "27df91d7a6c9d5a449c1797615f95a3f8eb63c961dca50473a62b33a501a83ee",
+      "bytes": 6176
+    },
+    {
+      "path": "data-science/geospatial_spatial/polygon_area_centroid.cpp",
+      "sha256": "06f482234a26752ce68c0ecec2516fc1ee7458838ecd254d04ee04e226c39b12",
+      "bytes": 6926
+    },
+    {
+      "path": "data-science/geospatial_spatial/quadtree_point_index.cpp",
+      "sha256": "50f3759496a838dc8726c5880b164a328ab91a438f35268849dc6375a1bd9121",
+      "bytes": 8985
+    },
+    {
+      "path": "data-science/geospatial_spatial/spatial_radius_join.cpp",
+      "sha256": "f94c1679da6a4543b64729b7c7cf64f6bd2f3542a9cb80ed3096ee0676aa6dc1",
+      "bytes": 7594
+    },
+    {
+      "path": "data-science/information_theory_probability/.folder-nature",
+      "sha256": "c6718e7bd59d6af29bb1e199d04d7081aae09095154f892b01e515aa855fe41b",
+      "bytes": 401
+    },
+    {
+      "path": "data-science/information_theory_probability/bayes_diagnostic_test.cpp",
+      "sha256": "e0ccd2a2fb2d1bbba3c46911066db668e1c8913188a13c4b56f1250701ae81ec",
+      "bytes": 7383
+    },
+    {
+      "path": "data-science/information_theory_probability/box_muller_gaussian.cpp",
+      "sha256": "9e1a80ef39b876b364afc0014f34f35d69f0613572501e79fb7e396ff2d328b0",
+      "bytes": 8654
+    },
+    {
+      "path": "data-science/information_theory_probability/conjugate_priors.cpp",
+      "sha256": "5b9caf4b50b3bed5020d5981fec865788948f7f0da321c732f87a6bb94695c9b",
+      "bytes": 8985
+    },
+    {
+      "path": "data-science/information_theory_probability/entropy_estimators.cpp",
+      "sha256": "cfc0b62c39d02654783b84b5d9f781e8822b4db713bdd7f444d0748031155442",
+      "bytes": 7020
+    },
+    {
+      "path": "data-science/information_theory_probability/hmm_forward_backward.cpp",
+      "sha256": "4b6ae118bc2da8337380337485fbf8c9ec09cb044d909de6671690e468400277",
+      "bytes": 8014
+    },
+    {
+      "path": "data-science/information_theory_probability/inverse_transform_sampling.cpp",
+      "sha256": "f45522357af92b1c4d08529289606b9ebedfcd98bfd65d9033656317cb64577c",
+      "bytes": 7295
+    },
+    {
+      "path": "data-science/information_theory_probability/kl_divergence_cross_entropy.cpp",
+      "sha256": "8fc25a2f369a3b900f1fe18cbf807c269b11c312f490ff802a6c9551ee4c464c",
+      "bytes": 6388
+    },
+    {
+      "path": "data-science/information_theory_probability/lln_clt_demo.cpp",
+      "sha256": "8a55d4dacd690ffed38c915b5fee74dbf5077ce2d2fd51eeb5aa191bfbd30a12",
+      "bytes": 7851
+    },
+    {
+      "path": "data-science/information_theory_probability/markov_chain_stationary.cpp",
+      "sha256": "a614c3d50623aec1416cdca8e6a3d7dd23e936dc49a98f61227e609167a502f1",
+      "bytes": 7224
+    },
+    {
+      "path": "data-science/information_theory_probability/nonlinear_dependence_mi.cpp",
+      "sha256": "3f8115c0bd8a2e8d8d4781a9bb4db45e9f4a61dfd6c5ee57f83b2d715646e40f",
+      "bytes": 10215
+    },
+    {
+      "path": "data-science/linear_algebra/.folder-nature",
+      "sha256": "8e6e0c9c142a5692f639baa1f8082d7c824c402c82285f874e887fb599e39e93",
+      "bytes": 351
+    },
+    {
+      "path": "data-science/linear_algebra/conjugate_gradient.cpp",
+      "sha256": "a3a4db7b2b66c7284f0b6287144d149b173e56f017db5dbcf1517e741e7dcbdc",
+      "bytes": 6632
+    },
+    {
+      "path": "data-science/linear_algebra/gauss_seidel_vs_jacobi.cpp",
+      "sha256": "bf89193121fb01a92b23bbaa2a5c22f1c52dc4790b961fad196d3dd307de1269",
+      "bytes": 6656
+    },
+    {
+      "path": "data-science/linear_algebra/householder_reflection.cpp",
+      "sha256": "0c7cf315349f0b35d4cd8cdd0ba0b59368a68e3c016767e72f245d9751395fd1",
+      "bytes": 5678
+    },
+    {
+      "path": "data-science/linear_algebra/jacobi_eigen_symmetric.cpp",
+      "sha256": "64cd3dca6db459e8529a6fc8693687c9130cfb2fa9edb6312d0e7d5ff293511e",
+      "bytes": 7555
+    },
+    {
+      "path": "data-science/linear_algebra/least_squares_qr.cpp",
+      "sha256": "0d7474e8e023bc658634d08db3bfe06131fbc6a4988fd3df34c16b8a80b660f4",
+      "bytes": 6420
+    },
+    {
+      "path": "data-science/linear_algebra/lu_decomposition_pivoting.cpp",
+      "sha256": "0d6cf1c68a7cea845c1e80e3d8d363e20d83419d626ea619431b373de9b4b7cf",
+      "bytes": 6580
+    },
+    {
+      "path": "data-science/linear_algebra/matrix_condition_number.cpp",
+      "sha256": "ec074e18166aa090480f36276ad5a2f67dedf474a6e06f3e0014ff27867471ed",
+      "bytes": 6349
+    },
+    {
+      "path": "data-science/linear_algebra/power_iteration_shifted.cpp",
+      "sha256": "785e07ac82991b13486f81159842f2634f8411f74eff530a4cc6b1396bac5dfd",
+      "bytes": 6790
+    },
+    {
+      "path": "data-science/linear_algebra/qr_gram_schmidt.cpp",
+      "sha256": "aef3f2f85dcd94dff06e73a5bc62eb3533177681039f3b3550ae5920f4e84f83",
+      "bytes": 6830
+    },
+    {
+      "path": "data-science/linear_algebra/woodbury_rank1_update.cpp",
+      "sha256": "8cbd31a2a38ef5fff5d500f814bfc8301fc4a057e24124f27ad7a5d5d4299dcb",
+      "bytes": 6684
+    },
+    {
+      "path": "data-science/model_diagnostics/.folder-nature",
+      "sha256": "e939907c115d2e1456f82a76ddf3252783f70db42703748b6fd5108b77800da9",
+      "bytes": 360
+    },
+    {
+      "path": "data-science/model_diagnostics/bias_variance_decomposition.cpp",
+      "sha256": "57328d3a9f8947023208fec6c5bc36fb10c793e9a7b92837827de58183eb372f",
+      "bytes": 10462
+    },
+    {
+      "path": "data-science/model_diagnostics/bootstrap_model_comparison.cpp",
+      "sha256": "6242ea123fd48e7daa57beeca2c8e62eeae9cd37525e3cc8ffa6641d6cd2688d",
+      "bytes": 7354
+    },
+    {
+      "path": "data-science/model_diagnostics/calibration_curve.cpp",
+      "sha256": "43edc43a32c5dc98acbc941a4c50631c69a4295c278b9cb89aaa1fd038bbd5bb",
+      "bytes": 8763
+    },
+    {
+      "path": "data-science/model_diagnostics/gaussian_naive_bayes.cpp",
+      "sha256": "361bfddae3b2a5eb6c61bb10a82bb4b9ee1ce71d4b870cb280a1c3313f805968",
+      "bytes": 14734
+    },
+    {
+      "path": "data-science/model_diagnostics/learning_curve.cpp",
+      "sha256": "26798b92d28c1252d5ca5b6944f762c7bf7add63f2ce67c354dc11195f767a42",
+      "bytes": 6993
+    },
+    {
+      "path": "data-science/model_diagnostics/lift_gain_chart.cpp",
+      "sha256": "674ca18206a8d878dd70614f93bf28c1397329d1787da78dc762fa3af0d7fc2f",
+      "bytes": 7562
+    },
+    {
+      "path": "data-science/model_diagnostics/precision_recall_curve.cpp",
+      "sha256": "1d7225e14a0952be91abf66ab6161e3df1657542e5039fd41d0a3032890c72a3",
+      "bytes": 9153
+    },
+    {
+      "path": "data-science/model_diagnostics/rank_correlation.cpp",
+      "sha256": "c1f1b14103cb617d95392ee94e50626dfe1ae0f13f9de5faed40691b611780fb",
+      "bytes": 7489
+    },
+    {
+      "path": "data-science/model_diagnostics/residual_analysis.cpp",
+      "sha256": "260dfe5fccca6c8f180541f1034d5947c720ac7d3cf39dd23e06fe3f648117eb",
+      "bytes": 8990
+    },
+    {
+      "path": "data-science/model_diagnostics/ucb_bandit.cpp",
+      "sha256": "da24c6f934838141ff6f3894435f7e8cd61507603d9264061f6becd7766b288e",
+      "bytes": 6580
+    },
+    {
+      "path": "data-science/model_understanding_tuning/.folder-nature",
+      "sha256": "812f817a71125220bac4b84dbd2128af334fa682d5bd4cdc9338c6aeec99c207",
+      "bytes": 389
+    },
+    {
+      "path": "data-science/model_understanding_tuning/class_weight_imbalance.cpp",
+      "sha256": "6c31dbc9773051d359e58444fafbcb06cd9d9bc5f6790deb190718b0efd027c8",
+      "bytes": 8619
+    },
+    {
+      "path": "data-science/model_understanding_tuning/conformal_prediction_intervals.cpp",
+      "sha256": "ecf001fc3e85ed2a789db2e9d10d534977df9bc438e4a8c3bf868f7f44181511",
+      "bytes": 7908
+    },
+    {
+      "path": "data-science/model_understanding_tuning/grid_vs_random_search.cpp",
+      "sha256": "4ed93b1df0d6ed6046a42347f9137d25fe0b1dbf3793f939b6f0677bc6586c6f",
+      "bytes": 7396
+    },
+    {
+      "path": "data-science/model_understanding_tuning/model_persistence_roundtrip.cpp",
+      "sha256": "3b9798427fed7e2ab1613eaa57503e7eb7b3d5d4644b22f39d98bc746e794707",
+      "bytes": 8268
+    },
+    {
+      "path": "data-science/model_understanding_tuning/partial_dependence_data.cpp",
+      "sha256": "50f4da7de4f3deb2aade675efc6414ebab04405e935422f95897642b6758ac26",
+      "bytes": 8931
+    },
+    {
+      "path": "data-science/model_understanding_tuning/permutation_feature_importance.cpp",
+      "sha256": "0e584a8428805104c29ea6dfde00adc5eaeaf9eb8f53aeaab4931e2ea12b3c50",
+      "bytes": 7715
+    },
+    {
+      "path": "data-science/model_understanding_tuning/platt_scaling_calibration.cpp",
+      "sha256": "2e64d50a69df5ec093678616bef2a0de6d591eab49c433bfe2b504ee1bc3c938",
+      "bytes": 7279
+    },
+    {
+      "path": "data-science/model_understanding_tuning/shapley_value_sampling.cpp",
+      "sha256": "f647c6734c6169e0c78c456f5a01fab2931f8d285ffcbc64d973b2499146766e",
+      "bytes": 7206
+    },
+    {
+      "path": "data-science/model_understanding_tuning/successive_halving.cpp",
+      "sha256": "5304a9fa80b485d38fa1babd4c877988f0cc7adc9e133da07299ff91f6d4486c",
+      "bytes": 6981
+    },
+    {
+      "path": "data-science/model_understanding_tuning/threshold_tuning_cost.cpp",
+      "sha256": "fbf91f793e38a74f85173bc70813e9df8e09eb5ae1b59f046d9caf9326b6f2f2",
+      "bytes": 12380
+    },
+    {
+      "path": "data-science/neural_networks_from_scratch/.folder-nature",
+      "sha256": "d89aa061740d19ae56c264480ff060e900c75d0da50d8e6ed9ea1dd319cc1a78",
+      "bytes": 393
+    },
+    {
+      "path": "data-science/neural_networks_from_scratch/conv1d_feature_detector.cpp",
+      "sha256": "9f011fbe96f5e76cdfcd20249a6d3516c75e71337120a47cc55c04b1875f014a",
+      "bytes": 8698
+    },
+    {
+      "path": "data-science/neural_networks_from_scratch/dropout_regularization_sim.cpp",
+      "sha256": "4610b940868849f77bbb39c350bf29c5fd91d34e5decb2876980a8574f02f1e8",
+      "bytes": 343837
+    },
+    {
+      "path": "data-science/neural_networks_from_scratch/early_stopping.cpp",
+      "sha256": "866a7a7eb0bba7ef84e640d8821613d1cc608cb436e4c048868b822b060f97e2",
+      "bytes": 18865
+    },
+    {
+      "path": "data-science/neural_networks_from_scratch/learning_rate_schedules.cpp",
+      "sha256": "21736bae25de31dde71b980ae60d2524342ee7fc5b1f6bfee90f4e5314440ca0",
+      "bytes": 8285
+    },
+    {
+      "path": "data-science/neural_networks_from_scratch/mlp_backprop.cpp",
+      "sha256": "8aedc303216519e21630040375c76b66563aa619b4ebff18471767f4fbedf2f4",
+      "bytes": 7516
+    },
+    {
+      "path": "data-science/neural_networks_from_scratch/numerical_gradient_check.cpp",
+      "sha256": "352c69371f76f81d1418a28760b5d4972a6696fe1c781c7c1370fe030ba5b3fd",
+      "bytes": 9262
+    },
+    {
+      "path": "data-science/neural_networks_from_scratch/softmax_regression.cpp",
+      "sha256": "4db0648db05ab68a70f6b1244220795fb1ee7f579030f6b222ff21ff5ec9e97d",
+      "bytes": 8002
+    },
+    {
+      "path": "data-science/neural_networks_from_scratch/tiny_autoencoder.cpp",
+      "sha256": "01ca33eedcdc5320ff8f17df339f7635452ffbcd828a208a9f326e7174f9fcf1",
+      "bytes": 10305
+    },
+    {
+      "path": "data-science/neural_networks_from_scratch/weight_initialization_comparison.cpp",
+      "sha256": "e39108897353bcb37dcadfb24800f3c1f960115e10a6095e6c1a72a5fe3439a5",
+      "bytes": 9985
+    },
+    {
+      "path": "data-science/neural_networks_from_scratch/word2vec_skipgram.cpp",
+      "sha256": "fa8f9391b3fee5676d8f146b11d543795ca55e97e0bda4a429ecc697b79df0e4",
+      "bytes": 7558
+    },
+    {
+      "path": "data-science/numerical_methods/.folder-nature",
+      "sha256": "dc9d3076d396b0329b5f9d05ffa97f137787335941df079b6bc202795ac2a2ce",
+      "bytes": 360
+    },
+    {
+      "path": "data-science/numerical_methods/adaptive_simpson.cpp",
+      "sha256": "fc9da5fb2e9f135fa8257542d24a2028fa984ee826f97046b1b0c3e3a6931afd",
+      "bytes": 6160
+    },
+    {
+      "path": "data-science/numerical_methods/bisection_newton_hybrid.cpp",
+      "sha256": "c00ac11d1216b2a37d54fc48a11f82d719797961b2f886378a974b93acfe73a2",
+      "bytes": 5845
+    },
+    {
+      "path": "data-science/numerical_methods/cubic_spline_interpolation.cpp",
+      "sha256": "79b59ca0d6144cb156cc460077a309a17fc47437a4a2c54b2b2f53626d41e0b7",
+      "bytes": 6297
+    },
+    {
+      "path": "data-science/numerical_methods/euler_vs_rk4_error_order.cpp",
+      "sha256": "6b44dfa98365a6247f490b974697dd168065bdb019f074add824f62135f23976",
+      "bytes": 5926
+    },
+    {
+      "path": "data-science/numerical_methods/fixed_point_iteration.cpp",
+      "sha256": "b9b1ade9e421827ec32c943b56354de45b33522609e0178e28062710adffaeec",
+      "bytes": 4775
+    },
+    {
+      "path": "data-science/numerical_methods/gauss_legendre_quadrature_lite.cpp",
+      "sha256": "005c95ced570f91106316abb133c6b703a2755666cbe4dfac44663cfd1188342",
+      "bytes": 5170
+    },
+    {
+      "path": "data-science/numerical_methods/richardson_extrapolation.cpp",
+      "sha256": "123c6f1905d01805645c516185e87e3b17bf6a7a7d2e275aeb3bf126d9767e83",
+      "bytes": 5998
+    },
+    {
+      "path": "data-science/numerical_methods/rk4_ode_solver.cpp",
+      "sha256": "202c8e7253f731d096ecf35b80d91439d082440fecb37d6d6663ef9c6186442e",
+      "bytes": 5808
+    },
+    {
+      "path": "data-science/numerical_methods/romberg_integration.cpp",
+      "sha256": "26d7d3aa7ed481780cb7460b8b669256a583eee63b15d5f975c9b21f055ee786",
+      "bytes": 5218
+    },
+    {
+      "path": "data-science/numerical_methods/secant_method.cpp",
+      "sha256": "4671950e54da98ce343f7105266e8b27282c0c2116022c08fca30650a8b77742",
+      "bytes": 5062
+    },
+    {
+      "path": "data-science/optimization_distances/.folder-nature",
+      "sha256": "0b82d5a6cac279ce9d12397612c685ee15d2ab98eb53d15d5b40b6fae09bc2ff",
+      "bytes": 377
+    },
+    {
+      "path": "data-science/optimization_distances/distance_metrics_toolkit.cpp",
+      "sha256": "76d45b535d01a5446c8687dd15d5945394f289e948b979f505939f8d7f99d172",
+      "bytes": 7464
+    },
+    {
+      "path": "data-science/optimization_distances/dtw_dynamic_time_warping.cpp",
+      "sha256": "e9ae9c7b051d04dcbbc6906dc5f61f734e324dd6f9a8f4c12682fb04edd568f0",
+      "bytes": 7326
+    },
+    {
+      "path": "data-science/optimization_distances/epsilon_greedy_bandit.cpp",
+      "sha256": "468bf4e42a41e1d4db2e8bd49bb544e562bc07cab5e3f915d15460237c3124f0",
+      "bytes": 9310
+    },
+    {
+      "path": "data-science/optimization_distances/feature_scaling_toolkit.cpp",
+      "sha256": "ed90e07914df33a25bcc55b6dfc41bd2c0231433ffbf4f891102545a7ea027b6",
+      "bytes": 6909
+    },
+    {
+      "path": "data-science/optimization_distances/genetic_algorithm.cpp",
+      "sha256": "22d1c3c61178f16ece97db12908cc7dca95b558c6c4d90fbe0d8ef58dd8cbe32",
+      "bytes": 8006
+    },
+    {
+      "path": "data-science/optimization_distances/gradient_descent_momentum.cpp",
+      "sha256": "44717c21727ba2b467a0d4f077c9bb6ac512f1a9cf22d8fef0f6bd487f0316e1",
+      "bytes": 6294
+    },
+    {
+      "path": "data-science/optimization_distances/hill_climbing_restarts.cpp",
+      "sha256": "c54ab52a43b9969c67976ad86ba57b1e3bd816f959436fcd59f38429262cc41e",
+      "bytes": 7221
+    },
+    {
+      "path": "data-science/optimization_distances/mahalanobis_distance.cpp",
+      "sha256": "168b7a3f9812344ac844345d3750e75742d72e905c2c0e5b3e94c2661ccd2a90",
+      "bytes": 7054
+    },
+    {
+      "path": "data-science/optimization_distances/newton_method_optimization.cpp",
+      "sha256": "919e7de64070cccedd5f343c7a001f07570bb0216db7517a9274f7a494305ff5",
+      "bytes": 5929
+    },
+    {
+      "path": "data-science/optimization_distances/simulated_annealing.cpp",
+      "sha256": "973d4af82f643e17aaffbae22d95b39be16589e85bd89aa81c05f76650584f0d",
+      "bytes": 6643
+    },
+    {
+      "path": "data-science/preprocessing_eda/.folder-nature",
+      "sha256": "792a6effe3f976e6f3a7a5b85658d2fa3bd91ebee957cfc3651460f0576a805a",
+      "bytes": 362
+    },
+    {
+      "path": "data-science/preprocessing_eda/covariance_matrix.cpp",
+      "sha256": "e66ff1f6baca166438e9081c9eb716036f1717e0388657678080ff41337d657f",
+      "bytes": 7325
+    },
+    {
+      "path": "data-science/preprocessing_eda/data_profiling_summary.cpp",
+      "sha256": "9875ac9b601c9dc5a2391361843f4b00f0334942fe6819b1d3c902e95d2a16e2",
+      "bytes": 9357
+    },
+    {
+      "path": "data-science/preprocessing_eda/histogram_builder.cpp",
+      "sha256": "ce5a9369d71bfaefb6bf68b3791b3c0f7cd6af911aa6791cfafec0270e960f2c",
+      "bytes": 6872
+    },
+    {
+      "path": "data-science/preprocessing_eda/missing_value_imputation.cpp",
+      "sha256": "320ee5c48a909fff9b0c6fabe443507bb493432c799875d763dc6201e3ea7c42",
+      "bytes": 7033
+    },
+    {
+      "path": "data-science/preprocessing_eda/one_hot_encoding.cpp",
+      "sha256": "a46c7b7b616d01d9bd4a3f283530812e144d05c10e9dd7bdfad41a4c0b0adf4b",
+      "bytes": 7422
+    },
+    {
+      "path": "data-science/preprocessing_eda/pearson_correlation_matrix.cpp",
+      "sha256": "c92479881ad2e11e3280c362db00e16bdd559fa422e4b76b7fbe59a8cf6b12c6",
+      "bytes": 6204
+    },
+    {
+      "path": "data-science/preprocessing_eda/quantile_binning.cpp",
+      "sha256": "a96801495e8943afe70d9e5b25472f747d15e524038dae399fb3e04f4e7414b9",
+      "bytes": 7504
+    },
+    {
+      "path": "data-science/preprocessing_eda/random_oversampling_balance.cpp",
+      "sha256": "16278853cd9c5514079c40d46437c78083299b090e13d975ed59aee16731d68f",
+      "bytes": 8310
+    },
+    {
+      "path": "data-science/preprocessing_eda/three_way_stratified_split.cpp",
+      "sha256": "2baba332c90ba03a05f9dcf7718c6f1693c8195284550f699aa9e65e12da95fc",
+      "bytes": 9061
+    },
+    {
+      "path": "data-science/preprocessing_eda/winsorize_clip_outliers.cpp",
+      "sha256": "fcab5892c13b755cff2d0275736b8b62e5f8f4a69ca8e65dfef8f8098115624e",
+      "bytes": 7022
+    },
+    {
+      "path": "data-science/probabilistic_modeling_bayes_ii/.folder-nature",
+      "sha256": "31f383ee4ff5914af3626782060d8dbb63049133714d6b2186dbbccb2ca1cdc9",
+      "bytes": 403
+    },
+    {
+      "path": "data-science/probabilistic_modeling_bayes_ii/bayesian_linear_regression.cpp",
+      "sha256": "33c488bbf5e888cb97976ebb7f0815260263d9324c12163d435aba98f19094b2",
+      "bytes": 7393
+    },
+    {
+      "path": "data-science/probabilistic_modeling_bayes_ii/bayesian_two_segment_changepoint.cpp",
+      "sha256": "89045c5019331be5661c908b2f147e879eb1c8901e8fdcd6f54911d6143c4e15",
+      "bytes": 7917
+    },
+    {
+      "path": "data-science/probabilistic_modeling_bayes_ii/dirichlet_multinomial.cpp",
+      "sha256": "0c76263845826622022baa840063d0af616f6200263f0b25e50e70e21b7ef742",
+      "bytes": 7480
+    },
+    {
+      "path": "data-science/probabilistic_modeling_bayes_ii/empirical_bayes_shrinkage.cpp",
+      "sha256": "42b3f9554a4dc5ee6281b5475079a3d114cc8459c2bf123ee48a43cba90fa532",
+      "bytes": 229688
+    },
+    {
+      "path": "data-science/probabilistic_modeling_bayes_ii/gamma_poisson_conjugate.cpp",
+      "sha256": "e375ea45714c115ea6c7cfa41b9f14c23a83a4d34a1e2790fc094a8dba3fce4d",
+      "bytes": 7547
+    },
+    {
+      "path": "data-science/probabilistic_modeling_bayes_ii/gaussian_process_lite.cpp",
+      "sha256": "bd3940462cab525231f3e0d6d7dec77d73507f2bcacf61eb27706b0cc662f1f6",
+      "bytes": 8311
+    },
+    {
+      "path": "data-science/probabilistic_modeling_bayes_ii/hmm_baum_welch.cpp",
+      "sha256": "173e3c825ada7b4eee8b4a730534730821482235cc90e57afbec4377f4a3e929",
+      "bytes": 13964
+    },
+    {
+      "path": "data-science/probabilistic_modeling_bayes_ii/particle_filter_1d.cpp",
+      "sha256": "765842883036ca9d1106e38a871c00982766bbc6144b28e79888b6b1b65962f4",
+      "bytes": 10415
+    },
+    {
+      "path": "data-science/probabilistic_modeling_bayes_ii/rejection_sampling.cpp",
+      "sha256": "1beb343d787ea1ad81cb28a86e616178348fe388811556958a39c91e9eb49f36",
+      "bytes": 6789
+    },
+    {
+      "path": "data-science/probabilistic_modeling_bayes_ii/rts_kalman_smoother.cpp",
+      "sha256": "23d2beb3d6ec15bf30daec25365b0d7aad4f6f52f1f95fd1d186ad4e59ee7789",
+      "bytes": 7332
+    },
+    {
+      "path": "data-science/probability_iii/.folder-nature",
+      "sha256": "e5ae9d08ce33e99ad49ab68a6fdd3ebfeaecaca70b355678facd6e0397829aec",
+      "bytes": 354
+    },
+    {
+      "path": "data-science/probability_iii/banach_matchbox_or_gambler_ruin.cpp",
+      "sha256": "7231797a8a86894dea71339c2e6b36bb30873ec2d2c7f64c80cd3963b50980cb",
+      "bytes": 6421
+    },
+    {
+      "path": "data-science/probability_iii/benford_law_test.cpp",
+      "sha256": "76334e5ea3be43a4a5cc1aca6209b4dff3bd272d2dbb52d753bceb099983125e",
+      "bytes": 6322
+    },
+    {
+      "path": "data-science/probability_iii/birthday_paradox_exact_vs_sim.cpp",
+      "sha256": "be2265702449afe0dfe569cd15a3ca2d54f95d7689d95390b9fb63ac17083825",
+      "bytes": 5707
+    },
+    {
+      "path": "data-science/probability_iii/copula_gaussian_lite.cpp",
+      "sha256": "632e2b5bcdef7b4d4b01aade728956bd8f1633c4f99a47b784f98c5a08aa7161",
+      "bytes": 6580
+    },
+    {
+      "path": "data-science/probability_iii/coupon_collector.cpp",
+      "sha256": "d43b5e15aa375bf4cc47dbd8a47a0e272893e75519280b4f724ba5cef56d2c25",
+      "bytes": 5385
+    },
+    {
+      "path": "data-science/probability_iii/extreme_value_block_maxima.cpp",
+      "sha256": "a8937ac728e97b44eb688d40df10a1756cad9f8d8dd7e52fb3248712c3d6c4d0",
+      "bytes": 6395
+    },
+    {
+      "path": "data-science/probability_iii/inclusion_exclusion_derangements.cpp",
+      "sha256": "f7f4437f466e1a261ef9a5555ebec784fce2ff351c8c6e0d790c8fe44315e747",
+      "bytes": 5227
+    },
+    {
+      "path": "data-science/probability_iii/polya_urn_reinforcement.cpp",
+      "sha256": "234a591c2cefcd55008cb63e79870ba8f0f2993285d84c4d4c82857b1eac8b07",
+      "bytes": 5841
+    },
+    {
+      "path": "data-science/probability_iii/quantile_mapping_bias_correction.cpp",
+      "sha256": "86e4f4f92f2d5521c7f4beeaeea8f11f8ee0f992b80aacce2724850b5ec2c714",
+      "bytes": 6292
+    },
+    {
+      "path": "data-science/probability_iii/stirling_approximation_error.cpp",
+      "sha256": "6ab36ea01f4d36872f8b778fee3ed2ce8683b5b16bec7cff1b19fc45ca326e9c",
+      "bytes": 5601
+    },
+    {
+      "path": "data-science/rankings_information_retrieval/.folder-nature",
+      "sha256": "90e250d8aa7c90b462240f1737c3604264a7eccefed04a0dd3508c0e82822f68",
+      "bytes": 401
+    },
+    {
+      "path": "data-science/rankings_information_retrieval/ab_interleaving.cpp",
+      "sha256": "dfe1ab78a85bbf34fa36e8582fa15e3305b3f0238c3028b11948b3c5041e3a27",
+      "bytes": 8149
+    },
+    {
+      "path": "data-science/rankings_information_retrieval/bm25_ranking.cpp",
+      "sha256": "9b97dca3d2586c375ee49268fdb85e405cb7fdd7692d5bac9c7bcf2d5c323351",
+      "bytes": 8166
+    },
+    {
+      "path": "data-science/rankings_information_retrieval/elo_rating.cpp",
+      "sha256": "b695317b20fb6da0366252ad117dcee92d363d5343543cef5f4187da6f0b2d75",
+      "bytes": 6051
+    },
+    {
+      "path": "data-science/rankings_information_retrieval/inverted_index_search.cpp",
+      "sha256": "88913f25a71f8019402d03fbf5d771b3ba6f93996dc2ab8caa2d452d941a5a7a",
+      "bytes": 7155
+    },
+    {
+      "path": "data-science/rankings_information_retrieval/mean_reciprocal_rank.cpp",
+      "sha256": "86dd3bdac7a9f6816550cb692250ebdd2fc53258431a936490aa48942a00338e",
+      "bytes": 6233
+    },
+    {
+      "path": "data-science/rankings_information_retrieval/ndcg_evaluation.cpp",
+      "sha256": "fdd144efab238d9b4b073573da83accee9827db573c48bb77edd7f5d0c2fcb03",
+      "bytes": 5458
+    },
+    {
+      "path": "data-science/rankings_information_retrieval/pairwise_ranking_learn.cpp",
+      "sha256": "996d52cab0df3b627836e70e206a02c8d9cbef924dba1d3293ed38132d8d5770",
+      "bytes": 8758
+    },
+    {
+      "path": "data-science/rankings_information_retrieval/position_bias_click_model.cpp",
+      "sha256": "7385b49d1ba48db9894289b42352678f297119e55abe43003256f851dbbcc202",
+      "bytes": 7802
+    },
+    {
+      "path": "data-science/rankings_information_retrieval/query_expansion_prf.cpp",
+      "sha256": "202b7002ccc0d92df7a4f7c5a5653dbe1736dfbc224a3c68a0bfbc1e925e8260",
+      "bytes": 8362
+    },
+    {
+      "path": "data-science/rankings_information_retrieval/rank_fusion_rrf.cpp",
+      "sha256": "e54848b35c8a164bc6c4bb240cd9390ce280e2a374dece341b31d6c067db3605",
+      "bytes": 6945
+    },
+    {
+      "path": "data-science/recommenders_graph_sampling/.folder-nature",
+      "sha256": "d0dca9a39cec9777432bba708349d58825aaaa9b71358aca6e2f89fc595fca1d",
+      "bytes": 392
+    },
+    {
+      "path": "data-science/recommenders_graph_sampling/apriori_frequent_itemsets.cpp",
+      "sha256": "671b1cdbf00a69a3c096f876c12b9350f8bcff2eea99792990a387fb325a0851",
+      "bytes": 9401
+    },
+    {
+      "path": "data-science/recommenders_graph_sampling/bayesian_ab_beta.cpp",
+      "sha256": "05681ab9476c775f7d580497d1fcfb457023d034e48fda6872d0b1a5a563fad4",
+      "bytes": 6825
+    },
+    {
+      "path": "data-science/recommenders_graph_sampling/iqr_outlier_detection.cpp",
+      "sha256": "dff0f04c98510e1beacb822f4c39ea7b1f89c7bd1b78b46ff6b4421b7c1f8465",
+      "bytes": 9806
+    },
+    {
+      "path": "data-science/recommenders_graph_sampling/item_based_cf.cpp",
+      "sha256": "25df2e1dfa4ca97feb4afd04d666124a349448049779cb9a47ece5502003d7cc",
+      "bytes": 7864
+    },
+    {
+      "path": "data-science/recommenders_graph_sampling/matrix_factorization_sgd.cpp",
+      "sha256": "dbf565ea171a62c53dc573afc9c321a545e17ade4469514fbe9468b17cb26e11",
+      "bytes": 7000
+    },
+    {
+      "path": "data-science/recommenders_graph_sampling/monte_carlo_estimation.cpp",
+      "sha256": "e0c9e0c8d1d305a2084e6cfaa0c09b77945b955a507eaee8ba120ce7513d0ee8",
+      "bytes": 5987
+    },
+    {
+      "path": "data-science/recommenders_graph_sampling/mutual_information_feature_selection.cpp",
+      "sha256": "349f7d41fef4dc54122d70141ad1e8e1d9a7e38488509ec38a2c20275b4e6580",
+      "bytes": 9954
+    },
+    {
+      "path": "data-science/recommenders_graph_sampling/pagerank_power_iteration.cpp",
+      "sha256": "0f9bc1a50b588d8e7bc07dad4235ebedc07b397245f1e823a0a2891c82ea74e4",
+      "bytes": 7204
+    },
+    {
+      "path": "data-science/recommenders_graph_sampling/thompson_sampling_bandit.cpp",
+      "sha256": "e98d1b6c2734fcfc2c0a097f43cf9671a8cf681d9de7cf5a7d1a780c2490c4de",
+      "bytes": 7314
+    },
+    {
+      "path": "data-science/recommenders_graph_sampling/user_based_cf.cpp",
+      "sha256": "6bec19c98240616db102e4735b419192a6b75158e2d2085d82e33eb8ae2366fa",
+      "bytes": 6927
+    },
+    {
+      "path": "data-science/recommenders_ii_kept_survivors/.folder-nature",
+      "sha256": "625845227fb0855d1bfb9fbc785411d98abbd94105e1973fe768d621903bd34b",
+      "bytes": 402
+    },
+    {
+      "path": "data-science/recommenders_ii_kept_survivors/catalog_coverage_diversity.cpp",
+      "sha256": "11fcafb23e9ce55d5fb85689725313b6886539791fdc0e3761ef3e606f9744b0",
+      "bytes": 4822
+    },
+    {
+      "path": "data-science/recommenders_ii_kept_survivors/content_tfidf_rec.cpp",
+      "sha256": "48957834142356c0588f91ebd4271ef31e5a06250a0d09947e8e2f17f0e6b1f0",
+      "bytes": 5931
+    },
+    {
+      "path": "data-science/recommenders_ii_kept_survivors/intra_list_diversity.cpp",
+      "sha256": "3ea5fd8df6a575e6728fce7a95e06bc872b230b93321f0e670c08b2ba9bd6dfe",
+      "bytes": 5332
+    },
+    {
+      "path": "data-science/recommenders_ii_kept_survivors/novelty_serendipity.cpp",
+      "sha256": "508b09f820fe1c46938ddd5169d57e2eef31b05700178fa01af1c25edb4f9878",
+      "bytes": 4896
+    },
+    {
+      "path": "data-science/signal_processing_sequences/.folder-nature",
+      "sha256": "5b60ba251d2c123eff2abcb85cbfce5d3a74b2279736203d26ac206e71f8daab",
+      "bytes": 392
+    },
+    {
+      "path": "data-science/signal_processing_sequences/autocovariance_spectrum.cpp",
+      "sha256": "298d9534ca79201eabc35815f845cacc79e5b6c3c803b2229029d42881ffd5ff",
+      "bytes": 7811
+    },
+    {
+      "path": "data-science/signal_processing_sequences/convolution_filtering.cpp",
+      "sha256": "b8e2461f183a2755cacd0ad1ca03ed3319f2c002b05719b5809d5ab72bdbf630",
+      "bytes": 6831
+    },
+    {
+      "path": "data-science/signal_processing_sequences/cross_correlation_lag.cpp",
+      "sha256": "f64343c87fa63488a78a21dbf8787ec82cfde0bd9929ddd9714e63afb3e40ac7",
+      "bytes": 6276
+    },
+    {
+      "path": "data-science/signal_processing_sequences/discrete_fourier_transform.cpp",
+      "sha256": "9e46d46cb05cf015e6d703d2097c6de9c0e41692fccdfa47763ed7687ee01079",
+      "bytes": 5423
+    },
+    {
+      "path": "data-science/signal_processing_sequences/dynamic_range_compression.cpp",
+      "sha256": "a4646427eb9062c5bd1162f3191654fee24930a8d03e2fd63b96e32c32d72107",
+      "bytes": 7548
+    },
+    {
+      "path": "data-science/signal_processing_sequences/fft_cooley_tukey.cpp",
+      "sha256": "08d9fa739145d4e2a33d63dc03840aff5b89facdd2641f29aadc936c9b273b17",
+      "bytes": 26484
+    },
+    {
+      "path": "data-science/signal_processing_sequences/hampel_filter_outliers.cpp",
+      "sha256": "46e0cd8b17ff5154640da84641ce5a373776760fa4d6cabad6db11b71cfbc539",
+      "bytes": 6334
+    },
+    {
+      "path": "data-science/signal_processing_sequences/peak_detection.cpp",
+      "sha256": "d59ac1a9101c5787b2644cb4b0241774e8c2f6e0c91d287235fe3439d2d83d50",
+      "bytes": 6408
+    },
+    {
+      "path": "data-science/signal_processing_sequences/resampling_interpolation.cpp",
+      "sha256": "cdf75cb56c2ad64addcda4fa8ef5a713f0fb27d8f1c342cc142d8ff786fe63e9",
+      "bytes": 7289
+    },
+    {
+      "path": "data-science/signal_processing_sequences/savitzky_golay_lite.cpp",
+      "sha256": "6d87a037673cb97ba1b124d332b8a7f18a2bfa3c26fce7ae75f6bfcb186eb90b",
+      "bytes": 8249
+    },
+    {
+      "path": "data-science/simulation_decision_science/.folder-nature",
+      "sha256": "730c2c5d0e8e80e9d07698cf3c269a7b978e392dbf11747d77c64da958751b40",
+      "bytes": 391
+    },
+    {
+      "path": "data-science/simulation_decision_science/discrete_event_simulation.cpp",
+      "sha256": "abec1bf52f47fec82ed14bbaacdc85dcfad0f0980e5eb3fb4003088ef33034e5",
+      "bytes": 6153
+    },
+    {
+      "path": "data-science/simulation_decision_science/kelly_criterion.cpp",
+      "sha256": "abea7919bac10ed6032b20f347602fba6101c8fdafd2ef8000c909f5dec42028",
+      "bytes": 5927
+    },
+    {
+      "path": "data-science/simulation_decision_science/mm1_queue_littles_law.cpp",
+      "sha256": "6ac7d9da15df29fd0752538d5f04f9d26952ca93b2e6b7132c6ee76a06ac9e34",
+      "bytes": 5865
+    },
+    {
+      "path": "data-science/simulation_decision_science/monte_carlo_var_es.cpp",
+      "sha256": "f50121f8355aae653cf2b0425cd19867a336a1bf5477dfb1407af0d6012d02ee",
+      "bytes": 5610
+    },
+    {
+      "path": "data-science/simulation_decision_science/newsvendor_critical_fractile.cpp",
+      "sha256": "60189c0db06dc60585ec677248814d3c0298be4d11c39bc931c18888d2ad80c9",
+      "bytes": 6050
+    },
+    {
+      "path": "data-science/simulation_decision_science/q_learning_gridworld.cpp",
+      "sha256": "b37088da6861299ba99fa4410d7f5975f7f9d0ffcefcbeec526b206ecdb72df5",
+      "bytes": 7861
+    },
+    {
+      "path": "data-science/simulation_decision_science/schelling_segregation.cpp",
+      "sha256": "ff95177f1eaeedceedd2ffa8ec4a739d94560231788131cdbcbc37ca19040d71",
+      "bytes": 7787
+    },
+    {
+      "path": "data-science/simulation_decision_science/sir_epidemic_model.cpp",
+      "sha256": "d67097706da892a88fdff133ce2bf64167c4726b7e6a22c8654ac46308ac63bd",
+      "bytes": 6085
+    },
+    {
+      "path": "data-science/simulation_decision_science/tornado_sensitivity.cpp",
+      "sha256": "d9287eaea5965d1953b9fc489f372759665647bc9e846f33ffd96daf1085fd71",
+      "bytes": 7313
+    },
+    {
+      "path": "data-science/statistical_modeling/.folder-nature",
+      "sha256": "e2deaeb6aaf072aff4d3fa318f408b9d22bc2da207bdef1b5a482f47c6e38e51",
+      "bytes": 369
+    },
+    {
+      "path": "data-science/statistical_modeling/em_two_coins.cpp",
+      "sha256": "8f92ac66d6d22f7df6de25946df3a0f08a54cd946449e3f6f7fb966ed4b8f85b",
+      "bytes": 4806
+    },
+    {
+      "path": "data-science/statistical_modeling/gibbs_sampling_bivariate.cpp",
+      "sha256": "5e0a986ff018d813ef8a49181a3c5368658e7855afcc0664580672ab48ed893d",
+      "bytes": 7056
+    },
+    {
+      "path": "data-science/statistical_modeling/importance_sampling.cpp",
+      "sha256": "7cabd0146503a33643d5a977821c33ae3a7c33ea232191904520832ebfb9089e",
+      "bytes": 5401
+    },
+    {
+      "path": "data-science/statistical_modeling/kaplan_meier_survival.cpp",
+      "sha256": "5976763d78d0bbce7af2fe046c533279e06f5861bb934a01853e5360375a6e3a",
+      "bytes": 7857
+    },
+    {
+      "path": "data-science/statistical_modeling/kernel_density_estimation.cpp",
+      "sha256": "f7aa91749cc2d36ea14f0549aded7e8ae90ce0730f4868739eb5e2563e848f67",
+      "bytes": 7846
+    },
+    {
+      "path": "data-science/statistical_modeling/loess_local_regression.cpp",
+      "sha256": "58bd8262a730a348f175a01cbd782b3ccdcbcc791eb6e823eb508e34f558756a",
+      "bytes": 7179
+    },
+    {
+      "path": "data-science/statistical_modeling/metropolis_hastings_mcmc.cpp",
+      "sha256": "71e782c308927bdb16b6a0171a96a90b077bcc0714d617436f7bf97ec9357128",
+      "bytes": 5984
+    },
+    {
+      "path": "data-science/statistical_modeling/polynomial_regression.cpp",
+      "sha256": "ac31d300d9bea86d92223bc2027963f75586d4e50698d3239b70517b7a6f6fb1",
+      "bytes": 8659
+    },
+    {
+      "path": "data-science/statistical_modeling/power_analysis_sample_size.cpp",
+      "sha256": "417e266873f3e4721234f7ddd598aa71e3e09314eb62f8ed2469498ccf4c24cf",
+      "bytes": 6343
+    },
+    {
+      "path": "data-science/statistical_modeling/quantile_regression_pinball.cpp",
+      "sha256": "51a9dd04c9f06c7ec069f048d6aedefca624a8e3d733b31c009c8baaddf2e1f3",
+      "bytes": 6917
+    },
+    {
+      "path": "data-science/statistics_testing/.folder-nature",
+      "sha256": "96f73caa92ea45340002e31ebc4129a7f7a8b7060cb13b8b153240405ded14dd",
+      "bytes": 364
+    },
+    {
+      "path": "data-science/statistics_testing/ab_test_proportions.cpp",
+      "sha256": "01066641e03a919263f89986df7994a9074d7ac38f0041f059075080eec3268e",
+      "bytes": 6865
+    },
+    {
+      "path": "data-science/statistics_testing/benjamini_hochberg.cpp",
+      "sha256": "ac5213ec4a22ed0f3eacb9958cde0f7a27cacb193156d22688b9c6565b22c9db",
+      "bytes": 8057
+    },
+    {
+      "path": "data-science/statistics_testing/bootstrap_confidence_interval.cpp",
+      "sha256": "cdc237158c2608b32328ebab10e354604d690eebb3d7797c3f88fc10e764b9ae",
+      "bytes": 6315
+    },
+    {
+      "path": "data-science/statistics_testing/chi_square_independence.cpp",
+      "sha256": "a2422272cdefc46e8e16cd24044f7186e3b5882271bd2e4f77425cf05c804396",
+      "bytes": 6792
+    },
+    {
+      "path": "data-science/statistics_testing/confusion_matrix_metrics.cpp",
+      "sha256": "1f83ebd1c39a0aa747144c0a4eddeb71f226a230e2398872b49de111b36d7155",
+      "bytes": 6517
+    },
+    {
+      "path": "data-science/statistics_testing/permutation_test.cpp",
+      "sha256": "08eaf9253fe660dcb9298a8a95e76178c8db4fe650ffb4c398d4750eab771fea",
+      "bytes": 6463
+    },
+    {
+      "path": "data-science/statistics_testing/reservoir_sampling.cpp",
+      "sha256": "216d623797d6055e83e1966fea094ae4ea436fa31d0c5770531619d18c26825e",
+      "bytes": 7064
+    },
+    {
+      "path": "data-science/statistics_testing/roc_auc_from_scratch.cpp",
+      "sha256": "20cd2a4139aa3b9088ac83a9fd9fa7d1665cdc938e1fb40fed42fb024e76bb77",
+      "bytes": 7965
+    },
+    {
+      "path": "data-science/statistics_testing/train_test_split_kfold.cpp",
+      "sha256": "6c04d61093f7ad7d7ab492a857a15960b1d4b2ff51a72bb6872ded87f2e4b711",
+      "bytes": 9132
+    },
+    {
+      "path": "data-science/streaming_iii/.folder-nature",
+      "sha256": "10f92c51c634ad3db1328cda416822cc6a0e56961c9d8f810ecd913c6fd01953",
+      "bytes": 348
+    },
+    {
+      "path": "data-science/streaming_iii/adwin_drift_detector.cpp",
+      "sha256": "bcf804a66fcbeeb0876dd7590b5e9272ee5f39913c2d1ea4210ff2491041eab6",
+      "bytes": 6728
+    },
+    {
+      "path": "data-science/streaming_iii/bloom_filter_fpr.cpp",
+      "sha256": "0a088e2cce06f62a95a891d2b408647ab3a195f1b32ce07d6308ea9c0137b8bd",
+      "bytes": 7463
+    },
+    {
+      "path": "data-science/streaming_iii/concept_drift_ensemble.cpp",
+      "sha256": "a252d3f001791648955b8b60bdad74ac7f65f6a3e98e77026a5cd5c5071d287f",
+      "bytes": 7484
+    },
+    {
+      "path": "data-science/streaming_iii/ddm_error_drift.cpp",
+      "sha256": "ac174d2d047d87927e59248bde63b2de3b8af1c7a0444b9ed6ddff65553470af",
+      "bytes": 5881
+    },
+    {
+      "path": "data-science/streaming_iii/exponential_histogram_count.cpp",
+      "sha256": "77056bde6a4890d93a1a71a6a67279ffbdcd5904568fe7d880503193edcab5cb",
+      "bytes": 26870
+    },
+    {
+      "path": "data-science/streaming_iii/frugal_streaming_median.cpp",
+      "sha256": "4a76a35ed12efede8fc11021732c2bc38313f1f639b2c31543238af4adf23977",
+      "bytes": 954197
+    },
+    {
+      "path": "data-science/streaming_iii/gk_quantile_summary.cpp",
+      "sha256": "d602aa095562ce7d41d89515479b7493e1fb58b549d954e0a055b88a547165ed",
+      "bytes": 6211
+    },
+    {
+      "path": "data-science/streaming_iii/hoeffding_tree_lite.cpp",
+      "sha256": "9e6a3efc7d641baf82cfc4546dbb9b0f17dbcc4111df2478d0aa3a6964a11d85",
+      "bytes": 10822
+    },
+    {
+      "path": "data-science/streaming_iii/hyperloglog_distinct.cpp",
+      "sha256": "12705008a9a7f56b32bcf5b63a200c0af0a0291aaa40b2dd246ae99369bc9ce1",
+      "bytes": 6325
+    },
+    {
+      "path": "data-science/streaming_iii/kswin_drift.cpp",
+      "sha256": "4b23cfcae03fce4edf5940fbbb426e94a50a37a04c3db217f5ecb889532cde0f",
+      "bytes": 18489
+    },
+    {
+      "path": "data-science/streaming_iii/lossy_counting_frequent.cpp",
+      "sha256": "e4f989378b5f349eea4dfd6c042380ac53a341a1c70d22cf5b8d592795b4115c",
+      "bytes": 7004
+    },
+    {
+      "path": "data-science/streaming_iii/misra_gries_heavy_hitters.cpp",
+      "sha256": "428f660dd82de90eccfa1c673153278c16d5693155bc9c758ec0fa1fa2358dcb",
+      "bytes": 6200
+    },
+    {
+      "path": "data-science/streaming_iii/online_bagging_poisson.cpp",
+      "sha256": "cdcd67f9dd00ecfdc23e0319517b4a27b69978484a8190ddbda9fa5f10c85ef2",
+      "bytes": 132954
+    },
+    {
+      "path": "data-science/streaming_iii/robust_streaming_mad.cpp",
+      "sha256": "86649bd7ada95b3414a07c75b7586be3b8323b83d8f054a37bc4de7285a931cf",
+      "bytes": 6562
+    },
+    {
+      "path": "data-science/streaming_iii/sliding_window_quantile.cpp",
+      "sha256": "9800468acbf351a474526510f02d2b4914a136d4d21cac9fec815544c79fb616",
+      "bytes": 6123
+    },
+    {
+      "path": "data-science/streaming_iii/sliding_window_regression.cpp",
+      "sha256": "531c6acfecbd9ff6351ed528f13fc08428d15185355f6e90efa68c3e878f015c",
+      "bytes": 6513
+    },
+    {
+      "path": "data-science/streaming_iii/tdigest_lite.cpp",
+      "sha256": "43b1cab8c24cf6751b9a114ff318491a5ba6a7fbba2ffa6ca94cec83b5d9524d",
+      "bytes": 8344
+    },
+    {
+      "path": "data-science/streaming_iii/weighted_reservoir_ares.cpp",
+      "sha256": "1f7bb2644222707e42c974cd6a6bbd73d366b83558976a20e06a001d6ec912ba",
+      "bytes": 6563
+    },
+    {
+      "path": "data-science/streaming_iii/welford_decayed_moments.cpp",
+      "sha256": "cde4c203d982c943149a88aaf0d5c8471942402386bd71536733bfd4328f158e",
+      "bytes": 5943
+    },
+    {
+      "path": "data-science/streaming_iii/windowed_distinct_count.cpp",
+      "sha256": "996003599a1feeb383be7e9d4f98adb53fa8b1a35454e56aee3f6eff67af8bb2",
+      "bytes": 5493
+    },
+    {
+      "path": "data-science/streaming_sketches/.folder-nature",
+      "sha256": "c39d7b7df3823957196138601e3021019f1908f836f483fb820c5bcd8308f3a7",
+      "bytes": 365
+    },
+    {
+      "path": "data-science/streaming_sketches/count_min_sketch.cpp",
+      "sha256": "2d6b7cca967a448e5530b7602be8d676cb1dfb9b13491c46cd1ac6672f4dfd88",
+      "bytes": 6699
+    },
+    {
+      "path": "data-science/streaming_sketches/online_covariance.cpp",
+      "sha256": "b3cdd978498bb036d4c95683a50110d6b5118d60b06df4bc4d753b32eac7220f",
+      "bytes": 9081
+    },
+    {
+      "path": "data-science/streaming_sketches/online_sgd_classifier.cpp",
+      "sha256": "6d2b593f364987d15171812cf862a5bac4030c71b6e10cfc3df67cf1cf7085ce",
+      "bytes": 9864
+    },
+    {
+      "path": "data-science/streaming_sketches/p2_quantile_estimator.cpp",
+      "sha256": "f3c3e4b29f52ad7c3fcb867a40e16e467c5326fca65f646a2377532827e345ca",
+      "bytes": 8463
+    },
+    {
+      "path": "data-science/streaming_sketches/page_hinkley_drift.cpp",
+      "sha256": "606322da9617490794cb47d0e9d534961f30dbe89d2c122bd030299fd7ed77ef",
+      "bytes": 7009
+    },
+    {
+      "path": "data-science/streaming_sketches/sliding_window_extrema.cpp",
+      "sha256": "418070f078d1ad29ae38a4f50a2ef339a018c59ff91f13072d635fa6b9868564",
+      "bytes": 6506
+    },
+    {
+      "path": "data-science/streaming_sketches/space_saving_heavy_hitters.cpp",
+      "sha256": "b853ecfa32149721caa70ad7c2855dff3ad81fee2026eceb99f90a4457cd80a9",
+      "bytes": 7199
+    },
+    {
+      "path": "data-science/streaming_sketches/streaming_histogram_merge.cpp",
+      "sha256": "1bdafa7efb6fab3087c4c732e9183f6f00d8ea9e1ad734843432d74eeaf4788e",
+      "bytes": 8057
+    },
+    {
+      "path": "data-science/streaming_sketches/streaming_kmeans.cpp",
+      "sha256": "40a31ec24407d8bcc3c0113669d779162e39f45cd97a3a4948929df551762732",
+      "bytes": 7709
+    },
+    {
+      "path": "data-science/streaming_sketches/weighted_reservoir_sampling.cpp",
+      "sha256": "6fe8ccc56cc9fa33943f6ab7105923f0f1e520ece5b51b94a5861d940f3ffe37",
+      "bytes": 6907
+    },
+    {
+      "path": "data-science/survival_reliability/.folder-nature",
+      "sha256": "3069fc0824553949600baab3c9051e8ab286565e849304641c364c6b2414b28f",
+      "bytes": 371
+    },
+    {
+      "path": "data-science/survival_reliability/accelerated_failure_time_lite.cpp",
+      "sha256": "467dcf154a1e63a047fdc9a19f11cd5efa26cf4e481ce8c9647529a420808904",
+      "bytes": 6396
+    },
+    {
+      "path": "data-science/survival_reliability/censoring_bias_demo.cpp",
+      "sha256": "fd36c6105e8da4c4f3c6eace63539de1137b86faa345f6496c4bda8ab473d0b2",
+      "bytes": 6828
+    },
+    {
+      "path": "data-science/survival_reliability/competing_risks_naive_bias.cpp",
+      "sha256": "2e05a6ff29fd1cdb2be19031aa89dc268335282fb4c05ed540b8a9efc4c3559e",
+      "bytes": 7694
+    },
+    {
+      "path": "data-science/survival_reliability/cox_partial_likelihood_lite.cpp",
+      "sha256": "53ade71da7c280896300c36f4a81863b538d39048717309410279beb4d6bb5d4",
+      "bytes": 8262
+    },
+    {
+      "path": "data-science/survival_reliability/exponential_reliability_mtbf.cpp",
+      "sha256": "f92b260f8a2b0f2c9b7094b3fbc177222fa96c1622cb51f0ebac55193a2f0554",
+      "bytes": 24283
+    },
+    {
+      "path": "data-science/survival_reliability/hazard_vs_survival_conversion.cpp",
+      "sha256": "9b7928e0975125fbdeaae81a714f570977c03dbdf6c356bad2aff1acbe8ff5c6",
+      "bytes": 5223
+    },
+    {
+      "path": "data-science/survival_reliability/log_rank_test.cpp",
+      "sha256": "7cc4c4bce642362fce483cfb757cf762487612c8fc02225d29334ca61ac5057d",
+      "bytes": 9453
+    },
+    {
+      "path": "data-science/survival_reliability/nelson_aalen_cumhazard.cpp",
+      "sha256": "fa9a7ac4b1e6c69352b4ef0c198cf7b0fd1bee214f10f34f3cadfc66ab0258bb",
+      "bytes": 6249
+    },
+    {
+      "path": "data-science/survival_reliability/reliability_series_parallel.cpp",
+      "sha256": "8f35cddb28a807ed66800d276451e96e0c1349e4f90578e0f151ce39114aec96",
+      "bytes": 6139
+    },
+    {
+      "path": "data-science/survival_reliability/weibull_mle.cpp",
+      "sha256": "d6087299d99913db3fcff3a16a8a1141dfaea39487f559bedbb5a840c22997e4",
+      "bytes": 6727
+    },
+    {
+      "path": "data-science/text_nlp/.folder-nature",
+      "sha256": "0fd4bae82734c79de6ba7c7a453254bb95df0d675870d4a1940bc0c8e2fc6616",
+      "bytes": 335
+    },
+    {
+      "path": "data-science/text_nlp/bag_of_words.cpp",
+      "sha256": "735a5923d39a782360308855a7094b69c706f8a314a91922996b9ab3413f1685",
+      "bytes": 8949
+    },
+    {
+      "path": "data-science/text_nlp/bpe_tokenizer_lite.cpp",
+      "sha256": "61080983ab5da2bb7ccc5c4567e7a9a79e89e4664884ba0ec455fe40ab4430f7",
+      "bytes": 11550
+    },
+    {
+      "path": "data-science/text_nlp/cosine_similarity_search.cpp",
+      "sha256": "7f2e751edaa4be6570d35a664cade0a334e10bfe8956ec47a4ca2358f0019744",
+      "bytes": 9842
+    },
+    {
+      "path": "data-science/text_nlp/edit_distance.cpp",
+      "sha256": "159db33dd8b0e68f2dafbd3b24254cb41c3b96cf0754bff5639b0c3ff64b2443",
+      "bytes": 6798
+    },
+    {
+      "path": "data-science/text_nlp/markov_chain_text.cpp",
+      "sha256": "cec69a3b5fc09c08262fafadb045bfc9323b120d8b93d4fff5aacea76f94d444",
+      "bytes": 8566
+    },
+    {
+      "path": "data-science/text_nlp/minhash_dedup.cpp",
+      "sha256": "fbf76d091f61136fe4265653eb7a826af2915d186f619e9f29f413715b28dca5",
+      "bytes": 8878
+    },
+    {
+      "path": "data-science/text_nlp/ngram_language_model.cpp",
+      "sha256": "23d88153c66bc978347aaff374073b6a6ef79213519776d62297681c60822fa9",
+      "bytes": 10819
+    },
+    {
+      "path": "data-science/text_nlp/rake_keyword_extraction.cpp",
+      "sha256": "036edc1cc1187335d57fc24349eca9b3c3346553931e828c86fce3f96ef3d1f0",
+      "bytes": 10110
+    },
+    {
+      "path": "data-science/text_nlp/tfidf_vectorizer.cpp",
+      "sha256": "a7ade45f04bc2a95e273e6779e4288e53755f259d74fef10d7cba37018a9d61d",
+      "bytes": 8357
+    },
+    {
+      "path": "data-science/text_nlp/viterbi_hmm.cpp",
+      "sha256": "bef73aa1a7512b52989edfd486d631dc81802c146e75cbf684099073c001de02",
+      "bytes": 8993
+    },
+    {
+      "path": "data-science/text_nlp_ii/.folder-nature",
+      "sha256": "ad8d9a218c4e340ba0645254f5ff09941fc660b8d4cca8e3844668af19e56b5f",
+      "bytes": 343
+    },
+    {
+      "path": "data-science/text_nlp_ii/char_ngram_language_id.cpp",
+      "sha256": "c966d9bb5d23befe65bdb328db4103c1686298af18a05cfd4d5a3dd851e60991",
+      "bytes": 6680
+    },
+    {
+      "path": "data-science/text_nlp_ii/naive_bayes_complement.cpp",
+      "sha256": "5379c6980df48ea1153497641e3d90bc2db80bc5c8445ba5fb361f69fec8bf82",
+      "bytes": 8761
+    },
+    {
+      "path": "data-science/text_nlp_ii/porter_stemmer_lite.cpp",
+      "sha256": "f7e3d6adb4993417c9be5325d9c00f4e88ef10098c3284604f26b2e08df8ab21",
+      "bytes": 6446
+    },
+    {
+      "path": "data-science/text_nlp_ii/sentence_boundary_detection.cpp",
+      "sha256": "6236c76243eaa4c7695f3d3cfd86336b65aa6a141c703fe68bb48f5f81eb286a",
+      "bytes": 6932
+    },
+    {
+      "path": "data-science/text_nlp_ii/soundex_phonetic.cpp",
+      "sha256": "b5dab2a63a6a854433133de7e71ad752e4f5c4a7d1d16e1959fdfbeea5d99b63",
+      "bytes": 5976
+    },
+    {
+      "path": "data-science/text_nlp_ii/textrank_lite.cpp",
+      "sha256": "5a780418f0e10fd71207a9d4a8012e18f4bf3c00a4f01f753ef18229dfa8020a",
+      "bytes": 6999
+    },
+    {
+      "path": "data-science/text_nlp_ii/tf_idf_bm25_comparison.cpp",
+      "sha256": "c9392e81d6cf169abc33463acb3037fd8fc55203c2fd4e3b8f92535f8ae0c4e2",
+      "bytes": 7706
+    },
+    {
+      "path": "data-science/text_nlp_ii/zipf_law_fit.cpp",
+      "sha256": "ce693061c79f5fbae9f1597fd691a23ef56a2519c0f44a5ad8c2d82b7f1ae7d5",
+      "bytes": 5535
+    },
+    {
+      "path": "data-science/time_series/.folder-nature",
+      "sha256": "96051b43badb4bfd7245d3f96e7b218dca4f9eb894672007175347a9cf2a4409",
+      "bytes": 342
+    },
+    {
+      "path": "data-science/time_series/autocorrelation_function.cpp",
+      "sha256": "562eabb2bd21d70f8d0da524930dc5389e415ebc988170ea174c7e66d4644bae",
+      "bytes": 8290
+    },
+    {
+      "path": "data-science/time_series/autoregressive_model.cpp",
+      "sha256": "aed7fbd0502cb543c4692f76c3245d5291e4702e98df11e2de5d6b21fca2c292",
+      "bytes": 9706
+    },
+    {
+      "path": "data-science/time_series/cusum_changepoint.cpp",
+      "sha256": "cb0d51cedeef9e46e31c91049834f954c0bea89e1121d1ebf1190bb9b22aa505",
+      "bytes": 5910
+    },
+    {
+      "path": "data-science/time_series/differencing_stationarity.cpp",
+      "sha256": "08bddf878145aded2511193756839e22f9a15ec2a7e2b32503f0d688aa25d65d",
+      "bytes": 6927
+    },
+    {
+      "path": "data-science/time_series/exponential_smoothing.cpp",
+      "sha256": "b43dff3c54a167062d22a3c34781150bad8319c230ed793b6f49e66494ff4c11",
+      "bytes": 6742
+    },
+    {
+      "path": "data-science/time_series/kalman_filter_1d.cpp",
+      "sha256": "0cd72dc2a8842e13666b0904b1c515c80ae662877d4c85c064670864a7074265",
+      "bytes": 8537
+    },
+    {
+      "path": "data-science/time_series/moving_average_smoothing.cpp",
+      "sha256": "85086c2bd0eb0e0764d94e3df2d2e4eb1c126fdd6b781a2dabe136fd61f09a78",
+      "bytes": 8196
+    },
+    {
+      "path": "data-science/time_series/rolling_zscore_anomaly.cpp",
+      "sha256": "abb72b7380d4e2ca79d6c7bde88ccd4205a6f9963ccfad343afa53fefc504a2b",
+      "bytes": 7141
+    },
+    {
+      "path": "data-science/time_series/seasonal_decomposition.cpp",
+      "sha256": "24aba443551320fd721a91059210e2cc066181c951043ddbfba825a16a2e946a",
+      "bytes": 8416
+    },
+    {
+      "path": "data-science/time_series/walk_forward_validation.cpp",
+      "sha256": "f95cb053cc995c23cf936ac3a31bcbd03374bc3ee098e41346ce9c9d86231728",
+      "bytes": 7412
+    }
+  ]
+}

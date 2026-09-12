@@ -1,0 +1,290 @@
+"""In-process distributed lock manager with lease expiry and a fairness queue.
+
+Use when several owners contend for named resources and you need mutual
+exclusion plus automatic recovery if a holder dies: locks carry a lease that
+lapses on its own, and blocked waiters are served first-come-first-served.
+Guarantees (proven by self-test): only one owner holds a resource at a time; a
+released lock hands off to exactly one waiter; an expired lease is reacquirable;
+refresh extends a live lease past its original expiry; release/refresh with a
+foreign or stale token is refused.
+"""
+# △ AURA Pattern Library — © Reality Optimizer ⟦AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO⟧
+# ⁣​‌​‌​​​​​‌​​‌‌​‌​‌​‌​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​​‌‌​​‌‌​‌​‌‌​‌​​‌​​​​‌‌​‌​​‌​​​​‌​​‌​​‌​‌​‌​​‌​​‌​​​‌‌​​‌​​​‌​‌​‌​‌‌​‌​​‌​​‌‌​​​‌​​​​‌​​‌​​‌‌‌​​‌​‌​​‌​​‌​‌​‌​‌​‌​‌‌​​​​‌​​‌​​‌​​‌‌​‌‌​​‌​​‌​‌​​‌​​​​​‌​‌​​‌​‌​​​‌‌​‌​‌​‌​‌‌​​‌​‌​​‌​​​​‌​​‌​​‌​​‌‌​​‌​​‌​​‌‌​​​‌​​‌‌‌​​‌​​‌‌‌​​‌​​​‌‌​​​‌‌​‌​‌​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌​​‌​‌​​​‌​‌​‌​​‌​​‌​​​‌‌‌​​‌‌​​‌​​‌​​‌​​‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌​‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​‌​‌​‌​​‌​‌‌​‌​‌​‌​​​‌​​‌​‌‌​‌​​​​‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​‌‌​​‌​‌​‌​​​‌​​​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​‌​‌‌​​​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌‌‌​‌​​​​​‌​‌​‌​​‌​​‌​​​​‌‌​‌​‌‌​​‌​‌​​‌​​‌​‌​‌​‌​​​‌​‌​​​‌​‌​​‌‌‌​​‌​​​‌‌​​‌​‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​​​​‌‌​‌​​​‌​‌​‌​​‌​​‌​‌​‌​‌‌‌​‌​​​​‌‌​‌​​​‌​‌​​‌‌​‌​‌​‌​​​‌​​​‌​​‌‌‌​​‌​​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​‌​​​​‌‌​‌​​​‌​‌​‌​‌​​​‌​‌​​‌​‌‌​‌​‌​‌‌​​‌​​‌​‌‌​‌​​‌​‌​​‌​​​​​‌​‌​‌​​‌‌​‌​​​​​‌​‌​‌​‌​‌​‌​​​‌​​​‌​​​​‌​​‌​​‌‌‌‌​‌​‌​​‌​​​‌‌​​‌​​‌​​​‌‌‌​‌​​‌​‌‌​​‌‌​‌​​​‌​‌​‌​​​‌​​‌‌‌‌​‌​​​‌​‌​‌​​​​‌​​‌​​​‌‌‌​‌​​​‌‌‌​‌​‌​​‌‌​‌​‌‌​​‌​‌​‌​‌​​​‌​‌​​‌‌​‌​​‌‌​‌​‌​​​‌‌​​‌​‌‌​‌​​‌​​‌​​​​‌​‌​​‌‌​‌​​‌​​‌​‌​‌​​‌​​‌​​‌‌​‌​‌​​​‌​‌​‌​​‌​‌​​​‌‌​​‌‌​‌​​​​‌‌​‌​​​‌​‌​‌​​‌‌‌‌​‌​‌​​‌​​‌​‌​​‌​​‌​‌​​​​​‌​‌​‌‌‌​‌​‌‌​​‌​‌​‌​​‌‌​‌​​‌​‌​​‌​‌​​​​​‌​‌‌​​​​‌​​‌‌‌‌⁣
+_AURA_MARK = "AE1.PMRGG3ZCHIRFEZLBNRUXI6JAJ5YHI2LNNF5GK4RCFQRG2IR2EJAUKTKBKJFTCIRMEJXCEORCGARCYITQNFSCEORCEIWCE5DNEI5CEQKVKJASAUDBOR2GK4TOEBGGSYTSMFZHSIRMEJ3CEORRPWYSJPXO"
+import time
+import uuid
+from typing import Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from threading import Lock as ThreadingLock
+
+
+@dataclass
+class LockToken:
+    """Represents a lock token with expiration and ownership information."""
+    token_id: str
+    owner_id: str
+    expiration_time: float
+    resource_id: str
+
+    def is_expired(self) -> bool:
+        """Check if the lock token has expired."""
+        return time.time() > self.expiration_time
+
+    def remaining_time(self) -> float:
+        """Get remaining time before expiration in seconds."""
+        return max(0, self.expiration_time - time.time())
+
+
+class LockManager:
+    """A distributed lock manager implementing fairness queue and expiration."""
+
+    def __init__(self):
+        """Initialize the lock manager."""
+        self._locks: Dict[str, Optional[LockToken]] = {}
+        self._waiting_queues: Dict[str, List[Tuple[str, float]]] = {}
+        self._lock = ThreadingLock()
+
+    def acquire(self, resource_id: str, owner_id: str, timeout: float = 10.0, 
+                lease_time: float = 30.0) -> Optional[LockToken]:
+        """
+        Acquire a lock for a resource.
+        
+        Args:
+            resource_id: Identifier for the resource to lock
+            owner_id: Identifier for the lock requester
+            timeout: Maximum time to wait for the lock (seconds)
+            lease_time: Time until the lock expires (seconds)
+            
+        Returns:
+            LockToken if acquired, None if timeout exceeded
+        """
+        start_time = time.time()
+        
+        with self._lock:
+            # If no one holds the lock, acquire it immediately
+            if resource_id not in self._locks or self._locks[resource_id] is None:
+                return self._create_lock(resource_id, owner_id, lease_time)
+            
+            # Check if current holder's lock has expired
+            current_lock = self._locks[resource_id]
+            if current_lock and current_lock.is_expired():
+                self._locks[resource_id] = None
+                return self._create_lock(resource_id, owner_id, lease_time)
+            
+            # Add to waiting queue
+            if resource_id not in self._waiting_queues:
+                self._waiting_queues[resource_id] = []
+            self._waiting_queues[resource_id].append((owner_id, start_time + timeout))
+        
+        # Wait for lock or timeout
+        while time.time() - start_time < timeout:
+            time.sleep(0.01)  # 10ms polling interval
+            
+            with self._lock:
+                # Check if we're next in line
+                if (resource_id in self._waiting_queues and 
+                    self._waiting_queues[resource_id] and 
+                    self._waiting_queues[resource_id][0][0] == owner_id):
+                    
+                    # Try to acquire the lock
+                    if (resource_id not in self._locks or 
+                        self._locks[resource_id] is None or 
+                        self._locks[resource_id].is_expired()):
+                        
+                        # Remove from queue and acquire
+                        self._waiting_queues[resource_id].pop(0)
+                        if not self._waiting_queues[resource_id]:
+                            del self._waiting_queues[resource_id]
+                        return self._create_lock(resource_id, owner_id, lease_time)
+                
+                # Check if we've timed out in the queue
+                if resource_id in self._waiting_queues:
+                    queue = self._waiting_queues[resource_id]
+                    for i, (waiter_id, expire_time) in enumerate(queue):
+                        if waiter_id == owner_id:
+                            if time.time() > expire_time:
+                                queue.pop(i)
+                                if not queue:
+                                    del self._waiting_queues[resource_id]
+                                return None
+                            break
+        
+        # Remove from queue if we timed out
+        with self._lock:
+            if resource_id in self._waiting_queues:
+                queue = self._waiting_queues[resource_id]
+                for i, (waiter_id, _) in enumerate(queue):
+                    if waiter_id == owner_id:
+                        queue.pop(i)
+                        if not queue:
+                            del self._waiting_queues[resource_id]
+                        break
+        return None
+
+    def release(self, token: LockToken) -> bool:
+        """
+        Release a lock using its token.
+        
+        Args:
+            token: The lock token to release
+            
+        Returns:
+            True if released successfully, False otherwise
+        """
+        with self._lock:
+            if token.resource_id not in self._locks:
+                return False
+                
+            current_lock = self._locks[token.resource_id]
+            if current_lock is None:
+                return False
+                
+            # Verify token matches current lock
+            if (current_lock.token_id == token.token_id and 
+                current_lock.owner_id == token.owner_id and
+                current_lock.resource_id == token.resource_id):
+                self._locks[token.resource_id] = None
+                return True
+                
+        return False
+
+    def refresh(self, token: LockToken, lease_time: float = 30.0) -> Optional[LockToken]:
+        """
+        Refresh an existing lock's expiration time.
+        
+        Args:
+            token: The lock token to refresh
+            lease_time: New lease time from now (seconds)
+            
+        Returns:
+            New LockToken if refreshed, None if failed
+        """
+        with self._lock:
+            if token.resource_id not in self._locks:
+                return None
+                
+            current_lock = self._locks[token.resource_id]
+            if current_lock is None:
+                return None
+                
+            # Verify token matches current lock
+            if (current_lock.token_id == token.token_id and 
+                current_lock.owner_id == token.owner_id and
+                current_lock.resource_id == token.resource_id and
+                not current_lock.is_expired()):
+                
+                # Create new token with extended expiration
+                new_expiration = time.time() + lease_time
+                new_token = LockToken(
+                    token_id=current_lock.token_id,
+                    owner_id=current_lock.owner_id,
+                    expiration_time=new_expiration,
+                    resource_id=current_lock.resource_id
+                )
+                self._locks[token.resource_id] = new_token
+                return new_token
+                
+        return None
+
+    def _create_lock(self, resource_id: str, owner_id: str, lease_time: float) -> LockToken:
+        """Create a new lock token and register it."""
+        token = LockToken(
+            token_id=str(uuid.uuid4()),
+            owner_id=owner_id,
+            expiration_time=time.time() + lease_time,
+            resource_id=resource_id
+        )
+        self._locks[resource_id] = token
+        return token
+
+    def get_lock_info(self, resource_id: str) -> Optional[Dict]:
+        """
+        Get information about a lock.
+        
+        Args:
+            resource_id: The resource to check
+            
+        Returns:
+            Dictionary with lock info or None if no lock exists
+        """
+        with self._lock:
+            if resource_id not in self._locks or self._locks[resource_id] is None:
+                return None
+                
+            lock = self._locks[resource_id]
+            return {
+                "token_id": lock.token_id,
+                "owner_id": lock.owner_id,
+                "expires_in": lock.remaining_time(),
+                "expired": lock.is_expired()
+            }
+
+
+if __name__ == "__main__":
+    # Self-test: mutual exclusion, waiter handoff on release, lease expiry
+    # (real time, short leases), refresh extends, foreign release refused.
+    import threading
+
+    manager = LockManager()
+
+    # Mutual exclusion: second client cannot take a held lock.
+    token1 = manager.acquire("resource1", "client1", lease_time=5.0)
+    assert token1 is not None, "first acquire failed"
+    info = manager.get_lock_info("resource1")
+    assert info["owner_id"] == "client1" and not info["expired"]
+    assert manager.acquire("resource1", "client2", timeout=0.1) is None, \
+        "second client acquired a HELD lock — mutual exclusion broken"
+
+    # Release: honest returns; double release refused.
+    assert manager.release(token1) is True
+    assert manager.release(token1) is False, "double release reported success"
+
+    # After release the resource is takeable.
+    token2 = manager.acquire("resource1", "client2", timeout=0.1)
+    assert token2 is not None and token2.owner_id == "client2"
+    manager.release(token2)
+
+    # Waiter handoff: two clients block; releasing lets EXACTLY one in
+    # (the other still holds it when its own acquire returns).
+    t1 = manager.acquire("resource2", "client1", lease_time=10.0)
+    results = {}
+    def try_acquire(client_id):
+        tok = manager.acquire("resource2", client_id, timeout=3.0, lease_time=10.0)
+        results[client_id] = tok
+    threads = [threading.Thread(target=try_acquire, args=(c,))
+               for c in ("client2", "client3")]
+    for t in threads:
+        t.start()
+    time.sleep(0.3)
+    assert not results, "a waiter acquired while the lock was held"
+    manager.release(t1)
+    for t in threads:
+        t.join()
+    n_winners = sum(1 for tok in results.values() if tok is not None)
+    assert n_winners * 2 == 2, \
+        f"exactly one waiter must win the handoff, got {n_winners}: {results}"
+    winners = [c for c, tok in results.items() if tok is not None]
+    manager.release(results[winners[0]])
+
+    # Lease expiry: a 0.3s lease is reacquirable by another client at 0.5s.
+    manager.acquire("resource3", "client1", lease_time=0.3)
+    assert manager.acquire("resource3", "client2", timeout=0.05) is None
+    time.sleep(0.5)
+    expired_info = manager.get_lock_info("resource3")
+    assert expired_info["expired"] is True, "lease did not expire"
+    stolen = manager.acquire("resource3", "client2", timeout=0.5)
+    assert stolen is not None, "expired lock not reacquirable"
+    manager.release(stolen)
+
+    # Refresh extends the lease past its original expiry.
+    tok = manager.acquire("resource4", "client1", lease_time=0.4)
+    time.sleep(0.2)
+    refreshed = manager.refresh(tok, lease_time=2.0)
+    assert refreshed is not None, "refresh of a live lock failed"
+    time.sleep(0.4)   # past the ORIGINAL lease
+    assert manager.acquire("resource4", "client2", timeout=0.05) is None, \
+        "lock lapsed despite the refresh"
+    assert manager.get_lock_info("resource4")["expires_in"] > 0.5
+
+    print("distributed_lock_manager: exclusion held, 1/2 waiters won handoff, "
+          "0.3s lease expired+stolen, refresh outlived original lease — PASS")
