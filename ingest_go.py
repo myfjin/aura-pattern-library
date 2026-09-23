@@ -25,6 +25,10 @@ sys.path.insert(0, str(Path.home() / "Projects/folder-nature"))
 from folder_nature.mark import signing, watermark as wm            # noqa: E402
 from folder_nature.mark.payload import WatermarkPayload            # noqa: E402
 
+from _check_folder_nature import require as _require_folder_nature  # noqa: E402
+
+_require_folder_nature()
+
 HOME = Path.home()
 FINAL = HOME / "ai-lab/patterns_go/final_approved.jsonl"
 SA_QUAR = HOME / "ai-lab/patterns_sysadmin/QUARANTINE.jsonl"

@@ -32,6 +32,10 @@ except ModuleNotFoundError:
     from folder_nature.core import NATURE_FILENAME, read_folder_nature
     from folder_nature.schema import Identity, Memory
 
+from _check_folder_nature import require as _require_folder_nature  # noqa: E402
+
+_require_folder_nature()
+
 ROOT = Path(__file__).resolve().parent
 SRC_EXT = (".py", ".R", ".cpp", ".go", ".rs")
 MAX_TAG_LEN = 30                       # schema limit — tags longer than this are rejected
