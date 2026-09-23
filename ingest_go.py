@@ -21,13 +21,13 @@ GATE B4 (a twin enters ONLY if ALL hold):
 import argparse, hashlib, json, re, shutil, subprocess, sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path.home() / "Projects/folder-nature"))
+from _check_folder_nature import add_dev_checkout as _dev, require as _require  # noqa: E402
+
+_dev()
 from folder_nature.mark import signing, watermark as wm            # noqa: E402
 from folder_nature.mark.payload import WatermarkPayload            # noqa: E402
 
-from _check_folder_nature import require as _require_folder_nature  # noqa: E402
-
-_require_folder_nature()
+_require()
 
 HOME = Path.home()
 FINAL = HOME / "ai-lab/patterns_go/final_approved.jsonl"
