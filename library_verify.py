@@ -90,6 +90,10 @@ except ModuleNotFoundError:
     from folder_nature.mark import signing
     from folder_nature.mark.watermark import verify_file
 
+from _check_folder_nature import require as _require_folder_nature  # noqa: E402
+
+_require_folder_nature()
+
 ROOT = Path(__file__).resolve().parent
 SIGNED_SUBTREES = ["python/programming", "python/data-science", "python/system-administration", "r", "cpp", "rust", "go", "javascript"]
 GATE = {".py": ["python3"], ".R": ["Rscript"], ".js": ["node"]}   # cpp/go/rust handled specially
