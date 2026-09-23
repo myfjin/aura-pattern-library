@@ -82,17 +82,13 @@ Requires `folder-nature>=0.2` (falls back to the v-next checkout on sys.path).
 import argparse, json, os, re, shutil, signal, subprocess, sys, tempfile, time
 from pathlib import Path
 
-try:
-    from folder_nature.mark import signing
-    from folder_nature.mark.watermark import verify_file
-except ModuleNotFoundError:
-    sys.path.insert(0, str(Path.home() / "Projects/folder-nature"))
-    from folder_nature.mark import signing
-    from folder_nature.mark.watermark import verify_file
+from _check_folder_nature import add_dev_checkout as _dev, require as _require  # noqa: E402
 
-from _check_folder_nature import require as _require_folder_nature  # noqa: E402
+_dev()
+from folder_nature.mark import signing
+from folder_nature.mark.watermark import verify_file
 
-_require_folder_nature()
+_require()
 
 ROOT = Path(__file__).resolve().parent
 SIGNED_SUBTREES = ["python/programming", "python/data-science", "python/system-administration", "r", "cpp", "rust", "go", "javascript"]

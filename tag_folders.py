@@ -22,19 +22,14 @@ import sys
 from datetime import date
 from pathlib import Path
 
-try:
-    from folder_nature import FolderNature, write_folder_nature
-    from folder_nature.core import NATURE_FILENAME, read_folder_nature
-    from folder_nature.schema import Identity, Memory
-except ModuleNotFoundError:
-    sys.path.insert(0, str(Path.home() / "Projects/folder-nature"))
-    from folder_nature import FolderNature, write_folder_nature
-    from folder_nature.core import NATURE_FILENAME, read_folder_nature
-    from folder_nature.schema import Identity, Memory
+from _check_folder_nature import add_dev_checkout as _dev, require as _require  # noqa: E402
 
-from _check_folder_nature import require as _require_folder_nature  # noqa: E402
+_dev()
+from folder_nature import FolderNature, write_folder_nature
+from folder_nature.core import NATURE_FILENAME, read_folder_nature
+from folder_nature.schema import Identity, Memory
 
-_require_folder_nature()
+_require()
 
 ROOT = Path(__file__).resolve().parent
 SRC_EXT = (".py", ".R", ".cpp", ".go", ".rs")
