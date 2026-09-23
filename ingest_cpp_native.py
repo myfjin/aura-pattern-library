@@ -41,6 +41,27 @@ sys.path.insert(0, str(Path.home() / "Projects/folder-nature"))
 from folder_nature.mark import signing, watermark as wm            # noqa: E402
 from folder_nature.mark.payload import WatermarkPayload            # noqa: E402
 
+# --- the mark layer's version must be one we actually tested -------------------
+# folder-nature changed under us in 0.2.2 (re-stamping is idempotent again — until
+# then an indented mark line survived re-stamping and the file kept verifying as
+# authentic with the OLD payload still embedded) and 0.2.3 (the manifest date is
+# UTC, not the local clock). This library resolves folder_nature through a source
+# checkout, so which version it gets depends on where that checkout happens to be —
+# and on .8 the path does not even exist. Fail LOUDLY rather than run a mark layer
+# we know is wrong.
+import folder_nature  # noqa: E402
+
+_MIN_FOLDER_NATURE = (0, 2, 3)
+_found = tuple(int(p) for p in folder_nature.__version__.split(".") if p.isdigit())[:3]
+if _found < _MIN_FOLDER_NATURE:
+    raise RuntimeError(
+        f"aura-pattern-library needs folder-nature >= "
+        f"{'.'.join(map(str, _MIN_FOLDER_NATURE))}, found {folder_nature.__version__} "
+        f"at {folder_nature.__file__}. See "
+        "https://github.com/myfjin/folder-nature/releases"
+    )
+# ------------------------------------------------------------------------------
+
 HOME = Path.home()
 KEY = HOME / ".config/folder-nature/aura-signing.key"
 TRADEMARK, COMPANY = "AURA Pattern Library", "Reality Optimizer"
