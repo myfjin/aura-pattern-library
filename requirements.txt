@@ -1,0 +1,12 @@
+# What this project needs to run.
+#
+# folder-nature is pinned to a TAG rather than a PyPI range, and the reason is recorded here
+# rather than left to be rediscovered: PyPI serves 0.2.1, which predates both fixes this
+# project depends on —
+#   0.2.2 — re-stamping is idempotent again (before it, an indented mark line survived
+#           re-stamping while the file still verified as authentic);
+#   0.2.3 — the manifest's `created` is the UTC date, not the local clock.
+# The tag is the released artifact; `>=0.2.3` is the intent. Switch the line below to
+# `folder-nature>=0.2.3` once PyPI serves it.
+folder-nature @ git+https://github.com/myfjin/folder-nature@v0.2.3
+pyyaml
