@@ -1,0 +1,13 @@
+schema_version: '1.0'
+identity:
+  name: docs
+  being: collector
+  purpose: Human-readable documentation about the library's tooling and process — not patterns, not code
+director: false
+tags:
+- docs
+- verified
+memory:
+  created: '2026-10-17'
+  notable_events:
+  - '2026-10-17: created alongside docs/tools/ priority-1 tool docs'
