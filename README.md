@@ -17,17 +17,18 @@ tracing channels, and a cryptographic signature.
 | `python/data-science` | 377 | run-gated | Ed25519 signed |
 | `python/system-administration` | 200 | run-gated | Ed25519 signed |
 | `r/` | 60 | run-gated | Ed25519 signed |
-| `cpp/` | 370 | g++ **and** clang, `-std=c++17 -pedantic` | Ed25519 signed |
+| `cpp/` | 420 | g++ **and** clang, `-std=c++17 -pedantic` | Ed25519 signed |
 | `rust/` | 200 | `rustc -O -D warnings` | Ed25519 signed |
 | `go/programming` | 45 | `go build` + run + 3× determinism | Ed25519 signed |
 | `go/system-administration` | 58 | `go build` + run + 3× determinism | Ed25519 signed |
 | `javascript/` | 91 | `node` (exit 0) | Ed25519 signed |
 
-**1,035 patterns · 1,500 verified files across six languages · 466 patterns in
-two or more languages.** (1,024 unique IDs — 11 catalog rows share a stem across
-spheres, e.g. `circuit_breaker` lives in programming, sysadmin *and* rust-systems;
-by the census law a stem in two spheres is two patterns.) Nine shelves, 144
-categories. **JavaScript, like Python and R, is a source lane** — its patterns were
+**1,550 verified files across six languages · 1,074 unique pattern IDs · nine shelves,
+145 categories.** (Each stem that lives in two or more spheres — e.g. `circuit_breaker`
+in programming, sysadmin *and* rust-systems — counts once in unique IDs and once per sphere
+in the raw file count; `CATALOG.md` is the ID-keyed master.) Re-counted from disk by
+`build_patterns_index.py` 2026-10-17; the catalog is being regenerated to reflect this
+same recount — the row-table trails the file count on disk. **JavaScript, like Python and R, is a source lane** — its patterns were
 written directly in the language and have no twins, which is why the
 two-or-more-languages count is unchanged. Language twins are strictly downstream of their Python/R source:
 each carries the source's proven claims (same assert, same tolerance) and is coupling-pinned
@@ -37,7 +38,7 @@ to the source's hash. Four data-science patterns are excluded from the tree enti
 ## Browse every pattern
 
 **[PATTERNS_INDEX.md](PATTERNS_INDEX.md)** — a direct link and a description for every one
-of the 1,500 files, grouped by shelf and category, with each pattern's language twins named.
+of the 1,550 files, grouped by shelf and category, with each pattern's language twins named.
 Descriptions are extracted from the files themselves at generation time, so the index cannot
 drift from the code; regenerate with `python3 build_patterns_index.py`.
 
