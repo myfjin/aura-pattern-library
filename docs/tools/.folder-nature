@@ -1,0 +1,15 @@
+schema_version: '1.0'
+identity:
+  name: tools
+  being: collector
+  purpose: Per-tool description pages for the library's verification and ingest tooling (layer 1 + layer 2) — reader-facing, not executable
+director: false
+tags:
+- docs
+- tools
+- verified
+memory:
+  created: '2026-10-17'
+  notable_events:
+  - '2026-10-17: priority-1 pages landed (README, library_verify, library_audit, polyglot, harvest_gate)'
+  - '2026-10-17: priority-2 pages landed (audit_report, build_patterns_index, ingest)'

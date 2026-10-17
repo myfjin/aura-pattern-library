@@ -13,14 +13,20 @@ A green Layer 1 does not grade a pattern. A green Layer 2 does not prove the tre
 
 ## This directory
 
-**Priority-1 docs (this page's siblings):**
+**Layer-1 tools (library-side, at repo root):**
 
 - [`library_verify.md`](library_verify.md) — the Layer-1 gate (library CI). 8 check classes.
 - [`library_audit.md`](library_audit.md) — Layer-1 second pass. 12 check classes; 5 verdicts.
-- [`polyglot.md`](polyglot.md) — Layer-2 multi-language health runner.
+- [`audit_report.md`](audit_report.md) — renders the audit JSONL into human triage markdown.
+- [`build_patterns_index.md`](build_patterns_index.md) — regenerates `PATTERNS_INDEX.md`; the one tool with zero folder-nature dependency.
 - [`harvest_gate.md`](harvest_gate.md) — Phase A proposer for new patterns. 5 strict invariants.
+- [`ingest.md`](ingest.md) — the 4-tool ingest flow (python, native cpp, go twin, native go). Illia's-yes-only.
 
-Follow-up pages will cover `audit_report.py`, `build_patterns_index.py`, the ingest flow, and the rest of the Layer-2 validator family (`sweep`, `full_sweep`, `executor`, `chaos_scan`, `metamorphic_scan`, `nan_domain_probe`, `invariant_mine`, `recipes` R1–R15).
+**Layer-2 tools (pattern-scoring validators at `tools/pattern-scoring/validator/`):**
+
+- [`polyglot.md`](polyglot.md) — multi-language health runner (6 languages, 4 health signals).
+
+Follow-up pages will cover the rest of the Layer-2 validator family (`sweep`, `full_sweep`, `executor`, `chaos_scan`, `metamorphic_scan`, `nan_domain_probe`, `invariant_mine`, `recipes` R1–R15, `twin_divergence`, `oracle`, `probes`, `validate`).
 
 ---
 
