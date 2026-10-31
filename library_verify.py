@@ -14,6 +14,8 @@ Green means the library is what it claims:
   (g) self-test: the quarantine checks are PROVEN non-vacuous on every run (--self-test
       to run it alone); a check that cannot fail is worse than no check
   (h) twin contract divergence == the number MANIFEST.json declares it to be
+  (k) every shippable pattern has its doc card: `<stem>.md` beside its source (decision D6,
+      2026-10-31). The walk is the census's own set (shippable_files), so no lane is skipped
 
 RULER v2 — 2026-07-27, the NATIVE LANE (versioned change, the maintainer's yes).
 Until now (f) assumed every cpp/go file is a CONVERSION TWIN of a python/r pattern. That was
@@ -106,6 +108,10 @@ _MD_ENTRY = re.compile(r"^\s*[-*]\s+`([^`]+)`")
 # some other name reads as divergent — deliberately: the marker IS the declaration.
 CONTRACT_MARKS = ("_aura_validate_", "AuraInputError", "aura_validate")
 TWIN_LANES = (("cpp", ".cpp"), ("go", ".go"), ("rust", ".rs"))
+
+# The six language lanes and their pattern extension. ONE definition: the census counts this set
+# as total_shippable and (k) demands a card for every member of it, so the two cannot drift.
+LANE_EXT = {"python": ".py", "cpp": ".cpp", "rust": ".rs", "go": ".go", "r": ".R", "javascript": ".js"}
 
 
 class GateTimeout(Exception):
@@ -397,6 +403,28 @@ def divergence_fails(block, lanes, examples) -> list:
     return fails
 
 
+def shippable_files(root: Path) -> dict:
+    """lane -> list of pattern files. This IS the set total_shippable counts."""
+    out = {}
+    for lane, ext in LANE_EXT.items():
+        lane_dir = root / lane
+        out[lane] = [p for p in lane_dir.rglob("*")
+                     if p.suffix == ext and "__pycache__" not in p.parts] if lane_dir.exists() else []
+    return out
+
+
+def missing_cards(root: Path) -> list:
+    """(k) Shippable pattern files with no `<stem>.md` card beside them (D6).
+
+    close_the_loop.sh deliberately does not copy a NEW pattern's card (D5: new patterns enter
+    via harvest/ingest), and until this check a missing card left the verify output
+    byte-identical to a full library — measured 2026-10-31 on a re-signed clone. Every lane is
+    walked, javascript included; no lane is exempt, because none was measured to need it.
+    """
+    return sorted(p for files in shippable_files(root).values() for p in files
+                  if not p.with_suffix(".md").is_file())
+
+
 def census_mismatches(root, manifest) -> list:
     """Recompute census fields from disk; return mismatches against the manifest dict.
 
@@ -408,19 +436,12 @@ def census_mismatches(root, manifest) -> list:
     if not isinstance(manifest, dict):
         return [f"manifest is not a dict (got {type(manifest).__name__})"]
 
-    LANE_EXT = {"python": ".py", "cpp": ".cpp", "rust": ".rs", "go": ".go", "r": ".R", "javascript": ".js"}
     mismatches = []
 
     # Count files and stems per lane on disk
     lane_filecount = {}   # lane -> file count (not unique stems)
     lane_stems = {}       # lane -> set of stems
-    for lane, ext in LANE_EXT.items():
-        lane_dir = root / lane
-        files = []
-        if lane_dir.exists():
-            for p in lane_dir.rglob("*"):
-                if p.suffix == ext and "__pycache__" not in p.parts:
-                    files.append(p)
+    for lane, files in shippable_files(root).items():
         lane_filecount[lane] = len(files)
         lane_stems[lane] = {p.stem for p in files}
 
@@ -713,6 +734,13 @@ def run_checks(pub, gate=False, inject_all=frozenset(), inject_lang=None,
     say(f"[census                ] {len(census_mm)} mismatch(es) against disk"
         + (" — " + census_mm[0] if census_mm else " — OK"))
     fails.extend(census_mm)
+
+    # (k) doc cards — every member of the census set has `<stem>.md` beside it (D6)
+    nocard = missing_cards(ROOT)
+    say(f"[doc cards             ] {sum(len(v) for v in shippable_files(ROOT).values())} shippable"
+        f" pattern(s), {len(nocard)} without a card" + (" — OK" if not nocard else ""))
+    fails.extend(f"{p.relative_to(ROOT)}: no doc card ({p.with_suffix('.md').name} missing)"
+                 for p in nocard)
 
     return fails
 
@@ -1067,6 +1095,34 @@ def self_test(pub, deep=False) -> list:
               gate_outcome("okay")[0] == "inconclusive" and gate_outcome("")[0] == "inconclusive")
     else:
         print("  --   gate/orphan proof not exercised (runs under --gate or --self-test)")
+
+    # --- (k) doc cards: non-vacuity probes ---------------------------------------------------
+    with tempfile.TemporaryDirectory() as td:
+        troot = Path(td)
+        srcs = ["python/programming/foo.py", "python/data-science/deep/bar.py", "cpp/foo.cpp",
+                "rust/foo.rs", "go/foo.go", "r/foo.R", "javascript/foo.js"]
+        for rel in srcs:
+            f = troot / rel
+            f.parent.mkdir(parents=True, exist_ok=True)
+            f.write_text("pass\n", encoding="utf-8")
+            f.with_suffix(".md").write_text("# card\n", encoding="utf-8")
+        check("cards: every pattern carded -> NO missing card (silent case)",
+              missing_cards(troot) == [], missing_cards(troot))
+        n = sum(len(v) for v in shippable_files(troot).values())
+        check("cards: the card walk is the census set (same count as total_shippable)",
+              n == len(srcs) and not any("total_shippable" in m for m in
+                                         census_mismatches(troot, {"total_shippable": n})), n)
+        for rel in srcs:   # one lane at a time: no lane, javascript included, may be skipped
+            card = (troot / rel).with_suffix(".md")
+            card.unlink()
+            got = [str(p.relative_to(troot)) for p in missing_cards(troot)]
+            check(f"cards: removing {card.name} in lane '{rel.split('/')[0]}' is RED and names it",
+                  got == [rel], got)
+            card.write_text("# card\n", encoding="utf-8")
+        (troot / "javascript/foo.md").unlink()
+        (troot / "javascript/foo.md").mkdir()
+        check("cards: a DIRECTORY named <stem>.md is not a card",
+              [p.name for p in missing_cards(troot)] == ["foo.js"], missing_cards(troot))
 
     # --- non-vacuity against the real tree -------------------------------------------------
     live_all, live_lang, _, _ = load_quarantine(ROOT)
