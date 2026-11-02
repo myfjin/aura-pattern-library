@@ -1,7 +1,7 @@
 {
   "manifest_version": 1,
   "trademark": "AURA Pattern Library",
-  "created": "2026-08-07",
+  "created": "2026-11-02",
   "algorithm": "ed25519",
   "public_key": "a051daad9b4724643d553430f4a3151cb9edb5182d806ab254ebe3a97deb046c",
   "files": [
@@ -152,7 +152,7 @@
     },
     {
       "path": "distributions_and_resampling/quantile_type7.md",
-      "sha256": "2f486d6346037ddd3ea3bbce7c44587b5a824fa361925c290fa3666ed52301aa",
+      "sha256": "8d4c55bb4e9aaf2b6d145f9c4b7ee6289aeb144b69d1c47ae5b65067092c97f3",
       "bytes": 2322
     },
     {
@@ -227,7 +227,7 @@
     },
     {
       "path": "hypothesis_testing_parametric/welch_t_test.md",
-      "sha256": "06d4591c35755f64d6cc2c0b04740be3b958447b3af9c352e3aa02f58ec17963",
+      "sha256": "d5343ed23f57f30e8cc0d25c3cafb72d6086a0e609c2259aa20f0802bb14dfa6",
       "bytes": 2003
     },
     {
@@ -347,7 +347,7 @@
     },
     {
       "path": "nonparametric_and_categorical/wilcoxon_rank_sum.md",
-      "sha256": "57257ca3ce9b932bae0bc6b84177bb76616d73f878d4616fb09e688c6ac67e8b",
+      "sha256": "583cc46a064aba3355c4011948e58dbd38173cf66a621e8270ecfb376ebdd25f",
       "bytes": 2495
     },
     {
@@ -432,7 +432,7 @@
     },
     {
       "path": "regression_and_glm/ridge_regression.md",
-      "sha256": "785e16189d7bfa1e749d4744301eaa438de29947cd8603dc8aca059b13983cb9",
+      "sha256": "01e328c107a5e54d198676a8cc1e030bb7b41682d2e5bf3a64d89aad46bf7620",
       "bytes": 2495
     },
     {
