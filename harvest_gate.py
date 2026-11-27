@@ -68,7 +68,7 @@ HARVEST = LIB / ".harvest"
 MANIFEST = HARVEST / "t1_manifest.json"
 TOOL_HASHES = HARVEST / "tool_hashes.json"
 STAGING = Path.home() / "ai-lab/pattern-scoring/validator"
-PATTERN_LIB = Path.home() / "aura-pattern-library"
+PATTERN_LIB = LIB  # the gate lives at the library root (was ~/aura-pattern-library: absent on the dev machine since the move to ~/Projects)
 
 # Phase A tools (twin_divergence explicitly held for Draft 2)
 PHASE_A_TOOLS = {
@@ -1901,9 +1901,9 @@ def self_test() -> int:
         all_pass &= ok_viii
 
         # Source-code grep proof: zero tool_name="nan_domain_probe" in run_metamorphic_scan
-        _src_lines = open(__file__).read().split("\n") if "__file__" in dir() else []
-        if not _src_lines:
-            _src_lines = open("/home/me/ai-lab/cheat_arm/harvest_gate_v9_1.py").read().split("\n")
+        # Read THIS file. (Was: `"__file__" in dir()`, always False inside a function, so it
+        # fell back to a /home/me/ai-lab/cheat_arm copy that exists on no host.)
+        _src_lines = open(__file__).read().split("\n")
         metamorphic_block = ""
         in_meta = False
         for line in _src_lines:
@@ -2163,7 +2163,7 @@ def self_test() -> int:
         all_pass &= ok_vii
 
         # Source-code grep: is_ratified_violation check exists in run_invariant_mine
-        _src_vii = open("/home/me/ai-lab/cheat_arm/harvest_gate_v10_1.py").read()
+        _src_vii = open(__file__).read()  # THIS file (was a /home/me/ai-lab/cheat_arm copy, on no host)
         inv_block_vii = ""
         in_inv_vii = False
         for line in _src_vii.split("\n"):
